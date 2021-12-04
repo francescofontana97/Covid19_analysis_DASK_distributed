@@ -1,0 +1,3003 @@
+{
+    "paper_id": "3e4d65b96b6fe5a5cf3f47a5c2af0bdd2cf350d1",
+    "metadata": {
+        "title": "ACTA: A Mobile-Health Solution for Integrated Nudge-Neurofeedback Training for Senior Citizens",
+        "authors": [
+            {
+                "first": "Giulia",
+                "middle": [],
+                "last": "Cisotto",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Andrea",
+                "middle": [],
+                "last": "Trentini",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Italo",
+                "middle": [],
+                "last": "Zoppis",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Alessio",
+                "middle": [],
+                "last": "Zanga",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Sara",
+                "middle": [],
+                "last": "Manzoni",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Giada",
+                "middle": [],
+                "last": "Pietrabissa",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Anna",
+                "middle": [
+                    "Guerrini"
+                ],
+                "last": "Usubini",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Gianluca",
+                "middle": [],
+                "last": "Castelnuovo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "As the worldwide population gets increasingly aged, in-home tele-medicine and mobile-health solutions represent promising services to promote active and independent aging and to contribute to a paradigm shift towards a patient-centric healthcare. In this work, we present ACTA (Advanced Cognitive Training for Aging), a prototypal mobile-health solution to provide advanced cognitive training for senior citizens with mild cognitive impairments, We disclose here the conceptualization of ACTA as the integration of two promising rehabilitation strategies: the \"Nudge theory\", from the cognitive domain, and the neurofeedback, from the neuroscience domain. Moreover, in ACTA we exploit the most advanced machine learning techniques to deliver customized and fully adaptive support to the elderly, while training in an ecological environment. ACTA represents the next-step beyond SENIOR, an earlier mobile-health project for cognitive training based on Nudge theory, currently ongoing in Lombardy Region. Beyond SENIOR, ACTA represents a highly-usable, accessible, low-cost, new-generation mobile-health solution to promote independent aging and effective motor-cognitive training support, while empowering the elderly in their own aging.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Brain networks; ecological environment; explainable machine learning; machine learning; mobile health; rehabilitation; wearables; wireless EEG.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "As the worldwide population gets increasingly aged, tele-medicine and mobile-health solutions are becoming key services to promote active and independent aging, and to contribute to a paradigm shift towards a patient-centric healthcare. In many countries, especially Italy, Portugal in Europe, and Japan in Asia, average population age is rapidly increasing and projections indicate 79% of it will be over 60 by 2050, according to the 2017 report of the United Nations [1]. Mild cognitive impairment (MCI) is rapidly becoming one of the most common clinical manifestations affecting the elderly. It is characterized by deterioration of memory, attention, and cognitive function that is beyond what is expected based on age and educational level. MCI does not interfere significantly with individuals' daily activities. It can act as a transitional level towards dementia with a range of conversion of 10%-15% per year. It is crucial G. Cisotto is with the 2 to protect older people against MCI and developing dementia. As originally conceived, Petersen defined MCI by the following criteria: (1) a subjective complaint of a memory disturbance (preferably supported by an informant); (2) objective evidence of a memory deficit; (3) generally preserved cognitive functions; (4) intact activities of daily living; and (5) the absence of dementia [2] .",
+            "cite_spans": [
+                {
+                    "start": 1343,
+                    "end": 1346,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Preventive interventions, e.g., mental activity, physical exercises and social engagement, may help decrease the risk of further cognitive decline [3, 4, 5] . To this aim, \"SENIOR -SystEm of Nudge theory based ICT applications for OldeR citizen\" (ID 2018-NAZ-0129, rif. 2018-0826), a three-year project funded by CARIPLO Fundation in 2018, currently ongoing at the University of Milano-Bicocca and I.R.C.C.S. San Giuseppe Auxologico of Milan, is developing a new \"Nudge theory\"-based ICT coach system for monitoring and empowering elderly with MCI [6]: it aims to collect physiological, psychological and behavioral data in order to provide them personalized advices, suggestions for social engagement and overall wellness, according to the well-known \"Nudge theory\". \"Nudge Theory\" [7] refers to an extensive sociological framework for helping people to take decisions in a smooth way. Through proactive and positive suggestions (i.e., the nudges), \"Nudge theory\" based cognitive training can help the patients in remembering or focusing attention onto specific tasks. In SENIOR, nudges are conveyed via texts, speeches, or acoustic reminders. A dedicated app has been developed to correctly performing the training.",
+            "cite_spans": [
+                {
+                    "start": 147,
+                    "end": 150,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 151,
+                    "end": 153,
+                    "text": "4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 154,
+                    "end": 156,
+                    "text": "5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "More recently, degeneration in MCI has been also addressed by neurofeedback (NFB) interventions [8, 9, 10, 11] . NFB is a strategy to obtain a self-regulation of specific neural substrates which, in turn, produces improvements of specific cognitive and motor functions [12] . The target neural activity (assumed to be pathological) is associated with an automatic output (e.g., a cursor moving on a computer screen), the patient is instructed to control the output and a positive reinforcement can be provided him/her to help them reach their goal: in fact, after some trials-and-errors, the patient learns to control the output. NFB is enabled by the basic principles of \"operant learning\" and \"brain plasticity\" [13, 14] . Operant learning is employed to create an association between brain activity and (cognitive) behaviour in real-time, and facilitates the learning process via reinforcement strategy. Brain plasticity, instead, is the key ability of the brain to adapt its own functionalities to finally control the output. While criticisms still persist on the mechanisms through which NFB may produce benefits to specific patients, an increasing bulk of evidence has proved it as effective to improve motor and cognitive (e.g., attention deficits, memory, cognitive flexibility, reaction time, and executive functions) functionalities in a variety of pathologies [12, 15, 16, 17], including MCI [18, 19, 20, 21] .",
+            "cite_spans": [
+                {
+                    "start": 96,
+                    "end": 99,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 100,
+                    "end": 102,
+                    "text": "9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 103,
+                    "end": 106,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 107,
+                    "end": 110,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 269,
+                    "end": 273,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 714,
+                    "end": 718,
+                    "text": "[13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 719,
+                    "end": 722,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1371,
+                    "end": 1375,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1376,
+                    "end": 1379,
+                    "text": "15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1380,
+                    "end": 1383,
+                    "text": "16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1384,
+                    "end": 1388,
+                    "text": "17],",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1408,
+                    "end": 1411,
+                    "text": "19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1412,
+                    "end": 1415,
+                    "text": "20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1416,
+                    "end": 1419,
+                    "text": "21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The abovementioned studies used Electroencephalography (EEG), a non-invasive electrophysiological technique that allows to acquire the individual's brain activity with a very high time resolution (i.e., milliseconds), making it ideal to deliver timely NFB reinforcing stimuli [22, 23, 24, 25, 26] . EEGbased NFB is typically operated by Brain-Computer Interface (BCI), i.e., \"closed-loop\" human-machine systems that process EEG through several steps of pre-processing, feature extraction and classification, and transform the classifier's output in a command for an external device, e.g., a cursor on a computer or a robotic device navigating a room. During training, the machine refines its model of the user's brain activity and, at the same time, the human learns how to modulate his/her own brain activity to control the machine's output [14, 15] . Interestingly, [18] , the authors showed that central alpha EEG NFB was able to improve memory performance in MCI patients, and this outcome has been maintained at 30-day follow-up. Beta band EEG NFB was also reported to produce significant improvements to MCI patients in domains such as attention, memory, cognitive flexibility, reaction time, and executive functions [10]. More recently, theta EEG NFB, with EEG recorded over the sensorimotor brain areas, was effective to",
+            "cite_spans": [
+                {
+                    "start": 276,
+                    "end": 280,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 281,
+                    "end": 284,
+                    "text": "23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 285,
+                    "end": 288,
+                    "text": "24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 289,
+                    "end": 292,
+                    "text": "25,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 293,
+                    "end": 296,
+                    "text": "26]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 842,
+                    "end": 846,
+                    "text": "[14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 847,
+                    "end": 850,
+                    "text": "15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 868,
+                    "end": 872,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "reduce cognitive deficits in elderly patients with MCI, as well as stroke patients [19, 27] .",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 87,
+                    "text": "[19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 88,
+                    "end": 91,
+                    "text": "27]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "At the state-of-the-art (SENIOR project), \"Nudge theory\"-based cognitive training can be administered by specialized therapists only, the training level is defined by high-level cognitive assessments (e.g., Mini-Mental State Examination (MMSE) and reaction time tests) at the beginning of the intervention and updated on a regular base. Also, the timing for delivering the nudges, as well as their relevance, is based on the subjective therapist's expertise. On the other hand, NFB training is completely customized and timely adapted to match the user's mental state conditions, via continuous brain monitoring. Also, in the BCI community, an increasing effort to bring the promising results of NFB out-of-the-lab is being ongoing since a long time [28, 29, 30, 31, 32] . However, the research on the best strategies for improving learning in BCI remains a vivid field of investigation. Thus, SENIOR application of \"Nudge theory\" could represent a complimentary solution to improve learning in BCI research. Also, NFB could provide contingent intervention that could increase the effectiveness of \"Nudge theory\"-based cognitive training.",
+            "cite_spans": [
+                {
+                    "start": 750,
+                    "end": 754,
+                    "text": "[28,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 755,
+                    "end": 758,
+                    "text": "29,",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 759,
+                    "end": 762,
+                    "text": "30,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 763,
+                    "end": 766,
+                    "text": "31,",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 767,
+                    "end": 770,
+                    "text": "32]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "ACTA (Advanced Cognitive Training for Aging) aims to integrate two different domains, the \"Nudge theory\" and the NFB domains, and to get the best from each of them: in fact, ACTA aims to close the loop of a \"Nudge theory\"-based cognitive training, with introducing an automatic and fully-personalized NFB reinforcement based on the instantaneous patient's mental condition. In particular, ACTA will expand the methodologies of \"SENIOR -SystEm of Nudge theory based ICT applications for OldeR citizen\" (CARIPLO funded project ID 2018-NAZ-0129, rif. 2018-0826) project, currently ongoing at the University of Milano-Bicocca [6] . Going far beyond SENIOR, ACTA aims to design and test an integrated Nudge-NFB cognitive training by introducing a closed-loop assistance based on BCI and real-time quantitative assessments of the patient's conditions and attention level [9, 33] . Moreover, ACTA targets a new lowcost and wireless setup which could be used in less-controlled environments, i.e., in the patient's home, without the need of a clinical caregiver. At the same time, ACTA will provide the clinical caregiver with quantitative outcomes from the patient's behaviour and physiological conditions all throughout the course of the cognitive training. Thus, ACTA will provide a proof-of-concept that could be, later, easily extended to other use cases (i.e., motor disturbances in Parkinson's disease patients) or cognitive training programs (by adjusting the timings and the complexity of the implemented tasks) [17, 34, 31, 4] .",
+            "cite_spans": [
+                {
+                    "start": 622,
+                    "end": 625,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 865,
+                    "end": 868,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 869,
+                    "end": 872,
+                    "text": "33]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 1513,
+                    "end": 1517,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1518,
+                    "end": 1521,
+                    "text": "34,",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1522,
+                    "end": 1525,
+                    "text": "31,",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 1526,
+                    "end": 1528,
+                    "text": "4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The remainder of this paper is organized as follows: SectionII we present the methodologies to implement ACTA, in Section III we disclose the conceptualization of ACTA and the operative choices made in the development of the system and of the experimental protocol. In Section IV we discuss the potentialities, the limitations and the future perspective that ACTA could open for the new generation of tele-medicine and mobile-health. Finally, Section V concludes the paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Forty senior citizens with MCI from the cohort involved in the SENIOR project will take part in ACTA and will be enrolled via the same clinical and neuropsychological evaluation. Particularly, body mass index, smartwatch-based physical activity and energy expediture measure, sleep quality, MMSE score, functional-executive test scores will be obtained for each of them.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Participants"
+        },
+        {
+            "text": "The eligibility criteria and the exclusion criteria for ACTA will be the same as in SENIOR, and are recalled here for convenience. Individuals will be enrolled in ACTA if: (1) they are 65-85 years old, (2) they are diagnosed of MCI as measured via a standard battery of neuropsychological tests (e.g., MMSE, (3) they demonstrate an entry level in informatics. Exclusion criteria are as follows: (1) diagnosis of severe psychiatric disturbances, (2) severe medical conditions that lead to continuous medical assistance, (3) lack of independence in daily activities, (4) motor impairments.",
+            "cite_spans": [
+                {
+                    "start": 202,
+                    "end": 205,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Participants"
+        },
+        {
+            "text": "The experimental phases will be conducted in accordance with the Declaration of Helsinki. All experimental protocols and procedures for the first experimental phase are currently under ethics approval by the IRCCS Istituto Auxologico Italiano Ethical Committee. An additional approval will be requested to a Research Ethics Committee for the second experimental phase, which involves the use of neurofeedback via BCI. However, fully non invasive methodologies are employed (i.e., EEG) and the proposed NFB approach derives from standard BCI protocols. In fact, this kind of research has been previously approved in many different countries and many different pathologies [15, 20] , including MCI [34, 21, 3] . The eligible participants will be fully informed about the purpose, the experimental procedures, the data protection and treatment, the potential benefits and risks of taking part in this experiments. Then, they will be asked to sign a written and informed consent to take actual part in the project. Fig. 1 shows the overall architecture that is being deployed for ACTA. The latter implements the typical three-tier Internet-of-Things for healthcare (IoT-Health) architecture [5, 35, 36, 37, 38, 39] with the first tier including a wireless body area network (WBAN) for multi-modal sensing [40, 41] to collect physiogical data and vitals from the user (e.g., the heart rate via smartwatch's optical sensor, the brain activity via EEG), as well as the GPS position and the individual's movement (via accelerometer and gyroscope sensors). All data collected are sent through short-range wireless protocols, e.g., Bluetooth, to the smartphone that acts as a local gateway to access the Internet. At the second tier, the data are aggregated and further process before to reach the cloud. Here, mobile communications, e.g., 3G or 4G, or wi-fi are employed. The cloud, where data are stored and processed via advanced machine learning to identify individuals' profiles, represents the third tier of the IoT-Health architecture. Finally, the information about profiling are sent back, through the Internet, towards the local gateway to deliver nudges and neurofeedback stimuli, when needed. From a software point of view, at the front-end, we will extend the SENIOR app to integrate the new functionalities of ACTA (i.e., EEG acquisition, NFB delivery) and the user can run the app on his/her smartphone. At the backend, a Data Base Management System (DBMS) will store and analyze data on the cloud.",
+            "cite_spans": [
+                {
+                    "start": 671,
+                    "end": 675,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 676,
+                    "end": 679,
+                    "text": "20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 696,
+                    "end": 700,
+                    "text": "[34,",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 701,
+                    "end": 704,
+                    "text": "21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 705,
+                    "end": 707,
+                    "text": "3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1187,
+                    "end": 1190,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1191,
+                    "end": 1194,
+                    "text": "35,",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1195,
+                    "end": 1198,
+                    "text": "36,",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1199,
+                    "end": 1202,
+                    "text": "37,",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1203,
+                    "end": 1206,
+                    "text": "38,",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 1207,
+                    "end": 1210,
+                    "text": "39]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 1301,
+                    "end": 1305,
+                    "text": "[40,",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1306,
+                    "end": 1309,
+                    "text": "41]",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1011,
+                    "end": 1017,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "A. Participants"
+        },
+        {
+            "text": "C. Multi-modal wearable sensing design ACTA will be used by senior citizens, which are typically less familiar to technology compared to other population segments. Therefore, sensing device, data visualization on smartphone and feedback delivery have to be properly chosen. In case of senior citizens affected by MCI, these requirements must be carefully met.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "In fact, in ACTA, usability and accessibility, i.e., easy human-machine interaction and minimal intrusiveness [5, 42] , are ensured by adopting a fully wearable sensing system, from the heart rate measurement to the brain activity acquisition.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 113,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 114,
+                    "end": 117,
+                    "text": "42]",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "Thus, we adopted the following criteria:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "\u2022 to minimize the sensing intrusiveness;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "\u2022 to minimize the visual modality (except for the delivery of the nudges); \u2022 to prefer audio or haptic feedback, such as vibration;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "\u2022 fully wearability, i.e., nnothing to handle with hands. Since we need to get body parameters, i.e., the heart rate, oxygen saturation, and other vitals, a smartwatch is a suitable wearable. Usually, smartwatches come with proprietary software (e.g., Fitbit, Apple) or semi-open software (i.e., Android). To promote inter-operability and reproducibility, we adopted an Android-based smartwatch both in SENIOR as in ACTA.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "From the computational point of view, smartwatches are today autonomous computing devices: indeed, they have an operating system, sensors, memory, storage, and connectivity. However, their limited size constrains also the size of RAM and flashdisk, the CPU power and, above all, the battery capacity. For example, a smartwatch has battery capacity in the range of 100mAh. On the other hand, the GPS consumes about 30mA. Therefore, the battery may last about 3h. Moreover, adding the consumption for the display, the CPU and the connectivity, the device's lifespan could be reduced to less than an hour.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "Thus, to increase the system usability and its reliability for longer usages, ACTA system (and SENIOR as well) include both a smartwatch (running Wear OS, a reduction of Android OS) and a smartphone. The smartwatch is solely used for basic sensing of vitals (i.e., heart rate), while the full fledged Android smartphone is employed:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "\u2022 to act as a local gateway to access the Internet \u2022 to synchronize different sensing modalities, including the EEG recordings \u2022 to perform basic preliminary computations, before to send the data to the cloud \u2022 to host the SENIOR app \u2022 to track the individual's position via GPS communications \u2022 to deliver nudges and audio feedback Compared to the earlier deployment of SENIOR project, in ACTA the sensing setup is being extended to a low-cost wireless EEG with a limited number of sensors (distributed over the scalp) and the humanmachine interaction is being enriched with a real-time neuro-feedback delivery channel.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. System architecture"
+        },
+        {
+            "text": "The participants will be evaluated at relevant periodic times (at baseline and at different follow-up phases) to assess the effects of the training on their brain activity, motor and functional-executive abilities, as well as to collect information on the usability of the mobile-health system itself.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Data collection"
+        },
+        {
+            "text": "We will evaluate and collect several behavioral and kinematic measurements: we will exploit GPS-based continuous tracking to decide when to provide a nudge or a NFB stimulus (i.e., automatically delivered based on GPS position compared to the next landmark). Also, we will measure the path efficiency, i.e., the maximal deviation from the expected ideal path, the peak speed, the reaction time after a new stimulus, the number of steps, and the completion rate, i.e., how many landmarks are successfully reached (similarly to the assessment adopted by [15] ). Then, the sensing technologies of the smartphone and the smartwatch allow to collect physiological information, e.g., heart rate, respiration rate, to correlate with behavioural performance.",
+            "cite_spans": [
+                {
+                    "start": 552,
+                    "end": 556,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Data collection"
+        },
+        {
+            "text": "Also, EEG changes in the brain activity can be investigated through brain network analysis [43, 44] . Particularly, network topology (e.g., modularity), communication efficiency (e.g., small-world), and other graph theory metrics will be extracted from brain networks in real-time (i.e., based on dynamic graph theory) [45, 46] .",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "[43,",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 96,
+                    "end": 99,
+                    "text": "44]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 319,
+                    "end": 323,
+                    "text": "[45,",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 324,
+                    "end": 327,
+                    "text": "46]",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Data collection"
+        },
+        {
+            "text": "Finally, in line with SENIOR, we will derive a complete evaluation of ACTA usability by administering online questionnaries, available at SENIOR website, about patient engagement, empowerment and quality of experience (e.g., by means of the \"Telemedicine Satisfaction Quesitonnnaire\" and \"Patient Activation Measure and the Patient Health engegnement scale\").",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Data collection"
+        },
+        {
+            "text": "The participants will be asked to perform two different training tasks, which combine the use of both motor and cognitive abilities in outdoor path navigation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E. Tasks"
+        },
+        {
+            "text": "In task 1, i.e., memory task, the patients will be required to achieve a predetermined place (e.g., street, square), within 3 km distance, and asked to repeatedly walk it (in one-way) to memorize it. The path is defined as a pre-determined track from a start point to a final destination, including a number of intermediate reference locations, namely the landmarks (e.g., identified by an incremental index from 1 to 4 in Fig. 2) , and a number of other non-relevant places (e.g., represented by red cones in Fig. 2 ). Along the path, appropriate nudges are automatically delivered.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 423,
+                    "end": 430,
+                    "text": "Fig. 2)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 510,
+                    "end": 516,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "E. Tasks"
+        },
+        {
+            "text": "In a first session, consisting of a number of repetitions of the same path, a nudge will be delivered for each landmark (as in the left-most panel of Fig. 2 ). In the following sessions, the nudges will vanish (in line with the vanishing cue strategy), letting the patient finding their own way to reach the expected landmarks (intermediate panels of Fig. 2) . Particularly, as the patient's performance increases, the occurrence of nudges will be decreased (or additional support will be provided to complete the path). At the very last session, no intermediate landmarks will be announced using nudges (as in the right-most panel of Fig.  2 ). This will strengthen and consolidate memory [7, 6] . In task 2, i.e., attentional shift task, while repeating task 1, the patients will experience an additional disturbance (e.g., auditory stimulus asking for answering a question on the smartphone) that will likely provoke an attentional shift. This will train their attention and memory to reach the landmark, despite of the disturbance [4] .",
+            "cite_spans": [
+                {
+                    "start": 690,
+                    "end": 693,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 694,
+                    "end": 696,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1035,
+                    "end": 1038,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 150,
+                    "end": 156,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 351,
+                    "end": 358,
+                    "text": "Fig. 2)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 635,
+                    "end": 642,
+                    "text": "Fig.  2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "E. Tasks"
+        },
+        {
+            "text": "It is worth mentioning that the timing and the complexity of the path (task 1), as well as the entity of the disturbance (task 2), can be monitored and adjusted to avoid excessive cognitive load or gait fatigue.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E. Tasks"
+        },
+        {
+            "text": "Preliminary data are availble from an earlier project carried out by some of the authors of this work at the I.R.C.C.S. Istituto Auxologico Italiano in the framework of the \"TEChNology for OBesity\" (TECNOB) project (funded by the Compagnia di San Paolo Foundation and supported by technological partners TELBIOS [47] and METEDA [48] . TECNOB was a comprehensive two-phase stepped down program enhanced by tele-medicine for the medium-term treatment of obese and diabetic people seeking intervention for weight loss [49, 50] . Seventy-two obese patients with type 2 diabetes have been recruited and randomly allocated to the TECNOB program (n=37) or to a control condition (n=39). The TECNOB web-platform supported several functions and delivered many utilities, such as questionnaires, an animated food record diary, an agenda and a videoconference virtual room. All patients received a multi-sensory armband (SenseWear Pro3 Armband provided by BodyMedia), an electronic tool that enabled automatic monitoring of total energy expenditure (calories burned), active energy expenditure, physical activity duration and levels. They were instructed to wear the device on the back of their upper arm and to record data for 36 hours every two weeks in a free-living context. Also, the patients could ask for a teleconsultation with the clinical psychologist, to improve self-esteem and self-efficacy, to support motivation, to prevent relapse and to provide problem-solving. Within-group analysis showed a significant reduction of the initial weight at all time-points. The median percentage of the initial weight loss for the whole sample was \u22125, 1 kg (range from \u22126, 6 to \u22123, 7) at discharge from the hospital.",
+            "cite_spans": [
+                {
+                    "start": 312,
+                    "end": 316,
+                    "text": "[47]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 328,
+                    "end": 332,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 515,
+                    "end": 519,
+                    "text": "[49,",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 520,
+                    "end": 523,
+                    "text": "50]",
+                    "ref_id": "BIBREF51"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Preliminary data"
+        },
+        {
+            "text": "One contribution of this work is the systematic comparison among the most common portable low-cost EEG devices. We operated a selection that is in line with the recent survey presented in [51] ; however, we focused on portable and low-cost systems, only. A summary of their characteristics is reported in Tab. I. In [61] , a list of brands and products is provided, with further details. We can notice that all of them are characterized by a low-to-medium sampling frequency (less than 1000 Hz), a limited number of channels (21 max), and a low-to-average price. Additionally, most of them are wireless, but do not have special noise reduction technologies, thus reducing the SNR (i.e., the quality) of the acquired signals. Bluetooth is the most common communications technology used to send the EEG samples to the smartphone or the computer wirelessly. Finally, it is worth mentioning for the most of them the EEG sensors are placed in compliance with the International 10-20 System or its extended version, i.e., the 10-10 system [62] .",
+            "cite_spans": [
+                {
+                    "start": 188,
+                    "end": 192,
+                    "text": "[51]",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 316,
+                    "end": 320,
+                    "text": "[61]",
+                    "ref_id": "BIBREF60"
+                },
+                {
+                    "start": 1033,
+                    "end": 1037,
+                    "text": "[62]",
+                    "ref_id": "BIBREF61"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Low-cost EEG integration"
+        },
+        {
+            "text": "The main and most original contribution of this work is the conceptualization of the integration between \"Nudge theory\" and NFB.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C. Integration between Nudge and neurofeedback"
+        },
+        {
+            "text": "One of the most popular paradigms to train a BCI system for cognitive training is the oddball paradigm, where a sequence of stimuli, with different levels of saliency, are presented to the subject which is required to focus his/her attention to the most salient ones [63] . A well-established body of literature reported that the brain reacts to the oddball paradigm producing a specific kind of activity: the so-called event-related potentials (ERPs) [64] , where different components can be identified as associated to salient (i.e., target) events, or stimuli, and another to non-salient (i.e., non-target) events [65] . The target events are those which the subject is typically instructed to pay attention to, while the others can be regarded as distractors and used as a baseline to identify the attention-related brain patterns.",
+            "cite_spans": [
+                {
+                    "start": 267,
+                    "end": 271,
+                    "text": "[63]",
+                    "ref_id": "BIBREF62"
+                },
+                {
+                    "start": 452,
+                    "end": 456,
+                    "text": "[64]",
+                    "ref_id": "BIBREF63"
+                },
+                {
+                    "start": 617,
+                    "end": 621,
+                    "text": "[65]",
+                    "ref_id": "BIBREF64"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C. Integration between Nudge and neurofeedback"
+        },
+        {
+            "text": "In SENIOR, the MCI patient is asked to learn a pedestrian path, walking from one landmark and the next, until destination. The nudges are delivered by cognitive therapists to help the patient reaching out each landmark. Meanwhile, the patient passes by other places, on their way between two consecutive landmarks. Thus, \"Nudge theory\"-based cognitive training (as implemented in SENIOR) can be interpreted as an extension of the standard oddball paradigm with application to a more ecological environment: visiting a landmark can be interpreted as a target event, while passing by any other non-relevant place as a non-target event.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C. Integration between Nudge and neurofeedback"
+        },
+        {
+            "text": "Therefore, based on state-of-the-art (as reported in Section II), it is fair to hypothesize that closing the loop of SENIOR protocol, i.e., designing a BCI based on the integration of \"Nudge theory\" and NFB, could improve the beneficial effects of the (open-loop) SENIOR cognitive training protocol. In the development of such \"closed-loop\", an \"open-loop\" training phase has to be planned for allowing the patient learn to control the machine (of the BCI system), and for the machine to optimize its model of the patient's brain activity. Therefore, ACTA aims to operate on the two following phases, as shown in Fig. 3 . During the first phase, ACTA aims to create a rich training set of EEG data (time series or graph metrics) associated with the nudges: in fact, we could extract as many EEG data as many nudges are delivered in the repetitions of the path. Particularly, if we assume that brain attention can be detected in the proximity of each landmark (as in standard oddball cognitive paradigms), we could label the corresponding EEG data with a positive tag [9, 66] . Similarly, if we assume that no attentional state is required during the journey between two consecutive landmarks (i.e., passing by the non-relevant places), then a negative label can be associated to the corresponding EEG data. Thus, we could exploit advanced supervised ML methods to train a binary classifier that could accurately classify the EEG data either as attention-related or non-attention related samples [67, 68, 69, 70, 71] . At this stage, several deep architectures can be used to identify the brain networks features which are related to the individual's attentional state. Moreover, by designing and implementating specific \"attentional mechanisms\", we could weight those pieces of EEG information that mostly impact on determining the classification of the individual's attentional level [67, 68] .",
+            "cite_spans": [
+                {
+                    "start": 1067,
+                    "end": 1070,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1071,
+                    "end": 1074,
+                    "text": "66]",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 1495,
+                    "end": 1499,
+                    "text": "[67,",
+                    "ref_id": "BIBREF66"
+                },
+                {
+                    "start": 1500,
+                    "end": 1503,
+                    "text": "68,",
+                    "ref_id": "BIBREF67"
+                },
+                {
+                    "start": 1504,
+                    "end": 1507,
+                    "text": "69,",
+                    "ref_id": "BIBREF68"
+                },
+                {
+                    "start": 1508,
+                    "end": 1511,
+                    "text": "70,",
+                    "ref_id": "BIBREF69"
+                },
+                {
+                    "start": 1512,
+                    "end": 1515,
+                    "text": "71]",
+                    "ref_id": "BIBREF70"
+                },
+                {
+                    "start": 1885,
+                    "end": 1889,
+                    "text": "[67,",
+                    "ref_id": "BIBREF66"
+                },
+                {
+                    "start": 1890,
+                    "end": 1893,
+                    "text": "68]",
+                    "ref_id": "BIBREF67"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 613,
+                    "end": 619,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "C. Integration between Nudge and neurofeedback"
+        },
+        {
+            "text": "In the second phase, the same two tasks of the first phase are scheduled (with the patients asked to walk a path of similar complexity as in the previous phase). As sketched in Fig. 4 , when the GPS tracking system detects the patients nearby a landmark, either a nudge or a NFB stimulus could be sent him/her through the SENIOR app. In a first session, a nudgeis delivered for each landmark. In the following sessions, the nudges vanish, while the NFB is -possibly -delivered every time a nudge is absent. In fact, when a nudge is absent, NFB is provided -if and only if -the associated BCI system could identify an \"attention-related\" EEG activity (as explained at the beginning of this section). At the very last session, pure NFB-assistance is offered to the patient. As previously, when achieved the expected location, a \"reward\" will be sent to the patient. In task 2, the patients repeats task 1 with the presence of disturbances.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 177,
+                    "end": 183,
+                    "text": "Fig. 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "C. Integration between Nudge and neurofeedback"
+        },
+        {
+            "text": "From the analytical point of view, the experimental phase with only nudges (described in Section II-E) will represent the training phase to collect samples to train the deep learning models used in the second phase [66, 72] .",
+            "cite_spans": [
+                {
+                    "start": 215,
+                    "end": 219,
+                    "text": "[66,",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 220,
+                    "end": 223,
+                    "text": "72]",
+                    "ref_id": "BIBREF71"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fig. 4: Integration between Nudge and neurofeedback."
+        },
+        {
+            "text": "Here, the candidate deep model identified during the first phase, and preliminarly trained, subject-wise, over the training set is used to provide the NFB. Also, we assume that the patients are already familiar with the path, thus we expect to classify the EEG activity as \"attention\", when the patient is nearby a landmark, and as \"non-attention\", elsewhere [66] . Here, we validate the model by employing it to deliver a NFB with the following strategy: (a) whenever the subject walks nearby a landmark and produces EEG activity that is classified as \"attention\", we encourage her/him to reach the landmark itself. (b) whenever the subject walks nearby a non-relevant place and produces EEG activity that is classified as \"non-attention\", we might provide a positive reinforcement to encourage her/him to carry on her/his own way [11] . (c) otherwise, i.e., when the classifier's output mismatches the actual patient's location, we might decide to intervene, or not. When (a) is verified, a positive reward is sent to the patients via the SENIOR app, running on the smartphone. Labels associated with cases (a) and (b) could be used to update the training set, in line with other recent semi-supervised learning strategies.",
+            "cite_spans": [
+                {
+                    "start": 359,
+                    "end": 363,
+                    "text": "[66]",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 832,
+                    "end": 836,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fig. 4: Integration between Nudge and neurofeedback."
+        },
+        {
+            "text": "ACTA represents a new m-health solution that implements an advanced cognitive and motor training based on the integration of the \"Nudge theory\" and the \"neurofeedback theory\". Both of them have been previously, and separately, shown to be effective to improve or support the mild cognitive and motor deficits of senior citizens. Beyond SENIOR, ACTA features a number of new technological strategies that will increase the customization of the therapy, now based on the real-time neural signature of the individual's attention, and the quantitative monitoring of attention and memory abilities all throughout the course of the rehabilitation program. Moreover, ACTA will provide answers to the relationship between such an advanced cognitive and motor training and the brain networks changes [66, 73] . This will open up the way to further optimize the training strategies (both in the \"Nudge theory\" and in the NFB).",
+            "cite_spans": [
+                {
+                    "start": 791,
+                    "end": 795,
+                    "text": "[66,",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 796,
+                    "end": 799,
+                    "text": "73]",
+                    "ref_id": "BIBREF72"
+                }
+            ],
+            "ref_spans": [],
+            "section": "IV. DISCUSSION"
+        },
+        {
+            "text": "To promote usability and sustainability, we will adapt the software from SENIOR app to acquire data from new sensing modalities (e.g., the EEG) and to run NFB (i.e., to deliver additional audio or visual stimuli, beyond the nudges). We keep our sensing devices minimally intrusive, fully wearable, and easy to use [5, 74, 75, 76] . Also, we prefer tactile, audio, vibrating feedback (for nudges and NFB). To prolong the battery life in wearables, we decided to use them for basic sensing (i.e., heart rate) and to display stimuli when needed, while the full fledged Android smartphone (running Android OS) is used to access the Internet, synchronize the acquisition from different devices, store data in the cloud, run the SENIOR app, track the individual's position using GPS, provide feedback (as well as distractors of the task 2), as well as phone calls for emergency situations. Inter-operability is guaranteed by the use of semi-open Android smartwatches, in line with the choice made for SENIOR [5, 6] . This way we could take advantage of the full range of available Application Programming Interfaces (APIs) in the Android OS (e.g., Firebase cloud sync, Maps API, Text-to-speech API, Phone calls in emergency situations, etc.). Finally, trustworthiness is ensured as data privacy and protection are designed by fully comply with the GDPR and Italian Legislative Decree no. 196 dated 30/06/2003, across the entire ACTA architecture [5, 77] .",
+            "cite_spans": [
+                {
+                    "start": 314,
+                    "end": 317,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 318,
+                    "end": 321,
+                    "text": "74,",
+                    "ref_id": "BIBREF73"
+                },
+                {
+                    "start": 322,
+                    "end": 325,
+                    "text": "75,",
+                    "ref_id": "BIBREF74"
+                },
+                {
+                    "start": 326,
+                    "end": 329,
+                    "text": "76]",
+                    "ref_id": "BIBREF75"
+                },
+                {
+                    "start": 1002,
+                    "end": 1005,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1006,
+                    "end": 1008,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1440,
+                    "end": 1443,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1444,
+                    "end": 1447,
+                    "text": "77]",
+                    "ref_id": "BIBREF76"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Technological Usability and trustworthiness"
+        },
+        {
+            "text": "There is an urgent need to understand how technology can be applied in addressing the burden on the healthcare system. In this regards, it should be noted that, the demand for self-management approaches and technologies supporting chronic conditions, e.g., MCI in senior citizens, is of fundamental relevance. ACTA aims to contribute to this paradigm shift, by supporting autonomy and independence in elderly with MCI, via accessible, effective, and easy-to-use ICT platform. First, we use a low-cost technology to make ACTA accessible to everyone, outside of the advanced research laboratories [78, 41, 32, 31] . Second, we apply a new rehabilitative approach, based on two different but complimentary training strategies, i.e., the nudges and the NFB. They are implemented in ACTA to be fully customized and automatically adapted, in real-time, to the individual's attentional conditions. ACTA is expected to strengthen the individual's decision-making capabilities (via nudge-based training), and to gradually introduce the self-treatment (based on NFB) for the long-term maintenance of his/her cognitive and motor condition. These choices will allow the elderly to benefit of this kind of cognitive and motor training on a daily basis (i.e., a more intense rehabilitation program can be offered), and to be able to access it in a more ecological environment (e.g., in-home, or outdoor, not necessarily in specialized hospitals only). On the other hand, ACTA provides the clinicians, who are in charge of the senior citizens using the system, a highly explainable data visualization module to analyze the physiological data of their patients, all throughout the training. This allows the therapist to eventually adjust the program, or to consult with the patients, if needed.",
+            "cite_spans": [
+                {
+                    "start": 595,
+                    "end": 599,
+                    "text": "[78,",
+                    "ref_id": "BIBREF77"
+                },
+                {
+                    "start": 600,
+                    "end": 603,
+                    "text": "41,",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 604,
+                    "end": 607,
+                    "text": "32,",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 608,
+                    "end": 611,
+                    "text": "31]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Self-managed therapy and independent aging"
+        },
+        {
+            "text": "ACTA imposes as a m-health system that can contribute to significantly reduce the cost for the national (i.e., regional) healthcare service, as well as the time spent by patients visiting the hospitals.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Self-managed therapy and independent aging"
+        },
+        {
+            "text": "Patient-tailored rehabilitation protocols in mental disorders, including MCI, have become more broadly accepted with the launch of the Research Domain Criteria project in 2008 [79] , which was coordinated by the National Institute of Mental Health. The definition of the protocol and the evaluation of its effectiveness is typically based on the standard classification of mental health given by the Diagnostic and Statistical Manual of Mental Disorders (DSM-V) [80] , published by the American Psychiatric Association in 2000. However, this categorization has been obtained through questionnaires and by expert observation of the symptoms. In both cases, a high degree of subjectivity could have affected the classification.",
+            "cite_spans": [
+                {
+                    "start": 176,
+                    "end": 180,
+                    "text": "[79]",
+                    "ref_id": "BIBREF78"
+                },
+                {
+                    "start": 462,
+                    "end": 466,
+                    "text": "[80]",
+                    "ref_id": "BIBREF79"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C. Toward objective and personalized rehabilitation programs"
+        },
+        {
+            "text": "Furthermore, a whole spectrum of mental disorders is being demonstrated, i.e., ranging from autism, to schizophrenia and Alzheimer disease. Despite their differences, they could also share similar symptoms. This creates a rather complex and heterogeneous scenario that requires new objective and comprehensive evaluations (i.e., of many aspects of the individual's life and habits) and advanced data analytics competences and tools. To this regard, ACTA aims to contribute by measuring, in real-time and in a quantitative (yet objective) way the most relevant individual's neuro-physiological features and by adapting the training, accordingly. Indeed, as discussed in Section III-C, ACTA exploits advanced machine learning (ML) to create a mutual learning between the predictive model of the machine and the user who is performing the training. Thus, ACTA is expected to reduce the variability in the BCI output due to the intra-subject variations, as well as to favour the re-use of the system for other individuals. On the other hand, the twophase protocol of ACTA (nudges, first, and NFB later) is expected to cope with the inter-subject variability and to facilitate the re-use of the system by different users, i.e., producing different brain patterns.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C. Toward objective and personalized rehabilitation programs"
+        },
+        {
+            "text": "The mathematical and computational tools to characterize the organization and changes of the brain networks (both task-dependent and resting-state) can provide insights into the principles underlying the structure and functioning of the brain (both during tasks and rest). Also, they can help identifying the differences between healthy and pathological individuals [66] . However, understanding the causal relationship between a specific neurological disorders and the brain network alterations is still poorly understood. ACTA aims to contribute to unravel some new insights on the effect mechanisms of human learning by considering advanced ML techniques, including some degree of explainability, that allow to explain the association of temporal brain network changes during the training, e.g., learning of a new path [10, 11] .",
+            "cite_spans": [
+                {
+                    "start": 366,
+                    "end": 370,
+                    "text": "[66]",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 822,
+                    "end": 826,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 827,
+                    "end": 830,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Enhancing the understanding of dynamical brain connectivity"
+        },
+        {
+            "text": "These new knowledge could be exploited to further optimize the nudge, or NFB, stimulation in order to enhance and speed up the cognitive or motor recovery of patients suffering mental or motor disorders [81] . This will, in turn, shed some light on how to predict the results of a specific intervention in order to optimize its clinical effectiveness, and to modulate its intensity and target brain regions towards a healthy brain functioning [82] ).",
+            "cite_spans": [
+                {
+                    "start": 203,
+                    "end": 207,
+                    "text": "[81]",
+                    "ref_id": "BIBREF80"
+                },
+                {
+                    "start": 443,
+                    "end": 447,
+                    "text": "[82]",
+                    "ref_id": "BIBREF81"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D. Enhancing the understanding of dynamical brain connectivity"
+        },
+        {
+            "text": "To provide fully accessibility to the ACTA mobile-health solution, we included a low-cost commercial EEG device. This kind of systems typically features a low signal-to-noise ratio (SNR), can be affected by gait-related artefacts and has a limited number of sensors (less than 20, as reported in Tab. I). Unfortunately, signal quality could be critical to ensure an effective training in the framework of ACTA. In this work, we assume that such EEG can provide an SNR high enough to extract attention-related features (as claimed by the vendors). However, in the future, a systematic comparison with research-grade EEG would be useful to validate ACTA [83] .",
+            "cite_spans": [
+                {
+                    "start": 652,
+                    "end": 656,
+                    "text": "[83]",
+                    "ref_id": "BIBREF82"
+                }
+            ],
+            "ref_spans": [],
+            "section": "E. Limitations and future perspectives"
+        },
+        {
+            "text": "Also, at present, ACTA exploits cloud computing to run and update the ML models that identify the individuals' profiles. In fact, training an advanced ML model on a smartphone could be not feasible (especially if the user does not have a very recent smartphone with sufficient computational power).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E. Limitations and future perspectives"
+        },
+        {
+            "text": "However, real-time processing is needed to run NFB applications, such as ACTA. This is a delay-sensitive healthcare application that could benefit from the presence of an artificial intelligence (AI) engine closer to the final user (that uses the service), in order to minimize the delay between ACTA sensing and feedback phases [35, 84] . Mobile edge computing and fog computing are seeing increasing popularity as they can lead to minimize network latency and ensure real-time clinical feedback [84, 85, 38] . Finally, network slicing enabled by the new communications generation (5G) could allow to prioritize data transmission of mobile health systems over other delay-insensitive data traffic types [35, 38] .",
+            "cite_spans": [
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[35,",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 334,
+                    "end": 337,
+                    "text": "84]",
+                    "ref_id": "BIBREF83"
+                },
+                {
+                    "start": 497,
+                    "end": 501,
+                    "text": "[84,",
+                    "ref_id": "BIBREF83"
+                },
+                {
+                    "start": 502,
+                    "end": 505,
+                    "text": "85,",
+                    "ref_id": "BIBREF84"
+                },
+                {
+                    "start": 506,
+                    "end": 509,
+                    "text": "38]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 704,
+                    "end": 708,
+                    "text": "[35,",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 709,
+                    "end": 712,
+                    "text": "38]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "E. Limitations and future perspectives"
+        },
+        {
+            "text": "Finally, profiling is implemented in ACTA using advanced ML techniques which guarantee high classification accuracies, but which often lack a high degree of explainability of the classification decisions. However, in mobile-health and in healthcare, explainability and interpretability are highly desirable to provide suitable data visualization and interpretation to clinicians (e.g., to optimize training complexity and rewards), as well as to patients to increase their motivation in the rehabilitation program [37] . In the last few years, a strong effort is being put in the so-called explainable AI (XAI), which provides strategies and tools to explain the behaviour and the decisions of efficient ML models [86, 87, 88] .",
+            "cite_spans": [
+                {
+                    "start": 514,
+                    "end": 518,
+                    "text": "[37]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 714,
+                    "end": 718,
+                    "text": "[86,",
+                    "ref_id": "BIBREF85"
+                },
+                {
+                    "start": 719,
+                    "end": 722,
+                    "text": "87,",
+                    "ref_id": "BIBREF86"
+                },
+                {
+                    "start": 723,
+                    "end": 726,
+                    "text": "88]",
+                    "ref_id": "BIBREF87"
+                }
+            ],
+            "ref_spans": [],
+            "section": "E. Limitations and future perspectives"
+        },
+        {
+            "text": "M-health solutions are seeing an extraordinary development and adoption in a variety of contexts and applications, as a consequence of the ever increasing digitalization of medicine, and a more recent acceleration due to the SARS-CoV-2 pandemics. This works discloses the conceptualization of ACTA, a new mobile-health solution to support cognitive and motor training in a self-administered way for senior citizens. Featuring a fully wearable, low-cost, commercial and easy-to-use setup, ACTA represents a promising, fully accessible and highly usable m-health solution for cognitive and motor training or rehabilitation of senior citizens, either in healthy conditions or suffering from mild cognitive or motor impairments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. CONCLUSIONS"
+        },
+        {
+            "text": "ACTA has been designed as a minimally intrusive system, promoting a natural human-machine interaction in an ecological environment. Its training program (i.e., the outdoor path navigation tasks) is scalable for the easy administration of new tasks with different complexity, thus representing a valuable tool for clinical psychologists and therapists to support their work. It will also provide a user-friendly interface to interact with the senior citizens and make them aware of their progresses during the training program. Also, ACTA is easy generalized to support different cognitive or motor training for other patients, who might need different training tasks. In fact, ACTA features a data processing module and an advanced ML engine that could be adapted to new scenarios. In this case, a new training phase is required for the system to learn the users' profiles and adapt the nudges, and neurofeedback, responses to optimize the training outcomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. CONCLUSIONS"
+        },
+        {
+            "text": "In this way, ACTA pushes forward the recent effort towards a user-centric healthcare, or healthcare 4.0, and imposes as an active aging support for clinicians and senior citizens with mild impairments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. CONCLUSIONS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Department of Economic United Nations and Population Division Social Affairs",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Mild cognitive impairment: clinical characterization and outcome",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ronald",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Petersen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Archives of neurology",
+            "volume": "56",
+            "issn": "",
+            "pages": "303--308",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Potential benefits of a cognitive training program in mild cognitive impairment (MCI)",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nuria Mendoza Laiz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Restorative neurology and neuroscience",
+            "volume": "36",
+            "issn": "",
+            "pages": "207--213",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Evaluation of neural degeneration biomarkers in the prefrontal cortex for early identification of patients with mild cognitive impairment: an fNIRS study",
+            "authors": [
+                {
+                    "first": "Dalin",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Frontiers in human neuroscience",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Internet of Things for Elderly and Fragile People",
+            "authors": [
+                {
+                    "first": "Andrea",
+                    "middle": [],
+                    "last": "Zanella",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2006.05709"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "System of Nudge Theory-Based ICT Applications for Older Citizens: The SENIOR Project",
+            "authors": [
+                {
+                    "first": "Giada",
+                    "middle": [],
+                    "last": "Pietrabissa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "International Symposium on Pervasive Computing Paradigms for Mental Health",
+            "volume": "",
+            "issn": "",
+            "pages": "29--42",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "On curating multimodal sensory data for health and wellness platforms",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Muhammad Bilal Amin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Sensors 16",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Neurofeedback Training for Brain Functional Connectivity Improvement in Mild Cognitive Impairment",
+            "authors": [
+                {
+                    "first": "Xin",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Medical and Biological Engineering",
+            "volume": "40",
+            "issn": "",
+            "pages": "484--495",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A game-based neurofeedback training system to enhance cognitive performance in healthy elderly subjects and in patients with amnestic mild cognitive impairment",
+            "authors": [
+                {
+                    "first": "Suwicha",
+                    "middle": [],
+                    "last": "Jirayucharoensak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Clinical interventions in aging",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Tuning up the old brain with new tricks: attention training via neurofeedback",
+            "authors": [
+                {
+                    "first": "Yang",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Reza",
+                    "middle": [],
+                    "last": "Abiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaopeng",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Frontiers in aging neuroscience 9",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Human in the loop of robot learning: Eeg-based reward signal for target identification and reaching task",
+            "authors": [
+                {
+                    "first": "Lucia",
+                    "middle": [],
+                    "last": "Schiatti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE International Conference on Robotics and Automation (ICRA)",
+            "volume": "",
+            "issn": "",
+            "pages": "4473--4480",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Neurofeedback for the management of attention deficit disorders",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Joel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lubar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "An EEG-based BCI platform to improve arm reaching ability of chronic stroke patients by means of an operant learning training with a contingent force feedback",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "International Journal of E-Health and Medical Communications (IJEHMC)",
+            "volume": "5",
+            "issn": "",
+            "pages": "114--134",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Brain-computer interface in stroke: a review of progress",
+            "authors": [
+                {
+                    "first": "Stefano",
+                    "middle": [],
+                    "last": "Silvoni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Clinical EEG and Neuroscience",
+            "volume": "42",
+            "issn": "",
+            "pages": "245--252",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Kinematic and neurophysiological consequences of an assisted-force-feedback brain-machine interface training: a case study",
+            "authors": [
+                {
+                    "first": "Stefano",
+                    "middle": [],
+                    "last": "Silvoni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Frontiers in neurology",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "A development architecture for serious games using BCI (brain computer interface) sensors\"",
+            "authors": [
+                {
+                    "first": "Yunsick",
+                    "middle": [],
+                    "last": "Sung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyungeun",
+                    "middle": [],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyhyun",
+                    "middle": [],
+                    "last": "Um",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "In: Sensors",
+            "volume": "12",
+            "issn": "",
+            "pages": "15671--15688",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Brain computer interfaces for improving the quality of life of older adults and elderly patients",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Abdelkader Nasreddine Belkacem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Frontiers in Neuroscience",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Neurofeedback improves memory and peak alpha frequency in individuals with mild cognitive impairment",
+            "authors": [
+                {
+                    "first": "Yotam",
+                    "middle": [],
+                    "last": "Lavy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Applied psychophysiology and biofeedback",
+            "volume": "44",
+            "issn": "",
+            "pages": "41--49",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "SMR/Theta Neurofeedback Training Improves Cognitive Performance and EEG Activity in Elderly With Mild Cognitive Impairment: A Pilot Study",
+            "authors": [
+                {
+                    "first": "Fabienne",
+                    "middle": [],
+                    "last": "Marlats",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Frontiers in Aging Neuroscience",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The PERSON project: a serious brain-computer interface game for treatment in cognitive impairment",
+            "authors": [
+                {
+                    "first": "Alfonso",
+                    "middle": [],
+                    "last": "Monaco",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Health and Technology",
+            "volume": "9",
+            "issn": "",
+            "pages": "123--133",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "New perspectives for cognitive rehabilitation: Could brain-computer interface systems benefit people with dementia?",
+            "authors": [
+                {
+                    "first": "Leandro",
+                    "middle": [],
+                    "last": "Da Silva-Sauer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "In: Psychology & Neuroscience",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "EEG signal processing for post-stroke motor rehabilitation",
+            "authors": [
+                {
+                    "first": "Silvano",
+                    "middle": [],
+                    "last": "Pupolin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francesco",
+                    "middle": [],
+                    "last": "Piccione",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "40",
+            "issn": "",
+            "pages": "71--89",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "An Integrated Perspective for Future Widespread Integration of Neuro-motor Rehabilitation",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Silvano",
+                    "middle": [],
+                    "last": "Pupolin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Neuro-Rehabilitation with Brain Interface",
+            "volume": "40",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "An application of Brain Computer Interface in chronic stroke to improve arm reaching function exploiting operant learning strategy and brain plasticity",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "2013 IEEE 15th International Conference on e-Health Networking",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Comparison about EEG signals processing in BCI applications",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Silvano",
+                    "middle": [],
+                    "last": "Pupolin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francesco",
+                    "middle": [],
+                    "last": "Piccione",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "2014 4th International Conference on Wireless Communications, Vehicular Technology, Information Theory and Aerospace & Electronic Systems (VITAE)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "An application of Brain Computer Interface in chronic stroke to improve arm reaching function exploiting operant learning strategy and brain plasticity",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "2013 IEEE 15th International Conference on e-Health Networking",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "BCI for stroke rehabilitation: motor and beyond",
+            "authors": [
+                {
+                    "first": "Ravikiran",
+                    "middle": [],
+                    "last": "Mane",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tushar",
+                    "middle": [],
+                    "last": "Chouhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cuntai",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Neural Engineering",
+            "volume": "17",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "A cell-phone-based brain-computer interface for communication in daily life",
+            "authors": [
+                {
+                    "first": "Yu-Te",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yijun",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tzyy-Ping",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of neural engineering",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "A smartphone interface for a wireless EEG headset with real-time 3D reconstruction",
+            "authors": [
+                {
+                    "first": "Arkadiusz",
+                    "middle": [],
+                    "last": "Stopczynski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "International Conference on Affective Computing and Intelligent Interaction",
+            "volume": "",
+            "issn": "",
+            "pages": "317--318",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "A novel Brain Computer Interface for classification of social joint attention in autism and comparison of 3 experimental setups: a feasibility study",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Carlos",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Amaral",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of neuroscience methods",
+            "volume": "290",
+            "issn": "",
+            "pages": "105--115",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "More attention, less deficit: Wearable EEG-based serious game for focus improvement",
+            "authors": [
+                {
+                    "first": "Alaa",
+                    "middle": [],
+                    "last": "Eddin Alchalcabi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amer",
+                    "middle": [],
+                    "last": "Nour Eddin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shervin",
+                    "middle": [],
+                    "last": "Shirmohammadi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 IEEE 5th international conference on serious games and applications for health (SeGAH)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Brain-computer interface games based on consumer-grade EEG Devices: A systematic literature review",
+            "authors": [
+                {
+                    "first": "Mendes",
+                    "middle": [],
+                    "last": "Gabriel Alves",
+                    "suffix": ""
+                },
+                {
+                    "first": "Leonardo",
+                    "middle": [],
+                    "last": "Vasiljevic",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cunha De Miranda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Human-Computer Interaction",
+            "volume": "36",
+            "issn": "2",
+            "pages": "105--142",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Alpha and beta oscillatory changes during stimulus-induced movement paradigms: effect of stimulus predictability",
+            "authors": [
+                {
+                    "first": "Manuel",
+                    "middle": [],
+                    "last": "Alegre",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Neuroreport",
+            "volume": "14",
+            "issn": "",
+            "pages": "381--385",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Effectiveness of a personalized brain-computer interface system for cognitive training in healthy elderly: A randomized controlled trial",
+            "authors": [
+                {
+                    "first": "Si Ning",
+                    "middle": [],
+                    "last": "Yeo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Alzheimer's Disease",
+            "volume": "66",
+            "issn": "",
+            "pages": "127--138",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Requirements and Enablers of Advanced Healthcare Services over Future Cellular Systems",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edoardo",
+                    "middle": [],
+                    "last": "Casarin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stefano",
+                    "middle": [],
+                    "last": "Tomasin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Communications Magazine",
+            "volume": "58",
+            "issn": "",
+            "pages": "76--81",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "A 3-tier architecture for network latency reduction in healthcare internet-ofthings using fog computing and machine learning",
+            "authors": [
+                {
+                    "first": "Saurabh",
+                    "middle": [],
+                    "last": "Shukla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 2019 8th International Conference on Software and Computer Applications",
+            "volume": "",
+            "issn": "",
+            "pages": "522--528",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Design of a Healthcare Monitoring and Communication System for Locked-In Patients Using Machine Learning, IOTs, and Brain-Computer Interface Technologies",
+            "authors": [
+                {
+                    "first": "Adriane",
+                    "middle": [],
+                    "last": "Ernst Richard Fanfan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kun",
+                    "middle": [],
+                    "last": "Randolph",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Suo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Cascaded WLAN-FWA Networking and Computing Architecture for Pervasive In-Home Healthcare",
+            "authors": [
+                {
+                    "first": "Sergio",
+                    "middle": [],
+                    "last": "Martiradonna",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Evolution of ICT for the improvement of quality of life",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Silvano",
+                    "middle": [],
+                    "last": "Pupolin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Aerospace and Electronic Systems Magazine",
+            "volume": "33",
+            "issn": "",
+            "pages": "6--12",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "IoT Driven Healthcare Monitoring System",
+            "authors": [
+                {
+                    "first": "Md",
+                    "middle": [],
+                    "last": "Robiul",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alam",
+                    "middle": [],
+                    "last": "Robel",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Fog, Edge, and Pervasive Computing in Intelligent IoT Driven Applications (2020)",
+            "volume": "",
+            "issn": "",
+            "pages": "161--176",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "A comprehensive overview of smart wearables: The state of the art literature, recent advances, and future challenges",
+            "authors": [
+                {
+                    "first": "Naghmeh",
+                    "middle": [],
+                    "last": "Niknejad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Engineering Applications of Artificial Intelligence",
+            "volume": "90",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "A plug 'n'play approach for dynamic data acquisition from heterogeneous IoT medical devices of unknown nature",
+            "authors": [
+                {
+                    "first": "Argyro",
+                    "middle": [],
+                    "last": "Mavrogiorgou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Athanasios",
+                    "middle": [],
+                    "last": "Kiourtis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dimosthenis",
+                    "middle": [],
+                    "last": "Kyriazis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Evolving Systems",
+            "volume": "11",
+            "issn": "",
+            "pages": "269--289",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Graph theory methods: applications in brain networks",
+            "authors": [
+                {
+                    "first": "Olaf",
+                    "middle": [],
+                    "last": "Sporns",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Dialogues in clinical neuroscience",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "The physics of brain network structure, function and control",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Christopher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Danielle",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lynn",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bassett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nature Reviews Physics",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Covering a graph with clubs",
+            "authors": [
+                {
+                    "first": "Riccardo",
+                    "middle": [],
+                    "last": "Dondi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Journal of Graph Algorithms and Applications",
+            "volume": "23",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "On the tractability of finding disjoint clubs in a network",
+            "authors": [
+                {
+                    "first": "Riccardo",
+                    "middle": [],
+                    "last": "Dondi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Giancarlo",
+                    "middle": [],
+                    "last": "Mauri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Italo",
+                    "middle": [],
+                    "last": "Zoppis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Theoretical Computer Science",
+            "volume": "777",
+            "issn": "",
+            "pages": "243--251",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "TELBIOS",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "METEDA",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "TECNOB: study design of a randomized controlled trial of a multidisciplinary telecare intervention for obese patients with type-2 diabetes",
+            "authors": [
+                {
+                    "first": "Gianluca",
+                    "middle": [],
+                    "last": "Castelnuovo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "BMC public health",
+            "volume": "10",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "TECNOB study: ad interim results of a randomized controlled trial of a multidisciplinary telecare intervention for obese patients with type-2 diabetes\". In: Clinical practice and epidemiology in mental health",
+            "authors": [
+                {
+                    "first": "Gianluca",
+                    "middle": [],
+                    "last": "Castelnuovo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "CP & EMH",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Electroencephalography (EEG) Technology Applications and Available Devices",
+            "authors": [
+                {
+                    "first": "Mahsa",
+                    "middle": [],
+                    "last": "Soufineyestani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dale",
+                    "middle": [],
+                    "last": "Dowling",
+                    "suffix": ""
+                },
+                {
+                    "first": "Arshia",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Applied Sciences",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "ANT Neuro mini-serie",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Smarting mobi -mBrainTrain",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Comparison of different EEG products",
+            "authors": [
+                {
+                    "first": "Bryn",
+                    "middle": [],
+                    "last": "Farnsworth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "Ten percent electrode system for topographic studies of spontaneous and evoked EEG activities",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ge Chatrian",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Lettich",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nelson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1985,
+            "venue": "American Journal of EEG technology",
+            "volume": "25",
+            "issn": "",
+            "pages": "83--92",
+            "other_ids": {}
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "A modified oddball paradigm for investigation of neural correlates of attention: a simultaneous ERP-fMRI study",
+            "authors": [
+                {
+                    "first": "Mateusz",
+                    "middle": [],
+                    "last": "Rusiniak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Magnetic Resonance Materials in Physics",
+            "volume": "26",
+            "issn": "",
+            "pages": "511--526",
+            "other_ids": {}
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "Cognitive reserve modulates attention processes in healthy elderly and amnestic mild cognitive impairment: an event-related potential study",
+            "authors": [
+                {
+                    "first": "Lihua",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Clinical neurophysiology",
+            "volume": "129",
+            "issn": "",
+            "pages": "198--207",
+            "other_ids": {}
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "P300 as an index of attention to self-relevant stimuli",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Heather",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Journal of experimental social psychology",
+            "volume": "40",
+            "issn": "",
+            "pages": "216--224",
+            "other_ids": {}
+        },
+        "BIBREF65": {
+            "ref_id": "b65",
+            "title": "Hybrid high-order functional connectivity networks using resting-state functional MRI for mild cognitive impairment diagnosis",
+            "authors": [
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Scientific reports",
+            "volume": "7",
+            "issn": "",
+            "pages": "1--15",
+            "other_ids": {}
+        },
+        "BIBREF66": {
+            "ref_id": "b66",
+            "title": "An Attention-based Architecture for EEG Classification",
+            "authors": [
+                {
+                    "first": "Italo",
+                    "middle": [],
+                    "last": "Zoppis",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "214--219",
+            "other_ids": {}
+        },
+        "BIBREF67": {
+            "ref_id": "b67",
+            "title": "Comparison of Attention-based Deep Learning Models for EEG Classification",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2012.01074"
+                ]
+            }
+        },
+        "BIBREF68": {
+            "ref_id": "b68",
+            "title": "Deep Learning Techniques for Improving Digital Gait Segmentation",
+            "authors": [
+                {
+                    "first": "Matteo",
+                    "middle": [],
+                    "last": "Gadaleta",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 41st Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC)",
+            "volume": "",
+            "issn": "",
+            "pages": "1834--1837",
+            "other_ids": {}
+        },
+        "BIBREF69": {
+            "ref_id": "b69",
+            "title": "Deep learning-based classification of fine hand movements from low frequency EEG",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Bressan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Selina",
+                    "suffix": ""
+                },
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Wriessnegger",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2011.06791"
+                ]
+            }
+        },
+        "BIBREF70": {
+            "ref_id": "b70",
+            "title": "Deep Learning Methods in Electroencephalography",
+            "authors": [
+                {
+                    "first": "Krzysztof",
+                    "middle": [],
+                    "last": "Kotowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katarzyna",
+                    "middle": [],
+                    "last": "Stapor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeremi",
+                    "middle": [],
+                    "last": "Ochab",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "191--212",
+            "other_ids": {}
+        },
+        "BIBREF71": {
+            "ref_id": "b71",
+            "title": "Deep learning representation from electroencephalography of early-stage Creutzfeldt-Jakob disease and features for differentiation from rapidly progressive dementia",
+            "authors": [
+                {
+                    "first": "Francesco",
+                    "middle": [
+                        "Carlo"
+                    ],
+                    "last": "Morabito",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "International journal of neural systems",
+            "volume": "27",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF72": {
+            "ref_id": "b72",
+            "title": "Construction and evaluation of multidomain attention training to improve alertness attention, sustained attention, and visual-spatial attention in older adults with mild cognitive impairment: A randomized controlled trial",
+            "authors": [
+                {
+                    "first": "Hui-Ling",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International journal of geriatric psychiatry",
+            "volume": "35",
+            "issn": "",
+            "pages": "537--546",
+            "other_ids": {}
+        },
+        "BIBREF73": {
+            "ref_id": "b73",
+            "title": "Classification of grasping tasks based on EEG-EMG coherence",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE 20th International Conference on e-Health Networking",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF74": {
+            "ref_id": "b74",
+            "title": "Joint Compression of EEG and EMG Signals for Wireless Biometrics",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE Global Communications Conference (GLOBECOM)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF75": {
+            "ref_id": "b75",
+            "title": "Feature selection for gesture recognition in Internet-of-Things for healthcare",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "ICC 2020-2020 IEEE International Conference on Communications (ICC). IEEE. 2020",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF76": {
+            "ref_id": "b76",
+            "title": "Cyber security of smart grids modeled through epidemic models in cellular automata",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Leonardo",
+                    "middle": [],
+                    "last": "Badia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "2016 ieee 17th international symposium on a world of wireless, mobile and multimedia networks (wowmom)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF77": {
+            "ref_id": "b77",
+            "title": "A simple and accessible inkjet platform for ultra-short concept-to-prototype sEMG electrodes production",
+            "authors": [
+                {
+                    "first": "Giulia",
+                    "middle": [],
+                    "last": "Cisotto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Giulio",
+                    "middle": [],
+                    "last": "Rosati",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Paccagnella",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 41st Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC)",
+            "volume": "",
+            "issn": "",
+            "pages": "5765--5768",
+            "other_ids": {}
+        },
+        "BIBREF78": {
+            "ref_id": "b78",
+            "title": "Research domain criteria (RDoC): toward a new classification framework for research on mental disorders",
+            "authors": [
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "Insel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF79": {
+            "ref_id": "b79",
+            "title": "The diagnostic and statistical manual of mental disorders",
+            "authors": [
+                {
+                    "first": "Jill",
+                    "middle": [],
+                    "last": "Fain Lehman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF80": {
+            "ref_id": "b80",
+            "title": "Stimulation-based control of dynamic brain networks",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sarah Feldt Muldoon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "PLoS computational biology",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF81": {
+            "ref_id": "b81",
+            "title": "Controllability metrics, limitations and algorithms for complex networks",
+            "authors": [
+                {
+                    "first": "Fabio",
+                    "middle": [],
+                    "last": "Pasqualetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sandro",
+                    "middle": [],
+                    "last": "Zampieri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francesco",
+                    "middle": [],
+                    "last": "Bullo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "IEEE Transactions on Control of Network Systems",
+            "volume": "1",
+            "issn": "1",
+            "pages": "40--52",
+            "other_ids": {}
+        },
+        "BIBREF82": {
+            "ref_id": "b82",
+            "title": "From Validation of Medical Devices towards Validation of Adaptive Cyber-Physical Systems",
+            "authors": [
+                {
+                    "first": "Jo\u017ee",
+                    "middle": [],
+                    "last": "Tav\u010dar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jo\u017ee",
+                    "middle": [],
+                    "last": "Duhovnik",
+                    "suffix": ""
+                },
+                {
+                    "first": "Imre",
+                    "middle": [],
+                    "last": "Horv\u00e1th",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Integrated Design and Process Science Preprint",
+            "volume": "",
+            "issn": "",
+            "pages": "1--23",
+            "other_ids": {}
+        },
+        "BIBREF83": {
+            "ref_id": "b83",
+            "title": "A review on IoT healthcare monitoring applications and a vision for transforming sensor data into real-time clinical feedback",
+            "authors": [
+                {
+                    "first": "Hoa",
+                    "middle": [],
+                    "last": "Hong Nguyen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 IEEE 21st International Conference on Computer Supported Cooperative Work in Design (CSCWD)",
+            "volume": "",
+            "issn": "",
+            "pages": "257--262",
+            "other_ids": {}
+        },
+        "BIBREF84": {
+            "ref_id": "b84",
+            "title": "Towards a Distributed Access Control Model for IoT in Healthcare",
+            "authors": [
+                {
+                    "first": "Asma",
+                    "middle": [],
+                    "last": "Seham Alnefaie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Suhair",
+                    "middle": [],
+                    "last": "Cherif",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Alshehri",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 2nd International Conference on Computer Applications & Information Security (ICCAIS)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF85": {
+            "ref_id": "b85",
+            "title": "A unified approach to interpreting model predictions",
+            "authors": [
+                {
+                    "first": "Scott",
+                    "middle": [],
+                    "last": "Lundberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Su-In",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1705.07874"
+                ]
+            }
+        },
+        "BIBREF86": {
+            "ref_id": "b86",
+            "title": "NGBoost Interpretation Using LIME for Alcoholic EEG Signal Based on GLDM Feature Extraction",
+            "authors": [
+                {
+                    "first": "Fikhri",
+                    "middle": [],
+                    "last": "Dandi Trianta Barus",
+                    "suffix": ""
+                },
+                {
+                    "first": "Achmad",
+                    "middle": [],
+                    "last": "Masri",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Rizal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the Computational Methods in Systems and Software",
+            "volume": "",
+            "issn": "",
+            "pages": "894--904",
+            "other_ids": {}
+        },
+        "BIBREF87": {
+            "ref_id": "b87",
+            "title": "A survey on explainable artificial intelligence (xai): Toward medical xai",
+            "authors": [
+                {
+                    "first": "Erico",
+                    "middle": [],
+                    "last": "Tjoa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cuntai",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Neural Networks and Learning Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "ACTA architecture (modified from[6]).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "SENIOR implementation of \"Nudge theory\"-based cognitive training.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "An example of outdoor path navigation with presence of nudges and NFB.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Comparison among commercial low-cost portable EEG devices.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,440 @@
+{
+    "paper_id": "3dc407da1690c020d55861af1076a53dd3064c16",
+    "metadata": {
+        "title": "Sequence analysis Colorstock, SScolor, Rat\u00f3 n: RNA alignment visualization tools",
+        "authors": [
+            {
+                "first": "Yuri",
+                "middle": [
+                    "R"
+                ],
+                "last": "Benda\u00f1",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "UC Berkeley",
+                    "location": {
+                        "settlement": "Berkeley",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ian",
+                "middle": [
+                    "H"
+                ],
+                "last": "Holmes",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "UC Berkeley",
+                    "location": {
+                        "settlement": "Berkeley",
+                        "region": "CA",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Interactive examination of RNA multiple alignments for covariant mutations is a useful step in non-coding RNA sequence analysis. We present three parallel implementations of an RNA visualization metaphor: Colorstock, a command-line script using ANSI terminal color; SScolor, a Perl script that generates static HTML pages; and Rat\u00f3 n, an AJAX web application generating dynamic HTML. Each tool can be used to color RNA alignments by secondary structure and to visually highlight compensatory mutations in stems. Availability: All source code is freely available under the GPL. The source code can be downloaded and a prototype of Rat\u00f3 n can be accessed at http://biowiki.org/RnaAlignmentViewers",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Non-coding RNA (ncRNA) is an important part of the cisregulatory picture (Ambros and Chen, 2007; Pheasant and Mattick, 2007) and has a broad chemical repertoire of great potential value (Breaker, 2004) . Several 'pipelines' for discovery of novel ncRNA motifs by comparative genomics have been described (Pedersen et al., 2006; Rivas et al., 2001; Bradley et al., 2007; Washietl et al., 2005) adding to a comprehensive database of known ncRNA alignments (Griffiths-Jones et al., 2003) . Visual inspection of alignments is an important quality control step in such pipelines.",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 96,
+                    "text": "(Ambros and Chen, 2007;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 97,
+                    "end": 124,
+                    "text": "Pheasant and Mattick, 2007)",
+                    "ref_id": null
+                },
+                {
+                    "start": 186,
+                    "end": 201,
+                    "text": "(Breaker, 2004)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 304,
+                    "end": 327,
+                    "text": "(Pedersen et al., 2006;",
+                    "ref_id": null
+                },
+                {
+                    "start": 328,
+                    "end": 347,
+                    "text": "Rivas et al., 2001;",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 348,
+                    "end": 369,
+                    "text": "Bradley et al., 2007;",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 370,
+                    "end": 392,
+                    "text": "Washietl et al., 2005)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 454,
+                    "end": 484,
+                    "text": "(Griffiths-Jones et al., 2003)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Generally, in comparative genomics, alignments of sequences from related species are used to look for evidence of conservation of genomic features through evolution. Noncoding RNAs in particular, however, often do not exhibit conservation at the sequence level but do display conservation at the structural level. Compensatory mutations of the bases in an RNA alignment are a signature of this structural-level conservation. (By 'compensatory mutations' we mean substitutions of both the sites involved in a base-pair, such that canonical Watson-Crick or wobble base-pairing is maintained: although we do not know in which order the two substitutions occurred, we presume that the second substitution 'compensated' for the first.) When eyballing an RNA alignment to determine if it includes a structural ncRNA, it is extremely helpful to have a visual indicator of such mutations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Using color to denote basepairing patterns in RNA alignments has been common and, workers place for a while. To our knowledge, the idea of specifically highlighting compensatory mutations was introduced by Pedersen in the EVOFOLD track of the UCSC Genome Browser, and by Griffiths-Jones in RALEE, the RNA alignment mode for Emacs (Griffiths-Jones, 2005) . In the EVOFOLD track, rendered HTML pages show the colorized alignment for a predicted ncRNA feature on clickthrough from the corresponding browser track (Pedersen et al., 2006) .",
+            "cite_spans": [
+                {
+                    "start": 330,
+                    "end": 353,
+                    "text": "(Griffiths-Jones, 2005)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 510,
+                    "end": 533,
+                    "text": "(Pedersen et al., 2006)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "We found this visual paradigm to be useful enough to warrant a standalone implementation. We observe, however, that bioinformatics workflow often goes beyond static HTML. Experienced analysts spend a lot of time at the command line in an X11, VT100 or other terminal window, which (for an expert) is usually the most interactive way to work. However, extra interactivity is also starting to show up in 'Web 2.0' applications via dynamic HTML technologies such as Javascript/AJAX. An example of this migration of command-line workflow to a Javascript-led interface is the heavily Unix-influenced web application 'Yahoo Pipes': http://pipes.yahoo.com/ To analyze RNA effectively we needed visualization tools that matched all three parts of our workflow: command-line terminal hackery, static HTML page browsing and smart AJAX components. We also found that a variety of coloring paradigms is effective. Here, we describe three tools-Colorstock, SScolor and Rato\u00b4n-that grew from these needs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "All three scripts take a Stockholm format alignment as input (see biowiki.org/StockholmFormat). The alignment should include a line beginning '#=GC SS_cons' that describes the consensus secondary structure, as per the Stockholm format spec. A colorized, annotated alignment is produced as output. Optionally, compensatory mutations are shown relative to a designated reference sequence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DESIGN"
+        },
+        {
+            "text": "The visual outputs of the three tools are compared in Figure 1 . The coloring scheme used by Colorstock is slightly different than the scheme used by the other two programs. In Colorstock, coloration is per-column and by stem; the number of compensatory mutations is indicated above each stem. In SScolor and Rato\u00b4n, coloration is per-basepair and depends on whether the bases (i) are complementary and (ii) display mutations relative to a reference sequence.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 54,
+                    "end": 62,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "DESIGN"
+        },
+        {
+            "text": "The Perl script colorstock.pl renders a colorized RNA alignment in ANSI terminal color. Optionally, a reference sequence can be highlighted. Colorstock also outputs a *To whom correspondence should be addressed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Colorstock"
+        },
+        {
+            "text": "\u00df The Author 2008. Published by Oxford University Press. All rights reserved. For Permissions, please email: journals.permissions@oxfordjournals.org summary line counting total paired columns, the number of these paired columns which display compensatory mutations and the number of distinct stems. Output is piped through less or another Unix pager. Optionally, the output can be rendered in HTML using the ANSI terminal color scheme. Extensive documentation is available by typing 'perldoc colorstock.pl'.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Colorstock"
+        },
+        {
+            "text": "The sscolor.pl script outputs static HTML without Javascript, with a color scheme similar to Rato\u00b4n's (described below). The accompanying sscolorMult.pl script calls sscolor.pl repeatedly, generating a family of interlinked HTML pages where each page has a different row of the alignment designated as the reference sequence. Extensive documentation of both tools is available by typing 'perldoc sscolor.pl'.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SScolor"
+        },
+        {
+            "text": "Rato\u00b4n is an AJAX web application created to make the sscolor.pl alignment coloring function more interactive. At the beginning of a session, the user first uploads an RNA alignment in Stockholm format to the server. If the alignment contains a consensus secondary structure, the user is then able to select one of the sequences in the alignment to be the reference sequence. If there is more than one consensus secondary structure, the user can also select which one will be used for coloring.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Rato\u00b4n"
+        },
+        {
+            "text": "The Rato\u00b4n program acts as an interface to the xrate phylogrammar engine (Klosterman et al., 2006) , so that the user can also request that a consensus structure to be computed by an xrate server.While this is processing, the user can (asynchronously) perform interactive coloring operations on the alignment, selecting any sequence to be the 'reference' and observing the mutations in the other sequences relative to this reference. With the graphical interface, the user is quickly able to see how basepairing covariation changes with respect to a given sequence in the alignment and consensus secondary structure. (right) . The first sequence is the reference sequence for this particular coloring. The SS_cons line displays the consensus secondary structure previously predicted by another program, such as xrate (Klosterman et al., 2006) , and uploaded with the alignment (matching angle-brackets denote base-paired columns; see biowiki.org/StockholmFormat for explanation of this line). Note that the programs currently do not highlight basepairs in pseudoknots (some of which exist in this alignment).",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 98,
+                    "text": "(Klosterman et al., 2006)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 617,
+                    "end": 624,
+                    "text": "(right)",
+                    "ref_id": null
+                },
+                {
+                    "start": 817,
+                    "end": 842,
+                    "text": "(Klosterman et al., 2006)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Rato\u00b4n"
+        },
+        {
+            "text": "Y.R.Benda\u00f1 a and I.H.Holmes",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Rato\u00b4n"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The regulation of genes and genomes by small RNAs",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ambros",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Development",
+            "volume": "134",
+            "issn": "",
+            "pages": "1635--1641",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "An XRATE ncRNA pipeline",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bradley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Natural and engineered nucleic acids as tools to explore biology",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Breaker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Nature",
+            "volume": "432",
+            "issn": "",
+            "pages": "838--845",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "RALEE-RNA ALignment editor in Emacs",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Griffiths-Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Bioinformatics",
+            "volume": "21",
+            "issn": "",
+            "pages": "257--266",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Rfam: an RNA family database",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Griffiths-Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Nucleic Acids Res",
+            "volume": "31",
+            "issn": "",
+            "pages": "439--441",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "XRate: a fast prototyping, training and annotation tool for phylo-grammars",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Klosterman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "BMC Bioinformatics",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Identification and classification of conserved RNA secondary structures in the human genome",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Pedersen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "PLoS Computational Biology",
+            "volume": "2",
+            "issn": "",
+            "pages": "1245--1253",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Computational identification of noncoding RNAs in E. coli by comparative genomics",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Rivas",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Eddy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Curr. Biol",
+            "volume": "11",
+            "issn": "",
+            "pages": "1369--1373",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Fast and reliable prediction of noncoding RNAs",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Washietl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Proc. Nat. Acad. Sci. USA",
+            "volume": "102",
+            "issn": "",
+            "pages": "2454--2459",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "RFAM alignment RF00165 (coronavirus 3'UTR replication element), as displayed by Colorstock (top left), SScolor (lower left) and Rato\u00b4n",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "The coloring scheme was inspired by the UCSC Genome Browser Evofold track, which uses color to distinguish Watson-Crick/wobble base-pairs from non-canonical base-pairs and to indicate compensatory mutations. Complementary basepairs are colored black if both are identical to the reference sequence, blue if one is different and green if both are different. Noncomplementary basepairs are colored red. Unpaired bases are colored gray if they are identical to the reference sequence or purple if they are different.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "YRB was funded in part by a Berkeley EDGE scholarship. IH was funded in part by NIH/NHGRI grant 1R01GM076705-01. The authors thank Mitch Skinner, Andrew Uzilov and Robert Bradley.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGEMENTS"
+        },
+        {
+            "text": "Conflict of Interest: none declared.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        }
+    ]
+}

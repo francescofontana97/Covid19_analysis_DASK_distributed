@@ -1,0 +1,3103 @@
+{
+    "paper_id": "3db84171963f485dac54019277d5fd6ee077e4a1",
+    "metadata": {
+        "title": "",
+        "authors": [
+            {
+                "first": "Lion",
+                "middle": [],
+                "last": "Schulz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Wellcome Centre for Human Neuroimaging",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1N 3BG",
+                        "settlement": "London",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": "lion.schulz@tuebingen.mpg.deor"
+            },
+            {
+                "first": "Max",
+                "middle": [],
+                "last": "Rollwage",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Wellcome Centre for Human Neuroimaging",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1N 3BG",
+                        "settlement": "London",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Raymond",
+                "middle": [
+                    "J"
+                ],
+                "last": "Dolan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Wellcome Centre for Human Neuroimaging",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1N 3BG",
+                        "settlement": "London",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Stephen",
+                "middle": [
+                    "M"
+                ],
+                "last": "Fleming",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Wellcome Centre for Human Neuroimaging",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1N 3BG",
+                        "settlement": "London",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": "stephen.fleming@ucl.ac.uk."
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "When knowledge is scarce, it is adaptive to seek further information to resolve uncertainty and obtain a more accurate worldview. Biases in such information-seeking behavior can contribute to the maintenance of inaccurate views. Here, we investigate whether predispositions for uncertainty-guided information seeking relate to individual differences in dogmatism, a phenomenon linked to entrenched beliefs in political, scientific, and religious discourse. We addressed this question in a perceptual decision-making task, allowing us to rule out motivational factors and isolate the role of uncertainty. In two independent general population samples (n = 370 and n = 364), we show that more dogmatic participants are less likely to seek out new information to refine an initial perceptual decision, leading to a reduction in overall belief accuracy despite similar initial decision performance. Trial-by-trial modeling revealed that dogmatic participants placed less reliance on internal signals of uncertainty (confidence) to guide information search, rendering them less likely to seek additional information to update beliefs derived from weak or uncertain initial evidence. Together, our results highlight a cognitive mechanism that may contribute to the formation of dogmatic worldviews.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "information search | dogmatism | politics | metacognition | computational modeling A never-ending flow of informational choices is a defining feature of modernity (1) . We are in charge of gathering information critical to our health (2) , the survival of democracies (3) , or the conservation of the planet (4) . These decisions to seek information are in turn a crucial determinant of our beliefs. Cognitive science has studied information search extensively, providing us with a rich empirical and theoretical perspective on these choices (5) (6) (7) (8) . This research indicates that people prefer to seek information that confirms their beliefs and has positive valence, as when we read an additional news story about the victory of a favored political party. This type of motivated search is evident both in laboratory experiments (9) (10) (11) and in realworld data (12) (13) (14) .",
+            "cite_spans": [
+                {
+                    "start": 163,
+                    "end": 166,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 234,
+                    "end": 237,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 268,
+                    "end": 271,
+                    "text": "(3)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 308,
+                    "end": 311,
+                    "text": "(4)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 542,
+                    "end": 545,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 546,
+                    "end": 549,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 550,
+                    "end": 553,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 554,
+                    "end": 557,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 838,
+                    "end": 841,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 842,
+                    "end": 846,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 847,
+                    "end": 851,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 874,
+                    "end": 878,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 879,
+                    "end": 883,
+                    "text": "(13)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 884,
+                    "end": 888,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In contrast, normative frameworks propose that uncertainty, rather than valence, should determine where and when we should seek information (5, 7, 15) . In the absence of external feedback, humans rely on internal confidence signals to guide such uncertainty-based information search. Bayes-optimal agents should seek out more information when they have lower confidence in a decision, because the likelihood of a mistake will then outweigh the cost of further information (16) . Empirical data bear out such predictions (17, 18) , showing that people are more likely to seek information when they express low confidence (i.e., higher uncertainty) in their decisions.",
+            "cite_spans": [
+                {
+                    "start": 140,
+                    "end": 143,
+                    "text": "(5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 144,
+                    "end": 146,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 147,
+                    "end": 150,
+                    "text": "15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 473,
+                    "end": 477,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 521,
+                    "end": 525,
+                    "text": "(17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 526,
+                    "end": 529,
+                    "text": "18)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In everyday situations, both motivational influences and failures in uncertainty-guided information search can lead to biased or inaccurate beliefs, albeit via distinct mechanisms. For example, a person who does not believe in climate change is likely to show a preference for media that refutes its occurrence (19) , reinforcing preexisting beliefs. Alternatively, people with doubts about the science of global warming (20) might fail to act on this uncertainty, and as a consequence not seek out further, potentially corrective evidence. In both of these cases, an unwillingness to seek out corrective information is one potential source of dogmatism, a worldview that involves a rigid maintenance of one's beliefs (21) (22) (23) regardless of their accuracy (24) . The scope of this worldview is wide-ranging and transcends specific issues and positions, affecting political (25) , scientific (26) , and religious debate (21, 26) . Prior questionnaire-based research suggests a link between such a dogmatic style of thinking and a willingness to seek further information (21, 27) . However, how motivation and uncertainty contribute to this phenomenon remains unknown.",
+            "cite_spans": [
+                {
+                    "start": 311,
+                    "end": 315,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 421,
+                    "end": 425,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 718,
+                    "end": 722,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 723,
+                    "end": 727,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 728,
+                    "end": 732,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 762,
+                    "end": 766,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 879,
+                    "end": 883,
+                    "text": "(25)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 897,
+                    "end": 901,
+                    "text": "(26)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 925,
+                    "end": 929,
+                    "text": "(21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 930,
+                    "end": 933,
+                    "text": "26)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 1075,
+                    "end": 1079,
+                    "text": "(21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1080,
+                    "end": 1083,
+                    "text": "27)",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Here, we address this question using a precise assay of uncertainty-guided information search in the context of a lowlevel perceptual decision-making task. Leveraging the computational precision afforded by this approach, we test (in both exploratory and replication samples) whether individual differences in a sensitivity to uncertainty explain a disposition to hold dogmatic beliefs. Our approach builds on previous research on the influence of confidence on information search (17, 28) and allows us to rule out possible motivational influences: Participants are unlikely to approach such a low-level task with vested interests or prior knowledge, and should not hold differing appraisals of the helpfulness of further information. Moreover, eliciting trial-by-trial estimates of confidence enabled us to infer how participants use uncertainty to guide their search.",
+            "cite_spans": [
+                {
+                    "start": 481,
+                    "end": 485,
+                    "text": "(17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 486,
+                    "end": 489,
+                    "text": "28)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Dogmatic individuals are reluctant to seek out new information to refine their views, often skewing political, scientific, and religious discourse in the process. The cognitive drivers of this reluctance are poorly understood. Here, we isolate an influence of uncertainty on information search using a low-level perceptual decision-making task. We show that people with dogmatic views are both less likely to seek information before committing to a decision and to use fluctuations in uncertainty to guide their search. Our results highlight a cognitive mechanism that may contribute to the formation of dogmatic worldviews.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Significance"
+        },
+        {
+            "text": "We studied a sample of 370 US adults (study 1) and replicated all key findings in an independent second sample of 364 US participants (study 2). Both samples were recruited through Amazon Mechanical Turk and comprised a wide range of ages and educational backgrounds (see Materials and Methods and SI Appendix for details). Participants first completed an informationseeking task and then answered a number of questionnaires that allowed us to measure general belief rigidity and dogmatism, political beliefs, authoritarianism, and intolerance to opposing political attitudes (see Materials and Methods for details regarding the questionnaires). This methodology builds on our previous research as to how dogmatic individuals construct a sense of confidence (24) .",
+            "cite_spans": [
+                {
+                    "start": 758,
+                    "end": 762,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Measuring Dogmatism. We derived a measure of dogmatism from a factor analysis applied to the questionnaire battery (Fig. 1) . The breadth of the battery allowed us to quantitatively distinguish dogmatism from other, possibly related, constructs and study their interplay. The most parsimonious factor structure contained three factors, capturing 40% of questionnaire variance. A first factor represented individuals' position on a leftright political spectrum, and a second factor described their domain-general dogmatism and rigidity of worldview (21) . A third factor captured variance in beliefs as to the superiority of participants' policy preferences (a factor related to but also theoretically independent of dogmatism) (22) . Whereas this last factor is specific to political policy, dogmatism itself is a broader construct that describes the general way beliefs are held and acted upon (23, 29, 30) . Dogmatism thereby transcends specific political preferences as evident, for example, in a link between dogmatism and religious fundamentalism (21) .",
+            "cite_spans": [
+                {
+                    "start": 548,
+                    "end": 552,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 727,
+                    "end": 731,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 895,
+                    "end": 899,
+                    "text": "(23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 900,
+                    "end": 903,
+                    "text": "29,",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 904,
+                    "end": 907,
+                    "text": "30)",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 1052,
+                    "end": 1056,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 115,
+                    "end": 123,
+                    "text": "(Fig. 1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "We first explored interrelationships between individuals' political orientation, dogmatism, and political belief superiority (SI Appendix, Table S2 ). We found both positive linear (study 1: \u03b2 linear = 0.16, P = 0.001; study 2: \u03b2 linear = 0.24., P < 10 \u22126 ) and quadratic (study 1: \u03b2 quadratic = 0.35, P < 10 \u221213 ; study 2: \u03b2 quadratic = 0.37, P < 10 \u221213 ) relationships between political orientation and dogmatism across both samples. These findings indicate that individuals on both the far left and far right of the political spectrum show enhanced dogmatism, but interestingly this increase in dogmatism is more marked for those on the far right (see Fig. 1 , Materials and Methods, and SI Appendix, Table S1 for further information). Conversely, a negative linear (study 1: \u03b2 linear = \u22120.33, P < 10 \u221210 ; study 2: \u03b2 linear = \u22120.32, P < 10 \u22129 ) and positive quadratic (study 1: \u03b2 quadratic = 0.43, P < 10 \u221220 ; study 2: \u03b2 quadratic = 0.34, P < 10 \u221210 ) relationship between political orientation and political belief superiority reveals that individuals on both the far left and far right show heightened beliefs in the superiority of their respective policy positions, but more so on the far left. Finally, we found a positive linear relationship between political belief superiority and dogmatism, indicating more dogmatic subjects also tended to be more confident in the superiority of their specific political convictions (study 1: \u03b2 = 0.26, P < 10 \u221206 ; study 2: \u03b2 = 0.14, P = 0.006).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 139,
+                    "end": 147,
+                    "text": "Table S2",
+                    "ref_id": null
+                },
+                {
+                    "start": 655,
+                    "end": 661,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 704,
+                    "end": 712,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Measuring Information Search. We next tested our primary hypothesis of a link between dogmatism and uncertainty-guided information search. To probe this, we presented participants with a perceptual information-seeking task ( Fig. 2 ; see Materials and Methods for details) where they received monetary reward for correctly judging which of two flickering boxes contained the greater number of dots. On each trial, participants were first presented with an initial pair of boxes, made an unincentivized judgment as to which box contained more dots and simultaneously reported their confidence in this judgment. Following this initial decision, participants were asked whether they wanted to see additional evidence so as to improve their decision accuracy. If participants decided to see this additional information, they were presented with another set of flickering dots. This additional information was always helpful (the correct option continued to have a greater number of dots) and was presented at a higher stimulus strength (greater dot difference). We imposed a variable cost for seeing this information through a deduction of points, allowing concurrent assessment of participants' sensitivity to information cost. If participants decided not to see more information, they instead saw two empty black boxes for an identical duration and were not deducted any points. Finally, regardless of whether subjects decided to see additional information or not, they were asked to provide a final decision and confidence rating. To incentivize subjects to strive for the best possible overall accuracy, they were paid only for their performance on this final decision.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 225,
+                    "end": 231,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "First, we validated that participants used the additional information adaptively (see Materials and Methods for details and SI Appendix, Fig. S2 for overview). Participants chose to see additional information more often after initial mistakes (study 1: \u03b2 = \u22120.76, P < 10 \u221269 ; study 2: \u03b2 = \u22120.77, P = 10 \u221252 ) and were more likely to make an accurate final decision after deciding to see additional information (study 1: \u03b2 = 1.23, P < 10 \u221280 ; study 2: \u03b2 = 1.12, P < 10 \u221274 ). Similarly, examining individual differences analysis revealed a three-factor structure underlying responses to multiple questionnaires assessing political convictions, authoritarianism, and belief rigidity. The three factors identified 1) \"political orientation\" (liberal to conservative), 2) \"dogmatism\" representing a domain-general belief certainty, and 3) \"political belief superiority\" characterizing participants' confidence in specific political convictions. Item loadings for each question are presented with individual questionnaires indicated by colors. (B-D) We examined the relationships between these constructs by investigating individual scores for each factor (combined data from studies 1 and 2 are plotted). (B and C) We observed that a combined linear-quadratic model provided the best fit to the relationship between both political orientation and dogmatism as well as between political orientation and political belief superiority. (D) The relationship between dogmatism and political belief superiority was best characterized by a linear relationship (see SI Appendix for further details about the factor analysis).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 144,
+                    "text": "Fig. S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "in information search revealed that participants who sought additional information more often also performed better in their final decisions (study 1: \u03b2 = 0.68, P < 10 \u221250 ; study 2: \u03b2 = 0.71, P < 10 \u221256 ) and received a higher payoff (study 1: \u03b2 = 0.43, P < 10 \u221217 , study 2: \u03b2 = 0.49, P < 10 \u221222 ). Importantly participants were also sensitive to cost, seeking information less often when it was more expensive (study 1: \u03b2 = \u22121.22, P < 10 \u221258 ; study 2: \u03b2 = \u22121.34, P < 10 \u221266 ). Finally, participants sought out additional evidence less often when they were more confident in their initial decision (study 1: \u03b2 = \u22122.02; P < 10 \u2212126 ; study 2: \u03b2 = \u22121.93, P < 10 \u2212130 ), demonstrating that internal signals of uncertainty were used to guide information search.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Information Search and Dogmatism. We next asked whether more dogmatic participants differed in their propensity to seek out information. To that end, we sought to explain variance in dogmatism factor scores using behavioral measures derived from the information-seeking task. In line with our hypothesis, higher levels of dogmatism were associated with a reduced willingness to seek out information (study 1: \u03b2 = \u22120.15, P = 0.005, R 2 = 0.02; Fig. 3A ). No significant relationships with initial decision accuracy (study 1: \u03b2 = 0.02, P = 0.72) or overall confidence level (study 1: \u03b2 = \u22120.03, P = 0.61) were found, and our analyses controlled for key demographic variables including age, gender, and education (see Fig. 3A and Materials and Methods for details). We replicated this lowered tendency for dogmatic subjects to seek out information in a second, independent sample in study 2 (\u03b2 = \u22120.10, one-tailed P = 0.039, R 2 = 0.01; Fig. 3 ), again in the absence of differences in initial decision accuracy (\u03b2 = \u22120.09, P = 0.13) and confidence (\u03b2 = \u22120.03, P = 0.53). To assess the overall strength of the relationship between dogmatism and information seeking, we conducted an internal meta-analysis of this effect by pooling data from both samples (31) . This revealed a consistently negative effect across both samples (\u03b2 = \u22120.12, P = 0.002, R 2 = 0.012). Overall, our findings highlight that, in the absence of motivational factors, more dogmatic participants seek out less information before committing to a decision-even when this information would be helpful.",
+            "cite_spans": [
+                {
+                    "start": 1251,
+                    "end": 1255,
+                    "text": "(31)",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 443,
+                    "end": 450,
+                    "text": "Fig. 3A",
+                    "ref_id": null
+                },
+                {
+                    "start": 715,
+                    "end": 722,
+                    "text": "Fig. 3A",
+                    "ref_id": null
+                },
+                {
+                    "start": 934,
+                    "end": 940,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "A key question arising from this finding is whether more dogmatic individuals' final accuracy and payoff suffered because of their lowered information search, or whether they simply sought information more efficiently. Here, a mediation analysis ( Fig. 3B ; see Materials and Methods for details) showed that more dogmatic participants were in fact less accurate in their final decision (total effect: study 1, \u03b2 = \u22120.11, P = 0.001; study 2, \u03b2 = \u22120.09, one-tailed P = 0.01), and that this effect was fully mediated by a lowered willingness to seek information (mediation effect: study 1: \u03b2 = \u22120.08, P = 0.005; study 2: \u03b2 = \u22120.05, onetailed P = 0.038; corrected direct effect, study 1: \u03b2 = \u22120.03, P = 0.097; study 2: \u03b2 = \u22120.03, P = 0.12). To obtain a meta-analytical estimate of this mediation analysis, we again pooled data from both studies to establish that our effect was stable across conditions (total effect: \u03b2 = \u22120.098, P = 0.0001; mediation effect: \u22120.064, P = 0.002; Fig. 2 . Example experimental trial. Participants first had to judge whether a left or right square contained more flickering dots. They then chose whether they wanted to see a stronger, more helpful, version of this stimulus again, costing them either 5 or 20 points. After seeing either this additional stimulus or blank boxes, they again made a judgment as to which box contained more dots. We compensated participants for the accuracy of this final decision alone (100 points for a correct judgment; 0 points for an incorrect judgment). Participants rated their confidence (on a six-point scale from \"sure left\" to \"sure right\") at both the initial and the final decision. The difficulty of the initial decision was fixed through an individually predetermined difference in dot number that resulted in \u223c71% accuracy. The post decision-evidence strength was yoked to this predetermined dot difference, to make the final decision easier (information on stimulus calibration is provided in Materials and Methods and SI Appendix). Fig. 3 . Dogmatism is characterized by a reduction in information search, leading to less veridical judgments. (A) Dogmatism was predicted by a reduced willingness to seek out more information before committing to a decision, controlling for several demographic and task variables. We present standardized \u03b2 coefficients \u00b1 SE of predictors for study 1 (left markers, n = 370) and study 2 (right markers, n = 364). Effects in study 2 were tested onetailed based on the directional hypothesis derived from study 1. *P < 0.05, **P < 0.01, and ***P < 0.001. A significant effect of age was found only in study 2, which we further discuss in SI Appendix. (B) A reduction in information search mediated less accurate overall final judgments in more dogmatic participants (mediation results for study 1 are presented in the figure; see main text for results from study 2). corrected direct effect: \u22120.036, P = 0.016). More dogmatic participants also earned less money overall, indicating their lowered information seeking did not entail any strategic benefits (study 1: \u03b2 = \u22120.24, P = 0.008, R 2 = 0.02; study 2: \u03b2 = \u22120.21, one-tailed P = 0.009, R 2 = 0.01; pooled internal meta-analysis: \u03b2 = \u22120.23, P = 0.0003, R 2 = 0.017).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 248,
+                    "end": 255,
+                    "text": "Fig. 3B",
+                    "ref_id": null
+                },
+                {
+                    "start": 976,
+                    "end": 982,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 2007,
+                    "end": 2013,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Trial-by-Trial Modeling of Information Search. We next sought to develop a more detailed account of how dogmatic individuals' trial-by-trial information seeking choices were informed by confidence judgments and the cost of information. This model can be expressed as a logistic regression predicting the choice to seek information:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A B"
+        },
+        {
+            "text": "The three \u03b2's capture three independent behavioral phenomena ( Fig. 4 A and B) : Differences in the model's intercept, \u03b2 0 , represent a general shift in willingness to seek out information; \u03b2 1 represents how strongly participants' information-seeking choices are influenced by confidence; and \u03b2 2 indicates the influence of information cost on subjects' willingness to seek out more information.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 63,
+                    "end": 78,
+                    "text": "Fig. 4 A and B)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "A B"
+        },
+        {
+            "text": "We were interested in whether any of these parameters were associated with individual differences in dogmatism, i.e., whether dogmatism was linked to a general tendency to seek out less information (\u03b2 0 ), a differential influence of confidence on information seeking (\u03b2 1 ), or an altered sensitivity to information costs (\u03b2 2 ). The relation between each parameter, \u03b2, and dogmatism was thereby estimated directly within a hierarchical framework, such that each individual's parameter (indexed by i) was a function of a group mean (\u03bc B ) and their dogmatism score (Dogmatism i ). For instance, the relation between dogmatism and a general tendency to seek out less information can be formalized as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A B"
+        },
+        {
+            "text": "Here, \u03c1 0 describes the relation between dogmatism and \u03b2 0 , while \u00ab B0 represents individual variation in this parameter that is not explained by dogmatism. If the credible interval of \u03c1 0 does not include zero, this indicates a significant association between dogmatism and \u03b2 0 (32) . In what follows, we report 95% credible intervals.",
+            "cite_spans": [
+                {
+                    "start": 280,
+                    "end": 284,
+                    "text": "(32)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A B"
+        },
+        {
+            "text": "We found more dogmatic subjects had lower values of \u03b2 0 ( Fig.  4D ; 95% CI \u03c1 0 = \u22120.40, \u2212 0.07), in accordance with our model-agnostic findings that dogmatic participants show lower informationseeking behavior. While we found no association between dogmatism and cost sensitivity (95% CI \u03c1 2 = \u22120.06, 0.07), dogmatism was associated with higher values of the confidence parameter \u03b2 1 95% CI \u03c1 1 = 0.02, 0.27 ( ) . Because \u03b2 1 values were generally negative (see Fig. 4B for distribution of individual parameter values), this positive shift suggests that the information-seeking decisions of individuals with higher levels of dogmatism were less coupled to fluctuations in subjective confidence than those of individuals with lower levels of dogmatism. In other words, participants with higher levels of dogmatism were less likely to use feelings of confidence or uncertainty to guide their search for more information. Together, this dual shift in both \u03b2 0 and \u03b2 1 parameters combines to produce marked differences in information search under low confidence (high uncertainty). On these trials, individuals with lower levels of dogmatism were more likely to (adaptively) seek out new information compared to individuals with high levels of dogmatism. In contrast, participants with both higher and lower levels of dogmatism showed similar profiles of information-seeking behavior when they were more confident in their decision (Fig. 4 E and F) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 58,
+                    "end": 66,
+                    "text": "Fig.  4D",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 463,
+                    "end": 470,
+                    "text": "Fig. 4B",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1429,
+                    "end": 1445,
+                    "text": "(Fig. 4 E and F)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "A B"
+        },
+        {
+            "text": "Information Search and Other Factor Scores. Given a long-standing debate over diverging cognitive profiles of liberals and conservatives (33) (34) (35) (36) , we also investigated the relationship between information search and political orientation. Here, we found that position on the political spectrum (right vs. left) was not predicted by a willingness to seek information (study 1: \u03b2 = \u22120.07, P = 0.19; study 2: \u03b2 = \u22120.07, P = 0.23; SI Appendix, Fig. S3 ). Additionally, there was no consistent association between the extremity of political opinion, as indexed by the absolute value of the political orientation, and information-seeking behavior (study 1: \u03b2 = 0.07, P = 0.21; study 2: \u03b2 = \u22120.13, P = 0.02; SI Appendix, Fig. S3) . Similarly, policy-specific political belief superiority was not related to changes in information seeking (study 1: \u03b2 = 0.03, P = 0.62; study 2: \u03b2 = \u22120.07, P = 0.24; SI Appendix, Fig. S3 ).",
+            "cite_spans": [
+                {
+                    "start": 137,
+                    "end": 141,
+                    "text": "(33)",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 142,
+                    "end": 146,
+                    "text": "(34)",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 147,
+                    "end": 151,
+                    "text": "(35)",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 152,
+                    "end": 156,
+                    "text": "(36)",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 452,
+                    "end": 459,
+                    "text": "Fig. S3",
+                    "ref_id": null
+                },
+                {
+                    "start": 726,
+                    "end": 734,
+                    "text": "Fig. S3)",
+                    "ref_id": null
+                },
+                {
+                    "start": 916,
+                    "end": 923,
+                    "text": "Fig. S3",
+                    "ref_id": null
+                }
+            ],
+            "section": "A B"
+        },
+        {
+            "text": "We show that dogmatic individuals are less likely to seek out additional information before committing to a decision. By foregoing this opportunity, they in turn tend to form less accurate overall judgments. Trial-by-trial modeling revealed that two factors drove dogmatic individuals' altered information seeking: 1) a shift in the general willingness to seek information and 2) a decreased influence of confidence on information-seeking behavior. Together, these effects gave rise to a distinct pattern: Whereas dogmatism had little effect on information seeking after high confidence decisions, more dogmatic subjects were less likely (relative to moderates) to seek out additional information when they were uncertain about their decision.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "A key aspect of our results is that we find this disadvantageous pattern of information seeking in a low-level perceptual decision-making task. This stands in contrast to previous studies on information seeking in the political domain that have relied on questionnaires or experimental tasks with overt political content (27, 37) . By capitalizing on the neutral valence and personal irrelevance of simple dot stimuli, we could isolate uncertainty-driven information-seeking behavior from possible confounding effects of motivated reasoning. Observing such an effect in this neutral setting is consistent with a proposal that domain-general cognitive factors contribute to real-world attitudes (38) (39) (40) . Nevertheless, in most real-world decision-making scenarios, it is likely that both motivational and cognitive (uncertainty-driven) effects contribute to biases in information seeking (6) , and it is interesting to consider that the latter may even become magnified in the presence of affective influences.",
+            "cite_spans": [
+                {
+                    "start": 321,
+                    "end": 325,
+                    "text": "(27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 326,
+                    "end": 329,
+                    "text": "37)",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 694,
+                    "end": 698,
+                    "text": "(38)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 699,
+                    "end": 703,
+                    "text": "(39)",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 704,
+                    "end": 708,
+                    "text": "(40)",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 894,
+                    "end": 897,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our trial-by-trial model fits revealed that while participants generally use internal signals of uncertainty (as assayed by confidence ratings) to guide information search, dogmatic individuals did so to a lesser extent. This points to a general alteration in the way that confidence guides actions, a process usually described as metacognitive control (41) . Metacognitive control is hypothesized to not only regulate information search, but also other phenomena in which effort must be weighed against accuracy, such as cognitive offloading (42) or speed-accuracy trade-offs (43) . From a theoretical perspective, metacognitive control complements metacognitive monitoring (41) , which describes a process that gives rise to, and updates, representations of confidence. However, while metacognitive monitoring has received considerable attention from a neural (44, 45) and individual differences perspective (24, 46) , metacognitive control processes remain underinvestigated. Such research might therefore provide fruitful for understanding the drivers of altered information search. Further work is needed also to disentangle how different models of confidence formation [such as postdecisional or second-order architectures (47, 48) ] affect both monitoring and control processes, and in turn determine the interplay of confidence and information search.",
+            "cite_spans": [
+                {
+                    "start": 353,
+                    "end": 357,
+                    "text": "(41)",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 543,
+                    "end": 547,
+                    "text": "(42)",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 577,
+                    "end": 581,
+                    "text": "(43)",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 675,
+                    "end": 679,
+                    "text": "(41)",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 862,
+                    "end": 866,
+                    "text": "(44,",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 867,
+                    "end": 870,
+                    "text": "45)",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 910,
+                    "end": 914,
+                    "text": "(24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 915,
+                    "end": 918,
+                    "text": "46)",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1229,
+                    "end": 1233,
+                    "text": "(47,",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 1234,
+                    "end": 1237,
+                    "text": "48)",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Dogmatic individuals were less likely to seek information in situations of uncertainty compared to their peers. At a singletrial level, this is consistent with basing a final judgment on less evidence, leading to less accurate judgments overall. Because uncertain decisions are also less likely to be correct, this meant dogmatic individuals were less likely to seek out contradictory evidence when they were wrong-a form of confirmation bias. Over a longer time horizon, and in the absence of external feedback (49) , such a self-reinforcing feedback loop might in turn lead dogmatic individuals to think that their initial judgments are already sufficiently optimal and that investing in acquiring more information is unnecessary. A useful extension of our work will be to investigate how dogmatic individuals manage information search in situations that span more than one trial and require iterative learning. In such scenarios, adequately managing the exploration/exploitation trade-off is central to effective learning (5, 8) , such that small differences in a tendency toward or against uncertainty-driven information search may summate and lead to skewed representations of reality. While a psychophysical approach provides us with the precise control required to characterize dogmatic individuals' information search, our task is necessarily contrived relative to realworld decision problems. It remains unknown whether the types of search behavior observed here are representative of real-world search behavior, for instance on the internet (1). However, we can be cautiously optimistic about the generalizability of the current results, given the domain-general nature of our task and recent observations that real-life behavior adheres to cognitive models of uncertainty-based exploration (50) . One difference between our paradigm and real-world decisions is the guaranteed helpfulness of future information. The calculus changes when a first source is trustworthy, but future information might be unreliable. In that case, it might be adaptive to rely more heavily on one's initial judgment, and refrain from seeking new information even when uncertain.",
+            "cite_spans": [
+                {
+                    "start": 512,
+                    "end": 516,
+                    "text": "(49)",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 1025,
+                    "end": 1028,
+                    "text": "(5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1029,
+                    "end": 1031,
+                    "text": "8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1801,
+                    "end": 1805,
+                    "text": "(50)",
+                    "ref_id": "BIBREF49"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In sum, we highlight a generic resistance to seek out additional information in more dogmatic individuals, a difference that is most marked when initial decisions are uncertain. This is disconcerting in the current cultural landscape. While the internet has heralded access to a plethora of well-vetted information, fake news remains rife (1, 3) . In such cases, the mere availability of correcting information might not be enough to prevent the formation of unsupportable beliefs in dogmatic individuals, because even feelings of uncertainty would not trigger corrective information-seeking behavior. On a systemic level, such results suggest that the veracity of first contact with a news story is therefore critical (51, 52) . On an individual level, instilling successful uncertainty-based search may be enabled by the extension of training of metacognitive monitoring (53) to also target metacognitive control. Finally, our research shows that psychophysical paradigms in conjunction with trial-by-trial modeling of behavior provide important tools for identifying mechanisms behind dogmatism, polarization, and their consequences (40) .",
+            "cite_spans": [
+                {
+                    "start": 339,
+                    "end": 342,
+                    "text": "(1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 343,
+                    "end": 345,
+                    "text": "3)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 719,
+                    "end": 723,
+                    "text": "(51,",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 724,
+                    "end": 727,
+                    "text": "52)",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 873,
+                    "end": 877,
+                    "text": "(53)",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 1136,
+                    "end": 1140,
+                    "text": "(40)",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Online Recruitment and Sample. Both studies were conducted online and recruited US adults through the online labor marketplace Amazon Mechanical Turk (54) (55) (56) . They were approved by the Research Ethics Committee of University College London (#1260-003), and subjects gave informed consent.",
+            "cite_spans": [
+                {
+                    "start": 150,
+                    "end": 154,
+                    "text": "(54)",
+                    "ref_id": "BIBREF53"
+                },
+                {
+                    "start": 155,
+                    "end": 159,
+                    "text": "(55)",
+                    "ref_id": "BIBREF54"
+                },
+                {
+                    "start": 160,
+                    "end": 164,
+                    "text": "(56)",
+                    "ref_id": "BIBREF55"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "In study 1, 370 subjects' data were analyzed (see SI Appendix for exclusion criteria). We based this sample size on previous studies conducted to detect interindividual differences in cognition across the political spectrum (24, 38) and in disorders (46) . Subjects were paid a basic payment of $1 and earned a bonus of up to $6 based on their adequate completion of the questionnaires and their performance on the information-seeking task (see Experimental Design, Information-seeking task for a detailed description of the remuneration). Participants were 50% female (49.7% male, 0.3% \"other/would rather not say\") and the mean age was 36.62 y (SD, 11.61; range, 19 to 81 y; SI Appendix, Fig. S1A ). In study 2 (replication), we analyzed data from 364 participants with the same payment scheme as in study 1. An a priori power analysis based on the information-seeking effect size from study 1 determined our sample size in study 2, giving us a power above 80% to detect the association between dogmatism and average information search. The sample consisted of 52% women (47% male, 1% other/\"would rather not say\"; mean age, 36.55 y; SD, 11.09; range, 18 to 74 y; SI Appendix, Fig. S1A) . Participants in both studies came from a broad range of educational backgrounds, which was comparable to the general US adult population (SI Appendix, Fig. S1B ).",
+            "cite_spans": [
+                {
+                    "start": 224,
+                    "end": 228,
+                    "text": "(24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 229,
+                    "end": 232,
+                    "text": "38)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 250,
+                    "end": 254,
+                    "text": "(46)",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 690,
+                    "end": 698,
+                    "text": "Fig. S1A",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1179,
+                    "end": 1188,
+                    "text": "Fig. S1A)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1342,
+                    "end": 1350,
+                    "text": "Fig. S1B",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "Factor Analysis. There is significant debate about the exact structure of political ideology and its relationships to related constructs such as dogmatism (22, 25, 57) . As used previously (24) , here we administered multiple questionnaires measuring political orientation, identification with the two major US parties, the social and economic conservatism scale (58) , as well as a questionnaire assessing specific policy positions and subjects' belief in the superiority of these positions (22) . Additionally, right-and left-wing (59, 60) authoritarianism was assessed. Finally, participants also filled out a dogmatism questionnaire (21) . We conducted a factor analysis (see SI Appendix for a detailed discussion of the results) using the fa() function in the \"Psych\" R package on all 78 questionnaire items using maximumlikelihood estimation with an oblique rotation (oblimin). This mirrors methodology previously employed to study political beliefs (24) and mental health (46) . We determined the number of factors through the Cattell-Nelson-Gorsuch test (61) where a sharp drop in the eigenvalues indicates the point at which there is little benefit to retaining additional factors. To maximize the precision of the factor loading estimates and the factor scores, we pooled the present sample with the one from Rollwage et al. (24) where subjects had completed the same questionnaire battery. This resulted in total sample of 2,135 participants for the factor analysis. We observed qualitatively similar pattern of factor loadings for both the pooled sample of 2,135 participants and the two individual samples.",
+            "cite_spans": [
+                {
+                    "start": 155,
+                    "end": 159,
+                    "text": "(22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 160,
+                    "end": 163,
+                    "text": "25,",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 164,
+                    "end": 167,
+                    "text": "57)",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 189,
+                    "end": 193,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 363,
+                    "end": 367,
+                    "text": "(58)",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 492,
+                    "end": 496,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 637,
+                    "end": 641,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 956,
+                    "end": 960,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 979,
+                    "end": 983,
+                    "text": "(46)",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1335,
+                    "end": 1339,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "Experimental Design. Stimuli. We used the JavaScript library JsPsych (version 5.0.3) (62) to program the task and hosted the experiment on the online research platform Gorilla (63) , which subjects could access through their browser. Two black squares, each 250 pixels in height and width, were presented as discrimination stimuli, with one square positioned left and one square right of center (see Fig. 3 for task overview). Each square consisted of 625 cells, randomly filled with white dots, so that one baseline square always held 313 dots and the other target square contained a greater number determined during a calibration phase (SI Appendix). During each dot-discrimination trial, subjects were presented with five such configurations for 150 ms each in order to create the impressions of flickering dots. Within each trial, the location of the individual dots per configuration within one square was random. However, the difference in number of dots between the target and baseline squares remained the same within each trial. The location of the target was pseudorandomized between trials. Task and procedure. Both studies followed the same protocol and participants spent around 45 min on the experiment, which was divided into three parts. Participants first received information and reported their demographic information. Following this, they then first completed a 120-trial calibration phase to individually determine task difficulty (SI Appendix), identical to previous procedures (24) . There, participants simply had to indicate which of the two flickering dots contained more dots by a press of the \"2\" or \"6\" key (indicating left and right) and received feedback about their correctness through a colored frame around their chosen option. This was followed by the information-seeking task (Fig. 2) in which subjects received no feedback about the correctness. The information-seeking task consisted of four blocks, each containing 25 trials. Participants then went on to fill out the aforementioned questionnaires. Information-seeking task. Across the 100 trials of the information-seeking task, participants were presented with the stimulus strength determined in the calibration phase (study 1: mean, 73.80%; SD, 6.57%; study 2: mean, 73.67%; SD, 6.50%). As in the calibration phase, participants had to decide whether more dots were in the left or in the right box (the initial decision). Simultaneously, they indicated their confidence in this decision by pressing one of three buttons per side to indicate low, medium, or high confidence (the \"1\" to \"3\" or \"5\" to \"7\" keys in the number row). Crucially, the informationseeking task allowed participants to choose whether they wanted to see a second, additional display of the stimulus to improve the accuracy of their initial judgment. Subjects were specifically instructed about the helpful nature of this information. If they decided to see the stimulus again, the subjects saw a stronger version of the stimulus (i.e., one with a higher dot difference; SI Appendix). If they decided to forego the second stimulus, they were instead presented with two empty black boxes, to prevent them from artificially speeding through the task. Therefore, the only cost associated with the additional information was the deduction of points (5 points or 20 points, depending on the block). Regardless of whether subjects decided to see additional information or not, they then made another judgment (the final decision), indicating both the side they believed contained more dots and their confidence in this final decision (using the same response keys as for the initial decision). Importantly, we only incentivized the accuracy of this final decision: Subjects received 100 points for a correct and 0 points for an incorrect final decision.",
+            "cite_spans": [
+                {
+                    "start": 176,
+                    "end": 180,
+                    "text": "(63)",
+                    "ref_id": "BIBREF62"
+                },
+                {
+                    "start": 1500,
+                    "end": 1504,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 400,
+                    "end": 406,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1812,
+                    "end": 1820,
+                    "text": "(Fig. 2)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "Participants' bonus payment was linked to their performance in the task: They received a $2 bonus for completing the task and an extra 4 cents for every 100 points they had earned on the task (average points-based bonus, study 1: mean, $3.11; SD, $0.34 ; study 2: mean, $3.11; SD, $0.35).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "Task analysis. We conducted several analyses to ensure participants understood the task and were able to perform it adequately (see SI Appendix, Fig.  S1 for an overview). Within-participant effects (see SI Appendix, Table S1 for an overview) were investigated using trial-by-trial hierarchical mixed effects models computed and analyzed in the \"afex\" package (64) . Specifically, we constructed logistic models with binary outcomes as respective dependent variables and the corresponding predictors as fixed effects (see SI Appendix, Table S1 for details). We included per-participant random intercepts and slopes and employed likelihood-ratio tests to obtain P values (65) . To quantify relationships between subjects' average information seeking and their final decision accuracy, we set up a general linear model using the lm() function in R. All analyses were performed separately for the two studies. Statistical analysis. We conducted the following regression analysis using the lm() function in R. All analyses were performed separately for the two studies, and effects were tested two-tailed if not stated otherwise.",
+            "cite_spans": [
+                {
+                    "start": 360,
+                    "end": 364,
+                    "text": "(64)",
+                    "ref_id": null
+                },
+                {
+                    "start": 670,
+                    "end": 674,
+                    "text": "(65)",
+                    "ref_id": "BIBREF64"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 145,
+                    "end": 153,
+                    "text": "Fig.  S1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 217,
+                    "end": 225,
+                    "text": "Table S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 535,
+                    "end": 543,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "1) To investigate the relationship between the factor scores themselves, we constructed polynomial regression models. Specifically, we built these models for each possible factor combination and compared 1) a linear fit, 2) a quadratic fit, and 3) a combined linear and quadratic fit based on their Bayesian information criterion (see SI Appendix, Table S2 for an overview). 2) To investigate the relationship between information seeking and the factors observed through our questionnaire, we set up one generalized linear model per factor, explaining the respective variance in this factor score through participants' average information seeking. Following previous work (24), we controlled for the following covariates: age, gender, education, subjects' average performance and confidence level on the initial decision, objective stimulus strength (indicated by the logarithm of the dot difference), and performance on the stronger version of the stimulus (as recorded during the calibration phase; see SI Appendix).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 348,
+                    "end": 356,
+                    "text": "Table S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "We standardized the continuous outcome and predictor variables to obtain standardized \u03b2 coefficients. For significant variables of interest, we calculated R 2 values by comparing the variance explained by a full model including information seeking relative to a model excluding this predictor. 3) Finally, to check whether dogmatism was associated with a reduction in points earned on our task, we set up the same model used for the information-seeking analysis but replaced the information-seeking predictor with the points earned on the task.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "To investigate whether dogmatism was linked to a reduction in final decision accuracy and whether this arose from a lowered propensity to seek out information, we conducted a mediation analysis. This analysis was conducted using the \"mediate\" package in R (66), which uses a quasi-Bayesian Monte Carlo method based on normal approximation to estimate the significance of the mediation effect (67) . We again entered the covariates used for the original information-seeking analysis as control variables into all paths of the mediation analysis. To conduct an internal meta-analysis of behavioral results obtained across the two studies, we pooled the two samples as recommended by Braver et al. (31) and applied the same analysis as detailed above. Trial-by-trial modeling. To probe the underlying mechanisms contributing to dogmatic individuals' information search, we set up a trial-by-trial model that investigated the factors impacting an individual's decision to seek out more information. Specifically, we modeled the information-seeking choices as a function of the confidence level and the current information cost (see main text and SI Appendix).",
+            "cite_spans": [
+                {
+                    "start": 392,
+                    "end": 396,
+                    "text": "(67)",
+                    "ref_id": "BIBREF66"
+                },
+                {
+                    "start": 695,
+                    "end": 699,
+                    "text": "(31)",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "Because classical maximum-likelihood-based methods can frequently provide noisy estimates with so few data points, we employed a hierarchical fitting procedure (68) . In such a hierarchical model, individual parameters, \u03b2 i , are drawn from a group-level prior distribution. For example, for the first parameters, \u03b2 0,i , we can write as follows:",
+            "cite_spans": [
+                {
+                    "start": 160,
+                    "end": 164,
+                    "text": "(68)",
+                    "ref_id": "BIBREF67"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "Here, \u03bc B0 represents the population mean that then informs the estimation of \u03b2 0,i , the individual parameters of \u03b2 0 for participant i, from a population distribution, N (\u03bc B0 , \u03c3 B0 ). Conventionally, parameters obtained through such an approach can then be correlated with an external measure of differences between individuals. However, this procedure is suboptimal because it assumes no variability in the mean of the population in the initial model fit, possibly distorting or minimizing potential relationships between the parameter and external factors (32) . To maintain the advantages of hierarchical fitting while avoiding such pitfalls regarding individual differences, here we employ a procedure recently prescribed by Moutoussis et al. (32) . There (Fig. 4C) , the relationship between the parameters and individual differences is embedded into the estimation of the parameters themselves through the prior, so that:",
+            "cite_spans": [
+                {
+                    "start": 562,
+                    "end": 566,
+                    "text": "(32)",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 751,
+                    "end": 755,
+                    "text": "(32)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 764,
+                    "end": 773,
+                    "text": "(Fig. 4C)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "To capture interindividual differences in the parameter, we allow the mean of the population distribution to vary as a function of dogmatism through the embedded parameter \u03c1 0 . To enable accurate hierarchical estimation, we pooled the samples from both studies and only included subjects that sought out information on at least 5% and at most on 95% of trials. In doing so, we achieved a total sample of 568 subjects. We built the model using the programming language Stan (69), which uses a form of Markov chain Monte Carlo sampling, Hamilton Monte Carlo sampling, to estimate posteriors over parameters. Further details on model fitting and a discussion of the influence of different parameters on participant's payoff are presented in SI Appendix.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "Data Availability. Fully anonymized data are available from the corresponding author upon reasonable request. The final code for data analysis has been deposited in a dedicated GitHub repository (https://github.com/metacoglab/ SchulzRollwageDolanFleming).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Statistical Analysis."
+        },
+        {
+            "text": "We thank E. Schulz for comments on an earlier version of the manuscript and P. Dayan for helpful discussions on the research. The Wellcome Centre for Human Neuroimaging is supported by core funding from the Wellcome Trust (203147/Z/16/Z). L.S. was supported by a scholarship from the German Academic Scholarship Foundation. S.M.F. is supported by a Sir Henry Dale Fellowship jointly funded by the Wellcome Trust and the Royal Society (206648/Z/17/Z).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS."
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The dark side of information proliferation",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Hills",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Perspect. Psychol. Sci",
+            "volume": "14",
+            "issn": "",
+            "pages": "323--330",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "COVID-19: The medium is the message",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Garrett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "942--943",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The science of fake news",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "M J"
+                    ],
+                    "last": "Lazer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Science",
+            "volume": "359",
+            "issn": "",
+            "pages": "1094--1096",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Narrowing the climate information usability gap",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lemos",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kirchhoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ramprasad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nat. Clim. Chang",
+            "volume": "2",
+            "issn": "",
+            "pages": "789--794",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The algorithmic architecture of exploration in the human brain",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Schulz",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gershman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Curr. Opin. Neurobiol",
+            "volume": "55",
+            "issn": "",
+            "pages": "7--14",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "How people decide what they want to know",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Sharot",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Sunstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Hum. Behav",
+            "volume": "4",
+            "issn": "",
+            "pages": "14--19",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Towards a neuroscience of active sampling and curiosity",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gottlieb",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Oudeyer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Rev. Neurosci",
+            "volume": "19",
+            "issn": "",
+            "pages": "758--770",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Exploration versus exploitation in space, mind, and society",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Hills",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Todd",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lazer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Redish",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Couzin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Trends Cogn. Sci",
+            "volume": "19",
+            "issn": "",
+            "pages": "46--54",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Evidence accumulation is biased by motivation: A computational account",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gesiarz",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cahill",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Sharot",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PLOS Comput. Biol",
+            "volume": "15",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Valuation of knowledge and ignorance in mesolimbic reward circuitry",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Charpentier",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Bromberg-Martin",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Sharot",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proc. Natl. Acad. Sci. U.S.A",
+            "volume": "115",
+            "issn": "",
+            "pages": "7255--7264",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Confirmation bias in sequential information search after preliminary decisions: An expansion of dissonance theoretical research on selective exposure to information",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Jonas",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Schulz-Hardt",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Frey",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Thelen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "J. Pers. Soc. Psychol",
+            "volume": "80",
+            "issn": "",
+            "pages": "557--571",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Exposure to ideologically diverse news and opinion on Facebook",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Bakshy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Messing",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Adamic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Science",
+            "volume": "348",
+            "issn": "",
+            "pages": "1130--1132",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Anatomy of news consumption on Facebook",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Schmidt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proc. Natl. Acad. Sci. U.S.A",
+            "volume": "114",
+            "issn": "",
+            "pages": "3035--3039",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Feeling validated versus being correct: A meta-analysis of selective exposure to information",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Hart",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Psychol. Bull",
+            "volume": "135",
+            "issn": "",
+            "pages": "555--588",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Computational mechanisms of curiosity and goal-directed exploration",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Schwartenbeck",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Decision theory, reinforcement learning, and the brain",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Dayan",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Daw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Cogn. Affect. Behav. Neurosci",
+            "volume": "8",
+            "issn": "",
+            "pages": "429--453",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Subjective confidence predicts information seeking in decision making",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Desender",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Psychol. Sci",
+            "volume": "29",
+            "issn": "",
+            "pages": "761--778",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Confidence modulates exploration and exploitation in value-based learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Blundell",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "De"
+                    ],
+                    "last": "Martino",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Neurosci. Conscious",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Climate change, cultural cognition, and media effects: Worldviews drive news selectivity, biased processing, and polarized attitudes",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Newman",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Nisbet",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Nisbet",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Public Underst. Sci",
+            "volume": "27",
+            "issn": "",
+            "pages": "985--1002",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The accuracy of German citizens' confidence in their climate change knowledge",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fischer",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Amelung",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Said",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat. Clim. Chang",
+            "volume": "9",
+            "issn": "",
+            "pages": "776--780",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Dogmatic behavior among students: Testing a new measure of dogmatism",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Altemeyer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "J. Soc. Psychol",
+            "volume": "142",
+            "issn": "",
+            "pages": "713--721",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Feeling superior is a bipartisan issue: Extremity (not direction) of political views predicts perceived belief superiority",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Toner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Leary",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Asher",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jongman-Sereno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Psychol. Sci",
+            "volume": "24",
+            "issn": "",
+            "pages": "2454--2462",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "The nature and meaning of dogmatism",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rokeach",
+                    "suffix": ""
+                }
+            ],
+            "year": 1954,
+            "venue": "Psychol. Rev",
+            "volume": "61",
+            "issn": "",
+            "pages": "194--204",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Metacognitive failure as a feature of those holding radical beliefs",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rollwage",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dolan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Curr. Biol",
+            "volume": "28",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Extreme political beliefs predict dogmatic intolerance",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Van Prooijen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P M"
+                    ],
+                    "last": "Krouwel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Soc. Psychol. Personal. Sci",
+            "volume": "8",
+            "issn": "",
+            "pages": "292--300",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Identifying dogmatism in social media: Signals and models",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Fast",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Horvitz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of 2016 Conference Empirical Methods in Natural Language Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "690--699",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Dogmatism and predecisional information search",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Long",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ziller",
+                    "suffix": ""
+                }
+            ],
+            "year": 1965,
+            "venue": "J. Appl. Psychol",
+            "volume": "49",
+            "issn": "",
+            "pages": "376--378",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "A post-decisional neural marker of confidence predicts information-seeking in decision-making",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Desender",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Murphy",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Verguts",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J. Neurosci",
+            "volume": "39",
+            "issn": "",
+            "pages": "3309--3319",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Radicalism within the context of social movements: Processes and types",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Cross",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Snow",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J. Strateg. Secur",
+            "volume": "4",
+            "issn": "",
+            "pages": "115--130",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "The Political Economy of Radicalism",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Wintrobe",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Extremism",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Continuously cumulating meta-analysis and replicability",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Braver",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Thoemmes",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rosenthal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Perspect. Psychol. Sci",
+            "volume": "9",
+            "issn": "",
+            "pages": "333--342",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Hypotheses about the relationship of cognition with psychopathology should be tested by embedding them into empirical priors",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Moutoussis",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Hopkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dolan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Front. Psychol",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Political ideology, exploration of novel stimuli, and attitude formation",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Shook",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Fazio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "J. Exp. Soc. Psychol",
+            "volume": "45",
+            "issn": "",
+            "pages": "995--998",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Ideological asymmetries and the essence of political psychology",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Jost",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Polit. Psychol",
+            "volume": "38",
+            "issn": "",
+            "pages": "167--208",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Psychological motives and political orientation-The left, the right, and the rigid: Comment on",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Greenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Jonas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Psychol. Bull",
+            "volume": "129",
+            "issn": "",
+            "pages": "376--382",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Of deadly beans and risky stocks: Political ideology and attitude formation via exploration depend on the nature of the attitude stimuli",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Fiagbenu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Proch",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kessler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Br. J. Psychol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/bjop.12430"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Thinking clearly about causal inferences of politically motivated reasoning: Why paradigmatic study designs often prevent causal inference",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Tappin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pennycook",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Rand",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Curr. Opin. Behav. Sci",
+            "volume": "34",
+            "issn": "",
+            "pages": "81--87",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Cognitive underpinnings of nationalistic ideology in the context of Brexit",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zmigrod",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Rentfrow",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Robbins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proc. Natl. Acad. Sci. U.S.A",
+            "volume": "115",
+            "issn": "",
+            "pages": "4532--4540",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "The partisan mind: Is extreme political partisanship related to cognitive inflexibility?",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zmigrod",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Rentfrow",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Robbins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Exp. Psychol. Gen",
+            "volume": "149",
+            "issn": "",
+            "pages": "407--418",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "What underlies political polarization? A manifesto for computational political psychology",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rollwage",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zmigrod",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "De-Wit",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dolan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Trends Cogn. Sci",
+            "volume": "23",
+            "issn": "",
+            "pages": "820--822",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Metamemory: A theoretical framework and new findings",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Nelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Narens",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Psychol. Learn. Motiv",
+            "volume": "26",
+            "issn": "",
+            "pages": "125--173",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Cognitive offloading",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Risko",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gilbert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Trends Cogn. Sci",
+            "volume": "20",
+            "issn": "",
+            "pages": "676--688",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Confidence predicts speed-accuracy tradeoff for subsequent decisions",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Desender",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Boldt",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Verguts",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Donner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Relating introspective accuracy to individual differences in brain structure",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Weil",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Nagy",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dolan",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Rees",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Science",
+            "volume": "329",
+            "issn": "",
+            "pages": "1541--1543",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Thinking about thinking: A coordinate-based metaanalysis of neuroimaging studies of metacognitive judgements",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Vaccaro",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Brain Neurosci. Adv",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Psychiatric symptom dimensions are associated with dissociable shifts in metacognition but not task performance",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rouault",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Seow",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Gillan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Biol. Psychiatry",
+            "volume": "84",
+            "issn": "",
+            "pages": "443--451",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Self-evaluation of decision-making: A general Bayesian framework for metacognitive computation",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Daw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Psychol. Rev",
+            "volume": "124",
+            "issn": "",
+            "pages": "91--114",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Two-stage dynamic signal detection: A theory of choice, decision time, and confidence",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pleskac",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Busemeyer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Psychol. Rev",
+            "volume": "117",
+            "issn": "",
+            "pages": "864--901",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Forming global estimates of self-performance from local confidence",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rouault",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Dayan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat. Commun",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Structured, uncertainty-driven exploration in real-world consumer choice",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Schulz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proc. Natl. Acad. Sci. U.S.A",
+            "volume": "116",
+            "issn": "",
+            "pages": "13903--13908",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "The spreading of misinformation online",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Del",
+                    "middle": [],
+                    "last": "Vicario",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proc. Natl. Acad. Sci. U.S.A",
+            "volume": "113",
+            "issn": "",
+            "pages": "554--559",
+            "other_ids": {}
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Fighting misinformation on social media using crowdsourced judgments of news source quality",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pennycook",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Rand",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proc. Natl. Acad. Sci. U.S.A",
+            "volume": "116",
+            "issn": "",
+            "pages": "2521--2526",
+            "other_ids": {}
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Domain-general enhancements of metacognitive ability through adaptive training",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Carpenter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J. Exp. Psychol. Gen",
+            "volume": "148",
+            "issn": "",
+            "pages": "51--64",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Amazon's Mechanical Turk: A new source of inexpensive, yet high-quality data?",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Buhrmester",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Gosling",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Perspect. Psychol. Sci",
+            "volume": "6",
+            "issn": "",
+            "pages": "3--5",
+            "other_ids": {}
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "The online laboratory: Conducting experiments in a real labor market",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Horton",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Rand",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Zeckhauser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Exp. Econ",
+            "volume": "14",
+            "issn": "",
+            "pages": "399--425",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Nonna\u00efvet\u00e9 among Amazon mechanical turk workers: Consequences and solutions for behavioral researchers",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chandler",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mueller",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Paolacci",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Behav. Res. Methods",
+            "volume": "46",
+            "issn": "",
+            "pages": "112--130",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "Rethinking the rigidity of the right model: Three suboptimal methodological practices and their implications\" in Frontiers of Social Psychology: Politics of Social Psychology",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Malka",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lelkes",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Holzer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "116--135",
+            "other_ids": {}
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "The 12 item social and economic conservatism scale (SECS)",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Everett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "PLoS One",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "The dimensionality of right-wing authoritarianism: Lessons from the dilemma between theory and measurement",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Funke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Polit. Psychol",
+            "volume": "26",
+            "issn": "",
+            "pages": "195--218",
+            "other_ids": {}
+        },
+        "BIBREF59": {
+            "ref_id": "b59",
+            "title": "The presence of left-wing authoritarianism in Western Europe and its relationship with conservative ideology",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Van Hiel",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Duriez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kossowska",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Polit. Psychol",
+            "volume": "27",
+            "issn": "",
+            "pages": "769--793",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Factor Analysis",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Gorsuch",
+                    "suffix": ""
+                }
+            ],
+            "year": 1983,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "jsPsych: A JavaScript library for creating behavioral experiments in a Web browser",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "De Leeuw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Behav. Res. Methods",
+            "volume": "47",
+            "issn": "",
+            "pages": "1--12",
+            "other_ids": {}
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "Gorilla in our midst: An online behavioral experiment builder",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Anwyl-Irvine",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Massonni\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Flitton",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kirkham",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Evershed",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Behav. Res. Methods",
+            "volume": "52",
+            "issn": "",
+            "pages": "388--407",
+            "other_ids": {}
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "An introduction to mixed models for experimental psychology",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Singmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kellen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "New Methods in Cognitive Psychology",
+            "volume": "",
+            "issn": "",
+            "pages": "4--31",
+            "other_ids": {}
+        },
+        "BIBREF65": {
+            "ref_id": "b65",
+            "title": "Mediation: R package for causal mediation analysis",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Tingley",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yamamoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hirose",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Keele",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J. Stat. Softw",
+            "volume": "59",
+            "issn": "",
+            "pages": "1--38",
+            "other_ids": {}
+        },
+        "BIBREF66": {
+            "ref_id": "b66",
+            "title": "A general approach to causal mediation analysis",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Keele",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Tingley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Psychol. Methods",
+            "volume": "15",
+            "issn": "",
+            "pages": "309--334",
+            "other_ids": {}
+        },
+        "BIBREF67": {
+            "ref_id": "b67",
+            "title": "Empirical Bayes Methods for Estimation, Testing, and Prediction",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Efron",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Large-Scale",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Inference",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF68": {
+            "ref_id": "b68",
+            "title": "Stan: A probabilistic programming language",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Carpenter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J. Stat. Softw",
+            "volume": "76",
+            "issn": "",
+            "pages": "1--32",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Liberal and conservative extremes of the political spectrum are associated with higher levels of dogmatism and belief superiority. (A) A factor",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Individual differences in confidence-driven information search as captured by a trial-by-trial model. (A) The decision to seek additional information was captured using a model with three parameters: an intercept \u03b2 0 , a confidence parameter \u03b2 1 , and a cost parameter \u03b2 2 (not depicted here). (B) Distribution of individual-level parameters displaying the generally negative influence of higher confidence (\u03b2 1 ) and higher cost (\u03b2 2 ) on information search. (C) We captured dogmatism-related differences in these model parameters through a hierarchical fitting procedure, whereby each parameter's empirical prior varies as a function of another set of parameters \u03c1 that encode the influence of subjects' dogmatism scores in a hierarchical estimation scheme. (D) Posterior distribution of embedding parameters \u03c1 encoding dogmatism-driven shifts in parameter means. We found a dogmatism-related decrease in the parameter capturing baseline information search (\u03c1 0 ) and an increase in the parameter capturing the tuning of information search to participants' confidence (\u03c1 1 ). No effect of dogmatism on the cost parameter was observed (\u03c1 2 ). The dotted vertical line represents a null effect. (E and F) Dogmatic individuals seek out less information than moderates when they are uncertain. To visualize this effect, we compared the 10% most dogmatic participants to the remainder of the sample. We plot (E) model predictions and (F) actual data (medians with upper/lower quantiles), averaged over both levels of information cost.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

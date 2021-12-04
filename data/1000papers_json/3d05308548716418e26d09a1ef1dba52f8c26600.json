@@ -1,0 +1,2281 @@
+{
+    "paper_id": "3d05308548716418e26d09a1ef1dba52f8c26600",
+    "metadata": {
+        "title": "Design of a nonlinear model for the propagation of COVID-19 and its efficient nonstandard computational implementation",
+        "authors": [
+            {
+                "first": "Muhammad",
+                "middle": [],
+                "last": "Rafiq",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Central Punjab",
+                    "location": {
+                        "settlement": "Lahore",
+                        "country": "Pakistan"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "J",
+                "middle": [
+                    "E"
+                ],
+                "last": "Mac\u00edas-D\u00edaz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Universidad Aut\u00f3noma de Aguascalientes",
+                    "location": {
+                        "addrLine": "Avenida Universidad 940, Ciudad Universitaria",
+                        "postCode": "20131",
+                        "settlement": "Aguascalientes",
+                        "country": "Mexico"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ali",
+                "middle": [],
+                "last": "Raza",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "National College of Business Administration and Economics Lahore",
+                    "location": {
+                        "country": "Pakistan"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Nauman",
+                "middle": [],
+                "last": "Ahmed",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "publicly funded repositories, such as the WHO COVID database with rights for unrestricted research re-use and analyses in any form or by any means with acknowledgement of the original source. These permissions are granted for free by Elsevier for as long as the COVID-19 resource centre remains active.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Design of a nonlinear model for the propagation of COVID-19 and its efficient nonstandard computational implementation Journal Pre-proof Design of a nonlinear model for the propagation of COVID-19 and its efficient nonstandard computational implementation Please cite this article as: Muhammad Rafiq, J.E. Mac\u00edas-D\u00edaz, Ali Raza, Nauman Ahmed, Design of a nonlinear model for the propagation of COVID-19 and its efficient nonstandard computational implementation, Applied Mathematical Modelling (2020), doi: https://doi.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "\u2022 Mathematical considerations of a SEIQR model to describe the propagation of COVID-19 are proposed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "\u2022 We derive analytically the reproductive number and the equilibria with and without COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "\u2022 Necessary and sufficient conditions for the stability of the equilibria are mathematically established.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "\u2022 An efficient nonstandard method to solve the continuous problem is proposed and analyzed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "\u2022 The numerical simulations confirm the analytical and numerical results derived in this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Design of a nonlinear model for the propagation of COVID-19 and its efficient nonstandard computational implementation",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "In this manuscript, we develop a mathematical model to describe the spreading of an epidemic disease in a human population. The emphasis in this work will be on the study of the propagation of the coronavirus disease (COVID-19). Various epidemiologically relevant assumptions will be imposed upon the problem, and a coupled system of first-order ordinary differential equations will be obtained. The model adopts the form of a nonlinear susceptibleexposed-infected-quarantined-recovered system, and we investigate it both analytically and numerically. Analytically, we obtain the equilibrium points in the presence and absence of the coronavirus. We also calculate the reproduction number and provide conditions that guarantee the local and global asymptotic stability of the equilibria. To that end, various tools from analysis will be employed, including Volterra-type Lyapunov functions, LaSalle's invariance principle and the Routh-Hurwitz criterion. To simulate computationally the dynamics of propagation of the disease, we propose a nonstandard finite-difference scheme to approximate the solutions of the mathematical model. A thorough analysis of the discrete model is provided in this work, including the consistency and the stability analyses, along with the capability of the discrete model to preserve the equilibria of the continuous system. Among other interesting results, our numerical simulations confirm the stability properties of the equilibrium points.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Coronavirus disease 2019 (COVID-19) is a viral disease that was identified toward the end of the year 2019 in China, and which became a pandemic in the first quarter of the year 2020 [1] . After its identification in 2019, COVID-19 has been a source of active research from various scientific points of view, mainly due to the mortality rate derived from this disease and the inherent health complications. Indeed, to this day, the COVID-19 dashboard by the Center for Systems Science and Engineering at Johns Hopkins University reports a total of 5,439,559 cases in 188 countries around the World, along with 2,185,696 recovered individuals and 345,589 deaths worldwide [2] . On the other hand, the usual symptoms of this disease include fever, cough, fatigue and shortness of breath [3] , but it may develop to acute respiratory distress syndrome, multi-organ failure, septic shock and blood clots, among other conditions [4, 5] . In some cases, these symptoms evolve rapidly resulting ultimately in a painful death. Needless to mention that there are other severe consequences on the propagation of this disease worldwide, including economic and financial outcomes which are difficult to assess at this stage of the pandemic. Some reports already have started to investigate these potential consequences at various geographic levels [6, 7] , though the full extent of the implications of the global spread of COVID-19 are still under scientific scrutiny.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 186,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 671,
+                    "end": 674,
+                    "text": "[2]",
+                    "ref_id": null
+                },
+                {
+                    "start": 785,
+                    "end": 788,
+                    "text": "[3]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 924,
+                    "end": 927,
+                    "text": "[4,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 928,
+                    "end": 930,
+                    "text": "5]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1336,
+                    "end": 1339,
+                    "text": "[6,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1340,
+                    "end": 1342,
+                    "text": "7]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As many other problems associated to the study of COVID-19, the reliable prediction of its dynamics is an important topic of investigation from the epidemiological point of view. In general, the dynamics of epidemics is a highly transited topic of research in mathematics and simulation. There are various families of models depending on the assumptions on the mechanisms of propagation. For example, there are susceptible-infected-susceptible (SIS) systems which have been used to model nonlinear incidence rates and double epidemic hypotheses [8] , susceptible-infectedrecovered (SIR) models which are employed to consider the awareness of the presence of a disease [9] , susceptibleexposed-infected-recovered (SEIR) models that predict the propagation of epidemics with non-local reaction functions [10] , susceptible-exposed-infected-quarantined-recovered (SEIQR) systems used to account for adjusted incidence and imperfect vaccinations [11] , among other examples. It is worth pointing out that most of the deterministic models available in the literature are based on the use of ordinary differential equations, which means that a constant diffusion among the population is assumed. However, there are approaches which hinge on the use of systems of partial differential equations in order to account for imperfect mixing modelled by diffusion [12, 13, 14, 15] . In the present work, we focus our attention to the spreading of COVID-19 in populations where the diffusion is constant.",
+            "cite_spans": [
+                {
+                    "start": 545,
+                    "end": 548,
+                    "text": "[8]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 668,
+                    "end": 671,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 802,
+                    "end": 806,
+                    "text": "[10]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 942,
+                    "end": 946,
+                    "text": "[11]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1351,
+                    "end": 1355,
+                    "text": "[12,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1356,
+                    "end": 1359,
+                    "text": "13,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1360,
+                    "end": 1363,
+                    "text": "14,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1364,
+                    "end": 1367,
+                    "text": "15]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "It is important to realize that the most recent progresses in mathematical epidemiology give account of a vast variety of realistic mathematical models to describe the propagation of diseases [16] . Indeed, in addition to the usual models based on the use of ordinary or partial differential equations, there are reports on individual-based systems to describe the spreading of infectious diseases in clustered complex networks [17] , agent-based systems to investigate the spatio-temporal dynamics and synchrony of influenza epidemics [18] , network-based models to provide control strategies in SIS systems [19] , stochastic models that consider ratio-dependent incidence rates [20] , statistical models for the problem of estimation in some epidemic scenarios [21] , among various other approaches. The analysis of those models has been a fruitful topic of research in the literature. Moreover, the reliable computational simulation of those systems has also become a cornerstone in order to propose pertinent applications [22] . In the case of models based on differential equations, consistency, stability and convergence of the numerical methodologies have been criteria for the reliability of the discretizations. However, in light that the variables under study are populations, emphasis has been done on the development of finite-difference schemes that preserve the positivity and/or boundedness of the solutions of epidemic problems [23, 24, 25] , as well as other approaches for more complicated scenarios [26] .",
+            "cite_spans": [
+                {
+                    "start": 192,
+                    "end": 196,
+                    "text": "[16]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 428,
+                    "end": 432,
+                    "text": "[17]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 536,
+                    "end": 540,
+                    "text": "[18]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 609,
+                    "end": 613,
+                    "text": "[19]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 680,
+                    "end": 684,
+                    "text": "[20]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 763,
+                    "end": 767,
+                    "text": "[21]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1026,
+                    "end": 1030,
+                    "text": "[22]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1444,
+                    "end": 1448,
+                    "text": "[23,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1449,
+                    "end": 1452,
+                    "text": "24,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1453,
+                    "end": 1456,
+                    "text": "25]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1518,
+                    "end": 1522,
+                    "text": "[26]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this manuscript, we will consider a SEIQR model for the propagation of COVID-19. The system will consist of a nonlinear set of coupled ordinary differential equations in which various real parameters are included. The use of such model is based on the current understanding of the mechanisms of propagation of COVID-19. In particular, the consideration of the subpopulations of susceptible, exposed, infected, quarantined and recover individuals is strongly supported by both the effects of COVID-19 in human health and the measures adopted by the governments of all countries affected [27] . Various assumptions will be imposed on the problem considered in this work, and we will obtain a system of ordinary differential equations from those hypotheses. We will provide a stability analysis of the equilibrium points of the system in the presence and absence of COVID-19. The nature of the local stability of those equilibria will be thoroughly investigated with respect to the basic reproduction number. As a means to verify our theoretical results, we will propose a two-level finite difference discretization of the SEIQR model. Our approach will hinge on a non-local discretization of the continuous problem, and we will show that the discrete model has various numerical and structural properties which make it a desirable tool in the simulation of the SEIQR system. For instance, we will prove the linear stability of the scheme, along with its capability to preserve the positivity of solutions. This feature is of the utmost importance in view that the variables under investigation are population sizes [28, 29] . Some simulations will be provided to assess the validity of the theoretical results derived in this work.",
+            "cite_spans": [
+                {
+                    "start": 589,
+                    "end": 593,
+                    "text": "[27]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 1616,
+                    "end": 1620,
+                    "text": "[28,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1621,
+                    "end": 1624,
+                    "text": "29]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The present work is organized as follows. In Section 3, we will introduce the mathematical model under investigation. As we pointed out before, the system will be a general nonlinear SEIQR model with constant spatial diffusion. The assumptions on the derivation of the model will be provided therein, and the model will include various physically relevant constants to make it as realistic as possible. In that section, we will obtain the equilibrium points both in the presence and the absence of COVID-19. We will obtain the reproduction number in that stage, and various results on the local stability of the equilibria will be rigorously established. The numerical model employed to solve the SEIQR model is presented in Section 3. The scheme is a nonstandard model in the sense of R. E. Mickens [30] . We will show therein that the scheme is a stable technique which is able to preserve the positivity of the solutions. In other words, our computational methodology is a structure-preserving technique or, equivalently, a dynamically consistent technique. As the end of that section. we provide some simulations that illustrate the main analytical features of the numerical methodology, and we close this manuscript with a section of concluding remarks. ",
+            "cite_spans": [
+                {
+                    "start": 800,
+                    "end": 804,
+                    "text": "[30]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "For the remainder of this work, we will investigate the dynamics of a human population which is divided into various non-overlapping subpopulations. The population will be represented by P : [0, \u221e) \u2192 R, and it will be a function of the time t \u2265 0. In turn, each of the five subpopulations will be denoted by the nonnegative differentiable functions S , E, I, Q, R : [0, \u221e) \u2192 R, which will represent, respectively, the total number of individuals who are susceptible to be infected by COVID-19, the number of individuals who have been exposed to this disease, the number of individuals who are infected, the number of persons who are in quarantine and the number of recovered individuals.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "In this work, we will assume that the population of susceptible individuals is increased constantly as a recruitment rate \u03bb. At the same time, we will consider a natural death rate \u00b5 of susceptible individuals. Moreover, the population of susceptible people will decrease at constant rates when they interact with exposed and with infected individuals. Those constant rates are \u03b2 1 and \u03b2 2 , which represent the contact rate of susceptible individuals with infected and exposed individuals, respectively. Meanwhile, the population of exposed individuals increases at a rate which is proportional to the interactions between the susceptible population and both the infected and exposed populations. The respective constants of proportionality are equal to \u03b2 1 and \u03b2 2 . On the other hand, the rate of change of exposed also decreases as a factor of the quarantined rate of exposed individuals q 1 , the recovery rate of exposed individuals due to immunity during the latent period k, the rate at which exposed individuals become infected after the latent period \u03b1 and the natural death rate. In turn, a proportion \u03b1 of the exposed individuals become infected.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "On the other hand, the rate of change of infected individuals decreases in a proportion equal to r + \u00b5 + d 1 , where r is the recovery rate of exposed individuals due to immunity and d 1 represents the death rate of infected individuals due to COVID-19. Also, an increase in the speed of the amount of infected individuals is considered in view that a proportion \u03b1 of exposed individuals become infected. Meanwhile, the speed at which people are quarantined is increase by a fraction q 1 of exposed individuals, and decreases at a a rate equal to (q + \u00b5 + d 2 )Q, where q is the rate of recovery from quarantine to recovered and d 2 is the death rate of quarantined individuals due to COVID-19. Finally, the rate of change of the recovered individuals increases with the amounts of exposed, infected and quarantined who recover, and decreases with the portion of recovered members of the population who die due to natural causes. For convenience, Table 1 provides the set of model parameters employed and their physical relevance.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 947,
+                    "end": 954,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Using the assumptions in the paragraphs above, the mathematical model proposed to describe the dynamics of propagation of COVID-16 is given by the nonlinear system of coupled ordinary differential equations",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Natural death rate of individuals k",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Recovery rate of exposed individuals due to immunity during latent period r",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Recovery rate of exposed individuals due to immunity \u03b1 Rate at which exposed individuals become infected after latent period d 1 Death rate of infected individuals due to COVID-19 d 2",
+            "cite_spans": [
+                {
+                    "start": 127,
+                    "end": 128,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Death rate of quarantined individuals due to COVID-19 \u03b2 1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Contact rate of susceptible individuals with infected individuals \u03b2 2 Contact rate of susceptible individuals with exposed individuals q 1 Quarantined rate of exposed individuals q 2 Quarantined rate of infected individuals q Rate of recovery from quarantine to recovered ",
+            "cite_spans": [
+                {
+                    "start": 137,
+                    "end": 138,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "and R 0 be nonnegative real numbers which physically represent the initial sizes of the susceptible, exposed, infected, quarantined and recovered subpopulations, respectively. More precisely, the following conditions are satisfied:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "It is easy to see that, in the absence of COVID-19, the system",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Notice that the reproductive number R 0 is the spectral radius of FV \u22121 , where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "(2.5)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "More precisely, notice that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "(2.6)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Using the possible values of the reproductive number, we will devote our next efforts to establish conditions that guarantee the local asymptotic stability of the equilibrium points obtained above. Beforehand, notice that the Jacobian matrix associated to (2.1) is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "For the remainder, the symbol \u2126 will represent the set of all (S , E, I, Q, R) \u2208 R 5 such that S , E, I, Q, R \u2208 R + . Theorem 1. The equilibrium point C 1 is locally asymptotically stable if and only if R 0 < 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Proof. Using the Jacobian matrix (2.7) and an easy substitution, we can readily obtain that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "(2.8)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Notice the that the characteristic polynomial is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "where a 1 = \u03bb/\u00b5, a 2 = \u03ba+\u03b1+\u00b5+q 1 and a 3 = r+\u00b5+d 1 . The stability when R 0 < 1 follows now from the Routh-Hurwitz criterion for second-order polynomials, noticing that a 3 + a 2 \u2212 \u03b2 2 a 1 > 0 and (\u03ba + \u03b1 + \u00b5 + q 1 ) + (r + \u00b5 + d 1 ) \u2212 \u03b2 2 \u03bb \u00b5 > 0 and, thus, all the eigenvalues are negative numbers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Mathematical model"
+        },
+        {
+            "text": "Proceeding as in the proof of Theorem 1, it is easy to check that the characteristic polynomial is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2. The equilibrium point C 2 is locally asymptotically stable if and only if R"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2. The equilibrium point C 2 is locally asymptotically stable if and only if R"
+        },
+        {
+            "text": "(2.14)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2. The equilibrium point C 2 is locally asymptotically stable if and only if R"
+        },
+        {
+            "text": "(2. 16) Assuming that R 0 > 1 then the inequalities c 1 > 0, c 3 > 0 and c 1 c 2 > c 3 are all satisfied. It follows that all the eigenvalues of the problem (2.1) are negative. The conclusion of this theorem readily follows now using the Routh-Hurwitz criterion for third-order polynomials.",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 7,
+                    "text": "16)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2. The equilibrium point C 2 is locally asymptotically stable if and only if R"
+        },
+        {
+            "text": "In the following theorems, we tackle the global asymptotic stability of the equilibrium points.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2. The equilibrium point C 2 is locally asymptotically stable if and only if R"
+        },
+        {
+            "text": "The equilibrium point C 1 is globally asymptotically stable if and only if R 0 < 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3."
+        },
+        {
+            "text": "Proof. Consider the Volterra-type Lyapunov functional V : \u2126 \u2192 R, given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3."
+        },
+        {
+            "text": "(2.17)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3."
+        },
+        {
+            "text": "A straightforward derivation shows that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3."
+        },
+        {
+            "text": "(2.18)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3."
+        },
+        {
+            "text": "Notice that the right-hand side of (2.18) is non-positive only if R 0 < 1, and it is equal to zero if S = S 0 * and E = I = Q = R = 0. This means that the only trajectory of the system on which V = 0 is C 1 . LaSalle's invariance principle assures then that C 1 is globally asymptotically stable in \u2126.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3."
+        },
+        {
+            "text": "If R 0 > 1 then C 2 is globally asymptotically stable, and it is unstable otherwise.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "Proof. Consider now the Volterra-type Lyapunov functional U : \u2126 \u2192 R defined by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "(2. 19) Notice now that",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 7,
+                    "text": "19)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "(2.20)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "The right-hand side of (2.20) is obviously non-positive if R 0 > 1, and it is equal to zero only if S = S 1 * , E = E 1 * ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "This implies that the only set in which U = 0 is C 2 . LaSalle's invariance principle implies now that C 2 is globally asymptotically stable in \u2126.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "Before closing this section, we examine the sensitivity of the reproduction number with respect to each of the parameters involved. To that end, the following identities can be easily verified:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "(2.22)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "Also,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "(2.25)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "Observe that the numbers A \u03b2 1 , A \u03b2 2 and A \u03bb are positive. Meanwhile, the remaining numbers are negative if R 0 < 1. We conclude that the sensitive parameters of the reproduction number are \u03b2 1 , \u03b2 2 and \u03bb.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 4."
+        },
+        {
+            "text": "For each N \u2208 N, define the sets I N = {1, . . . , N} and I N = I N \u222a {0}. The present section will be devoted to provide and analyze a nonstandard finite-difference discretization of the model (2.1). To that end, we let N \u2208 N and consider a temporal period T > 0. Fix a uniform partition of the temporal interval [0, T ] consisting of N subintervals, and let \u03c4 = T/N. Define t n = n\u03c4, for each n \u2208 I N . For each n \u2208 I N , we will employ the notations S n , E n , I n , Q n and R n to represent numerical approximations to the values of the functions S , E, I, Q and R, respectively, at the time t n .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical methodology"
+        },
+        {
+            "text": "Let U be any of the functions S , E, I, Q or R. We define",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 5."
+        },
+        {
+            "text": "Using this nomenclature, the non-local finite-difference discretization of the mathematical model (2.1) is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 5."
+        },
+        {
+            "text": "\u03b4 t R n = \u03baE n + rI n + qQ n \u2212 \u00b5R n+1 , \u2200n \u2208 I N\u22121 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 5."
+        },
+        {
+            "text": "As expected, we will employ the discrete initial data (S 0 , E 0 , I 0 , Q 0 , R 0 ), where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.2)"
+        },
+        {
+            "text": "Our first result establishes that the numerical method (3.2) is a positivity-preserving technique. Moreover, the explicit character of the scheme is exhibited in the proof of that result. Theorem 6. If the initial data satisfy (S 0 , E 0 , I 0 , Q 0 , R 0 ) \u2208 \u2126 then the system (3.2) is uniquely solvable, and the solutions belong in \u2126.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.2)"
+        },
+        {
+            "text": "Proof. Beforehand, notice that the system (3.2) can be rewritten equivalently as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.2)"
+        },
+        {
+            "text": ", \u2200n \u2208 I N\u22121 ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.2)"
+        },
+        {
+            "text": ", \u2200n \u2208 I N\u22121 ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.2)"
+        },
+        {
+            "text": ", \u2200n \u2208 I N\u22121 , R n+1 = R n + \u03c4(\u03baE n + rI n + qQ n ) 1 + \u03c4\u00b5 , \u2200n \u2208 I N\u22121 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.2)"
+        },
+        {
+            "text": "Observe that (S n+1 , E n+1 , I n+1 , Q n+1 , R n+1 ) is uniquely determined and belongs to \u2126 in the case that (S n , E n , I n , Q n , R n ) belongs to \u2126. The result follows now by induction using the hypothesis on the initial data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.4)"
+        },
+        {
+            "text": "Next, we prove that the stability character of the equilibrium point C 1 is preserved by the method (3.2). The following technical result will be of utmost importance to that end. Lemma 7 (Brauer et al. [31] ). Let P 1 , P 2 \u2208 R, and suppose that \u03bb 1 , \u03bb 2 \u2208 C are the roots of the \u03bb 2 \u2212 P 1 \u03bb + P 2 . Then |\u03bb i | < 1 for i = 1, 2 if and only if the following conditions are satisfied:",
+            "cite_spans": [
+                {
+                    "start": 203,
+                    "end": 207,
+                    "text": "[31]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(3.4)"
+        },
+        {
+            "text": "Proof. The proof of this result is straightforward.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.4)"
+        },
+        {
+            "text": "(a) If R 0 < 1 then C 1 is locally asymptotically stable. (b) If R 0 > 1 then C 2 is locally asymptotically stable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Proof. We will prove only (a) in view that the proof of (b) is similar though more tedious. Consider the right-hand sides of the equations in (3.2) as functions of S n , E n , I n , Q n and R n . Calculate then the Jacobian matrix and evaluate it when (S n , E n , I n , Q n , R n ) = C 1 . In such way, we obtain that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "(3.5)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "In turn, the characteristic polynomial of J is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "where \u03bb 1 = \u03bb 2 = (1 + \u03c4\u00b5) \u22121 , \u03bb 3 = [1 + \u03c4(q + \u00b5 + d 2 )] \u22121 . Moreover,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": ", (3.7)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": ". (3.8) Clearly, the absolute value of the eigenvalues \u03bb 1 , \u03bb 2 and \u03bb 3 is less than one. To check that the the roots of the polynomial \u03bb 2 \u2212 P 1 \u03bb + P 2 also have absolute values less than one, it suffices to show that the conditions (i)-(iii) of Lemma 7 hold. However, the fact that P 1 > 0 assures that (i) is satisfied when (ii) of that lemma is true. To demonstrate (ii) and (iii), various simple algebraic calculations need to be performed, and the condition R 0 < 1 needs to be employed in both cases. As a consequence, all the eigenvalues of J have absolute values less than 1. This implies that C 1 is locally asymptotically stable, as desired.",
+            "cite_spans": [
+                {
+                    "start": 2,
+                    "end": 7,
+                    "text": "(3.8)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Before establishing the main numerical properties of the scheme (3.2), we would like to plot the largest eigenvalues of the Jacobian matrix associated to C 2 . To that end, we will employ the estimated and fitted values of the parameters recorded in Table 2 . The graph of the spectral radius of the Jacobian matrix is plotted in Figure 2 as a function of the temporal step size. Notice that the spectral radius is always less than one, as predicted by Theorem 8. Table 2 were used, and the spectral radius was obtained for various temporal step-sizes \u03c4 in [0, 1000].",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 250,
+                    "end": 257,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 330,
+                    "end": 338,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 464,
+                    "end": 471,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Proof. Beforehand, let us define the differential operators",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "On the other hand, define also the discrete operators",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "(3.10)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Here, we used the discrete operator",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "where U can be any of the functions S , E, I, Q or R for the remainder of this proof. Notice that, under the regularity assumptions and using the classical argument based on Taylor's theorem, it follows that there exist constants C 1 U and C 2 U which are independent of \u03c4, such that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Using the smoothness of E and I, we can fix respective bounds C 0 E and C 0 I of these functions on [0, T ]. Using the triangle ineqlauity and the bounds above, we observe then that there exists a constant C U which is independent of \u03c4, such that the following are satisfied for U being any of S , E, I, Q or R:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "(3.14)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "To be more precise, those constants are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "We conclude that (3.2) yields first-order approximations to the solutions of (2.1), as desired.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "The following is a discrete version of Gronwall's inequality.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Lemma 10 (Pen-Yu [33] ). Let (\u03c9 n ) N n=0 and (\u03c1 n ) N n=0 be finite sequences of nonnegative mesh functions, and suppose that there exists C \u2265 0 such that",
+            "cite_spans": [
+                {
+                    "start": 17,
+                    "end": 21,
+                    "text": "[33]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "(3.20)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Then \u03c9 n \u2264 \u03c1 n e Cn\u03c4 for each n \u2208 I N .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Theorem 11. There exists a \u03c4 0 > 0 such that the finite-difference method (3. 2) is stable for values of \u03c4 < \u03c4 0 .",
+            "cite_spans": [
+                {
+                    "start": 74,
+                    "end": 77,
+                    "text": "(3.",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "Proof. Consider two sets of initial conditions (S 0 , E 0 , I 0 , Q 0 , R 0 ) and ( S 0 , E 0 , I 0 , Q 0 , R 0 ). The corresponding numerical solutions obtained through (3.2) will be denoted by (S , E, I, Q, R) and ( S , E, I, Q, R), respectively. Obviously, the first solution satisfies (3.2) while the second satisfies the discrete problem",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "\u03b4 t R n = \u03ba E n + r I n + q Q n \u2212 \u00b5 R n+1 , \u2200n \u2208 I N\u22121 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 8."
+        },
+        {
+            "text": "For convenience, we will define \u03b5 n U = U n \u2212 U n and \u03b5 0 U = U 0 \u2212 U 0 , for each \u2208 I N and U = S , E, I, Q, R. Calculating the difference between the respective equations of (3.2) and (3.21) , it is easy to see that the following problem holds:",
+            "cite_spans": [
+                {
+                    "start": 186,
+                    "end": 192,
+                    "text": "(3.21)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "(3.22)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "Using the mean value theorem, it is easy to show that there exist constants C n S ,1 , C n S ,2 , C n S ,3 , C n E,1 , C n E,2 , C n E,3 \u2208 R, for which the following identities are satisfied:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "(\u03b2 1 I n + \u03b2 2 E n )S n+1 \u2212 (\u03b2 1 I n + \u03b2 2 E n ) S n+1 = C n S ,1 \u03b5 n I + C n S ,2 \u03b5 n E + C n S ,3 \u03b5 n+1 S , \u2200n \u2208 I N\u22121 , (3.23) (\u03b2 1 I n + \u03b2 2 E n )S n \u2212 (\u03b2 1 I n + \u03b2 2 E n ) S n = D n S ,1 \u03b5 n I + D n S ,2 \u03b5 n E + D n S ,3 \u03b5 n S , \u2200n \u2208 I N\u22121 , (3.24)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "Let us consider firstly the first equation of the system (3.22) , and multiply both sides by \u03c4. Take then the absolute value on both sides and use the triangle inequality on both. In that way, we readily obtain |\u03b5 n+1 S | \u2212 |\u03b5 n S | \u2264 C n S \u03c4(|\u03b5 n I | + |\u03b5 n E | + |\u03b5 n+1 S |) + \u00b5\u03c4|\u03b5 n+1 S |, \u2200n \u2208 I N\u22121 .",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 63,
+                    "text": "(3.22)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "(3.25)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "Here, we let C n S = max{C n S ,1 , C n S ,2 , C n S ,3 }. Let now k \u2208 I N\u22121 , and take the sum on both sides of the last inequality over all n between 0 and k. Using the formula for telescoping sums and letting C S = \u00b5 + max{C n S : n \u2208 I N }, we reach",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "As a consequence, we reach that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "In similar fashion, the remaining identities of (3.22) lead to the following inequalities",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "Let \u03c4 0 = min{C \u22121 U : U = S , E, I, Q, R}, and let 0 < \u03c4 < \u03c4 0 . Obviously, the numbers 1 \u2212 C U \u03c4 are positive for all U = S , E, I, Q, R, and we let C * be the minimum of all of them. Moreover, let C * = max{C U : U = S , E, I, Q, R}, and agree that \u03b5 n = |\u03b5 n S | + |\u03b5 n E | + |\u03b5 n I | + |\u03b5 n Q | + |\u03b5 n R |, for each n \u2208 I N . Using then the inequalities above, it is easy to see that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "\u03b5 n , \u2200k \u2208 I N\u22121 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "(3.32)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "Using now Lemma 10, it follows that \u03b5 n \u2264 K\u03b5 0 , where K = C \u22121 * exp(C * T/C * ). As a consequence, the conclusion of the theorem readily follows now. Proof. The proof is similar to that of Theorem 11.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(3.21)"
+        },
+        {
+            "text": "Before closing this section, we employed the finite-difference scheme (3.2) to confirm the validity of the analytical results. Figure 3 shows the solution of the system (2.1) using the method proposed in this work. To that end, we employed the parameters of Table 1 , and the initial conditions are. Two cases were considered, namely, (a) a system free of COVID-19 and (b) a system with the presence of COVID-19. The graphs show that the solutions tend to the prescribed equilibrium points C 1 and C 2 , respectively. It is worth pointing out that these results are in full agreement with both the analytical and the numerical theorems derived in this work. Figure 3 ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 127,
+                    "end": 135,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 258,
+                    "end": 265,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 658,
+                    "end": 666,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "(3.21)"
+        },
+        {
+            "text": "In this work, we considered a generic SEIQR system to model the propagation of COVID-19. The model employed here consisted of a system of nonlinear ordinary differential equations of first order. Various constant parameters were used to describe the system and nonnegative initial conditions were employed. The method considered the presence of susceptible, exposed, infected, quarantined and recovered populations in light of the known dynamics of COVID-19. The mathematical model was obtained from epidemiological assumptions, and equilibrium points were obtained considering the presence and the absence of the epidemic. The reproductive number was obtained, and the stability of the equilibria was established in terms of the values of the reproductive number. Both local and global stability were analyzed. Also, a finite-difference method was proposed to investigate computationally the dynamics of COVID-19. The method is nonlocal, and we proved the positivity of the scheme, along with the discrete stability of the equilibrium points. In addition, the numerical properties of consistency, stability and convergence were rigorously established. Some numerical simulations proved the validity of the theorems on the stability of the equilibrium points. In this way, the present work contributes to the design of SEIQR models to describe the dynamics of infectious diseases like COVID-19 [34] .",
+            "cite_spans": [
+                {
+                    "start": 1394,
+                    "end": 1398,
+                    "text": "[34]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The continuing 2019-nCoV epidemicthreatof novel coronaviruses to global health: the latest 2019 novel coronavirus outbreak in Wuhan, China",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "A E"
+                    ],
+                    "last": "Huids",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Madani",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ntoumi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Koch",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Dar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "91",
+            "issn": "",
+            "pages": "264--266",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Handbook of COVID-19 prevention and treatment, The First Affiliated Hospital",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Zhejiang University School of Medicine. Compiled According to Clinical Experience",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Care for critically ill patients with COVID-19",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Murthy",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Gomersall",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Fowler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Jama",
+            "volume": "323",
+            "issn": "15",
+            "pages": "1499--1500",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "COVID-19 and thrombotic or thromboembolic disease: implications for prevention, antithrombotic therapy, and follow-up",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Bikdeli",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Madhavan",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jimenez",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chuich",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dreyfus",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Driggin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Der Nigoghossian",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ageno",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Madjid",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of the American College of Cardiology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Keeping the lights on: Economic medicine for a medical shock",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Baldwin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Macroeconomics",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "COVID-19 economic cost; impact on forcibly displaced people",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kabir",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Afzal",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Travel Medicine and Infectious Disease",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Dynamics of a novel nonlinear stochastic SIS epidemic model with double epidemic hypothesis",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of Mathematical Analysis and Applications",
+            "volume": "433",
+            "issn": "1",
+            "pages": "227--242",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Analysis of SIR epidemic model with information spreading of awareness",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kabir",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kuga",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tanimoto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Chaos, Solitons & Fractals",
+            "volume": "119",
+            "issn": "",
+            "pages": "118--125",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Traveling waves for a diffusive SEIR epidemic model with non-local reaction",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Applied Mathematical Modelling",
+            "volume": "50",
+            "issn": "",
+            "pages": "432--449",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Analysis and numerical simulations of a stochastic SEIQR epidemic system with quarantine-adjusted incidence and imperfect vaccination, Computational and mathematical methods in medicine",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Numerical modeling and theoretical analysis of a nonlinear advection-reaction epidemic system",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Azam",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mac\u00edas-D\u00edaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Iqbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafiq",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nisar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Ahmad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Computer Methods and Programs in Biomedicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Analysis and nonstandard numerical design of a discrete three-dimensional hepatitis b epidemic model",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mac\u00edas-D\u00edaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafiq",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Mathematics",
+            "volume": "7",
+            "issn": "12",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A numerical efficient splitting method for the solution of two dimensional susceptible infected recovered epidemic model of whooping cough dynamics: Applications in bio-medical engineering",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ali",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafiq",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nisar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rehman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ahmad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Computer Methods and Programs in Biomedicine",
+            "volume": "190",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "A deterministic model for the distribution of the stopping time in a stochastic equation and its numerical solution",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mac\u00edas-D\u00edaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Villa-Morales",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Computational and Applied Mathematics",
+            "volume": "318",
+            "issn": "",
+            "pages": "93--106",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Understanding epidemics from mathematical models: Details of the 2010 dengue epidemic in",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Lizarralde-Bejarano",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Arboleda-S\u00e1nchez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Puerta-Yepes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "43",
+            "issn": "",
+            "pages": "566--578",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "An individual-based modeling framework for infectious disease spreading in clustered complex networks",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hadzibeganovic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Applied Mathematical Modelling",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Investigating spatiotemporal dynamics and synchrony of influenza epidemics in Australia: An agent-based modelling approach",
+            "authors": [
+                {
+                    "first": "Oliver",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Author=cliff",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nathan",
+                    "middle": [],
+                    "last": "Harding",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Piraveenan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mahendra",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Erten",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yagmur",
+                    "suffix": ""
+                },
+                {
+                    "first": "Manoj",
+                    "middle": [],
+                    "last": "Gambhir",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mikhail",
+                    "middle": [],
+                    "last": "Prokopenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "jour-nal=Simulation Modelling Practice and Theory",
+            "volume": "87",
+            "issn": "",
+            "pages": "412--431",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Nonlinear dynamical analysis and control strategies of a network-based sis epidemic model with time delay",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Applied Mathematical Modelling",
+            "volume": "70",
+            "issn": "",
+            "pages": "512--531",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "A stochastic SIRS epidemic model with nonlinear incidence rate",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Applied Mathematics and Computation",
+            "volume": "305",
+            "issn": "",
+            "pages": "221--240",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Some estimation problems in epidemic modeling",
+            "authors": [
+                {
+                    "first": "J.-Y",
+                    "middle": [],
+                    "last": "Dauxois",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Nucit",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Communications in Statistics-Simulation and Computation",
+            "volume": "47",
+            "issn": "4",
+            "pages": "1066--1087",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A primer on stochastic epidemic models: Formulation, numerical simulation, and analysis",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "J S"
+                    ],
+                    "last": "Allen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Infectious Disease Modelling",
+            "volume": "2",
+            "issn": "2",
+            "pages": "128--142",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Positivity and boundedness preserving numerical algorithm for the solution of fractional nonlinear epidemic model of HIV/AIDS transmission",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Iqbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Baleanu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Adel",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafiq",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Rehman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Alshomrani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Chaos, Solitons & Fractals",
+            "volume": "134",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Positivity preserving operator splitting nonstandard finite difference methods for seir reaction diffusion model",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tahira",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafiq",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rehman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ali",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ahmad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Open Mathematics",
+            "volume": "17",
+            "issn": "1",
+            "pages": "313--330",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "A novel time efficient structure-preserving splitting method for the solution of two-dimensional reaction-diffusion systems",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Korkmaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafiq",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Baleanu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Alshomrani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rehman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Advances in Difference Equations",
+            "volume": "2020",
+            "issn": "1",
+            "pages": "1--26",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A positive and bounded finite element approximation of the generalized Burgers-Huxley equation",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ervin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mac\u00edas-D\u00edaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ruiz-Ram\u00edrez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Journal of Mathematical Analysis and Applications",
+            "volume": "424",
+            "issn": "2",
+            "pages": "1143--1160",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Isolation, quarantine, social distancing and community containment: pivotal role for old-style public health measures in the novel coronavirus (2019-ncov) outbreak",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Freedman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Travel Medicine",
+            "volume": "27",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "A positivity-preserving nonstandard finite difference scheme for the damped wave equation",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mickens",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jordan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Numerical Methods for Partial Differential Equations",
+            "volume": "20",
+            "issn": "5",
+            "pages": "639--649",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "A new positivity-preserving nonstandard finite difference scheme for the DWE",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mickens",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jordan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Numerical Methods for Partial Differential Equations: An International Journal",
+            "volume": "21",
+            "issn": "5",
+            "pages": "976--985",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Dynamic consistency: a fundamental principle for constructing nonstandard finite difference schemes for differential equations",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mickens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Journal of difference equations and Applications",
+            "volume": "11",
+            "issn": "7",
+            "pages": "645--653",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Mathematical models in population biology and epidemiology",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Brauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Castillo-Chavez",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Castillo-Chavez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Modeling the dynamics of novel coronavirus (2019-nCov) with fractional derivative",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Atangana",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Alexandria Engineering Journal",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Numerical methods for incompressible viscous flow",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Pen-Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 1977,
+            "venue": "",
+            "volume": "20",
+            "issn": "",
+            "pages": "287--304",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Modelling the impact of COVID-19 in Australia to inform transmission reducing measures and health system preparedness",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Moss",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wood",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shearer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Black",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mccaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mcvernon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Flowchart depicting the dynamics of propagation of COVID-19 in a SEIQR model.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "If S , E, I, Q, R \u2208 C 2 ([0, T ]) then the scheme (3.2) yields consistent approximations to the solutions of the system (2.1) with linear consistency order. Graph of the spectral radius of the Jacobiam matrix associated to the finite-difference scheme(3.2) at the equilibrium point C 2 .The fitted and estimated parameters of",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "The finite-difference scheme (3.2) converges linearly to the solution of the continuous model (2.1) for sufficiently small values of \u03c4.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "(c) shows the the dynamics of the model (2.1) when it transits from COVID-19 present to COVID-19 absent with q 1 = 0.014. Meanwhile, Figure 3(c) shows the effect of the quarantine parameter on infected humans. As expected, increasing q 1 reduces the number of infected individuals. In the simulations, we used S 0 = 0.5, E 0 = 0.2, I 0 = 0.1, Q 0 = 0.1, R 0 = 0.1 and \u03c4 = 0.01.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Solution of the system (2.1) versus time using the method (3.2), considering (a) a system free of COVID-19 and (b) a system with the presence of COVID-19. We employed the parameters ofTable 1, and the initial conditions are S 0 = 0.5, E 0 = 0.2, I 0 = 0.1, Q 0 = 0.1, R 0 = 0.1 and \u03c4 = 0.01. (c) Dynamics of the model (2.1) when it transits from COVID-19 present to COVID-19 absent with q 1 = 0.014. (d) Dynamics of the infected individuals depending on the parameter q 1 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Table of model parameters in the dynamics of propagation of COVID-19 in a SEIQR model.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Corona Free EquilibriumSub population of COVID-19Corona Present Equilibrium",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Acknowledgments. The corresponding author (J.E.M.-D.) wishes to acknowledge the financial support from the National Council for Science and Technology of Mexico (CONACYT) through grant A1-S-45928.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

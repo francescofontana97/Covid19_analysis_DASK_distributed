@@ -1,0 +1,2509 @@
+{
+    "paper_id": "3d437a83aac3593fcea6eb2a6f6f5e56fc13b7ee",
+    "metadata": {
+        "title": "To appear in: Future Generation Computer Systems",
+        "authors": [
+            {
+                "first": "Xiaoyu",
+                "middle": [],
+                "last": "Qi",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Gang",
+                "middle": [],
+                "last": "Mei",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Salvatore",
+                "middle": [],
+                "last": "Cuomo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Lei",
+                "middle": [],
+                "last": "Xiao",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "mainly consists of two stages: (1) creating reasonable networks for the interested 19 healthcare service systems and (2) identifying the influential nodes in the created 20 networks. 21 Much research has been conducted to abstract healthcare systems as networks, 22 and most of this research has focused on creating \"patient-sharing networks\" based both deliver care to the same patient and examined the approaches to conceptual-43 izing, measuring, and analyzing provider patient-sharing networks. 44 There are typically two procedures in identifying influential nodes in the cre-45 ated networks: (1) ranking nodes according to nodal influence measure metrics, 46 such as degree centrality [11] , clustering coefficients [12] , H-Index [13, 14] , and 47 k-shell [15, 16] ; and (2) evaluating the influence of top-ranked nodes by compar- 48 ing the structures and functions before and after removing a certain percentage of 49 top-ranked nodes. 50 Currently, many algorithms have been proposed for identifying influential nodes. In this paper, we propose a network-based method with privacy-preserving The novelty of the proposed method can be explained as follows. As mentioned 79 above, most of the related research is based on patient-sharing networks, which 80 are created according to electronic medical claims, focusing on the sharing of pa-81 tient information between providers. The advantage of creating patient-sharing 82 networks is that they are quite precise. However, the data of electronic medical 83 claims are personal and private [32, 33] , and the data are generally not directly 84 available to the public. Healthcare organizations need to consider regulations and 85 rules of privacy in regard to patient information. Researchers need to deal with 86 personal privacy information carefully before creating the required patient-sharing 87 network.",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 85,
+                    "text": "19",
+                    "ref_id": null
+                },
+                {
+                    "start": 183,
+                    "end": 185,
+                    "text": "21",
+                    "ref_id": null
+                },
+                {
+                    "start": 263,
+                    "end": 265,
+                    "text": "22",
+                    "ref_id": null
+                },
+                {
+                    "start": 499,
+                    "end": 501,
+                    "text": "44",
+                    "ref_id": null
+                },
+                {
+                    "start": 663,
+                    "end": 665,
+                    "text": "46",
+                    "ref_id": null
+                },
+                {
+                    "start": 692,
+                    "end": 696,
+                    "text": "[11]",
+                    "ref_id": null
+                },
+                {
+                    "start": 723,
+                    "end": 727,
+                    "text": "[12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 738,
+                    "end": 742,
+                    "text": "[13,",
+                    "ref_id": null
+                },
+                {
+                    "start": 743,
+                    "end": 746,
+                    "text": "14]",
+                    "ref_id": null
+                },
+                {
+                    "start": 764,
+                    "end": 768,
+                    "text": "[15,",
+                    "ref_id": null
+                },
+                {
+                    "start": 769,
+                    "end": 772,
+                    "text": "16]",
+                    "ref_id": null
+                },
+                {
+                    "start": 839,
+                    "end": 841,
+                    "text": "48",
+                    "ref_id": null
+                },
+                {
+                    "start": 925,
+                    "end": 927,
+                    "text": "49",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 946,
+                    "end": 948,
+                    "text": "50",
+                    "ref_id": null
+                },
+                {
+                    "start": 1549,
+                    "end": 1553,
+                    "text": "[32,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1554,
+                    "end": 1557,
+                    "text": "33]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In contrast, our study is based on a patient-sharing network rather than the 89 provider-interacting network. In the proposed method, the provider-interacting net-90 work joined by healthcare providers can be roughly created according to the loca-91 tion and available types of healthcare service, without the need for personal, private 92 electronic medical claims data. We only utilize the relationships between providers 93 to identify influential providers, thus protecting the privacy of patients. Most im- ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "88"
+        },
+        {
+            "text": "The main contributions of this paper can be summarized as follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "101"
+        },
+        {
+            "text": "(1) We construct a provider-interacting network by employing publicly avail-103 able information on locations and types of healthcare services of providers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "102"
+        },
+        {
+            "text": "(2) We rank the influential nodes of the created provider-interacting networks 105 using four local metrics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "104"
+        },
+        {
+            "text": "(3) We evaluate the impact of the top-ranked influential nodes in the provider-107 interacting network using three indicators.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "106"
+        },
+        {
+            "text": "The rest of this paper is organized as follows. Section 2 describes the details 109 of the proposed network-based method for identifying the influential provider of 110 healthcare service in the provider-interacting network. Section 3 presents the ap- ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "108"
+        },
+        {
+            "text": "In this section, we will first introduce the data source and then describe the 116 details of the proposed network-based method. (1) npi -NPI for the performing provider on the claim. The provider's NPI is 124 the numeric identifier registered in the NPPES. Each provider has a unique NPI.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "115"
+        },
+        {
+            "text": "(2) nppes provider zip -The provider's ZIP code.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "125"
+        },
+        {
+            "text": "(3) hcpcs code -Healthcare Common Procedure Coding System (HCPCS) 127 code used to identify the specific medical service provided.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "126"
+        },
+        {
+            "text": "The availability of the obtained datasets is as follows. In this paper, we propose a network-based method with privacy-preserving for 134 identifying influential providers in large healthcare service systems. The proposed 135 network-based method is composed of three main procedures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "128"
+        },
+        {
+            "text": "The first procedure is the construction of the network, which uses the ZIP code 137 and HCPCS code of the providers to build the provider-interacting networks. The 138 key step in this procedure is to set a threshold value for the location of the neigh-139 boring providers, specify that providers within the threshold range can generate the 140 connection relationship, and add weights to the edges according to the similarity 141 of the types of medical services provided.",
+            "cite_spans": [
+                {
+                    "start": 80,
+                    "end": 83,
+                    "text": "137",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "136"
+        },
+        {
+            "text": "The second procedure is to rank influential nodes. The ranking of the nodes in 143 the generated provider-interacting network is conducted in parallel on the basis of 144 four nodal influence metrics, including the DC, CB, CC, and H-Index.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "142"
+        },
+        {
+            "text": "The third procedure is to evaluate the impact of the identified influential nodes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "145"
+        },
+        {
+            "text": "By removing a certain proportion of the top-ranked nodes, the impact on the three 147 indicators of the network is evaluated, including the maximum connectivity co-effectiveness of the influential nodes ranking algorithm.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "146"
+        },
+        {
+            "text": "The flowchart of the proposed network-based method for identifying influential 151 providers in a healthcare service system is illustrated in Fig. 1 . information [34, 35, 36] . In this paper, we employed the second approach by using ",
+            "cite_spans": [
+                {
+                    "start": 163,
+                    "end": 167,
+                    "text": "[34,",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 168,
+                    "end": 171,
+                    "text": "35,",
+                    "ref_id": null
+                },
+                {
+                    "start": 172,
+                    "end": 175,
+                    "text": "36]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 148,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "150"
+        },
+        {
+            "text": "(1) ZIP code proximity 176 We converted the centroid coordinates of each provider's ZIP code to latitude",
+            "cite_spans": [
+                {
+                    "start": 23,
+                    "end": 26,
+                    "text": "176",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "175"
+        },
+        {
+            "text": "is X j , and the latitude is Y j . If the absolute value of the difference between the 179 longitudes of two nodes, i.e., |X i -X j |, and the absolute value of the difference 180 between the latitudes, i.e., |Y i -Y j |, are both within a certain range, then the two 181 providers are considered potential neighbors; see Eq.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "175"
+        },
+        {
+            "text": "(2).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "175"
+        },
+        {
+            "text": "According to the division of cities, districts, and streets, people who live in a 183 city are likely to know each other. After statistical calculation, the average value of 184 threshold \u03b1 is 0.2\u02da, and the average value of threshold \u03b2 is also 0.2\u02da.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "175"
+        },
+        {
+            "text": "(2) HCPCS code similarity 186 The HCPCS is divided into two principal subsystems, referred to as level I and there is descriptive terminology that identifies a category of similar items.",
+            "cite_spans": [
+                {
+                    "start": 26,
+                    "end": 29,
+                    "text": "186",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "185"
+        },
+        {
+            "text": "In this paper, we specify that the set of HCPCS codes for medical services 194 provided by node v i is represented by S i , and the set of HCPCS codes provided by 195 node v j is represented by S j . If two providers have the same HCPCS code, they 196 are considered potential neighbors, and the weight of the edge is k (Eq. (3)).",
+            "cite_spans": [
+                {
+                    "start": 163,
+                    "end": 166,
+                    "text": "195",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "193"
+        },
+        {
+            "text": "Due to the large number of nodes in the nationwide provider-interacting net- 5)). If the JC of two nodes is small, the relationship between the two 240 nodes may be weak. Conversely, if the JC of two nodes is large, the relationship 241 between the two nodes may be strong. between v i and its neighbors is E i , the CC of a node can be calculated via Eq. (7).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "193"
+        },
+        {
+            "text": "In special cases, if the degree K i of the node is 0 or 1, the C i of the node is 265 considered to be 0. Obviously, the nodal CC is also between 0 and 1 [20, 44]. nent after the removal of nodes, the more obvious the trend is, indicating that the 305 effect of using this method to attack a network is better than that of other methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "193"
+        },
+        {
+            "text": "(2) Network efficiency 307 To investigate the effect of node removal on network efficiency, the network 308 efficiency can be used to evaluate the connectivity of the network (Eq. (10)). To ",
+            "cite_spans": [
+                {
+                    "start": 23,
+                    "end": 26,
+                    "text": "307",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "306"
+        },
+        {
+            "text": "where \u03b7 ij = 1/d ij , d ij is the shortest path between nodes i and j, and N is the 314 number of network nodes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "306"
+        },
+        {
+            "text": "In this paper, we remove a certain proportion of specific nodes in the network 316 to simulate the effect of a network attack and then calculate the network efficiency 317 decline ratio before and after the attack to quantify the accuracy of each node in-318 fluence metric.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "315"
+        },
+        {
+            "text": "The proportion of network efficiency decrease is expressed through Eq. (11).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "319"
+        },
+        {
+            "text": "where \u03b7 represents the network efficiency after node removal, \u03b7 0 represents the 321 original network efficiency, and 0\u2264 \u00b5 \u22641. The higher the value of \u00b5 is, the worse 322 the network efficiency becomes after removing the node.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "319"
+        },
+        {
+            "text": "(3) Susceptibility In this subsection, we will introduce more implementation details on the devel- There are two steps in this procedure: the extraction of NPI, ZIP code, and 345 HCPCS data and the construction of the provider-interacting network according to 346 (1) the ZIP code proximity and (2) the HCPCS code similarity. 347 We wrote a Python script specifically to extract the NPI, ZIP code, and HCPCS Table 2 . The frequency distribution of the four node-ranking metrics is shown in Fig. 8 . Fig. 9 (a) and Fig. 9 (b) show that when removal ratios reach 0.5% \u223c 1%, us-441 ing the metric DC to remove the top-ranked nodes leads to the largest decline in the 442 maximum connectivity coefficient and network efficiency, followed by the metrics 443 CB and H-Index. The metric CC leads to a slight decrease in the maximum con-444 nectivity coefficient and network efficiency, which is almost unchanged. In Fig. 9 445 (c), the metrics CC and H-Index reduce the susceptibility by a small margin, which 446 is almost unchanged, while the metric CB reduces the maximum connectivity co-447 efficient and network efficiency by the largest margin, followed by the metric DC.",
+            "cite_spans": [
+                {
+                    "start": 260,
+                    "end": 263,
+                    "text": "346",
+                    "ref_id": null
+                },
+                {
+                    "start": 326,
+                    "end": 329,
+                    "text": "347",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 408,
+                    "end": 415,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 490,
+                    "end": 496,
+                    "text": "Fig. 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 499,
+                    "end": 505,
+                    "text": "Fig. 9",
+                    "ref_id": "FIGREF30"
+                },
+                {
+                    "start": 514,
+                    "end": 524,
+                    "text": "Fig. 9 (b)",
+                    "ref_id": "FIGREF30"
+                },
+                {
+                    "start": 909,
+                    "end": 915,
+                    "text": "Fig. 9",
+                    "ref_id": "FIGREF30"
+                }
+            ],
+            "section": "323"
+        },
+        {
+            "text": "The above results show that, in the provider-interacting networks, when selectively 449 removing the top 0.1% \u223c 1% of nodes for each metric, the efficiency, connectivity not be accurate because it is not able to determine the \"best\" distance threshold 528 to select neighboring providers. In fact, the threshold of distance is specified. In resource. In the future, we will also conduct research work in this field.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "448"
+        },
+        {
+            "text": "Identifying the most influential providers in a healthcare service system is an ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "538"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Provider patient-sharing networks and multiple-provider prescrib-577 ing of benzodiazepines",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mandl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "J Gen Intern Med",
+            "volume": "31",
+            "issn": "2",
+            "pages": "164--171",
+            "other_ids": {
+                "DOI": [
+                    "57810.1007/s11606-015-3470-8"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "An 580 analysis of patient-sharing physician networks and implantable cardioverter 581 defibrillator therapy",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Moen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Austin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Bynum",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Skinner",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "O&apos;malley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Health Serv Outcomes Res Methodol",
+            "volume": "16",
+            "issn": "3",
+            "pages": "132--582",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10742-016-0152-x"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The formation of physician patient sharing networks in medicare",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Linde",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Exploring the effect of hospital affiliation",
+            "authors": [],
+            "year": 2019,
+            "venue": "Health Econ",
+            "volume": "28",
+            "issn": "12",
+            "pages": "1435--585",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/hec.3936"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Patient-sharing networks of physicians and health care 588 utilization and spending among medicare beneficiaries",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Takis",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "O&apos;malley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "JAMA Intern Med",
+            "volume": "589",
+            "issn": "1",
+            "pages": "66--73",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jamainternmed.2017.5034.590"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A scoping review of patient-sharing network studies using admin-592 istrative data",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pollack",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Transl Behav Med",
+            "volume": "8",
+            "issn": "4",
+            "pages": "598--625",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Fu-600 ture Generation Computer Systems",
+            "authors": [],
+            "year": 2020,
+            "venue": "tial nodes in large biological networks on the graphics processing unit",
+            "volume": "106",
+            "issn": "",
+            "pages": "1--13",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The h-index of a network node 603 and its relation to degree and coreness",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Stanley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nature Communications",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/ncomms10168"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "An index to quantify an individual's scientific research output",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hirsch",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The k-core as a predictor of struc-609 tural collapse in mutualistic ecosystems",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Morone",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Ferraro",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Makse",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nature Physics",
+            "volume": "15",
+            "issn": "1",
+            "pages": "95--610",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41567-018-0304-8"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Theories and appli-612 cations",
+            "authors": [
+                {
+                    "first": "Y.-X",
+                    "middle": [],
+                    "last": "Kong",
+                    "suffix": ""
+                },
+                {
+                    "first": "G.-Y",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R.-J",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "832",
+            "issn": "",
+            "pages": "1--32",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.physrep.6132019.10.004"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Identifying influential and susceptible members of social 615 networks",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Aral",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Walker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Science",
+            "volume": "337",
+            "issn": "6092",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Identification of influential spreaders in complex networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Makse",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Na-619 ture Physics",
+            "volume": "6",
+            "issn": "11",
+            "pages": "888--893",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nphys1746"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Influential node ranking in social net-621 works based on neighborhood diversity, Future Generation Computer Sys-622 tems",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zareie",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sheikhahmadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jalili",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "94",
+            "issn": "",
+            "pages": "120--129",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.future.2018.11.023"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Ranking in 624 evolving complex networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Mariani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Medo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-Y",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Physics Reports",
+            "volume": "689",
+            "issn": "",
+            "pages": "1--54",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Centrality in social networks conceptual clarification",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Freeman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1978,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/0378-8733(78)90021-7"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "A new status index derived from sociometric analysis, Psychome-629 trika",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Katz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1953,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/bf02289026"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Identification of influential spreaders in complex networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Makse",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Na-632 ture Physics",
+            "volume": "6",
+            "issn": "11",
+            "pages": "888--893",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nphys1746"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Searching the web",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Arasu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "ACM Transactions 634 on Internet Technology",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/383034.383035"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Authoritative sources in a hyperlinked environment",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kleinberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Journal 636 of the ACM",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/324133.324140"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Leaders in social networks, the 638 delicious case",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "PLoS One",
+            "volume": "6",
+            "issn": "6",
+            "pages": "1--9",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.639pone.0021202"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Vital nodes 641 identification in complex networks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X.-L",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q.-M",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Physics Reports",
+            "volume": "650",
+            "issn": "",
+            "pages": "1--63",
+            "other_ids": {
+                "DOI": [
+                    "64210.1016/j.physrep.2016.06.007"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Cascade-based attacks on complex networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Motter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lai",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Phys",
+            "volume": "644",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Efficient behavior of small-world networks",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Latora",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Marchiori",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Phys 647 Rev Lett",
+            "volume": "87",
+            "issn": "19",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1103/PhysRevLett.87"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Evaluating the importance 650 of nodes in complex networks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Physica a-Statistical Mechanics and Its Appli-651 cations",
+            "volume": "452",
+            "issn": "",
+            "pages": "209--219",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.physa.2016.02.049"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Physician and Other Supplier Data CY",
+            "authors": [],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Medicare-Provider-Charge-Data",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "A distributed ensemble approach for mining 658 healthcare data under privacy constraints",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Reddy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Information Sciences",
+            "volume": "330",
+            "issn": "",
+            "pages": "245--259",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ins.2015.10.011"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Gtsim-pop: Game theory based se-661 cure incentive mechanism and patient-optimized privacy-preserving packet 662 forwarding scheme in m-healthcare social networks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Vasilakos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Future Generation Com-663 puter Systems",
+            "volume": "101",
+            "issn": "",
+            "pages": "70--82",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.future.2019.05"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Disparities in obesity rates: analysis 666 by zip code area",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Drewnowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Rehm",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Solet",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Soc Sci Med",
+            "volume": "65",
+            "issn": "12",
+            "pages": "2458--63",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "New-669 comb, Geocoding addresses from a large population-based study: lessons",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mcelroy",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Remington",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Trentham-Dietz",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Robert",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "A comparison of address point, parcel and street geocoding 673 techniques",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Zandbergen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Computers, Environment and Urban Systems",
+            "volume": "32",
+            "issn": "3",
+            "pages": "214--674",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.compenvurbsys.2007.11.006"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "The node importance in actual complex net-676 works based on a multi-attribute ranking method, Knowledge-Based Systems 677",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "84",
+            "issn": "",
+            "pages": "56--66",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.knosys.2015.03.026"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Identifying influential nodes in complex networks 679 based on expansion factor",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jing",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "International Journal of Modern Physics C",
+            "volume": "",
+            "issn": "09",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1142/s0129183116501059"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Evidential identification of influential nodes in 682 network of networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Chaos, Solitons and Fractals",
+            "volume": "117",
+            "issn": "",
+            "pages": "283--296",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.chaos.2018.04.033"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Ranking the spreading ability of 685 nodes in complex networks based on local structure",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Physica A: Statistical 686 Mechanics and its Applications",
+            "volume": "403",
+            "issn": "",
+            "pages": "130--147",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Identification of influential nodes in social networks 689 with community structure based on label propagation",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Neurocomputing",
+            "volume": "210",
+            "issn": "",
+            "pages": "34--44",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.neucom.2015.11.125"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Evidential method to identify influential nodes in 692 complex networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Mo",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Journal of Systems Engineering and Electronics",
+            "volume": "26",
+            "issn": "2",
+            "pages": "381--387",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/jsee.2015.00044"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Identifying influential nodes in complex networks 695 based on the inverse-square law",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Physica A: Statistical Mechanics and its Ap-696 plications",
+            "volume": "512",
+            "issn": "",
+            "pages": "1044--1059",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.physa.2018.08"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Role of centrality for the identification of influential spreaders 700 in complex networks",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Costa",
+                    "middle": [],
+                    "last": "Lda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Phys Rev E Stat Nonlin Soft Matter Phys",
+            "volume": "90",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1103/PhysRevE.90.032812"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Universal resilience patterns in com-703 plex networks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Barzel",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Barabasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nature",
+            "volume": "530",
+            "issn": "7590",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Statistical mechanics of complex networks",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Albert",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Barabasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "706 Reviews of Modern Physics",
+            "volume": "74",
+            "issn": "1",
+            "pages": "47--97",
+            "other_ids": {}
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "Error and attack tolerance of complex 709 networks",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Albert",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jeong",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Barabasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Nature",
+            "volume": "406",
+            "issn": "6794",
+            "pages": "378--82",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/35019019"
+                ]
+            }
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "SNAP for C++: Stanford Network Analysis Platform",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "SNAP: A general purpose network analysis and graph 713 mining library",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sosic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "ACM Transactions on Intelligent Systems and Technology",
+            "volume": "714",
+            "issn": "1",
+            "pages": "1--23",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2898361"
+                ]
+            }
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "On the design and analysis of proto-716 cols for personal health record storage on personal data server devices",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Belyaev",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Ray",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Ray",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "A data integration platform for patient-centered e-721 healthcare and clinical decision support, Future Generation Computer Sys-722 tems",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Webster",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chilamkurti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "92",
+            "issn": "",
+            "pages": "996--1008",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.future.2018.07.061"
+                ]
+            }
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "COVID-19: what is next for public health?",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Heymann",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Shindo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The 724 Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "542--545",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/s0140-6736(20"
+                ]
+            }
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "Case of the index patient who 728 caused tertiary transmission of COVID-19 infection in korea: the applica-729 tion of lopinavir/ritonavir for the treatment of COVID-19 infected pneumo-730 nia monitored by quantitative RT-PCR",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Choe",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Korean Med Sci",
+            "volume": "35",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3346/jkms.2020.35.e79"
+                ]
+            }
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "Substantial un-733 documented infection facilitates the rapid dissemination of novel coronavirus 734 (SARS-CoV2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb3221"
+                ]
+            }
+        },
+        "BIBREF67": {
+            "ref_id": "b67",
+            "title": "SARS virus infection of cats and ferrets",
+            "authors": [],
+            "year": 2003,
+            "venue": "",
+            "volume": "425",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/425915a"
+                ]
+            }
+        },
+        "BIBREF69": {
+            "ref_id": "b69",
+            "title": "Impact of internaand border control measures on the global spread of the novel 742 2019 coronavirus outbreak",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Meyers",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Singer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Galvani",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Proceedings of the National Academy of Sci",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.2002616117"
+                ]
+            }
+        },
+        "BIBREF72": {
+            "ref_id": "b72",
+            "title": "The effect of travel restrictions 747 on the spread of the 2019 novel coronavirus (COVID-19) outbreak",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Halloran",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Longini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "748",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.aba9757"
+                ]
+            }
+        },
+        "BIBREF73": {
+            "ref_id": "b73",
+            "title": "A survey of Internet of Things 750 (IoT) for geo-hazards prevention: Applications, technologies, and chal-751 lenges",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Qi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "IEEE Internet of Things Journal",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF74": {
+            "ref_id": "b74",
+            "title": "A machine learning approach for 754",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Piccialli",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cuomo",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Cola",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Casolla",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF75": {
+            "ref_id": "b75",
+            "title": "IoT cultural data",
+            "authors": [],
+            "year": null,
+            "venue": "Journal of Ambient Intelligence",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12652-019-01452-6"
+                ]
+            }
+        },
+        "BIBREF76": {
+            "ref_id": "b76",
+            "title": "Decision 757 making in IoT environment through unsupervised learning",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Piccialli",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Casolla",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cuomo",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Giampaolo",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Di Cola",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Intelligent",
+            "volume": "758",
+            "issn": "1",
+            "pages": "27--35",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/MIS.2019.2944783"
+                ]
+            }
+        },
+        "BIBREF77": {
+            "ref_id": "b77",
+            "title": "Exploring unsupervised 760 learning techniques for the Internet of Things",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Casolla",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cuomo",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "S D"
+                    ],
+                    "last": "Cola",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Piccialli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Indus-761 trial Informatics",
+            "volume": "16",
+            "issn": "4",
+            "pages": "2621--2628",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TII.2019"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "23 on electronic medical claims [4]. For example, Pollack et al [5] first created patient-24 sharing networks among physicians using medical claims data and then investi-25 gated care coordination and costs of care. Ong et al [6] created a patient-sharing 26 network using commercial healthcare claims spanning the years 2008 through 27 2011 and elucidated the effect of professional relationships among providers on 28 multiple-provider prescriptions of benzodiazepines. 29 Moreover, using Medicare Part B claims data, Moen et al [7] first constructed 30 a network of physicians who care for patients with cardiovascular disease based 31 on patient-sharing relationships and then analyzed a case study of physicians' ad-32 herence to clinical guidelines for the prevention of sudden cardiac death. Using a 33 dataset consisting of 1,306 physicians who practiced within the Chicago hospital 34 referral region in 2016 and who collectively had 12,091 patient-sharing ties, Linde 35 [8] created a patient-sharing network and examined the degree to which hospital 36 affiliation drives physicians' sharing of Medicare patients. 37 In addition, Landon et al [9] identified patient-sharing networks in which physi-38 cians share patients, information, and behaviors and presented a social network 39 analysis of Medicare administrative data from 2006 to 2010 in 51 hospital referral 40 regions. Similarly, DuGoff et al [10] constructed patient-sharing networks using 41 administrative data in which pairs of physicians are considered connected if they 42",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Most of the identification algorithms are designed for online social networks [17, 52 18, 19]. In these identifications, some influence measures, such as degree central-53 ity [11], betweenness centrality [20], closeness centrality [21], and Katz centrality 54 [22], are highly dependent on the topological structure of the network. Moreover, 55 Xiao et al [12] used company behaviors and clustering coefficient to rank nodes. 56 Lu et al [13] adopted the H-Index [14] to identify vital nodes. Kitsak et al. [23] 57proposed the theory of k-shell decomposition to identify influential nodes.58 In addition, in the development of search engines, there are also important 59 and famous algorithms for ranking nodes, such as PageRank [24], HITs [25], and 60 LeaderRank [26]. These ranking algorithms have been excellently investigated and 61 summarized in several reviews [27, 20]. The node ranking and influential nodes 62 identification methods have their own advantages and disadvantages. Users can 63 employ suitable metrics and develop algorithms in their specific applications.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "94 portantly, the locations and the provided types of healthcare services are publicly 95 available. For example, these data are publicly available from the U.S. Centers 96 for Medicare & Medicaid Services (https://www.cms.gov/). The afore-97 ploying the publicly available information on the locations and the provided health-100 care service.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "111 plication of the proposed method for the Physician and Other Supplier Data CY 112 2017 [31]. Section 4 discusses the experimental results and the proposed method.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Section 5 draws several conclusions.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "paper, the data of providers and other suppliers who have effective Na-119 tional Provider Identifiers (NPIs) and submit Part B medical insurance services 120 in the United States from 2012 to 2017 are obtained from the U.S. Centers for 121Medicare & Medicaid Services. We first extract interesting and important data and",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Flowchart of the proposed network-based method for identifying influential providers in a healthcare service system 2.3. Procedures of the Proposed Method 153 2.3.1. Construction of the Provider-Interacting Network 154 First, we cleaned and processed the obtained data. By writing a specific Python 155 script, we extracted the NPI, ZIP code, and HCPCS code of 898,257 providers from 156 Physician and Other Supplier Data CY 2017 [31]. Address matching was used to for address matching: (1) by street address, (2) by ZIP code, and (3) by boundary 159",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "160 the ZIP code of the providers. The centroid coordinates based on ZIP code were 161 converted into longitude and latitude and then represented by nodes on the map 162 (Fig. 2). The size of each node is the weight added according to the number of 163 different medical services provided by the providers. The greater the number is, 164 the greater the weight, and the larger the point (Fig. 3). Map of the nationwide providers We constructed provider-interacting networks A(\u03b4) for 50 U.S. states (\u03b4), who 166 have an effective NPI and submit Part B medical insurance services. The network 167 can be abstracted as an undirected weighted network. The model of the undirected 168 weighted network is given as a triple G = (V, E, W), where V=(v 1 ,v 2 ,. . . ,v n ) rep-169 resents the set of nodes and v i \u2208V. E = (e 1 ,e 2 ,. . . ,e m ) represents the set of edges; Weighted nodes distribution in a local area",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "The ij ] n i,j=1 is the weight matrix of connected edges, where w ii = 0 and w ii \u2265171 0, w ij (i =j) represents the weight of edges (v i , v j ) [37]; see Eq. (1). 172 w ij = w ji (i, j = 1, 2, . . . , n) (1) Each provider is regarded as a node. Node v i and node v j are connected by 173 weighted lines. The weighted lines are created by considering (1) ZIP code prox-174 imity and (2) HCPCS code similarity.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "level II. Level I of the HCPCS is comprised of CPT (Current Procedural Terminol-188 ogy), a numeric coding system maintained by the American Medical Association 189 (AMA). Level II codes are also referred to as alpha-numeric codes because they 190 consist of a single letter of the alphabet followed by 4 numeric digits, while CPT 191 codes are identified using 5 numeric digits. For each alpha-numeric HCPCS code,",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "work, we choose a representative provider-interacting network in California and 199 Nevada for research. The distributions of the providers in California and Nevada 200 are shown in Fig. 4. According to the above two rules for finding neighbors of 201 providers, we generate local provider-interacting networks as shown in Fig. The Partially enlarged map of the provider-interacting network 2.3.2. Ranking of the Influential Nodes 204 In network science, one of the most important research areas is how to rank 205 influential nodes in a complex network [38]. It is interesting to rank nodes when 206 there are a massive number of nodes and find the vital providers that have a strong 207 impact on the function and efficiency of the whole network. For example, it is 208 possible to replace the missing vital nodes in a timely manner to protect the network 209 from paralysis and maintain the stability of the medical system [39].210 Moreover, Gao et al [40] proposed a local structural centrality measure to rank 211 the spreading ability of nodes in the network. Zhao et al [41] proposed the IM-LPA 212 algorithm to solve the influence maximization problem in social networks with 213 a community structure. Mo et al [42] proposed a new comprehensive centrality 214 measure based on Dempster-Shafer evidence theory. algorithms can be roughly divided into two categories: one is based 216 on local nodal influence metrics such as the degree centrality, and the other is based 217 on global metrics such as the betweenness centrality, closeness centrality, and k-218 shell metrics [43]. 219 In this paper, after considering the ranking metrics that are relatively suit-220 able for undirected weighted provider-interacting networks, four nodal influential 221 metrics are used to rank nodes, including (1) the degree centrality [11] , measured by the degree of a node, which can directly reflect the possi-226 bility of the node having direct contact with other nodes in the network (Eq. indicates the DC of node v i and K i indicates the degree of node v i . To 228 reflect the function of weighted edges, we specify how many HCPCS codes are 229 the same between nodes v i and v j , and how many connecting edges are there be-230 tween nodes v i and v j . When calculating the DC of node v i , the number of added 231 connected edges can be equivalent to the number of increased neighbors. For a 232network where node v i has n connected edges, the maximum degree of a node is 233 n\u22121. After the node is divided by n\u22121 for normalization, there is 0 \u2264 DC i \u2264 1.234The larger the value is, the stronger the centrality of the nodes is [37].235(2) Companion Behaviors (CB)236    The local metric CB was originally proposed byMei et al [12]  and is based on 237 the calculation of Jaccard Coefficients (JCs) of edges. The JC reflects the differ-238 ence between the neighbors of two nodes, that is, the relationship strength of two",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "Suppose \"s\" is a common neighbor of nodes v i and v j , v i and s have x HCPCS 243 codes that the same, and v j and s have y HCPCS codes that the same. Similarly, 244 to reflect the function of weighted edges, we specify that there are several HCPCS 245 codes between nodes v i and v j , and there are several connecting edges between 246 nodes v i and v j . The increased number of connected edges is equivalent to the 247 increased number of neighbors (Fig. 7 (a)), and the intersection of v i and v j neigh-248 bors |n A \u2229 n B | means min(x, y). Illustrations of the summations of Jaccard Coefficient For example, node v i shares an edge with v j , node v i has 5 connected providers 250 (including node v j ), node v j has 4 connected providers (including node v i ), and 251 there is a common understanding provider v S . At the same time, there are five 252 identical HCPCS codes between v i and v S and four identical HCPCS codes be-253tween v j and v s , which means that v i , v j and v s are connected with 4 triangles.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "the edge whose value is always in the range of 0 \u223c 1. The weight of the nodes is 257 represented by CB, which means the sum of the JCs of the connected edge of the the tightness of the connection between neighbors. For a node v i 261 with a degree of K i , the number of edges between node i and K i nodes is K i (K i -262 1)/2, which is the case with the largest number of edges. If the number of edges 263",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "of the H-Index proposed by J.E. Hirsch [14] is as follows. All268 n papers published by an author are sorted in descending order by the size of the 269 citation frequency. If and only if the citation frequency of each paper in the first h 270 papers is at least h and the citation frequency of the h+1 paper in the first h papers 271 is less than h+1, then value h is defined as the H-Index of the author. If F i is set as 272 the citation frequency of article i, the expression of the H-Index can be written as 273 in Eq. (8).274 H = max(i), F i \u2265 i (8) Similarly, a node has an H-Index h if h of its neighbors have a degree of at 275 least h [12].276 2.3.3. Impact Evaluation of the Identified Influential Nodes 277 There are two typical categories of indicators to evaluate the effectiveness of 278 influential node ranking algorithms: (1) the propagation dynamics of the network 279 and (2) the resilience (also called the robustness) of the network [30]. The re-280 silience is a system's ability to adjust its activity to retain its basic functionality 281 when errors, failures, and environmental changes occur [45]. 282 The research on network resilience due to external damage such attacks has 283 drawn much attention in network science [46]. In general, there are two kinds 284 of attacks on complex networks: random attacks and selective attacks. Random 285 attacks mean that nodes are randomly removed with a certain probability, while 286 selective attacks mean that nodes or edges are selectively deleted in a certain way 287 [47]. Research on the structural robustness of network nodes subjected to random 288 failures or malicious attacks has been widely studied [28]. the concept of network resilience, in this paper, we employ three in-290 dicators, including the maximum connectivity coefficient, network efficiency, and 291 susceptibility, to quantify the impact of selective removal of top-ranked influential 292 nodes on the network structure and function. We abstract this situation as node 293 deletion due to the influential provider's own reasons (such as retirement or resig-294 nation) or other external factors. The results can be examined in two aspects: (a) 295 the connectivity of the network has been damaged; and (b) the efficiency of the net-296 work has declined, resulting in the network not meeting the business requirements. Maximum connectivity coefficient 298 The maximum connectivity coefficient of a network can be calculated by first 299 ranking the nodes according to the nodal influence metrics from the largest to the 300 smallest and then observing the impact of removing a part of the nodes on the giant 301 connected component (Eq. (9)). 302 G = R/N (9) where N represents the total number of nodes in the network and R represents the 303 giant connected component. The smaller the scale of the giant connected compo-304",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "remove nodes and all their corresponding edges in the network, some paths in310 the network are interrupted, resulting in the shortest path between some nodes 311 becoming larger, and then the average path length of the whole network increases, 312 affecting network connectivity [30].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "The giant connected component decreases with an increase in the number of 325 removed nodes and vanishes when a critical proportion p c of nodes is removed 326 [27]. To find the accurate p c value, the susceptibility S of the network is calculated 327 before and after removing a certain number of nodes (Eq. (12)). s is the number of components of size s, n is the size of the whole network 329 and R represents the giant connected component. 330 In general, there is a peak value of S at the critical proportion p c of network 331 collapses. If the network experiences multiple collapses during selective node dele-332 tion, there are multiple peaks, and the p c value is determined by the highest one.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF20": {
+            "text": "according to the objective function on network connectivity, the smaller 334 the value of p c is, the better the sorting algorithm. 335 2.4. Implementation Details of the Proposed Method336",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "opment of the proposed network-based method for identifying influential providers 338 in healthcare service systems. As has been described several times, there are three 339 main procedures in the proposed method: (1) constructing the provider-interacting 340 network, (2) ranking the influential nodes in the generated provider-interacting net-341 work, and (3) evaluating the impact of top-ranked influential nodes. This subsec-342 tion will introduce more details on the above three procedures.343 2.4.1. Implementation Details of Constructing the Provider-Interacting Network344",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF22": {
+            "text": "of each provider from the raw dataset, and we obtained 898,257 providers from349    Physician and Other Supplier Data CY 2017[31]. The entire Python script is 350 presented in Listing 1.351    We also specifically wrote C/C++ code to construct the local provider-interacting352 network in California and Nevada according to (1) the ZIP code proximity and (2) 353 the HCPCS code similarity. 354 After reading in the data of the NPI, ZIP code, and HCPCS of each provider, 355 we first exclude those providers located outside California and Nevada according 356 to the latitude and longitude. Those providers with latitudes in the range of 32.5 357 and 42 and with longitudes in the range of -124.5 and -114 are kept, while the rest 358 are excluded. All the remaining providers are stored in a node list. Python code for extracting the NPI, ZIP code, and HCPCS from the raw dataset evaluating the distance between any pair of providers. If two providers have 390 the same HCPCS codes and the providers are also located within a given region 391 (see Eq. (2)), then a link/edge is created and stored in the edge list. If there are 392 duplicate edges, then those edges will be merged into a unique one using sorting 393 and scanning operations, while the weight of the merged edge indicates the number 394 of duplications. 395 2.4.2. Implementation Details of Ranking the Influential Nodes 396 In the proposed method, the ranking of nodes in the generated provider-interacting 397 network is conducted in parallel on the basis of four nodal influence metrics, in-398 cluding the DC, CB, CC, and H-Index. In this paper, we directly employ the source 399 code presented in our previous work [12] to rank the influential nodes. Much more 400 implementation detail is provided in reference [12].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF23": {
+            "text": "the proposed method, the impact of those top-ranked influential nodes in the 404 provider-interacting network is evaluated by comparing three network indicators: 405 the maximum connectivity coefficient, network efficiency, and susceptibility. This406 procedure is implemented by invoking the Stanford Network Analysis Platform 407 (SNAP) [48]. Much more implementation detail is provided in reference[49].",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF24": {
+            "text": "performance of the proposed method is evaluated on a workstation com-411 puter. Detailed specifications of the employed workstation computer are listed in412",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF26": {
+            "text": "a) shows the frequency distribution of the unweighted node degrees, and 417 Fig. 8 (b) shows the frequency distribution of the weighted node degrees. 418 Fig. 8 shows that the unweighted degree of nodes ranges from 1 to 4,050, of 419 which 98.7% are less than 200; the weighted degree of nodes ranges from 1 to 420 14,247, of which 99.1% is less than 1,000; and the CB of nodes ranges from 0 to 421 40.2575, of which 98.6% are less than 2. The distributions of the degree and CB 422 metrics of nodes are extremely irregular from low to high, and most of them are 423 low-value metrics. 424 The CC of nodes ranges from 0 to 1, of which 20.3% are less than 0.05; the 425 H-index of nodes ranges from 1 to 99, of which 34.1% are less than 5. The distri-Frequency distributions of node ranking using four nodal influence metrics 24 J o u r n a l P r e -p r o o f butions of the CC and H-Index metrics of nodes are relatively regular from low to 427 high, but the proportion of low values is the largest. The general trend is that with 428 increasing of CC and H-Index values, the proportion decreases.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF27": {
+            "text": "Results of Impact Evaluation of the Top-ranked Influential Nodes 430 To evaluate the influence of static attacks (i.e., the node importance remains 431 unchanged) on the maximum connectivity coefficient, network efficiency, and sus-432 ceptibility of the network, we selected 11 groups of removal ratios (0%, 0.1%, 433 0.2%, 0.3%, 0.4%, 0.5%, 0.6%, 0.7%, 0.8%, 0.9%, 1%) for testing; see Tables 3 \u223c 434 6 and Fig. 9 for the detailed test results. 435 Fig. 9 shows the effect of removing the top-ranked nodes with different scales 436 on the maximum connectivity coefficient, network efficiency, and susceptibility. 437 After removing the top-ranked nodes, the trend in the giant connected component 438 becoming smaller is more obvious, the more obvious the decline in the maximum 439 connectivity coefficient is, and the worse the network efficiency is.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF29": {
+            "text": "and susceptibility of the network become the worst when using the metrics DC and 451 CB to remove top-ranked nodes.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF30": {
+            "text": "The influence of removing the top nodes with different proportions on the (a) maximum connectivity coefficient, (b) network efficiency, and (obvious advantage of the proposed method is that it does not require 455 the information of personally private medical claims.456 As mentioned above, patient-sharing networks are created according to elec-457 tronic medical claims, and the advantage of creating patient-sharing networks is 458 that they are quite precise. However, the data of electronic medical claims are per-459 sonal and private [32, 33]. Personally private information needs to be carefully 460 addressed before creating the required patient-sharing networks [50, 51]. 461 In contrast, in the proposed method, the provider-interacting network joined by 462 healthcare providers can be roughly created according to the location and the avail-463 able types of healthcare services, without the need for personally private electronic 464 medical claims. For example, the data of the location and the provided types of 465 healthcare service are publicly available at the U.S. Centers for Medicare & Med-466 icaid Services (https://www.cms.gov/). This is the main advantage of the 467 proposed method.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF31": {
+            "text": "Shortcomings of the Proposed Method 469 One of the essential ideas behind the proposed method is the construction of 470 the provider-interacting network, rather than the commonly used patient-sharing 471 networks. Those patient-sharing networks are typically constructed based on med-472 ical claims data. Medical claims are usually quite accurate, and the patient-sharing 473 network is also quite accurate in reflecting the relationships between providers. 474 Compared with those patient-sharing networks constructed based on medical 475 claims data, the provider-interacting network is generated according to the loca-476 tion and available healthcare service of the providers, more specifically, according 477 29 J o u r n a l P r e -p r o o f to the ZIP codes and HCPCS codes of the providers. In the proposed method, 478 several nearby providers located within a certain distance who provide the same 479 HCPCS codes are linked and considered neighbors in the provider-interacting net-480 work.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF32": {
+            "text": "China, during the period of epidemic prevention, the demand for front-line 503 30 J o u r n a l P r e -p r o o f medical staff, disinfection materials, protective equipment and emergency supplies 504 in the respiratory tract infection department increased dramatically. In contrast, 505 many patients with other diseases went to the hospital as little as possible; thus, 506 the investment in diagnosis and treatment in other departments of the hospital de-507 creased, and the required medical resources (e.g., the labor and material resources) 508 decreased accordingly. 509 It is quite meaningful to employ the proposed method in this paper to build a 510 network of hospital providers, identify the important providers remaining to main-511 tain the normal operation of local medical services, and transfer other redundant 512 providers and available medical materials to support areas heavily affected by the 513 epidemic. In this way, the proposed method can not only effectively ensure that 514 local hospitals maintain their capability to provide healthcare services but can also 515 reasonably distribute medical resources, which plays an important role in epidemic 516 prevention. Moreover, more attention needs to be paid to strengthening the distri-517 bution of personnel and facilities in district and community level medical institu-518 tions. According to urban planning, the method in this paper ensures that public 519 medical resources can flow between different levels corresponding to different ge-520 ographical units and can be transferred at the grassroots level to establish a resilient 521 and hierarchical healthcare service system.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF33": {
+            "text": "the large number of nodes in the provider-interacting network, in this 524 paper, we only choose the providers in California and Nevada for research. More-525 over, in the proposed method, several nearby providers located within a certain 526 distance who provide the same HCPCS codes are linked. This procedure may 527",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF34": {
+            "text": "future, we will generate a nationwide provider-interacting network for further 530 research and optimize the selection of a proper distance threshold.531 Moreover, with significant advances in communication technologies, an era 532 of Internet of Things (IoT) appears [58, 59]. A large amount of IoT data can be 533 collected in various ways [60, 61] which may be used to generate networks for 534 healthcare service systems. Identifying influential providers in those generated 535 network-based systems can also help optimize and distribute the healthcare service536",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF35": {
+            "text": "important step towards optimizing the use of available healthcare resources and 540 ensuring the more efficient delivery of matched healthcare services. In this pa-541 per, we proposed a network-based method with privacy-preserving for identifying 542 influential providers in large healthcare service systems. First, we constructed a 543 provider-interacting network by employing the publicly available information on 544 the locations and types of healthcare service of providers. Second, we ranked the 545 nodes in the generated provider-interacting network on the basis of four nodal in-546 fluence metrics. Third, we evaluated the impact of those top-ranked influential 547 nodes in the provider-interacting network by comparing three network indicators. 548 The proposed method is demonstrated by employing the dataset of Physician and 549 Other Supplier Data CY 2017, and can be applied to other similar datasets to help 550 make decisions for healthcare system management, such as the optimization of 551 healthcare resources in the response to public health emergencies. 552 This research was jointly supported by the National Natural Science Founda-554 tion of China (Grant Numbers: 11602235), and the Fundamental Research Funds 555 for China Central Universities (Grant Numbers: 2652018091, 2652018107, and 556 2652018109). The authors would like to thank the editor and the reviewers for M. E. J. Newman, Communities, modules and large-scale structure in net-560 works, Nature Physics 8 (1) (2011) 25-31. doi:10.1038/nphys2162. 561 [2] D. Tsiotas, Detecting different topologies immanent in scale-free networks 562 with the same degree distribution, Proc Natl Acad Sci U S A 116 (14) (2019) 563 6701-6706. doi:10.1073/pnas.1816842116. 564 [3] D. R. Lo Sardo, S. Thurner, J. Sorger, G. Duftschmid, G. Endel, P. Klimek, 565 Quantification of the resilience of primary care networks by stress testing the 566 health care system, Proc Natl Acad Sci U S A 116 (48) (2019) 23930-23935. 567 doi:10.1073/pnas.1904826116. 568 [4] R. Robbins, A. Seixas, A. Schoenthaler, The nature and scope of patient-569 sharing network research: a novel, important area for network science, Transl 570 Behav Med 8 (4) (2018) 626-628. doi:10.1093/tbm/iby052. 571 [5] C. E. Pollack, G. E. Weissman, K. W. Lemke, P. S. Hussey, J. P. Weiner, 572 Patient sharing among physicians and costs of care: a network analytic ap-573 proach to care coordination using claims data, J Gen Intern Med 28 (3) (2013) 574 459-65. doi:10.1007/s11606-012-2104-7.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "provider-interacting network is evaluated by comparing three network indicators, including the maximum connectivity coefficient [28], network efficiency [29, 30] and susceptibility [27]. The proposed method is finally demonstrated by employing Physician and Other Supplier Data CY 2017 [31] and can be applied to other similar datasets to help make healthcare system management decisions, such as the optimization of healthcare resources.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "The number of identical HCPCS codes shared by nodes i and j with other neighbor nodes The edges of node i and node j with the other nodes are shown inTable 1. InFig.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Specifications of the workstation computer for testing the proposed method",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Influences of removing the top nodes with different proportions on the network resilience",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Influences of removing the top nodes with different proportions on the network resilience",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Influences of removing the top nodes with different proportions on the network resilience",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Influences of removing the top nodes with different proportions on the network resilience",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "This procedure may not be accurate because it is not able to determine the best distance threshold for selecting neighboring providers. In fact, the distance threshold is specified. Thus, the generation of the provider-interacting network is not as accurate as that of the patient-sharing network.The proposed method can be applied to help make decisions for healthcare sys-tems management, such as the optimization of healthcare resources in the response to public health emergencies [52]. For example, since mid-December 2019, coronavirus disease 2019 (COVID-19) has been spreading from Wuhan, China. The epidemic quickly disseminated from Wuhan, and as of 12 February 2020, 45,179 cases have been confirmed in 25 countries, including 1,116 deaths [53]. As of March 1, 2020, it has spread to 58 other countries [54]. Recognizing the Wuhanfocused and nationwide outbreak responses in China, the WHO has encouraged countries with heavy air travel exchanges with Wuhan to take precautionary public health measures and, if there is an imported infection, to undertake activities that could lead to the elimination of the virus in human populations, as occurred during the 2003 SARS outbreak [55]. Rapid and effective collaboration betweenthe clinicians (e.g., the general practitioners attending the cases, emergency hotline clinicians, and infectious diseases specialists), the National Reference Centre and the regional and national health authorities has played a crucial role in the systemic capacity to quickly detect, isolate and investigate cases to implement adequate con-",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors declare that there are no conflicts of interest.J o u r n a l P r e -p r o o f",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest"
+        }
+    ]
+}

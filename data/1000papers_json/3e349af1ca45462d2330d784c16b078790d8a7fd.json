@@ -1,0 +1,853 @@
+{
+    "paper_id": "3e349af1ca45462d2330d784c16b078790d8a7fd",
+    "metadata": {
+        "title": "Understanding the Galactic population of normal pulsars: A leap forward",
+        "authors": [
+            {
+                "first": "Anirban",
+                "middle": [],
+                "last": "Chakraborty",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indian Institute of Technology Madras",
+                    "location": {
+                        "postCode": "600036",
+                        "settlement": "Chennai",
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Manjari",
+                "middle": [],
+                "last": "Bagchi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "The Institute of Mathematical Sciences",
+                    "location": {
+                        "addrLine": "4th Cross Road"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We revisit the population of normal pulsars in the Galactic field in an 'evolutionary' approach. By comparing the distributions of various parameters of synthetic pulsars detectable by the Parkes Multibeam Pulsar Survey, the Pulsar Arecibo L-band Feed Array Survey, and two Swinburne Multibeam surveys with those of the real pulsars detected by the same surveys, we find that a good and physically realistic model can be obtained by using a uniform distribution of the braking index in the range of 2.5 to 3.0, a uniform distribution of the cosine of the angle between the spin and the magnetic axis in the range of 0 to 1, a log-normal birth distribution of the surface dipolar magnetic field with the mean and the standard deviation as 12.85 and 0.55 respectively while keeping the distributions of other parameters unchanged from the ones most commonly used in the literature. We have also replaced the universal 'death-line' by a 'death-condition' specific to each individual pulsar. We find that our model is better than the most popular model. With our improved model, we predict that an all-sky pulsar survey with phase-I SKA-MID will detect about nine thousand normal pulsars in the Galactic field. Among these pulsars, a considerable number will produce continuous gravitational waves in the operational range of the future ground-based gravitational waves detectors like LIGO A+, and in certain cases, the spin-down limit of the gravitational wave strains will be well below the detection sensitivity limit. We also provide a fit for the present-day distributions of the spin periods and 1400 MHz luminosities of the whole normal pulsar population in the Galactic field (which are potentially observable) and those can be used in future population studies under the snapshot approach.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Ever since the first discovery in 1967 (Hewish et al. 1968 ), more than 2500 pulsars have been discovered with a variety of observational characteristics and intrinsic properties. Understanding the birth, evolution, life, and death of pulsars has been of great interest consequently. However, the greatest challenge towards such studies has been the issue of selection biases due to limitations of telescopes and searching algorithms, higher selectivity towards brighter nearby objects, dispersion and scattering of the radio waves in the interstellar medium, etc., in the case of the properties of the observed pulsar samples. Thus, what we observe today is believed to represent only a minuscule portion of a much larger underlying population of pulsars. This strongly motivates the need of statistical studies of pulsar populations. There are two approaches for pulsar population studies. The first is the 'snapshot' approach where people perform statistical studies on the observed parameters of the known pulsars and use that knowledge to synthesize an entire pulsar population, at that current epoch, which is then further optimized to match to the observed sample as much as possible. The second one is the 'evolutionary' approach where one simulates the distribution of parameters \u22c6 E-mail: anirban.chakraborty096@gmail.com \u2020 E-mail: manjari@imsc.res.in of the newly born pulsars and then model their spin and kinematic evolution, as well as the selection effects, and compare the final distributions of parameters of these synthetic pulsars to the observed sample.",
+            "cite_spans": [
+                {
+                    "start": 39,
+                    "end": 58,
+                    "text": "(Hewish et al. 1968",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Pulsar population study with the evolutionary approach started almost three decades ago (Bhattacharya et al. 1992 , and references therein) and was continued by many researchers focusing on various sub-populations of pulsars, e.g., radio and \u03b3ray emitting millisecond pulsars (Gonthier et al. 2018) , millisecond X-ray pulsars (Zhu et al. 2015) , rotation-powered radio pulsars , etc. We set our focus on rotation powered isolated non-recycled radio pulsars in the Galactic field. We use the definition of non-recycled normal pulsars as those having the value of the spin period larger than 0.03 seconds. The last extensive effort to understand various parameters of this population was done in 2006 by whose results were later supported by Ridley & Lorimer (2010) , Bates et al. (2014) , and many others. This paper is organised as follows, Section 2 describes our methodology (including a description of the surveys we use and the comparison strategies adopted) and our analysis results, leading to an improved set of population parameters. We also present the underlying distribution functions for various parameters of the potentially observable pulsar population at the present epoch. We outline results for the normal pulsar population observable by future pulsar surveys like the Square Kilometer Array and discuss the prospects of detection of continuous gravitational waves in various subsections of Section 3. Our main conclusions are summarized in Section 4.",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 113,
+                    "text": "(Bhattacharya et al. 1992",
+                    "ref_id": null
+                },
+                {
+                    "start": 276,
+                    "end": 298,
+                    "text": "(Gonthier et al. 2018)",
+                    "ref_id": null
+                },
+                {
+                    "start": 327,
+                    "end": 344,
+                    "text": "(Zhu et al. 2015)",
+                    "ref_id": null
+                },
+                {
+                    "start": 741,
+                    "end": 764,
+                    "text": "Ridley & Lorimer (2010)",
+                    "ref_id": null
+                },
+                {
+                    "start": 767,
+                    "end": 786,
+                    "text": "Bates et al. (2014)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "As we employ population studies within the 'evolutionary approach', we first need to simulate a synthetic set of pulsars with chosen birth distributions of their various parameters, e.g., the spin period, the surface magnetic field, the birth locations, the birth velocity, etc, as well as the gravitational potential of the Galaxy. Then, we need to model the motion of the pulsars in the Galaxy to get their final locations, their spin evolution to obtain the present-day spin parameters, as well as model their luminosities. Afterward, to test the validity of these models, we need to compare the properties of the simulated pulsars to those of the observed sample that is affected by observational limitations. Therefore, we further need to pass our synthetic pulsars through the conditions of such limitations as well. For this, we first require to convert pulsar luminosities to flux values at the telescopes using their simulated distances. Then, we need to model the effect of the interstellar medium on the detectability, e.g., scattering and dispersion of the radio waves. For this purpose, we use NE2001 model of the Galactic electron density (Cordes & Lazio 2002) . Finally, we need to model the telescope sensitivities using the radiometer equation (Lorimer & Kramer 2012) .",
+            "cite_spans": [
+                {
+                    "start": 1153,
+                    "end": 1174,
+                    "text": "(Cordes & Lazio 2002)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1261,
+                    "end": 1284,
+                    "text": "(Lorimer & Kramer 2012)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "POPULATION STUDIES"
+        },
+        {
+            "text": "Detailed step-by-step discussion on this method can be found in Faucher- . We felt the need of redoing the analysis of Faucher- to check whether with a larger sample, the properties of various parameters suggested by still remain the same. We also aim to obtain a more physically realistic model. Bates et al. (2014) provided an excellent package 'PsrPopPy' 1 that can perform evolutionary population synthesis using its module called 'evolve'. In addition to the models for various parameters chosen by , the 'evolve' module has options to use some other models too. In the present work, we use the 'evolve' module, but modify it whenever necessary to accommodate our investigations. We also utilise the 'dosurvey' module of PsrPopPy to model the detectability of simulated pulsars in various surveys (will be discussed later). For purposes of statistical comparisons in our analysis, we use the SciPy v1.2.3 package.",
+            "cite_spans": [
+                {
+                    "start": 297,
+                    "end": 316,
+                    "text": "Bates et al. (2014)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "POPULATION STUDIES"
+        },
+        {
+            "text": "Note that, 'PsrPopPy' has another module 'populate' that can generate a set of synthetic pulsar population at the present epoch, i.e., it studies the pulsar parameters in a 'snapshot' approach. Certain default parameter distributions match with the end results of population studies in the evolutionary approach, as an example, the default luminosity distribution in 'populate' is the log-normal distribution obtained by . However, in the case of some parameters, there are options to choose distributions different from the default ones. Like 'evolve', 'populate' can also be used with 'dosurvey' to find out how many of the present population of pulsars would be detectable by various surveys and the properties of such detectable population. Due to the ease of use, 'populate' interface in PsrPopPy is widely used to understand the performance of various surveys (Keane et al. 2015; McEwen et al. 2020; Bhattacharyya et al. 2016; Keith et al. 2010) . We plan to work on the 'populate' module and improve it if needed in a future study. 1 https://github.com/samb8s/PsrPopPy . We take the parameters of the real pulsars from the ATNF Pulsar Catalogue v1.63 2 (Manchester et al. 2005) . As already mentioned, we restrict ourselves to the study of normal (spin period larger than 0.03 seconds) isolated pulsars as we do not aim to model binary evolution in the present work. We also exclude pulsars in the globular clusters and Magellanic clouds from our study as they are clearly different populations than the ones in the Galactic field.",
+            "cite_spans": [
+                {
+                    "start": 866,
+                    "end": 885,
+                    "text": "(Keane et al. 2015;",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 886,
+                    "end": 905,
+                    "text": "McEwen et al. 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 906,
+                    "end": 932,
+                    "text": "Bhattacharyya et al. 2016;",
+                    "ref_id": null
+                },
+                {
+                    "start": 933,
+                    "end": 951,
+                    "text": "Keith et al. 2010)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1160,
+                    "end": 1184,
+                    "text": "(Manchester et al. 2005)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "POPULATION STUDIES"
+        },
+        {
+            "text": "Before comparing the final parameter distributions of the simulated pulsars with the observed ones, we need to select the pulsars that would be detectable through the surveys that detected the real sample. There are many completed pulsar surveys, and it is not easy to model all those. We select four surveys with the largest pulsar yields at 1.4 GHz, namely the Parkes Multibeam Pulsar Survey (PMPS), the Pulsar Arecibo L-band Feed Array (PALFA) Survey, and two Swinburne Multibeam surveys (Manchester et al. 2001; Cordes et al. 2006; Edwards et al. 2001; Jacoby et al. 2009 ). The parameters of these surveys needed to model the detectability of a pulsar with a known value of its flux is given in Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 491,
+                    "end": 515,
+                    "text": "(Manchester et al. 2001;",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 516,
+                    "end": 535,
+                    "text": "Cordes et al. 2006;",
+                    "ref_id": null
+                },
+                {
+                    "start": 536,
+                    "end": 556,
+                    "text": "Edwards et al. 2001;",
+                    "ref_id": null
+                },
+                {
+                    "start": 557,
+                    "end": 575,
+                    "text": "Jacoby et al. 2009",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 700,
+                    "end": 707,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Pulsar surveys included"
+        },
+        {
+            "text": "Note that, on the sample of normal real pulsars in the Galactic field discovered by these surveys, we strictly impose the survey sky coverage limits described in Table 1 to obtain a refined sample of real pulsars and then, exclude the pulsars with missing or anomalous (negative) period derivative values. Ultimately, we are left with a total of 1269 unique real pulsars detected by any one or more of these surveys. This is a larger sample in comparison to who used a sample of total 1065 real pulsars.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 162,
+                    "end": 169,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Pulsar surveys included"
+        },
+        {
+            "text": "There are many other ongoing surveys at lower frequencies like GBNCC, LOTAAS, and AODrift, but we do not use those surveys in the present work, mainly because these surveys are still ongoing. After these surveys are complete, a similar analysis like the present work can be done and will be valuable to understand the population of the non-recycled pulsars better.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pulsar surveys included"
+        },
+        {
+            "text": "In order to compare the properties of synthetic pulsars to those of the real ones, we make use of the two-sample Kolmogorov Smirnoff test. This nonparametric test compares the cumulative distribution function of two data sample sets and returns a D-statistic, which can then be used to infer the probability f that the two data samples are drawn from the same underlying distributions. For each simulated and 'detected' set of pulsars, the distributions of the Galactic longitudes (l), Galactic latitudes (b), dispersion measures (DM), flux densities at 1400 MHz (S 1400 ), spin periods (P), and spin period derivatives (\u1e56) are independently compared with the respective distributions for the real sample, and following Bhattacharya et al. (1992) we assign an overall goodness of fit metric F for the simulation model, as follows:",
+            "cite_spans": [
+                {
+                    "start": 720,
+                    "end": 746,
+                    "text": "Bhattacharya et al. (1992)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Simulation and Model Comparison Strategy"
+        },
+        {
+            "text": "Note that F is a negative quantity as the probabilities ( f ) for various parameters are always less than one. The model that produces the minimum absolute value of F can be considered as the best ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation and Model Comparison Strategy"
+        },
+        {
+            "text": "11.3 9.0 9.0 Gain Pattern Airy Gaussian Gaussian one. For computing the KS test probabilities of a particular simulation model, we use all the simulated pulsars generated, i.e., we use \u223c 1269\u00d7 N trials synthetic pulsars, where N trials is the number of realisations (= 50) carried out for that particular model. However, in the sample of the real pulsars, there are instances where the values of S 1400 are not available in the catalogue. In that case, we follow the same strategy as was adopted by Faucher-Gigu\u00e8re & Kaspi (2006), i.e., only while comparing the distribution of S 1400 between the simulated and real samples, we use a reduced sub-sample of real pulsars excluding the ones with missing S 1400 values.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation and Model Comparison Strategy"
+        },
+        {
+            "text": "We start by constructing a pulsar population model (Model-A) based on the distributions and corresponding best-fit parameters found by Faucher-Gigu\u00e8re & Kaspi (2006), which has been outlined in Table  2 . Figure 1 (a) shows the distributions of various parameters of the synthetic and real pulsars and the first column of Table 3 reports the KS test results on various parameters as well as the goodness of fit F = \u221227.8415. We see that there is a reasonably good agreement between the properties of the detected synthetic pulsars and the real ones. However, we aim to obtain a model that is better than this Model-A, both physics wise and in mimicking the parameter distributions of the observed sample. Our steps to achieve this goal are described in the subsequent sub-sections.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 194,
+                    "end": 202,
+                    "text": "Table  2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 205,
+                    "end": 213,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 322,
+                    "end": 329,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results from FK06 optimal model"
+        },
+        {
+            "text": "Steps to a more realistic model Ridley & Lorimer (2010) proposed that for a small deviation of the dipole nature of the magnetic field, the spin-down equation can be written (in CGS system of units) as:",
+            "cite_spans": [
+                {
+                    "start": 32,
+                    "end": 55,
+                    "text": "Ridley & Lorimer (2010)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "2.4"
+        },
+        {
+            "text": "where a is a constant in the unit of s n\u22123 , \u03b1 is the angle between the spin and the magnetic axis, n is the pulsar braking index, B is the magnetic field at the surface of the neutron star. The constant k is equal to (8/3) \u03c0 2 R 6 I \u22121 c \u22123 where I is the moment of inertia and R is the radius of the neutron star. For the canonical values for neutron stars, i.e., R = 10 6 cm, I = 10 45 gm cm 2 , k becomes 9.76 \u00d710 \u221240 cm gm \u22121 s \u22121 . For n = 3, the constant a takes the value of 1, and equation (2) Table 3 Table 3 ) Figure 1 . Distributions of Galactic longitudes, Galactic latitudes, dispersion measures, flux densities at 1.4 GHz, spin periods, and spin period derivatives for the synthetic pulsars (red bar plots) simulated for Model-A and Model-B as described in the text and those of real observed pulsar (solid turquoise-blue histograms). For the red bar plots (simulations), the number of pulsars in each bin is the average over 50 realizations of the models. Table 3 . KS test probabilities obtained on comparing the distributions of the parameters of the real pulsars with those of the simulated ones for models A, B, and C as described in the text. The results are computed using 50 realisations of the particular model. Here '\u03b1' refers to the angle between the spin and the magnetic axis and 'n' refers to the braking index. Model-A is the model chosen by . radio pulsars cannot emit if B \u2264 0.17 \u00d7 10 12 P 2 where B is in Gauss and P is in seconds, and the condition can be called the 'deathcondition'. Using Equation (2), we find that the 'death-condition' for the pulsars becomes",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 503,
+                    "end": 510,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 511,
+                    "end": 518,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 521,
+                    "end": 529,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 972,
+                    "end": 979,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "2.4"
+        },
+        {
+            "text": "For n = 3 and \u03b1 = 90 \u2022 , the above equation becomes",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2.4"
+        },
+        {
+            "text": "where the equality represents the standard 'death-line' equation (Bhattacharya et al. 1992) . For a phenomenological model, where the magnetic field deviates slightly from the dipolar nature, the value of the constant a can be taken as 1 as done by Ridley & Lorimer (2010) . However, we need to remember the existence of this constant, as otherwise the dimensionalities of the two sides of equation.",
+            "cite_spans": [
+                {
+                    "start": 65,
+                    "end": 91,
+                    "text": "(Bhattacharya et al. 1992)",
+                    "ref_id": null
+                },
+                {
+                    "start": 249,
+                    "end": 272,
+                    "text": "Ridley & Lorimer (2010)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "2.4"
+        },
+        {
+            "text": "(2) would be different when n = 3. From Equation (3), it is clear that if we use a distribution of n and \u03b1, then each pulsar has its own characteristic 'death-condition', not a universal 'death-line' for all pulsars, as was the case for Bhattacharya et al. (1992) or Faucher-Gigu\u00e8re & Kaspi (2006) who worked with a particular value of the braking index (n = 3) and the inclination angle (\u03b1 = 90 \u2022 ) for all synthetic pulsars.",
+            "cite_spans": [
+                {
+                    "start": 237,
+                    "end": 263,
+                    "text": "Bhattacharya et al. (1992)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "2.4"
+        },
+        {
+            "text": "Faucher- in their analysis had assumed a braking index of n = 3 for all synthetic pulsars. However, for a good number of real pulsars, the measured values of n differ from 3. Moreover, Ridley & Lorimer (2010) showed that for their optimal model, a uniform distribution of n in the range of 2.5 \u2212 3.0 provided a better agreement (see Table 3 in their paper). We test this hypothesis by adopting such a distribution for n while keeping all other model parameters the same as those in Model-A. We call this new model as Model-B. Figure 1(b) shows the distributions of various parameters of the synthetic and real pulsars and the second column of Table 3 reports the KS test results on various parameters as well as the goodness of fit F = \u221223.5934 for Model-B. We see better agreement between the simulated and observed distributions, particularly in the P an\u1e0b P distributions for Model-B in comparison to Model-A. Therefore, we decide to choose a uniform distribution of braking index in the range of 2.5 \u2212 3.0 and look for improvements in the choice of other parameters.",
+            "cite_spans": [
+                {
+                    "start": 185,
+                    "end": 208,
+                    "text": "Ridley & Lorimer (2010)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 333,
+                    "end": 340,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 526,
+                    "end": 537,
+                    "text": "Figure 1(b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 643,
+                    "end": 650,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "A model for the braking index distribution"
+        },
+        {
+            "text": "In order to obtain a more realistic picture of the pulsar population, we deviate from Faucher-Gigu\u00e8re & Kaspi (2006) assumption of the orthogonal rotator (\u03b1 = 90 \u2022 ). We select a uniform distribution of x = cos \u03b1 in the range of 0 to 1, keeping all other parameters the same as Model-B. We call this new model Model-C. The results of this model is given in the third column of Table 3 . However, instead of better (smaller absolute value) F, we get a much worse result in comparison to models A and B (both are for orthogonal rotator). This fact is also supported by Figure 2 where distributions of various parameters of the synthetic and real pulsars are shown. It is clear that the highest discrepancies are in the distributions of P and\u1e56. This result inspired us to check whether the birth distributions of the surface magnetic field (which is used in calculating the spin period and period derivative) need to be improved.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 377,
+                    "end": 384,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 567,
+                    "end": 575,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "A distribution for the angle between the spin and the magnetic axis"
+        },
+        {
+            "text": "The magnetic field B at the surface of the neutron star is expressed as a function of P,\u1e56 and \u03b1 as seen in equation (2) and the assumption of the orthogonal rotator (\u03b1 = 90 \u2022 ) gives the lower limit of B. So, it is reasonable to expect that the deviation from the orthogonal rotator model should be accompanied by a change in the birth distribution of B. Keeping the distribution type log-normal (in the logarithm to the base 10), we vary the values of \u00b5 logB and \u03c3 logB over a wide range to see whether we can obtain a better agreement between the parameters of the simulated and the real pulsars. We cover the parameter space spanned by 12.35 \u2264 \u00b5 logB \u2264 13.15 (in steps of 0.1) and 0.40 \u2264 \u03c3 logB \u2264 0.70 (in steps of 0.05). For each grid point (\u00b5 logB ,\u03c3 logB ), we performed 50 realisations of the particular simulation model and determined its goodness of fit metric using equation (1) as before. A heat map showing the variation of the computed goodness of fit value F over the scanned \u00b5 logB \u2212 \u03c3 logB parameter space is shown in Figure 3 . It is clear that there exists a broad range of values of \u00b5 logB and \u03c3 logB for which the simulated pulsar parameter distributions agree reasonably well with the observed sample. We identify the 'best' combination of parameters to be those that corresponds to the case where we obtained the maximum value of F = \u221221.5, i.e., \u00b5 logB , \u03c3 logB = 12.85 , 0.55. We call this model as Model-D where other than the magnetic field, everything else is the same as in Model-C.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1034,
+                    "end": 1042,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Improved model for the birth distribution of the surface magnetic field"
+        },
+        {
+            "text": "The KS Test probabilities, obtained by comparing the distributions of parameters of the simulated pulsars following Model-D with those of the real pulsars, are reported in Table 4 . It is clear that statistically, our simulation model shows good agreement with the real pulsars, even better than Model-A (the model used by Faucher-Gigu\u00e8re & Kaspi (2006)). The distribution of various pulsar parameters for a population generated according to Model-D is shown in Figure 4 . An example P-\u1e56 diagram generated for a single realization of model-D is shown in Figure 5 where P,\u1e56 values for real pulsars (used in this work) are also shown.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 172,
+                    "end": 179,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 462,
+                    "end": 470,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 554,
+                    "end": 562,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Improved model for the birth distribution of the surface magnetic field"
+        },
+        {
+            "text": "Using Model-D, we investigate whether the underlying distribution of some important parameters like P,\u1e56, and L 1400 for the whole normal pulsar population in the Galaxy (which are radio-loud and potentially observable) can be fitted with a model that can be used for population studies under the 'snapshot' approach. We find that the underlying L 1400 distribution is well fit by a log-normal function (in the logarithm to the base 10) with mean \u00b5 logL = \u22121.219 (L = 0.06 mJy kpc 2 ) and standard deviation \u03c3 logL = 0.93. Note that Faucher-Gigu\u00e8re & Kaspi (2006); Ridley & Lorimer (2010) also found log-normal distribution for L 1400 , but Faucher-Gigu\u00e8re & Kaspi (2006) had found \u00b5 logL = \u22121.1 Table 4 . KS test probabilities obtained by comparing the parameters of the real pulsars with those of the simulated and detected ones corresponding to Model D. The results are computed using 50 realisations of the model.",
+            "cite_spans": [
+                {
+                    "start": 564,
+                    "end": 587,
+                    "text": "Ridley & Lorimer (2010)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 695,
+                    "end": 702,
+                    "text": "Table 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Underlying distributions of pulsar population"
+        },
+        {
+            "text": "Model D and \u03c3 logL = 0.9. We also find that a log-normal distribution of P (in units of milliseconds) with \u00b5 logP = 3.07 and \u03c3 logP = 0.35 fits the underlying distribution well. The distributions and their corresponding best-fit curves have been shown in Figure 6 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 255,
+                    "end": 263,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Parameters"
+        },
+        {
+            "text": "The Square Kilometre Array (SKA) 3 , is expected to become operational in the coming decade. It is believed that SKA will advance pulsar science by leaps and bounds and open innumerable avenues for a wide range of scientific investigations mostly by discovering many new pulsars (Keane et al. 2015) .",
+            "cite_spans": [
+                {
+                    "start": 279,
+                    "end": 298,
+                    "text": "(Keane et al. 2015)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "PULSAR SCIENCE IN SQUARE KILOMETER ARRAY (SKA) ERA"
+        },
+        {
+            "text": "In this section, we assess the pulsar discovery capabilities with SKA Phase-1 within the framework of our improved Model-D. We focus only on using SKA-MID telescope and simulate a potential all-sky survey with the same, using the default survey template file from PsrPopPy and accounting for the resources as documented in the design document 4 . The parameters for the all-sky pulsar search survey using SKA-MID is listed out in Table 5 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 430,
+                    "end": 437,
+                    "text": "Table 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "PULSAR SCIENCE IN SQUARE KILOMETER ARRAY (SKA) ERA"
+        },
+        {
+            "text": "From 50 realisations of Model-D, we deduce that the hypothetical SKA-MID pulsar survey will be able to detect about 9000 normal pulsars in the Galactic field (including re-detection of already detected pulsars that fall in its visible sky region). 3 https://www.skatelescope.org/ 4 https://www.skatelescope.org/wp-content/uploads/2012/07/SKA-TEL-SKO-DD-001-1_BaselineDesign1.pdf .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Survey yields from all-sky SKA-MID pulsar search"
+        },
+        {
+            "text": "The distribution of the different pulsar parameters of the detectable population from such a survey is shown in Figure 7 . This figure also shows the distributions of the same parameters of all the known pulsars (about 2300) in the Galactic field. Note that, this sample of real normal pulsars in the Galactic field is different (larger) than the original sample (outcome of only four surveys) that we used to constrain our model, as here our motivation is to see how SKA will enhance the present population. It is clear that SKA-MID will significantly increase the population of long period pulsars (P \u2265 1s) and also provide a wholesome census of fainter pulsars, which will be useful in further constraining the luminosity distribution function of normal pulsars.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 112,
+                    "end": 120,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Survey yields from all-sky SKA-MID pulsar search"
+        },
+        {
+            "text": "We also note the dramatic increase in the number of pulsars discovered by the SKA-MID pulsar survey is accompanied by a much greater and wholesome sampling of its visible sky-region, as seen from Figure 8 where we show the simulated pulsars projected in the Galactic plane, as well as in Figure 9 where we show the Aitoff sky projection of the Galactic longitude-latitude of the simulated pulsars. Figure 9 demonstrate the fact that SKA-MID will be the main tool for discovering more distant pulsars in the Galactic plane (|b| \u2264 10 \u2022 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 196,
+                    "end": 204,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 288,
+                    "end": 296,
+                    "text": "Figure 9",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 398,
+                    "end": 406,
+                    "text": "Figure 9",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Survey yields from all-sky SKA-MID pulsar search"
+        },
+        {
+            "text": "The recent observations of gravitational waves from the inspiral and merger of binary compact objects heralded the era of gravitational- wave astronomy (Abbott et al. 2016 (Abbott et al. , 2017 . Such extra-Galactic and transient events are, however, not the only potential sources of observable gravitational waves. One local source of gravitational waves that would provide a continuous signal is a rapidly rotating neutron star. Spinning neutron stars (isolated as well as those in binary systems) could generate detectable gravitational waves via several possible mechanisms. We consider the simplest and the most optimistic scenario for the case of an isolated neutron star, which we consider as a rigid star (with a triaxial moment of inertia ellipsoid) rotating around its principal axis of inertia and emitting gravitational waves from the l = m = 2 (spherical harmonics) mass quadrupole mode. In this case, the gravitational wave frequency f gw is expected to be twice the rotational spin frequency f rot (= P \u22121 ) of the pulsar.",
+            "cite_spans": [
+                {
+                    "start": 152,
+                    "end": 171,
+                    "text": "(Abbott et al. 2016",
+                    "ref_id": null
+                },
+                {
+                    "start": 172,
+                    "end": 193,
+                    "text": "(Abbott et al. , 2017",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Prospects of detection of continuous gravitational waves"
+        },
+        {
+            "text": "Equating the gravitational-wave luminosity to the total kinetic energy lost as the pulsar spins down, we can obtain the so-called spindown limit of the gravitational-wave strain (h sd 0 ), which is given as (Abbott et al. 2019) : ",
+            "cite_spans": [
+                {
+                    "start": 207,
+                    "end": 227,
+                    "text": "(Abbott et al. 2019)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Prospects of detection of continuous gravitational waves"
+        },
+        {
+            "text": "where I 45 is the star's moment of inertia in the units of 10 45 g cm 2 , and d kpc is the distance to the pulsar in kiloparsecs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Prospects of detection of continuous gravitational waves"
+        },
+        {
+            "text": "In reality, especially for radio pulsars, only some fraction (\u03b7) of the spin-down energy gets converted to the gravitational radiation, and we have the gravitational wave strain to be h 0 = \u03b7 h sd 0 (Abbott et al. 2019 ). Since \u03b7 < 1, it implies that h 0 < h sd 0 . Therefore, it is reasonable to expect the detection of continuous gravitational waves only when the detection sensitivity reaches well below h sd 0 . Even if there is a non-detection of continuous gravitational waves when our detector's sensitivity has beaten the spin-down limit h sd 0 of some particular pulsars, it will allow us to constrain the fraction of spin-down energy that can be attributed to the emission of gravitational-waves and we can also place stringent limits on the equatorial fiducial ellipticity of the star, which will be ultimately helpful for studies of the equation of state of the neutron star matter. So far, there are 20 young pulsars (Abbott et al. 2019) for which the sensitivity of the LIGO search runs have been able to beat their respective spin-down limits, but no detection of continuous gravitational waves have been claimed yet. We expect that future pulsar surveys and their precision timing campaigns will discover more pulsars with f gw in the range of ground based gravitational waves detectors as well as large enough values of h sd 0 , that are well inside the instrument sensitivity limits. Table 5 . For the synthetic pulsar set, the number of pulsars in each bin is the average over 50 realizations of Model-D. The filled turquoise-blue histograms depict the corresponding distributions for the whole sample of normal real pulsars in the Galatic field (around 2300 pulsars) that have been detected so far using any terrestial telescope. Using a single realisation of Model-D, we extract the set of the synthetic pulsars that the proposed SKA-MID all-sky survey (Table  5 ) would be able to detect. For each such SKA-detectable pulsar, assuming the canonical value of the moment of inertia (i.e. I 45 = 1), we calculate their respective spin-down limits using equation (6) and check whether we will be in a position to detect continuous gravitational waves from them using more sensitive future LIGO observing science runs (LIGO A+).",
+            "cite_spans": [
+                {
+                    "start": 199,
+                    "end": 218,
+                    "text": "(Abbott et al. 2019",
+                    "ref_id": null
+                },
+                {
+                    "start": 930,
+                    "end": 950,
+                    "text": "(Abbott et al. 2019)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1402,
+                    "end": 1409,
+                    "text": "Table 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 1874,
+                    "end": 1883,
+                    "text": "(Table  5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Prospects of detection of continuous gravitational waves"
+        },
+        {
+            "text": "In Figure 10 , we show the spin-down limits h sd 0 for the simulated normal pulsars that are potentially detectable by the considered hypothetical SKA-MID pulsar survey, in a single realisation of Model-D. The turquoise-blue solid line shows an estimate of the expected sensitivity of potential future science runs using LIGO A+. The search strain sensitivity is computed from the power spectral density (S n ) using the relation h n = 10.4 S n /T assuming a typical observation time (T ) of 1 year (Abbott et al. 2019) . For this purpose, we make use of the design data provided at the LIGO Document Control Center Portal 5 . From Figure 10 , we find that there will be a considerable number of SKA detectable normal pulsars emitting gravitational waves around the lower end of the LIGO A+ operational range of frequencies, and for about 50 of them, the value of h sd 0 would be above the sensitivity limit (h n ). 5 https://dcc.ligo.org/LIGO-T1800042/public",
+            "cite_spans": [
+                {
+                    "start": 499,
+                    "end": 519,
+                    "text": "(Abbott et al. 2019)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 12,
+                    "text": "Figure 10",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 632,
+                    "end": 641,
+                    "text": "Figure 10",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Prospects of detection of continuous gravitational waves"
+        },
+        {
+            "text": "In this work, we have revisited the population of normal pulsars in the Galactic field under the 'evolutionary' approach. By comparing the distributions of various parameters of synthetic pulsars detectable by the Parkes Multibeam Pulsar Survey, the Pulsar Arecibo L-band Feed Array Survey, and two Swinburne Multibeam surveys with those of the real pulsars detected by the same surveys, we find that a good and physically realistic model can be obtained by using a uniform distribution of the braking index in the range of 2.5 to 3.0, a uniform distribution of the cosine of the angle between the spin and the magnetic axis in the range of 0 to 1, a log-normal birth distribution of the surface dipolar magnetic field (in Gauss) with the mean and the standard deviation as 12.85 and 0.55 respectively while keeping the distributions of other parameters unchanged from the population model (Faucher-Gigu\u00e8re & Kaspi 2006) most commonly used in the literature. We have replaced the universal 'death-line' by a 'death-condition' specific to each individual pulsar, depending on its braking index and inclination angle. With our best model, which we call as model-D, we predict that a prospective pulsar survey with phase-I SKA-MID will detect about nine thousand normal pulsars in the Galactic field. A good number of pulsars among these set will produce continuous gravitational waves in the operational range of the future ground-based gravitational waves detectors like LIGO A+, and about fifty of them will be promising candidates for the detection of continuous gravitational waves. We also provide a fit for the present-day distributions of the spin period and 1400 MHz luminosity of the whole normal pulsar population in the Galactic field, which are radio loud and beaming towards the earth, i.e. potentially observable with a sensitive enough telescope. From our analy- sis, we conclude that the underlying L 1400 distribution is well fit by a log-normal function (in the logarithm to the base 10) with mean \u00b5 logL = \u22121.219 (L = 0.06 mJy kpc 2 ) and standard deviation \u03c3 logL = 0.93. The spin period distribution (in units of milliseconds) is also adequately described by a log-normal distribution (in the logarithm to the base 10) with \u00b5 logP = 3.07 and \u03c3 logP = 0.35. These distribution functions can be readily used in future population studies under the snapshot approach.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SUMMARY AND CONCLUSIONS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Advancing Astrophysics with the Square Kilometre Array (AASKA14). p",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Keane",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1501.00056"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Handbook of Pulsar Astronomy",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Lorimer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kramer",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Manchester",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "MNRAS",
+            "volume": "328",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1046/j.1365-8711.2001.04751.x"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "While working on this project, we discovered certain problems in the earlier version of the 'evolve' module in PsrPopPy that have been reported to the developer for amendments. The following list of 'alerts' are not exhaustive and concern only the functionalities of",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Appendix A: Some",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Comments",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Psrpoppy",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "sin \u03b8 was erroneously written as cos \u03b8 . \u2022 In line 349 of galacticops.py, while blurring the radial position, the standard deviation of the zero-centered Gaussian distribution was set as '0.50 \u00d7 r', which is different from that mentioned in Faucher-Gigu\u00e8re & Kaspi (2006), viz., '0.07 \u00d7 r' for the YK2004 radial distribution model. We used '0.07 \u00d7 r'. \u2022 There was an angle conversion error (between radians and degrees) while computing sine and cosine in the random alignment model, in lines 449 and 451 of the evolve",
+            "authors": [],
+            "year": null,
+            "venue": "\u2022 The spiral structure of the Galaxy in the birth location of pulsars was not being generated correctly because in line 355 of the program galacticops.py",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "used an exponential distribution for the one-dimensional birth velocity components. However, in the default settings of the 'evolve' interface in PsrPopPy, the one-dimensional birth velocity components were drawn using a Gaussian distribution centered at 0 km/s with width 180 km/s. We preferred to use the exponential velocity model proposed by Faucher-Gigu\u00e8re & Kaspi (2006) in all our simulations because this model, owing to its heavier tail, can better accommodate for real pulsars with high one-dimensional velocities",
+            "authors": [
+                {
+                    "first": "\u2022",
+                    "middle": [],
+                    "last": "Faucher-Gigu\u00e8re",
+                    "suffix": ""
+                },
+                {
+                    "first": "&amp;",
+                    "middle": [],
+                    "last": "Kaspi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "becomes the standard spin-down equation for the dipolar magnetic field. It has been proposed (Bhattacharya & van den Heuvel 1991",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Distributions of Galactic longitudes, Galactic latitudes, dispersion measures, flux densities at 1.4 GHz, spin periods, and spin period derivatives for the synthetic pulsars (red bar plots) for model-C as described in the text and those of real observed pulsar (solid turquoise-blue histograms). For the red bar plots (simulations), the number of pulsars in each bin is the average over 50 realizations of the model.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The variation of the computed goodness of fit value F (see Equation 1) over the \u00b5 logB \u2212 \u03c3 logB parameter space. For each grid point, 50 realisations of the particular model were carried out and the corresponding goodness of fit value F is mentioned.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Distributions of Galactic longitudes, Galactic latitudes, dispersion measures, flux densities at 1.4 GHz, spin periods, and spin period derivatives for the synthetic pulsars (red bar plots) simulated for Model-D as described in the text and those of real observed pulsar (solid turquoise-blue histograms). For the red bar plots (simulations), the number of pulsars in each bin is the average over 50 realizations of the model.Table 5. List of assumed survey parameters used for simulating the hypothetical SKA-MID pulsar survey.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "An example P -\u1e56 diagram generated for the detectable pulsars (blue dots) in a single realization of Model-D. For comparison, we also show the real observed pulsars (black dots) on the same diagram Underlying distributions of pulsar luminosities at 1.4 GHz, spin periods, and spin period derivatives in a single realization of Model D. The solid red line in each case represents the best-fit curve for the corresponding distribution.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Distributions of Galactic longitudes, Galactic latitudes, dispersion measures, flux densities at 1.4 GHz, spin periods, and spin period derivatives for the synthetic pulsars (red bar plots) detected in the simulated SKA-MID survey described in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Locations of the simulated normal pulsars that are potentially detectable by the considered hypothetical SKA-MID pulsar survey, projected onto the Galactic plane from a single realisation of Model-D. The Galactic centre is at the origin while the Sun (shown as a red square) is located at (0, 8.5) kpc.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "The Galactic distribution (Aitoff projection) of simulated normal pulsars that are potentially detectable by the considered hypothetical SKA-MID pulsar survey from a single realisation of Model-D.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "The spin-down limits on h 0 for simulated normal pulsars that are potentially detectable by the considered hypothetical SKA-MID pulsar survey, in a single realisation of model-D. The turquoise-blue solid line shows an estimate of the expected sensitivity of potential future science runs using LIGO A+.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "List of observational survey parameters used for simulating the Pulsar Arecibo L-band Feed Array (PALFA) Survey, Parkes Multibeam Survey (PMPS), and the Swinburne Multibeam pulsar surveys (SWINMB).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Parameters for the best model of Faucher-Gigu\u00e8re & Kaspi(2006), which we call as Model-A.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "cos \u03b1",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors thank Sam Bates for making PsrPopPy publicly available and replying to many queries regarding its usage. We also acknowledge the use of the cluster computing facility at High Performance Computing Environment (HPCE), Indian Institute of Technology Madras, Chennai, India, where the simulations were carried out. AC also thanks the HPCE staff members at IIT Madras for keeping the VIRGO super-cluster working amidst the Covid-19 pandemic and months-long national lockdown.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGEMENTS"
+        },
+        {
+            "text": "This work has made extensive use of the population synthesis package PsrPopPy, which is publicaly available on Github 6 and the data of real pulsars archived from the ATNF Pulsar Catalogue v1.63 7 . 6 https://github.com/samb8s/PsrPopPy 7 https://www.atnf.csiro.au/research/pulsar/psrcat/catalogueHistory.htmlThe inputs used in running the simulations using PsrPopPy have been elaborately described in the text. The simulation results underlying this article, however, could be shared on reasonable request to the authors.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DATA AVAILABILITY"
+        }
+    ]
+}

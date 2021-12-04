@@ -1,0 +1,1184 @@
+{
+    "paper_id": "3dd811dfe175e655be4f5c06ed8d561868f0f08b",
+    "metadata": {
+        "title": "Semantic Description of Plant Phenological Development Stages, Starting with Grapevine",
+        "authors": [
+            {
+                "first": "Catherine",
+                "middle": [],
+                "last": "Roussey",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "TSCF",
+                    "location": {
+                        "settlement": "Aubi\u00e8re",
+                        "region": "UR",
+                        "country": "France"
+                    }
+                },
+                "email": "catherine.roussey@inrae.fr"
+            },
+            {
+                "first": "Xavier",
+                "middle": [],
+                "last": "Delpuech",
+                "suffix": "",
+                "affiliation": {},
+                "email": "xavier.delpuech@vignevin.com"
+            },
+            {
+                "first": "Florence",
+                "middle": [],
+                "last": "Amardeilh",
+                "suffix": "",
+                "affiliation": {},
+                "email": "florence.amardeilh@elzeard.co"
+            },
+            {
+                "first": "Stephan",
+                "middle": [],
+                "last": "Bernard",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "TSCF",
+                    "location": {
+                        "settlement": "Aubi\u00e8re",
+                        "region": "UR",
+                        "country": "France"
+                    }
+                },
+                "email": "stephan.bernard@inrae.fr"
+            },
+            {
+                "first": "Clement",
+                "middle": [],
+                "last": "Jonquet",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "INRAE, Institut Agro",
+                    "location": {
+                        "settlement": "Montpellier",
+                        "country": "France"
+                    }
+                },
+                "email": "clement.jonquet@inrae.fr"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The French project Data to Knowledge in Agronomy and Biodiversity (D2KAB) will make available a semantically-enabled French agricultural alert newsletter. In order to describe/annotate crop phenological development stages in the newsletters, we need a specific semantic resource to semantically represent each stages. Several scales already exist to describe plant phenological development stages. BBCH, considered a reference, offers several sets of stages -one per crop called 'individual scales'-and a general one. The French Wine and Vine Institute (IFV) has aligned several existing scales in order to identify the most useful grapevine development stages for agricultural practices. Unfortunately these scales are not available in a semantic form preventing their use in agricultural semantic applications. In this paper, we present our work of creating an ontological framework for semantic description of plant development stages and transforming specific scales into RDF vocabularies; we introduce the BBCH-based Plant Phenological Description Ontology and we illustrate this framework with four scales related to grapevine.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "French ANR project Data to Knowledge in Agronomy and Biodiversity (D2KAB -www.d2kab.org) illustrates how semantic data science helps the development of innovative agricultural applications. D2KAB's objective is to create a framework to turn agronomy and biodiversity data into semantically described, interoperable, actionable, and open knowledge. To build such a framework, we rely on semantic resources (e.g., terminologies, vocabularies, ontologies) to describe our data and publish them as Linked Open Data [10] . We use AgroPortal repository (http://agroportal.lirmm.fr) [17] to find, publish and share semantic resources then we exploit those semantic resources for applications in agriculture or environment. One of D2KAB's driving agri-food scenario is to build an augmented, semantically-enabled, reading interface for the official French agricultural alert newsletters, called Bulletin de Sant\u00e9 du V\u00e9g\u00e9tal (Plant Health Bulletins, later abbreviated PHB). The prototype will be developed with an archive of preexisting PHB PDF files semantically enriched -or annotated-using text mining techniques and transformed into linked data. The annotations will be described using the Semantic Sensor Network ontology combined with the Web Annotation Data Model as presented in [7] . References to phenology are frequently found in PHB, for instances, in order to identify the periods of grapevine sensitivity to abiotic factors (e.g., spring frost from bud break), or to biotic factors (e.g., diseases). In order to describe/annotate crops phenological development stages, we need a specific semantic resource to represent each stages and their relations for any specific crops but also interrelate similar stages between different crops.",
+            "cite_spans": [
+                {
+                    "start": 511,
+                    "end": 515,
+                    "text": "[10]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 576,
+                    "end": 580,
+                    "text": "[17]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1278,
+                    "end": 1281,
+                    "text": "[7]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Several scales exist to describe plant phenological development stages such as the BBCH general scale [3] and other crop specific scales. Unfortunately, these scales are not available in a semantic form (i.e., described with a semantic Web language such as SKOS, RDF-S or OWL) preventing their use in agricultural semantic applications, such as the one we want to develop for PHB. Indeed, our corpus of PHB shows different scales were idiosyncratically used to refer phenological development stages in observed plots. For example, in a grapevine related PHB, we find the sentence: bourgeon dans le coton (stade 03 ou B ou BBCH 05) dans les secteurs tardifs, which is both a reference to a 'label' (\"bourgeon dans le coton\" translated as \"bud in wool\") and a semi-formal mention to several scales: (i) 03 is a code from Eichhorn-Lorenz scale [18] ; (ii) B is a code from the Baggiolini scale [9] ; (iii) and BBCH 05 is a code from the BBCH-grapevine-individual scale [3] . These codes inside the text are first extremely hard to identify and second, they need to be transformed into a formal concept identifying the stage inside a semanticized scale. Plus, it appears the most frequent labels used are IFV's, but this scale does not offer any coding system (only labels). From our analysis and experience working on the PHB use case, there is a clear need to build a set of aligned vocabularies to semantically describe the stages of the different scales.",
+            "cite_spans": [
+                {
+                    "start": 841,
+                    "end": 845,
+                    "text": "[18]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 891,
+                    "end": 894,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 966,
+                    "end": 969,
+                    "text": "[3]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "In this paper, we present our work in transforming French Wine and Vine Institute (IFV)'s French labels and other related scales: BBCH general and individual scales [3], Baggiolini grapevine specific scale [9] , Eichhorn-Lorenz [18] grapevine specific scale into RDF vocabularies. We present the first version of the BBCH-based Plant Phenological Description Ontology, an ontological framework which encodes in the same semantic resource the BBCH generic scale (as OWL classes) and each crop specific scales (as SKOS instances in respective concept schemes) aligned one another. The rest of the paper is organized as follow: Sect. 2 presents the scales to semanticize; Sect. 3 reviews existing vocabularies/ontologies to capture phenological development stages; Sect. 4 illustrates the methodology used to build a RDF vocabulary for grapevine development stages based on BBCH scale; Sect. 5 discusses pros and cons for publication of phenological information as linked open data before concluding the paper.",
+            "cite_spans": [
+                {
+                    "start": 206,
+                    "end": 209,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 228,
+                    "end": 232,
+                    "text": "[18]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The extended BBCH (Biologische Bundesanstalt, Bundessortenamt und CHemische Industrie) scale uniformly codes phenologically similar development stages of different plant species. BBCH describes several sets of development stages: one per plant species ('individual scales') and a general one [3] . The general scale forms the framework within which the individual scales are developed. It can also be used for plant species for which no individual scale are available: \u00ab The entire developmental cycle of the plants is subdivided into ten clearly recognizable and distinguishable longer-lasting developmental phases. These principal development stages are described using numbers from 0 to 9 in ascending order (...) The principal development stages alone are not sufficient to precisely define application or evaluation dates (...); Secondary stages are used when points of time or precise steps in plant development must be identified. Secondary stages are defined as short developmental steps (inside a principal stage) characteristic of the respective plant species. They are also encoded with a single digit. The combination of the principal and the secondary stages, results in a twodigit code -e.g., \"51\" stands for \"Inflorescence or flower buds visible\". The scale allows precisely defining all phenological development stages for the majority of plant species. \u00bb [3]. BBCH is considered a reference to describe stages and the monography is available in English, French, German and Spanish [1] [2] [3] [4] .",
+            "cite_spans": [
+                {
+                    "start": 292,
+                    "end": 295,
+                    "text": "[3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1498,
+                    "end": 1501,
+                    "text": "[1]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1502,
+                    "end": 1505,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1506,
+                    "end": 1509,
+                    "text": "[3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1510,
+                    "end": 1513,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Phenological Development Scales"
+        },
+        {
+            "text": "For grapevine, the first phenological scale was proposed by Baggiolini [8] in 1952. It initially had 10 stages that were completed in 1993 by Baillod and Baggiolini [9] to reach 16 stages. In 1977, Eichhorn and Lorenz (EL) proposed a more detailed scale of 24 stages for grapevine. In 1992, a universal scale known as BBCH for cultivated mono and dicotyledonous plants was proposed by Hack et al., then adapted to grapevine in 1995 by Lorenz et al. [18] . The BBCH grapevine individual scale allows comparison with other species, both annual and perennial, and has gradually established itself as a reference scale in the scientific community. In 1995, Coombe [11] proposed an alignment between the different existing scales for grapevine while proposing modifications to EL's. However, in the French agricultural technical community, different phenological scales are sometimes used according to the habits of the technicians and the territories. IFV had therefore produced a technical sheet [15] to synthesise the most useful and relevant grapevine development stages and their correspondences with the BBCH grapevine individual scale, the EL and the Baggiolini scales. The definitions of each stage were enriched by specific French expressions.",
+            "cite_spans": [
+                {
+                    "start": 71,
+                    "end": 74,
+                    "text": "[8]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 165,
+                    "end": 168,
+                    "text": "[9]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 449,
+                    "end": 453,
+                    "text": "[18]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 660,
+                    "end": 664,
+                    "text": "[11]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 993,
+                    "end": 997,
+                    "text": "[15]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Phenological Development Scales"
+        },
+        {
+            "text": "Even if there exists other scales for other crops, such as Zadoks (1974), there is clearly no universally agreed-upon \"phenological stages\"; however, because of its wide adoption, BBCH scale works well as a pivot language to describe crop specific development stages. In other terms, crop specific RDF vocabularies will have to be formally aligned to the BBCH generic scale (either via instantiation or via explicit mappings between scales.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Phenological Development Scales"
+        },
+        {
+            "text": "None of the aforementioned scales are published as semantic resources by their producers. However, some existing vocabularies or ontologies do encompass parts of them. Searching \"BBCH\" on AgroPortal returned mostly matches in 3 vocabularies: the Crop Ontology, Plant Ontology and SOY, a specific trait ontology for soy, irrelevant for us for now. Other semantic resources we identified would contain development or phenological descriptors include the AGROVOC thesaurus and the Plant Phenology Ontology [25] or crop specific resources like the Banana Anatomy Ontology.",
+            "cite_spans": [
+                {
+                    "start": 503,
+                    "end": 507,
+                    "text": "[25]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Resources for Phenological Development Stages"
+        },
+        {
+            "text": "AGROVOC thesaurus is published by the Food and Agriculture Organization of the UN (FAO) [22] . It is edited by a worlwide community of experts and covers all FAO's areas of interest, including agriculture, forestry, fisheries, food and related domains. It is available in 29 languages, with an average of 35,000 terms and developed in SKOS-XL. The strength of this thesaurus is its multilingual lexical coverage and therefore it is often used to annotate or index agricultural documents or images [24] . AGROVOC contains some phenological stages. The skos:Concept individual \"plant developmental stages\" is the root of a broader/narrower hierarchy of 38 development stages. For example the URI http://aims.fao.org/aos/agrovoc/c_2992 identifies the 'flowering' stage. We note that the reference to an existing scale is not mentioned -i.e., it does not refer to BBCH or any other scale either directly or through its mappings-, neither the crop which this stage occurred, and many stages are missing. For these reasons, AGROVOC is not precise enough for our purpose, despite offering 38 stages for alignments.",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 92,
+                    "text": "[22]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 497,
+                    "end": 501,
+                    "text": "[24]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "AGROVOC"
+        },
+        {
+            "text": "The Crop Ontology (CO) [23] and Plant Ontology (PO) [12] are two efforts to develop reference ontologies for plants genomics and phenomics developed and maintained during the Planteome project [16] . CO is actually a set of several crop specific traits dictionaries all connected to PO and Plant Trait Ontology (TO).",
+            "cite_spans": [
+                {
+                    "start": 23,
+                    "end": 27,
+                    "text": "[23]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 52,
+                    "end": 56,
+                    "text": "[12]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 193,
+                    "end": 197,
+                    "text": "[16]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Plant Ontology and Crop Ontology"
+        },
+        {
+            "text": "One of the crop specific trait dictionary is the Vitis Ontology, 1 but it does not contain any development stage. PO however covers all plants; it contains standardized terms, definitions, and logical relations describing plant anatomy, morphology and development stages [26] . In PO, a development stage is represented as a class. A stage corresponds to a time interval in the growth of the corresponding plant structure. Thus, a shorter stage is defined as a subclass of a longer stage. A stage is related to a plant anatomical entity using has_participant object property. Some (49) references to the BBCH scale (or to other scales e.g. 38 references to Zadoks) can be found in the has_related_synonym annotation property. For example, the URI http://purl.obolibrary.org/obo/PO_0007086 corresponds to the stage at which five nodes or five internodes are visible. This stage corresponds to the BBCH stage 35. As most OBO ontologies, PO is based on the Basic Formal Ontology (BFO) [6] and reuses some properties defined in the Relation Ontology (RO). Interesting object properties, such as precedes and preceded_by indicate that the end of a stage happens before the begining of another, but these properties defines some domain and range restrictions related to BFO constructs. Thus reusing these properties means reusing BFO constructs. PO, which was designed to annotate genomic and phenotypic data, is more detailed than the BBCH scale which was designed for agricultural practices and thus not really relevant for our use case.",
+            "cite_spans": [
+                {
+                    "start": 271,
+                    "end": 275,
+                    "text": "[26]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 982,
+                    "end": 985,
+                    "text": "[6]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Plant Ontology and Crop Ontology"
+        },
+        {
+            "text": "The Plant Phenology Ontology (PPO) provides a standardized vocabulary useful for large-scale integration of heterogeneous plant phenology data from around the world [25] . It relies on PO as well as on the Phenotype and Trait Ontology (PATO). Phenology studies do not really observe phenological stages, which usually occur over a period of days; they rather observe physical traits of plants, which provides information such as whether a plant has leaves or fruits. Thus, PPO defines phenological traits and does not focus on plant development stages. PPO enables to describe precisely the presence or absence of some plant anatomical entities that is modelled as phenological traits.",
+            "cite_spans": [
+                {
+                    "start": 165,
+                    "end": 169,
+                    "text": "[25]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Plant Phenology Ontology (PPO)"
+        },
+        {
+            "text": "To conclude, among the semantic resources identified, we have not found any solution to adopt directly in our use case. Although BBCH is often referenced, which confirms its role of corner stone, we have not found a semantic resource which would rely on BBCH and offer a means to semantically encode phenological development stages for any crops. Therefore, we decided to propose a new ontological framework to describe the BBCH scales: this framework will contain an OWL ontology to represent BBCH generic scale as well as several specific vocabularies (or datasets of SKOS individuals) for each crop specific scales -in our grapevine use case: BBCH individual, IFV labels, EL and Baggiolini scales.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Plant Phenology Ontology (PPO)"
+        },
+        {
+            "text": "We have followed the Linked Open Terms method, an ontology engineering methodology inspired by Agile software development [20] . This methodology focuses on the reuse of terms (classes, properties and attributes) existing in already published vocabularies or ontologies and the publication of the ontology following the linked data principles. The method defines iterations over the following four activities: (1) ontological requirements specification, (2) ontology implementation, (3) ontology publication, and (4) ontology maintenance.",
+            "cite_spans": [
+                {
+                    "start": 122,
+                    "end": 126,
+                    "text": "[20]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "An Ontological Framework for Phenological Development Stages"
+        },
+        {
+            "text": "Our ontological requirements were specified by several competency questions:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontological Requirements Specification"
+        },
+        {
+            "text": "-What are the French/English preferred and alternative labels for a specific development stage? -What is the definition in French/English of a specific development stage? -What are the principal and secondary development stages for grapevine in a specific scale (BBCH individual, IFV, EL or Baggiolini)? -Which BBCH principal stage is linked to a specific secondary stage S of the R scale (IFV, EL or Baggiolini)? -Which BBCH secondary stage is equivalent to a specific secondary stage S of the R scale (IFV, EL or Baggiolini)? -Which BBCH secondary stage is mapped (broad or narrow match) to the secondary stage S of the R scale (IFV, EL or Baggiolini)? -How to order (with follow/precede relations) the primary and secondary stages of a specific scale?",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontological Requirements Specification"
+        },
+        {
+            "text": "We have chosen to specialize the SKOS model [5] to represent development stages in our ontology; it is a W3C Recommendation with the appropriate semantic constructs, and it can address most of our competency questions, especially related to the use of labels and mappings properties. A phenological development stage will be a subclass of a skos:Concept and will be described with multilingual preferred and alternative labels. A stage will belong to a specific scale which will be represented by a set of instances in a skos:ConceptScheme. A secondary stage will be linked to its principal stage using a skos:broader relation. The ontology will be an OWL file which can possibly imports each scale defined in a specific file (to build a knowledge base) or be imported by any other ontology which want to build atop our model.",
+            "cite_spans": [
+                {
+                    "start": 44,
+                    "end": 47,
+                    "text": "[5]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "BBCH General Scale Model. We represent the BBCH stages from the general scale as a set of classes; each specific stages in an crop specific scale (BBCH individual scale or IFV scale) will therefore be instances of the classes. For example, the class secondary stage 'BBCH 01' of the general scale represents the set of secondary stages 'BBCH 01' of every individual scale. As shown in Fig. 1 , we created a class ppdo:GrowthStage, subclass of skos:Concept that will be the top of the BBCH stages hierarchy. This class is then specialized in two subclasses for principal and secondary stages. Both are defined as classes to express that all their individuals should be linked to one specific instance of the class ppdo:StageDivision with the ppdo:hasRank property. Thus all the instances of ppdo:GrowthStage linked to the individual principal, will be automatically classified as instances of ppdo:PrincipalGrowthStage and all the instances of ppdo:GrowthStage linked to the individual secondary will be automatically classified as instances of ppdo:SecondaryGrowthStage. Figure 1 presents examples of principal and secondary stages specializing the classes. -Labels are described using skos:prefLabel and skos:prefLabel properties.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 385,
+                    "end": 391,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1071,
+                    "end": 1079,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "Preferred labels are extracted from the associated documentation (e.g., BBCH monograph) whereas alternative labels are taken from the text definition when possible; -Definitions are described using skos:definition property. The BBCH monograph provides one definition per language; -The skos:inScheme property indicates the scale which the stage belongs to.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "Each BBCH individual scale or any other scale will be represented as instances of skos:ConceptScheme. -The crop associated to the development stage -or the whole scale-is described using fcu:relatedCrop property which comes from the French Crop Usage thesaurus, 2 a resource created to classify crops and already used to annotate PHB [21] ; -Relations between principal and secondary stages are described using skos: broader/narrower properties. Figure 3 illustrates use of this property between principal stage BBCH 0 and secondary stage BBCH 00; -Order between stages, as defined by the scale, are represented with the ppdo:precedes and ppdo:follows properties. Figure 3 presents an example between secondary stage BBCH 00 and secondary stage BBCH 01.",
+            "cite_spans": [
+                {
+                    "start": 334,
+                    "end": 338,
+                    "text": "[21]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 446,
+                    "end": 454,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 664,
+                    "end": 672,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "IFV Scale Model. We model IFV labels as a new formal scale following the same guidelines used for BBCH individual scale of grapevine. Here, the main new point was to formally align the BBCH individual scale with the IFV one.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "To do so we used SKOS mapping properties:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "-Because IFV labels describe only secondary stages, each IFV stage is mapped to one BBCH principal stage using the skos:broadMatch property;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "-Similarly, each IFV stage is mapped to one BBCH secondary stage using the skos:exactMatch property. Figure 3 presents an example of the alignment of IFV stage 00 to its corresponding BBCH stages. Even if not presented here, we would use the same approach to develop and map other scales (EL, Baggiolini). ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 101,
+                    "end": 109,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Ontology Implementation"
+        },
+        {
+            "text": "Once the models were designed, they were encoded as classes and instances in RDF using constructs from RDFS, SKOS and OWL. We used the Prot\u00e9g\u00e9 ontology editor (v5.1.0) [19] with Cellfie plugin. 3 We have first created the general model as an owl:Ontology defining the classes (Fig. 1 ) from the BBCH general scale. We also added metadata descriptions (e.g., authors, dates, licenses) as recommended by [14] or [13] . Second, we populated the ontology with instances from all the stages from the BBCH individual scale of grapevine, IFV labels, the Baggiolini scale and the EL scale to produce different OWL knowledge bases (i.e., datasets importing the ontology and adding individuals.) We used different sources to populate the ontology. The BBCH monographs provided the information (labels and descriptions) in four languages (French, English, Spanish and German) for the general scale and the grapevine individual scale. Scientific publication of Baggiolini scale and the Eichhorn-Lorenz scale provided the information in English. And finally, IFV provided us with one CSV file gathering the information in French and English. Then, we extracted the data semiautomatically to different spreadsheets before loading them in the knowledge bases using Cellfie transformation rules. Cellfie was also used to generate individuals, each of them as an instance of one of the stage classes; transformation rules enabled to create links using object properties: ppdo:precedes, ppdo:follows, skos:broader, skos:broadMatch, skos:exactMatch, rdf:type. To improve the coherency of the final resource, we used a SWRL rule to inferred all inverse properties. A final check was performed using the SKOS Play! tool (http://labs. sparna.fr/skos-play): it enabled to visualize and control the SKOS model and detected some errors.",
+            "cite_spans": [
+                {
+                    "start": 168,
+                    "end": 172,
+                    "text": "[19]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 194,
+                    "end": 195,
+                    "text": "3",
+                    "ref_id": null
+                },
+                {
+                    "start": 402,
+                    "end": 406,
+                    "text": "[14]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 410,
+                    "end": 414,
+                    "text": "[13]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 276,
+                    "end": 283,
+                    "text": "(Fig. 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "RDF Encoding."
+        },
+        {
+            "text": "The result is an ontological framework (and ontology and several knowledge bases) with an ontology that specializes the SKOS model, of 98 classes -most of them being stages in the BBCH generic scale-and 125 individuals -coming from grapevine scales only-and 1208 object property assertions and 1696 annotation property assertions. Within this ontology, each encoded scale is accessible by a specific SKOS concept scheme. We named this ontology BBCH-based Plant Phenological Description Ontology, tagged it as v1.0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RDF Encoding."
+        },
+        {
+            "text": "The BBCH-based Plant Phenological Description Ontology v1.0 is publicly available: https://gitlab.irstea.fr/copain/phenologicalstages. This file is also loaded into a Jena Fuseki triple store and can be queried at: http://ontology.inrae.fr/ ppdo/sparql/. The current implementation contains 98 classes, 21 object properties, 1 datatype property and 125 individuals and it imports all the individuals from the French Crop Usage thesaurus. The issue tracker provided by Gitlab is the tool used to receive feedback and control issue lists. In a near future, we plan to complete the metadata descriptions, choose a perennial URI pattern, and upload the BBCH-based Plant Phenological Description Ontology including authorized and properly credited specific scales to the AgroPortal ontology repository [17] .",
+            "cite_spans": [
+                {
+                    "start": 797,
+                    "end": 801,
+                    "text": "[17]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ontology Publication and Maintenance"
+        },
+        {
+            "text": "This transformation (RDFization) of the grapevine phenological development scales is a collaborative work between an IFV expert and computer scientists expert in ontology engineering. The result shall enhance the value and reusability/interoperability of the currently existing phenological development scales, once lifted to RDF. For example, IFV labels were improved as the French labels and definitions were translated in English thanks to the BBCH monograph. Also, some inconsistencies/errors were detected. For instance, IFV scale mentions BBCH 88 of grapevine which does not exist in the BBCH monograph. The semantic of mappings between the stages of different scales are defined using SKOS properties thus clarifying the alignment and overlap between the different scales with semantic web properties with clear semantics. We have already populated the ontology with stages from the Baggiolini scale and the Eichhorn-Lorenz scale. In the future, we plan to publish several wheat scales (e.g., Zadoks) using the same framework.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and Conclusion"
+        },
+        {
+            "text": "The mixture of SKOS and OWL allows to include and interlink in one ontology model all the stages in all the scales as instances of the relevant classes. But in addition, the skos:inScheme and skos:ConceptScheme constructs enable to capture the set of stages of each specific scale in a same scheme that can be described with its specific metadata (authors, dates, etc.). The mix of owl:subClassOf and skos:broader/skos:narrower hierarchies allows to respectively represent groups of generic stages and relations between stages in a specific scale only.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and Conclusion"
+        },
+        {
+            "text": "The semantic resource produced is currently available through a SPARQL endpoint at INRAE. By the end of our project, we expect to store and make available our PHB archive in the same environment and published all these interlinked datasets and ontology as Linked Open Data. Then, in order to improve the interlinking of the BBCH-based Plant Phenological Description Ontology, some alignments could be proposed. First, we could link the ppdo:GrowthStage individuals that represent crop specific stages to some AGROVOC individuals. AGROVOC proposes some generic stage not related to a specific crop, thus a skos:broadMatch property could be used. 4 Second, we could link those individuals to more precise description that are proposed in the Plant Phenotype Ontology and the Plant Ontology. The type of mapping should be well studied due to the fact that the point of view between these two models are quite different: PPO and PO represent precise development processes of each plant organ, phenological development scales are just a snapshot of some typical plant development stages useful to schedule agricultural practices.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion and Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Etapas de desarrollo de las plantas monocotiled\u00f3neas y dicotiled\u00f3neas: BBCH Monografia 3. Growth stages of mono-and dicotyledonous plants: BBCH Monograph",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Stades ph\u00e9nologiques des mono-et dicotyl\u00e9dones cultiv\u00e9es: BBCH Monographie",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "SKOS simple knowledge organization system. W3C Recommendation, W3C",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Alistair",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Sean",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Building Ontologies with Basic Formal Ontology",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Arp",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Spear",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Recent progresses in data and knowledge integration for decision support in agri-food chains. 30\u00e8mes Journ\u00e9es Francophones d'Ing\u00e9nierie des Connaissances",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Aubin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bisquert",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Buche",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dibie",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ibanescu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jonquet",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Roussey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "43--59",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Les stades rep\u00e8res dans le d\u00e9veloppement annuel de la vigne et leur utilisation pratique. Revue Romande d'Agriculture, de Viticulture et",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baggiolini",
+                    "suffix": ""
+                }
+            ],
+            "year": 1952,
+            "venue": "",
+            "volume": "1",
+            "issn": "",
+            "pages": "4--6",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Les stades rep\u00e8res de la vigne",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baillod",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baggiolini",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Rev. Suisse Vitic. Arboric. Hortic",
+            "volume": "25",
+            "issn": "1",
+            "pages": "7--9",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Linked data -the story so far",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Bizer",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Heath",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Berners-Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Semantic Web Inf. Syst",
+            "volume": "5",
+            "issn": "3",
+            "pages": "1--22",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Growth stages of the grapevine: adoption of a system for identifying grapevine growth stages",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Coombe",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Australian J. Grape Wine Res",
+            "volume": "1",
+            "issn": "2",
+            "pages": "104--110",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The plant ontology as a tool for comparative plant anatomy and genomic analyses",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cooper",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Plant Cell Physiol",
+            "volume": "54",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "New generation metadata vocabulary for ontology description and publication",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Dutta",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Toulet",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Emonet",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jonquet",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "CCIS",
+            "volume": "755",
+            "issn": "",
+            "pages": "173--185",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-319-70863-8_17"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A checklist for complete vocabulary metadata",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Garijo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Poveda Villalon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "IFV: Les stades ph\u00e9nologique de la vigne",
+            "authors": [],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Planteome: a resource for common reference ontologies and applications for plant biology",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jaiswal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "24th Plant and Animal Genome Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "AgroPortal: a vocabulary and ontology repository for agronomy",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jonquet",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Comput. Electron. Agri",
+            "volume": "144",
+            "issn": "",
+            "pages": "126--143",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Growth stages of the grapevine: phenological growth stages of the grapevine (Vitis vinifera L. ssp. vinifera)-codes and descriptions according to the extended BBCH scale",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lorenz",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Eichhorn",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Bleiholder",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Klose",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Meier",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Weber",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Australian J. Grape Wine Res",
+            "volume": "1",
+            "issn": "2",
+            "pages": "100--103",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "The prot\u00e9g\u00e9 project: a look back and a look forward",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Musen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "AI Matters",
+            "volume": "1",
+            "issn": "4",
+            "pages": "4--12",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "A reuse-based lightweight method for developing linked data ontologies and vocabularies",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Poveda-Villal\u00f3n",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Simperl",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Cimiano",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Polleres",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Corcho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "ESWC 2012",
+            "volume": "7295",
+            "issn": "",
+            "pages": "833--837",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-642-30284-8_66"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "A methodology for the publication of agricultural alert bulletins as LOD",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Roussey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Comput. Electron. Agri",
+            "volume": "142",
+            "issn": "",
+            "pages": "632--650",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "The AGROVOC concept scheme a walkthrough",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sachit Rajbhandari",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Integr. Agri",
+            "volume": "11",
+            "issn": "5",
+            "pages": "694--699",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Multifunctional crop trait ontology for breeders' data: field book, annotation, data discovery and semantic enrichment of the literature",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Shrestha",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "AoB Plants",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Migrating bibliographic datasets to the semantic web: the AGRIS case",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stefano",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yves",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fabrizio",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Armando",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Johannes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Semantic Web",
+            "volume": "6",
+            "issn": "2",
+            "pages": "113--120",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The plant phenology ontology: a new informatics resource for large-scale integration of plant phenology data",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Stucky",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Guralnick",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Deck",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Denny",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Bolmgren",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Walls",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Front. Plant Sci",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "The plant ontology facilitates comparisons of plant development stages across species",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Walls",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Front. Plant Sci",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "BBCH general scale model and examples of classes -the prefix ppdo currently means http://ontology.inrae.fr/ppdo/ontology. BBCH Individual Scale Model. A development stage for grapevine is represented as an instance of one of the subclasses of ppdo:GrowthStage in the general BBCH model e.g.,Fig. 2presents an instance of ppdo:SecondaryStage01. The URI identifying the development stage follows the pattern:<scaleName:cropName_typeOfStage_stageCode> Several SKOS properties or specific relations are used to describe the stage:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Example of instantiation of the BBCH general scale model with the grapevine specific scale (stage BBCH 01) -the prefix bbch currently means http://ontology.inrae. fr/ppdo/bbch.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Alignment between stage BBCH 01 of grapevine and corresponding IFV stage -the prefix ifv currently means http://ontology.inrae.fr/ppdo/ifv.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Acknowledgements. This work was achieved with support of the Data to Knowledge in Agronomy and Biodiversity (D2KAB -www.d2kab.org) project that received funding from the French National Research Agency (ANR-18-CE23-0017); as well as with help of French Wine and Vine Institute (www.vignevin.com). We also thanks Thibaut Scholasch (Fruition Sciences) for help translating the labels.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

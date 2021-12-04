@@ -1,0 +1,1403 @@
+{
+    "paper_id": "3e1fb65147f265365aa2e70306c318224d2a6522",
+    "metadata": {
+        "title": "Supporting Empathy Training Through Virtual Patients",
+        "authors": [
+            {
+                "first": "Jennifer",
+                "middle": [
+                    "K"
+                ],
+                "last": "Olsen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Ecole Polytechnique Federale de Lausanne",
+                    "location": {
+                        "settlement": "Lausanne",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": "jennifer.olsen@epfl.ch"
+            },
+            {
+                "first": "(",
+                "middle": [
+                    "B"
+                ],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Catharine",
+                "middle": [],
+                "last": "Oertel",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Delft University of Technology",
+                    "location": {
+                        "settlement": "Delft",
+                        "country": "The Netherlands"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "C",
+                "middle": [
+                    "R M M"
+                ],
+                "last": "Oertel@tudelft",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Nl",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "For the training of interpersonal skills, such as those required in the medical field, virtual agents can provide a safe environment for practice. However, many agent systems are not developed with the ability to understand non-verbal input. Being able to automatically parse such input is essential for the practice of interpersonal skills such as empathy. Currently, it is still an open question which prosodic or visual features would aid automatic classification of empathy and how this knowledge can be used to support the practice of these skills. As a first step towards this goal, we report on 42 second-year nursing students practicing their empathy skills with a virtual patient or through collaborative role playing. We found that across both the role playing and simulation, students assessed their empathy as increasing over time but as higher during the role playing. This work contributes to the continued development of virtual agents for the training of interpersonal skills.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "As with many areas of vocational education, the medical field has challenges in teaching skills to students in safe environments where the risk from mistakes is minimal and in a way that is scalable. One proposed solution that has been effective across a range of skills has been to use virtual agents [4, 14, 20, 25] . Outside of the medical domain, virtual agents can take on many different roles to support the learning process including those of instructor [1] , students for teacher training [9, 10] , or role-player [24] . Across studies, environments that include virtual agents have been found to enhance learning compared to those that do not [15, 29] . Within medical trains, researchers have used virtual patients, a subset of virtual agents, to support both the acquisition of theoretical knowledge [5, 27] as well as communication skills [22, 31] . Virtual patients provide many advantages to medical training including standardization, accessibility and efficiency, and practice in a safe environment with feedback [5, 27] .",
+            "cite_spans": [
+                {
+                    "start": 302,
+                    "end": 305,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 306,
+                    "end": 309,
+                    "text": "14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 310,
+                    "end": 313,
+                    "text": "20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 314,
+                    "end": 317,
+                    "text": "25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 461,
+                    "end": 464,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 497,
+                    "end": 500,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 501,
+                    "end": 504,
+                    "text": "10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 522,
+                    "end": 526,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 652,
+                    "end": 656,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 657,
+                    "end": 660,
+                    "text": "29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 811,
+                    "end": 814,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 815,
+                    "end": 818,
+                    "text": "27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 851,
+                    "end": 855,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 856,
+                    "end": 859,
+                    "text": "31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 1029,
+                    "end": 1032,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1033,
+                    "end": 1036,
+                    "text": "27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "More recently, research within virtual agents has expanded from focusing primarily on guidance and coaching to using agents' social and affective capabilities to support learning [18] , specifically interpersonal behaviors [2] . For the training of interpersonal skills, students can respond realistically to virtual humans [13] and can improve their target interpersonal skills [17, 24] . Furthermore, these skills practiced with the virtual agent may transfer to use with real humans [14] .",
+            "cite_spans": [
+                {
+                    "start": 179,
+                    "end": 183,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 223,
+                    "end": 226,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 324,
+                    "end": 328,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 379,
+                    "end": 383,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 384,
+                    "end": 387,
+                    "text": "24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 486,
+                    "end": 490,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Moreover, virtual patients can provide increased exposure to cases that take extra care such as those with special needs [28] or dementia. With virtual patients, students are able to practice in a safe environment [31] that prepares them for emotionally-charged real-life encounters and to transfer their skills to a more realistic situation [20] . When training students to deal with sensitive situations specifically, such as those when working with a dementia patient, there is far less work. One specific challenge is to support the training of empathy, which is critical to patient outcomes [16, 30] . We define empathy as \"a two-phase process: (a) understand and appreciate another person's feelings and emotions and (b) communicate understanding back to the patient in a supportive way\" [21] with a focus on the communication through voice. In these situations, the empathy exhibited by the student through both verbal and non-vernal actions is key to fruitful interactions with the patient. Virtual agents have shown mixed results in their ability to support empathy training with higher empathy with real people in some studies [8] and lower in others [19] . One strength of using virtual agents to support empathy training is their ability to provide feedback to students [11, 12] and support reflection on their responses [19] . However, virtual patients are still limited in their ability to support complex communication skills [5, 7, 27] .",
+            "cite_spans": [
+                {
+                    "start": 121,
+                    "end": 125,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 342,
+                    "end": 346,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 596,
+                    "end": 600,
+                    "text": "[16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 601,
+                    "end": 604,
+                    "text": "30]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 794,
+                    "end": 798,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1137,
+                    "end": 1140,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1161,
+                    "end": 1165,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1282,
+                    "end": 1286,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1287,
+                    "end": 1290,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1333,
+                    "end": 1337,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1441,
+                    "end": 1444,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1445,
+                    "end": 1447,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1448,
+                    "end": 1451,
+                    "text": "27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this work, we investigate how a virtual agent can be designed and support the training of empathy skills. Specifically, we evaluate the use of a virtual patient for empathy training compared to that of standard practice -collaborative role playing. Our research question is: how does the students' empathy compare over time between the virtual patient condition and the role playing condition? We hypothesize that students will increase their empathy over time but that they will have higher empathy when interacting with real humans [8] . This research contributes to our understanding of using virtual patients to support empathy training.",
+            "cite_spans": [
+                {
+                    "start": 537,
+                    "end": 540,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We developed the patient simulation using Unity with a narrative design, in which decisions the user makes results in different outcomes over time. We represented facial expressions and body posture through a 2-D sketch and speech as both text and audio. The students worked individually with the patient through simple text selections. At each decision point, the student could choose from three answers. We designed the student choices together with experts to represent a range of choices. After making their choice, the students were asked to read out loud the choice that they selected in the way that they would say it to a patient. If they had not liked any of the choices, at this point they were also given the opportunity to rephrase their response. The students could then replay their recording to reflect on the level of empathy. Based on their choice, the next interaction scenario (i.e., dialogue of the patient) would appear on the screen and the facial features of the patient would change subtly to indicate the emotions of the patient (Fig. 1) . In the collaborative role-playing, the students were assigned to act out different scenarios in either groups of two or three. In each group there was a patient with dementia and a nurse. When there was a third student, they observed the interaction and took notes. This role-playing set up followed the current school practices. For instructions, we asked the students to speak in High German to standardize the interactions across the different groups as there are multiple dialects of Swiss German. Furthermore, the students were told that they could take advantage of any of the furniture or items in the rooms as props.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1054,
+                    "end": 1062,
+                    "text": "(Fig. 1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Virtual Patient and Collaborative Role Playing Conditions"
+        },
+        {
+            "text": "We collected data from 42 second-year nursing students (16-25 years old) enrolled in a Swiss vocational education program. Of the participants, 37 were female and five male, which is similar to the proportion in the profession. For the experiment, we conducted a within-subject design in which all participants experienced both the virtual patient simulation and the collaborative role playing. We randomly assigned students to experience the virtual patient or the role playing first to counter-balance the order.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Study Design and Procedure"
+        },
+        {
+            "text": "For each condition, the students were given three scenarios that were designed to be different across the conditions, but equal. In between each of the scenarios, the students were asked to reflect on the empathy level displayed by the nurse in that scenario on a 1-5 Likert scale [26] . Additionally, they were asked to explain which actions were taken that concretely displayed empathy and which did not display empathy allowing them to reflect on their current actions to elicited self-explanation [6] .",
+            "cite_spans": [
+                {
+                    "start": 281,
+                    "end": 285,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 501,
+                    "end": 504,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Study Design and Procedure"
+        },
+        {
+            "text": "Our research question related to the impact of the virtual patients on the learning of empathy skills. Specifically, we were interested in the difference between the students' empathy levels between the two conditions, how students' empathy levels changed over time, and if the condition had any impact on this slope. To investigate this question, we used a mixed model to account for the nested nature of the data with each student having multiple scores within each condition. We found a significant impact of time on students' empathy ratings, t(157) = 5.15, p < .001, with an increase over time. Moreover, we found a significant impact of condition, t(38) = 3.13, p <.01, with students rating their empathy higher in the role-playing condition. Finally, we found a marginally significant interaction between the time and condition, t(157) = \u22121.84, p = .07, with the change over time being positively steeper in the virtual patient condition.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "For virtual agents to support the training of interpersonal skills, it is not enough to only capture the verbal content but to also provide training support for the non-verbal content. In this paper, we conducted a study with 42 nursing students to compare the impact of role playing and virtual patients on their empathy training. Unsurprisingly, we found that the students rated their empathy as being higher in the role-playing condition compared with the virtual patient. One reason for this difference is that the virtual patient did not include many of the channels through which people express empathy. These results support previous work in which students were able to respond empathetically to virtual patients, but not as well as a human [8] . In this case, much of the difference in empathy was also related to the non-verbal aspects of the communication and would be a place for future development of virtual agents. One limitation of our ratings was that they were all self-assessed so may have contained bias, although previous work has shown a correlation between self-assessed communication performance and expert ratings [3, 26] . Nevertheless, in this paper, we contribute to the understanding of how virtual agents, specifically the use of virtual patients, can be used to support the learning of interpersonal skills such as empathy. To move in this direction, future work is needed to further develop the non-verbal feedback support within virtual agents.",
+            "cite_spans": [
+                {
+                    "start": 748,
+                    "end": 751,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1138,
+                    "end": 1141,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1142,
+                    "end": 1145,
+                    "text": "26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and Conclusion"
+        },
+        {
+            "text": "In this future work, we aim to provide objective ratings of the recorded speech in each condition to further support these results. However, the software is still very limited in being able to provide any feedback around non-verbal features. Extracting prosodic features from the speech samples collected will enable the development of an automatic empathy classifier, similar in approach to the ones developed for engagement [23] . Although gestures and touching cannot be reflected with the virtual patient, the speech support could be greatly strengthened with the automatic detection of prosodic features. Furthermore, we aim to model these student futures to be able to integrate empathy attributes into virtual patients.",
+            "cite_spans": [
+                {
+                    "start": 426,
+                    "end": 430,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion and Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Optimizing learning from examples using animated pedagogical agents",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Atkinson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "J. Educ. Psychol",
+            "volume": "94",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "But that was in another country: agents and intercultural empathy",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Aylett",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Vannini",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Andre",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Paiva",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Enz",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Hall",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proceedings of The 8th International Conference on Autonomous Agents and Multiagent Systems",
+            "volume": "1",
+            "issn": "",
+            "pages": "329--336",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The use of video recording and standardized patient feedback to improve communication performance in undergraduate nursing students",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Beaird",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Nye",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Thacker",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Clin. Simul. Nurs",
+            "volume": "13",
+            "issn": "4",
+            "pages": "176--185",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Virtual patients in a behavioral medicine massive open online course (MOOC): a qualitative and quantitative analysis of participants' perceptions",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Berman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Acad. Psychiatry",
+            "volume": "41",
+            "issn": "5",
+            "pages": "631--641",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The use of virtual patients in medical school curricula",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cendan",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Adv. Physiol. Educ",
+            "volume": "36",
+            "issn": "1",
+            "pages": "48--53",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Learning from human tutoring",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Chi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Siler",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jeong",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yamauchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hausmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Cognit. Sci",
+            "volume": "25",
+            "issn": "4",
+            "pages": "471--533",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Efficacy of virtual patients in medical education: a meta-analysis of randomized studies",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Consorti",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mancuso",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nocioni",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Piccolo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Comput. Educ",
+            "volume": "59",
+            "issn": "3",
+            "pages": "1001--1008",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Do medical students respond empathetically to a virtual patient?",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Deladisma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Am. J. Sur",
+            "volume": "193",
+            "issn": "6",
+            "pages": "756--760",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "An interactive virtual training (IVT) simulation for early career teachers to practice in 3D classrooms with student avatars",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Delamarre",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "The Thirtieth International Flairs Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Virtual classrooms: star simulator",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Dieker",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hynes",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Stapleton",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hughes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "New Learn. Technol.SALT",
+            "volume": "4",
+            "issn": "",
+            "pages": "1--22",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Using virtual patients to teach empathy: a randomized controlled study to enhance medical students' empathic communication",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Foster",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Simul. Healthcare",
+            "volume": "11",
+            "issn": "3",
+            "pages": "181--189",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Teaching empathy in healthcare: from mirror neurons to education technology",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Foster",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Trieu",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Azutillo",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Halan",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J. Technol. Behav. Sci",
+            "volume": "2",
+            "issn": "2",
+            "pages": "94--105",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Virtual reality for social skills training",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gillies",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the Virtual and Augmented Reality to Enhance Learning and Teaching in Higher Education Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "83--92",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The validity of a virtual human experience for interpersonal skills education",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Johnsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Raij",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stevens",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lind",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proceedings of the SIGCHI Conference on Human Factors in Computing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "1049--1058",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Face-to-face interaction with pedagogical agents, twenty years later",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lester",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Int. J. Artif. Intell. Educ",
+            "volume": "26",
+            "issn": "1",
+            "pages": "25--36",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Interventions to cultivate physician empathy: a systematic review",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Kelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Womer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Walter",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Feudtner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "BMC Med. Educ",
+            "volume": "14",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Bilat: a game-based environment for practicing negotiation in a cultural context",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Int. J. Artif. Intell. Educ",
+            "volume": "19",
+            "issn": "3",
+            "pages": "289--308",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "based design of pedagogical agent roles: a review, progress, and recommendations",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Baylor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Int. J. Artif. Intell. Educ",
+            "volume": "26",
+            "issn": "1",
+            "pages": "160--169",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Understanding empathy training with virtual patients",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kleinsmith",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Rivera-Gutierrez",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Finney",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cendan",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Comput. Hum. Behav",
+            "volume": "52",
+            "issn": "",
+            "pages": "151--158",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Using a computer simulation for teaching communication skills: a blinded multisite mixed methods randomized controlled trial",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Kron",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Patient Educ. Couns",
+            "volume": "100",
+            "issn": "4",
+            "pages": "748--759",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Teaching and Learning Communication Skills in Medicine",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kurtz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Draper",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Silverman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Using a virtual patient system for the teaching of pharmaceutical care",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Menendez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Int. J. Med. Inform",
+            "volume": "84",
+            "issn": "9",
+            "pages": "640--646",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "On the use of multimodal cues for the prediction of degrees of involvement in spontaneous conversation",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Oertel",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Scherer",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Campbell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Twelfth Annual Conference of the International Speech Communication Association",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Intercultural negotiation with virtual humans: the effect of social goals on gameplay and learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ogan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Aleven",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "ITS 2010",
+            "volume": "6094",
+            "issn": "",
+            "pages": "174--183",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-642-13388-6_22"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Comparing interpersonal interactions with a virtual human to those with a real human",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Raij",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "IEEE Trans. Visual Comput. Graphics",
+            "volume": "13",
+            "issn": "3",
+            "pages": "443--457",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Selfassessment through interactive in-action reflections to improve interpersonal skills training",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Rivera-Gutierrez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kleinsmith",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Childs",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Pileggi",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "2016 IEEE 16th International Conference on Advanced Learning Technologies (ICALT)",
+            "volume": "",
+            "issn": "",
+            "pages": "143--147",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "The value of virtual patients in medical education",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Saleh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Ann. Behav. Sci. Med. Educ",
+            "volume": "16",
+            "issn": "2",
+            "pages": "29--31",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Virtual patient instruction for dental students: can it improve dental care access for persons with special needs?",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sanders",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Kleinert",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Boyd",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Herren",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Theiss",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mink",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Spec. Care Dentist",
+            "volume": "28",
+            "issn": "5",
+            "pages": "205--213",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "How effective are pedagogical agents for learning? a meta-analytic review",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Schroeder",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Adesope",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gilbert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J. Educ. Comput. Res",
+            "volume": "49",
+            "issn": "1",
+            "pages": "1--39",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Simulationbased empathy training improves the communication skills of neonatal nurses",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Shao",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Clin. Simul. Nurs",
+            "volume": "22",
+            "issn": "",
+            "pages": "32--42",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "The use of virtual patients to teach medical students history taking and communication skills",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stevens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Am. J. Sur",
+            "volume": "191",
+            "issn": "6",
+            "pages": "806--811",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Example screen of the virtual patient.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Acknowledgements. This project was supported by the leading house DUAL-T research project funded by the Swiss State Secretariat for Education, Research and Innovation (SERI). We would like to thank KOGS (www.kogs.ch) for their excellent collaboration and support in running this study. It would not have been possible without their expert knowledge in health and effort in bringing together input and study opportunities from different inter-company course centres all across the German speaking part of Switzerland.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

@@ -1,0 +1,942 @@
+{
+    "paper_id": "3e8fc031af0494ba7682d5c737f6129f306a09a9",
+    "metadata": {
+        "title": "High Performance Portable Solver for Tridiagonal Toeplitz Systems of Linear Equations",
+        "authors": [
+            {
+                "first": "Beata",
+                "middle": [],
+                "last": "Dmitruk",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Maria Curie-Sk lodowska University",
+                    "location": {
+                        "addrLine": "ul. Akademicka 9",
+                        "postCode": "20-033",
+                        "settlement": "Lublin",
+                        "country": "Poland"
+                    }
+                },
+                "email": "beata.dmitruk@umcs.pl"
+            },
+            {
+                "first": "B",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Maria Curie-Sk lodowska University",
+                    "location": {
+                        "addrLine": "ul. Akademicka 9",
+                        "postCode": "20-033",
+                        "settlement": "Lublin",
+                        "country": "Poland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Przemys",
+                "middle": [],
+                "last": "Law Stpiczy\u0144ski",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Maria Curie-Sk lodowska University",
+                    "location": {
+                        "addrLine": "ul. Akademicka 9",
+                        "postCode": "20-033",
+                        "settlement": "Lublin",
+                        "country": "Poland"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We show that recently developed divide and conquer parallel algorithm for solving tridiagonal Toeplitz systems of linear equations can be easily and efficiently implemented for a variety of modern multicore and GPU architectures, as well as hybrid systems. Our new portable implementation that uses OpenACC can be executed on both CPU-based and GPU-accelerated systems. More sophisticated variants of the implementation are suitable for systems with multiple GPUs and it can use CPU and GPU cores. We consider the use of both columnwise and row-wise storage formats for two dimensional double precision arrays and show how to efficiently convert between these two formats using cache memory. Numerical experiments performed on Intel CPUs and Nvidia GPUs show that our new implementation achieves relatively good performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Tridiagonal Toeplitz systems of linear equations appear in many theoretical and practical applications. For example, numerical algorithms for solving boundary value problems for ordinary and partial differential equations reduce to such systems [13, 15] . They also play an important role in piecewise cubic interpolation and spline algorithms [4, 14] . There are several methods for solving such systems (the review of the literature can be found in [5] ). Rojo [10] proposed a method for solving symmetric tridiagonal Toeplitz systems using LU decomposition of a system with almost Toeplitz structure together with Sherman-Morrison's formula and this approach was modified to obtain new solvers for a possible parallel execution [7, 9] .",
+            "cite_spans": [
+                {
+                    "start": 245,
+                    "end": 249,
+                    "text": "[13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 250,
+                    "end": 253,
+                    "text": "15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 344,
+                    "end": 347,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 348,
+                    "end": 351,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 451,
+                    "end": 454,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 463,
+                    "end": 467,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 731,
+                    "end": 734,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 735,
+                    "end": 737,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In [5] we proposed a new divide and conquer parallel algorithm for solving such systems using the splitting T = LR + P , where L, R are bidiagonal and P has only one non-zero entry. We showed how to reduce the number of necessary synchronizations and use SIMD extensions of modern processors. Our OpenMP (version 3.1) implementation of this method achieved very good speedup on Intel Xeon CPUs (up to 5.06) and Intel Xeon Phi (up to 29.45). While this approach can be further improved using more sophisticated vectorization techniques such as the use of intrinsics [1, 8, 11] , it will result in a loss of portability between different architectures. OpenACC is a standard for accelerated computing [2, 6] . It offers compiler directives for offloading C/C++ and Fortran programs from host to attached accelerator devices. Such simple directives allow marking regions of source code for automatic acceleration in a portable vendor-independent manner. However, sometimes it is desired to apply some high-level transformations of source codes to achieve better performance [2, 6, 12] . Marked sources can be compiled for a variety of accelerators and parallel computers based on multicore CPUs. It is also possible to use OpenACC and OpenMP together to utilize CPU and GPU cores at the same time.",
+            "cite_spans": [
+                {
+                    "start": 3,
+                    "end": 6,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 565,
+                    "end": 568,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 569,
+                    "end": 571,
+                    "text": "8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 572,
+                    "end": 575,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 699,
+                    "end": 702,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 703,
+                    "end": 705,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1071,
+                    "end": 1074,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1075,
+                    "end": 1077,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1078,
+                    "end": 1081,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this paper, we present a new portable OpenACC-based implementation of the algorithm that can be used on both CPUs and GPU accelerators without any changes in the source code. We also show how to use both OpenACC and OpenMP to utilize multiple GPUs, as well as implement the algorithm for hybrid systems. We study its performance on Intel Xeon CPUs and three Nvidia GPUs architectures: Kepler, Turing, and Volta. We consider both column-wise and row-wise storage formats for two dimensional arrays and show how to efficiently convert arrays between these two formats using cache memory to ensure coalesced access to device's global memory. We also discuss which format is more suitable for CPU-based and GPU-accelerated architectures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Let us consider a tridiagonal Toeplitz system of linear equations T x = f of the following form \u23a1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "For the sake of simplicity we assume that n = 2 k , k \u2208 N. The matrix T can be decomposed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "where \u03b1 = (t 2 + sign(t 2 ) (t 2 ) 2 \u2212 4t 1 t 3 )/(2t 3 ) and \u03b2 = t 2 \u2212 t 3 \u03b1. Using (2) we can rewrite the Eq. (1) as follows \u23a1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "or simply x = v \u2212 t 3 \u03b1x 0 u. Then the solution to (1) can be found using:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "In order to solve (1) we have to find two vectors v and u, solving two systems of linear equations with the same coefficient matrix, namely LR. The solution to a system of linear equations LRy = d can be found in two stages. First, we solve Lz = d, and then Ry = z. This can be easily done using the following simple sequential algorithm based on the two recurrence relations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "and",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "This simple sequential algorithm can be efficient only for small values of n because it does not utilize the underlying hardware of modern processors, namely multiple cores and vector units. In order to obtain an efficient parallel algorithm for solving (5) let us consider the following divide and conquer method. First, we choose two integers r, s > 1, rs = n, and rewrite L in the following block form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "Let us define:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "Then Lz = d can be rewritten as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "Similarly, in case of the upper bidiagonal system Ry = z, assuming the same as previously, we get the following block form of R:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "Analogously to (8), we get the following formula to find y:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "The algorithm for solving LRy = d based on (8) and (10) comprises two main stages (A and B), each consisting of three steps, has a lot of potential parallelisms. All vectors L \u22121",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "s D can be found using the following vector-recursive formula:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "where X i, * and D i, * denote i-th rows of X and D, respectively. Then we can find the last entry of each vector z i , i = 1, . . . , r \u2212 1, sequentially (Step A2) applying (8) . Finally, again in parallel, we calculate s \u2212 1 remaining entries of z 1 , . . . , z r\u22121 (Step A3). In the case of (10) we proceed similarly. If Z = [z 0 , . . . , z r\u22121 ], then Z \u2190 R \u22121 s Z can be found (Step B1) using:",
+            "cite_spans": [
+                {
+                    "start": 174,
+                    "end": 177,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "Then during the sequential part (Step B2) we find first entries of each y i , i = r\u22122, . . . , 0, and finally (Step B3) we use (10) to calculate in parallel all remaining entries of Y = [y 0 , . . . , y r\u22121 ]. The algorithm should be applied twice to find vectors v and u, respectively. Then we use (4) to find the solution to (2) . Note that (4) can be easily vectorized and parallelized.",
+            "cite_spans": [
+                {
+                    "start": 127,
+                    "end": 131,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 327,
+                    "end": 330,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parallel Algorithm"
+        },
+        {
+            "text": "The algorithm for solving (2) presented in Sect. 2 can be easily implemented using OpenACC. Parallel steps A1, A3, B1, B3 can be vectorized and parallelized using parallel loop constructs. It means that the execution of the independent loops will be distributed among gangs that work in SIMD mode utilizing available hardware. The steps A2 and B2 are sequential and should be executed by a single gang. Figure 1 (left) shows our OpenACC implementation of the steps A1, A2, A3 using the column-wise storage format for the matrix X stored as a double precision array. This format is the most natural because there is no need to do any data transfers after choosing specific values of r, s. Unfortunately, this format does not allow to use of coalesced memory access to global memory of devices [3] during the steps A1 and B1. Thus, one can expect that the performance of the implementation using such storage format can be much worse compared to the implementation using the row-wise storage format (Fig. 1, right) . In this case, all references to global memory are coalesced. Figure 2 shows simple parallel loops that can be used to convert between column-wise storage and row-wise storage. Unfortunately, such conversion between formats can significantly reduce the overall performance because of non-coalesced memory access. In order to improve the performance of the implementation let us consider a more sophisticated method for conversion between column-wise and row-wise storage formats that uses cache memory to ensure coalesced memory access (Fig. 5) . Each gang of BSIZE threads is responsible for reading a block of V L\u00d7 BSIZE elements from the array stored column-wise using coalesced memory access and writing it to the cache memory. Then such a block is moved to a new array stored row-wise. Figures 3 and 4 explain how to do it. A gang of threads operates on a sequence of V L blocks of V L \u00d7 NC elements, where V L \u00d7 NC = BSIZE. Each column of such a block is loaded by V L threads, where V L is the size of a warp [3] . As soon as all blocks are in the cache memory, all threads within a gang write rows of BSIZE elements into global memory. Devices coalesce such global memory access issued a warp into as few transactions as possible to minimize DRAM bandwidth [3] . Finally, it should be noted that in both cases (i.e. column-wise and row-wise storage formats) the steps B1, B2, B3 have been implemented similarly to excerpts of the source code shown in Fig. 1 . Computations according to (4) have been implemented using acc parallel loop construct. Figure 6 shows how to use OpenMP and OpenACC to utilize two GPUs. Two halves of the arrays are stored row-wise in global memories of GPUs. We create two OpenMP threads, each responsible for controlling one GPU. GPUs share data via host memory. The array shared data is allocated on the host and each GPU has its copy of this array. The update self construct is used to update data on the host, while update device updates device memory. It is necessary to synchronize threads using the omp barrier construct. This approach can also be applied to utilize GPU and CPU cores at the same time. Figure 7 shows the idea of hybrid implementation using OpenMP and OpenACC. CPU is responsible for finding r 1 first columns, while GPU is used to find further r 2 columns, where r 1 +r 2 = r. Note that in this case, OpenMP nested parallelism should be enabled [8] . We have tested three versions of our OpenACC-based implementation. The first one uses column-wise storage. The next two implementations rely on rowwise storage using the simple conversion between formats (Fig. 2 ) and the more sophisticated method (Fig. 5 ) that utilizes cache memory, respectively. On multicore (Table 1) we have also tested the OpenMP version of columnwise implementation compiled with the PGI compiler, the sequential Thomas algorithm, the algorithm based on sequential formulas (5), (6) and the simple automatic parallelization of (4). Tests have been performed for various problem sizes and values of the parameter r. Because of global memory limitations, in case of Kepler and Turing, the biggest problem size is n = 2 28 . We have observed that the best performance is achieved when r is O( \u221a n), and then the performance differs slightly. Tables 1, 2, and 3 show the results obtained for the best value of r. Table 2 also contains the results obtained for our OpenMP+OpenACC implementations (i.e. for two GPUs and hybrid one utilizing GPU and CPU cores). Moreover, it shows the order of the relative error We can observe that column-wise storage is the best for multicore and in this case, there is no need to perform conversion to row-wise storage. Thus, such conversion should be performed only if any GPU device is present. It can be easily checked using the acc get num devices() function from OpenACC Runtime Library. It means that the source code will work properly on GPUaccelerated and non-accelerated systems without any changes.",
+            "cite_spans": [
+                {
+                    "start": 792,
+                    "end": 795,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 2030,
+                    "end": 2033,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 2279,
+                    "end": 2282,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 2508,
+                    "end": 2511,
+                    "text": "(4)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 3419,
+                    "end": 3422,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 403,
+                    "end": 411,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 997,
+                    "end": 1012,
+                    "text": "(Fig. 1, right)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1076,
+                    "end": 1084,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 1550,
+                    "end": 1558,
+                    "text": "(Fig. 5)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1805,
+                    "end": 1820,
+                    "text": "Figures 3 and 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 2473,
+                    "end": 2479,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 2569,
+                    "end": 2577,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 3159,
+                    "end": 3167,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 3629,
+                    "end": 3636,
+                    "text": "(Fig. 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 3673,
+                    "end": 3680,
+                    "text": "(Fig. 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 3738,
+                    "end": 3747,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 4359,
+                    "end": 4366,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "OpenACC-Based and Hybrid OpenMP+OpenACC Implementations"
+        },
+        {
+            "text": "Our OpenACC implementation compiled for non-accelerated multicore systems achieves good speedup over the sequential Thomas algorithm (up to 7.39) and its performance is about 65% of the performance achieved by our OpenMPbased implementation [5] . Thus, if we only consider CPU as the target architecture, the use of OpenMP is a better choice. In most cases for all tested GPUs, the implementation using row-wise storage achieves much better performance than the version using column-wise storage. We can also observe that the use of cache memory allows to speedup conversion between considered storage formats, especially on Kepler. In this case, the version using row-wise storage is more than 50% faster for bigger problem sizes. In the case of Turing and Volta, the use of -wise Row-wise Row-wise with cache Column-wise Row-wise Row-wise with cache   r Time  r Time r Time  r Time  r Time r Time   2 cache memory is profitable for bigger problem sizes. It should be noticed that the performance on all considered GPUs significantly outperforms the performance achieved on multicore. Thus, the use of our hybrid implementation is profitable for bigger problem sizes, i.e. when the GPU memory capacity is exceeded (see Table 2 , the results marked with \" * \"). Our implementation for two GPUs scales very well (see Table 2 , 2 \u00d7 Kepler) without significant performance overheads (Fig. 8 ). It should be noticed that the timing results do not take into account the time needed to copy data between host and GPUs. However, solving considered systems is, in most cases, a part of a larger problem. The implementation achieves the performance of 6.6 GFLOPS on multicore and 68. 4 ",
+            "cite_spans": [
+                {
+                    "start": 241,
+                    "end": 244,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1675,
+                    "end": 1676,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 776,
+                    "end": 902,
+                    "text": "-wise Row-wise Row-wise with cache Column-wise Row-wise Row-wise with cache   r Time  r Time r Time  r Time  r Time r Time   2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 1220,
+                    "end": 1227,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 1316,
+                    "end": 1323,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 1380,
+                    "end": 1387,
+                    "text": "(Fig. 8",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "OpenACC-Based and Hybrid OpenMP+OpenACC Implementations"
+        },
+        {
+            "text": "Volta what is far from the peak performances of those architectures, but is normal for problems where the ratio of the number of memory references to the number of arithmetic operations is O(1). Finally, let us observe that the relative error of the solution obtained by the parallel algorithm is acceptable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "GFLOPS on"
+        },
+        {
+            "text": "We have presented the new portable OpenACC-based implementation of the solver for tridiagonal Toeplitz systems of linear equations. Numerical experiments show that column-wise storage is the best for CPU-based architectures and it achieves good speedup (up to 7.39) over the sequential Thomas algorithm.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Future Work"
+        },
+        {
+            "text": "In most cases for all tested GPUs, the implementation using row-wise storage achieves much better performance than the version using column-wise storage and the use of cache memory allows to improve its performance. Moreover, all considered GPUs outperform CPU-based systems. We have also shown how to use OpenMP and OpenACC together in order to obtain the implementation suitable for systems with multiple GPUs or hybrid systems. In the future, we plan to study the numerical properties of the method, especially its stability.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Future Work"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "SIMD programming using intel vector extensions",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Amiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shahbahrami",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Parallel Distrib. Comput",
+            "volume": "135",
+            "issn": "",
+            "pages": "83--100",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jpdc.2019.09.012"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "OpenACC for Programmers: Concepts and Strategies",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chandrasekaran",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Juckeland",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Professional CUDA C Programming",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Grossman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Parallel B-spline surface fitting on mesh-connected computers",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Chung",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Yan",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "J. Parallel Distrib. Comput",
+            "volume": "35",
+            "issn": "",
+            "pages": "205--210",
+            "other_ids": {
+                "DOI": [
+                    "10.1006/jpdc.1996.0082"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Vectorized parallel solver for tridiagonal Toeplitz systems of linear equations",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Dmitruk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Stpiczy\u0144ski",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Wyrzykowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Deelman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dongarra",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "PPAM 2019",
+            "volume": "12043",
+            "issn": "",
+            "pages": "93--103",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-030-43229-4_9"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Parallel Programming with OpenACC",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Farber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A parallel method for linear equations with tridiagonal Toeplitz coefficient matrices",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Garey",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Shaw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Comput. Math. Appl",
+            "volume": "42",
+            "issn": "1",
+            "pages": "1--11",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0898-1221(01)00125-0"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Intel Xeon Phi Processor High-Performance Programming: Knights Landing edition",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jeffers",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Reinders",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sodani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A communication-less parallel algorithm for tridiagonal Toeplitz systems",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcnally",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Garey",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Shaw",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "J. Comput. Appl. Math",
+            "volume": "212",
+            "issn": "",
+            "pages": "260--271",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cam.2006.12.001"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A new method for solving symmetric circulant tridiagonal systems of linear equations",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Rojo",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Comput. Math. Appl",
+            "volume": "20",
+            "issn": "90",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/0898-1221(90)90165-G"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Language-based vectorization and parallelization using intrinsics, OpenMP, TBB and Cilk Plus",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Stpiczy\u0144ski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "J. Supercomput",
+            "volume": "74",
+            "issn": "4",
+            "pages": "1461--1472",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11227-017-2231-3"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Algorithmic and language-based optimization of Marsa-LFIB4 pseudorandom number generator using OpenMP",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Stpiczy\u0144ski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "OpenACC and CUDA. J. Parallel Distrib. Comput",
+            "volume": "137",
+            "issn": "",
+            "pages": "238--245",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jpdc.2019.12.004"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Solving a kind of boundary-value problem for ordinary differential equations using Fermi -the next generation CUDA computing architecture",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Stpiczy\u0144ski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Potiopa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J. Comput. Appl. Math",
+            "volume": "236",
+            "issn": "3",
+            "pages": "384--393",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cam.2011.07.028"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "A highly scalable parallel algorithm for solving Toeplitz tridiagonal systems of linear equations",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Terekhov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "J. Parallel Distrib. Comput",
+            "volume": "87",
+            "issn": "",
+            "pages": "102--108",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jpdc.2015.10.004"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Solving systems of symmetric Toeplitz tridiagonal equations: Rojo's algorithm revisited",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Vidal",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Alonso",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Appl. Math. Comput",
+            "volume": "219",
+            "issn": "",
+            "pages": "1874--1889",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.amc.2012.08.030"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "OpenACC implementations of the parallel algorithm based on (8) using columnwise storage (left) and row-wise storage (right)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Simple conversion between considered column-wise and row-wise array storage formats using OpenACC parallel construct Conversion from column-wise to row-wise array storage using device cache memory",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Conversion of a V L \u00d7 BSIZE block stored column-wise to row-wise storage performed by a single gang of threads (V L = 32, BSIZE = 256) OpenACC implementation of the conversion from column-wise to row-wise using device cache memory",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Data distribution and general processing scheme for two GPUs",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Hybrid implementation for host (OpenMP) and GPU (OpenACC) 4 Results of Experiments All experiments have been carried out on four different target architectures which are modern accelerated systems allowing OpenACC and OpenMP programming models. Multicore is a server with two Intel Xeon E5-2670 v3 (totally 24 cores with hyper-threading, 2.3 GHz), 128 GB RAM, running under Linux with CUDA 10.0 and Portland Group PGI compilers and tools version 19.4 with OpenMP and OpenACC support. Kepler is just like multicore, with NVIDIA Tesla K40m GPU (2880 cores, 12 GB RAM). Similarly, Volta is just like multicore, but with NVIDIA Tesla V100 GPU (5120 cores, 32 GB RAM). Finally, Turing is a server with Intel Core i7 (totally 4 cores with hyper-threading, 3.0 GHz), 24 GB RAM, NVIDIA GEFORCE RTX 2080 SUPER GPU (3072 cores, 8 GB RAM) running under Linux with CUDA 10.0 and PGI compilers.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "NVIDIA Visual Profiler result for two GPUs implementation",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "solving the system of linear equations that arises for second order ordinary differential equations y (x) \u2212 py (x) \u2212 qy(x) = g(x), where x \u2208 [a, b] and y(a) = A, y(b) = B.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Multicore: execution time for the best values of r and speedup of columnwise method over the sequential Thomas algorithm n Thomas alg. Seq. alg. OpenMP Column-wise Row-wise Row-wise with cache Speedup",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Kepler: relative error and the execution time for the best values of r. *results obtained using the hybrid implementation",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Turing and Volta: the execution time for the best values of r.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

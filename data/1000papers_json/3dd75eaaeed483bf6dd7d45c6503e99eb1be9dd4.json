@@ -1,0 +1,2875 @@
+{
+    "paper_id": "3dd75eaaeed483bf6dd7d45c6503e99eb1be9dd4",
+    "metadata": {
+        "title": "Dynamic analysis of the role of innate immunity in SEIS epidemic model",
+        "authors": [
+            {
+                "first": "Shikha",
+                "middle": [],
+                "last": "Jain",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Delhi",
+                    "location": {
+                        "postCode": "110007",
+                        "settlement": "Delhi",
+                        "region": "New Delhi",
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Sachin",
+                "middle": [],
+                "last": "Kumar",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Delhi",
+                    "location": {
+                        "postCode": "110007",
+                        "settlement": "Delhi",
+                        "region": "New Delhi",
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Consideration of every important aspect while modeling a disease makes the model more precise and the disease eradication strategy more powerful. In the present paper, we analyze the importance of innate immunity on SEIS modeling. We propose an SEIS model with Holling type II and type III functions representing innate immunity. We find the existence and stability conditions for the equilibria. When innate immunity is in the form of Holling type II function, the disease-free equilibrium exists for reproduction number less than unity and is locally asymptotically stable, and supercritical transcritical (forward) as well as subcritical transcritical (backward) bifurcation may occur where the contact rate \u03b2 = \u03b2 * acts as the bifurcation parameter. Hence, disease-free equilibrium need not be globally stable. For reproduction number greater than unity unique endemic equilibrium exists which is locally asymptotically stable. The global stability conditions for the same are deduced with the help of Lozinski\u020b measure. When innate immunity is considered a Holling type III function, the disease-free equilibrium point exists for reproduction number less than unity and is locally as well as globally stable. The existence of either unique or multiple endemic equilibria is found when reproduction number is greater than unity, and there exists at least one locally asymptotically stable equilibrium point and bistability can also be encountered. The conditions for the existence of Andronov-Hopf bifurcation are deduced for both cases. Moreover, we observe that ignoring innate immunity annihilates the possibility of Andronov-Hopf bifurcation. Numerical simulation is performed to validate the mathematical findings. Comparing the obtained results to the case when innate immunity is ignored, it is deduced that ignoring it ends the possibility of backward bifurcation, Andronov-Hopf bifurcation as well as the existence of multiple equilibria, and it also leads to the prediction of higher infection than the actual which may deflect the accuracy of the model to a high extent. This would further lead to false predictions and inefficient disease control strategies which in turn would make disease eradication a difficult and more expensive task. a",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Mathematical modeling is a significant tool to progressively study various fields such as epidemiology, biology, engineering, applied mathematics, and economics. Moreover, it is a potent method to explore the wide range of communicable diseases which in turn helps in a better understanding of disease dynamics and further helps in constructing the disease control policy which includes emergency planning, risk estimation, and the economic aspects for a healthy environment. Many researchers, in the past, have formulated various epidemiological systems (SIS, SI, SIR, SEIR, SIERS, SEIVR, etc.) with distinct treatment procedures to keep the disease in control [4, 12, 26, 39, 45, 46] . The famous SIR compartmental system was formulated by Kermack and McKendrick [23] in 1927. He studied the Great Plague outbreak during 1665-1666 in London, and the Mumbai outbreak of plague in 1906. SEIR models are capable of representing many human contagious diseases such as mumps, SARS, ebola, TB, pox, flu, measles, and HIV. Adding one extra compartment known as the exposed compartment (E) to the SIR model leads to the SEIR model. This compartment consists of the people that are in the latent phase or incubation phase, that is, they are infected but not able to spread the infection. When the time of acquired temporal immunity is small compared to the major time scale or there is no temporal immunity to disease after recovery, the system changes to the SEIS compartmental model.",
+            "cite_spans": [
+                {
+                    "start": 662,
+                    "end": 665,
+                    "text": "[4,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 666,
+                    "end": 669,
+                    "text": "12,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 670,
+                    "end": 673,
+                    "text": "26,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 674,
+                    "end": 677,
+                    "text": "39,",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 678,
+                    "end": 681,
+                    "text": "45,",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 682,
+                    "end": 685,
+                    "text": "46]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 742,
+                    "end": 769,
+                    "text": "Kermack and McKendrick [23]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Most of the diseases take a certain time for a victim to become infectious and this fact prompted the study of SEIS disease dynamics. Ouaro [34] propose the SEIS model with exponential growth in population. They consider two distinct autonomous ordinary differential equation systems for two different scenarios: without treatment and with treatment. They find that the disease can play the role of a regulator of the population. Ilnytskyi et al. [21] perform computer simulation studies of the SEIS cellular automaton epidemiology model by considering distinct fractions for the exposed E and infectious I individuals for explicit accounting of the incubation period of infection. They find that the time required to get to an equilibrium state diverges when we approach the critical curing rate. The initial stage of the infection growth shows porous clusters of infectious individuals with exposed individuals decorated on their surface. Qingmei [8] study the stochastic SEIS epidemic model with degenerate diffusion. They linearize the model in Stratonovich form and by solving the corresponding three-dimensional Fokker-Planck equation obtain the density function around the endemic equilibrium. Lu et al. [30] study the influence of media coverage on the dynamics of infectious diseases, that is, they include behavior changes in the contacts of individuals due to the impact of media coverage. They observe that the media coverage may lessen the maximum value of the infected or the average number of the infected in different cases, while for large reproduction number, the impact of the media coverage can also cause an increase in the average number of the infected. This further causes challenges in control and prevention strategies for communicable diseases.",
+            "cite_spans": [
+                {
+                    "start": 140,
+                    "end": 144,
+                    "text": "[34]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 447,
+                    "end": 451,
+                    "text": "[21]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 949,
+                    "end": 952,
+                    "text": "[8]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1211,
+                    "end": 1215,
+                    "text": "[30]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "C. S. Holling, in the late 1950s, performed various experiments to find the relation between the prey capture rate of predator and prey density. He established three general categories of functional responses named as type I, II, and III [17] [18] [19] . The simplest among these is type I where the capture rate increase is directly proportional to the density of prey population until it suddenly saturates. It is defined by a linear relationship between capture rate C and density of prey N as follows:",
+            "cite_spans": [
+                {
+                    "start": 238,
+                    "end": 242,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 243,
+                    "end": 247,
+                    "text": "[18]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 248,
+                    "end": 252,
+                    "text": "[19]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where a is the proportionality constant identified by the rate at which predators come across prey. Type II is similar to type I as the capture rate increases with an increase in density of prey, but instead of linear, the approach to saturation is gradual. It is defined as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where t is the handling time and positive as well. Type III is similar to type II except at the low prey density and is defined as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where n is generally assumed to be 2. Earlier these functional responses were used in preypredator modeling, but later they were introduced to epidemiological, ecological, and economic modeling. Nowadays, these functional responses have become a significant part of modeling techniques.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The significance of the innate immunity to our survival while encountering a wide range of disease-causing pathogens is catastrophically illustrated by the disastrous consequences of the immunological weakening due to AIDS (acquired immune deficiency syndrome) and congenital immunological deficiencies such as SCID (severe combined immunodeficiency) in infants. The difference in the outcomes among different individuals after the infection is the major motivation for studying the role of innate immunity. These differences may in part be described by the capability of diverse innate host defense mechanisms or simply by natural immunity. The studies so far support the materiality of innate immunity. The reason why not every person who comes in contact with a carrier always gets infected and variable latent periods in different individuals suggest the significance of immunity. Phagocytosis, cytokine production, immune recognition, and effector mechanisms may all contribute to innate immunity. The major research on this topic done so far is on the cellular level. Shi et al [37] studied the sepsis disease model with innate and acquired immunity. Pigozzo et al [35] constructed the computational model of the innate immune system. Kumar et al [25] presented an inflammation model consisting of three ODEs and suggested some therapeutic strategies based on the sensitivity analysis. Reynolds et al [36] further extended their work to study the influence of time on the host defense mechanism. For further work on the cellular level study of innate immunity refer [1, 11, 14, 38, 41, 43, 44] . Not a very large number of researchers have worked on compartmental epidemiological models with innate immunity, and it is mostly ignored. Heffernan et al [16] combined the immunological and epidemiological models for the study of measles infection. They studied in detail the relationship between disease incidence, waning immunity, and boosting. Banerjee et al [3] constructed an immuno-epidemiological model of two-stage epidemic growth. They considered the fact that the increase in the number of infectious individuals hinders the effect of innate immunity due to the increase in viral load. Mwalili et al [33] constructed an SEIR model for COVID-19 disease where they consider the role of innate immunity in recovering from exposed to susceptible class. Another motivation for studying innate immunity is the fact that a very small number of such models is available in the literature as the majority of existing models are adaptive immunity focused. Hence, it becomes important to study whether innate immunity is an important factor or not while studying the dynamics of an infectious disease.",
+            "cite_spans": [
+                {
+                    "start": 1084,
+                    "end": 1088,
+                    "text": "[37]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1171,
+                    "end": 1175,
+                    "text": "[35]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1253,
+                    "end": 1257,
+                    "text": "[25]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 1407,
+                    "end": 1411,
+                    "text": "[36]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1572,
+                    "end": 1575,
+                    "text": "[1,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1576,
+                    "end": 1579,
+                    "text": "11,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1580,
+                    "end": 1583,
+                    "text": "14,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1584,
+                    "end": 1587,
+                    "text": "38,",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1588,
+                    "end": 1591,
+                    "text": "41,",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1592,
+                    "end": 1595,
+                    "text": "43,",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 1596,
+                    "end": 1599,
+                    "text": "44]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 1757,
+                    "end": 1761,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1965,
+                    "end": 1968,
+                    "text": "[3]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 2213,
+                    "end": 2217,
+                    "text": "[33]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the present paper, we analyze how neglecting innate immunity can result in inaccurate results and incorrect analysis. The research available on compartmental epidemiological models concerning innate immunity mostly assumes it to be linear while an increase in the number of infectives will further boost the number of exposed individuals, as well as the viral load. Hence, we consider the nonlinear form of natural immunity as Holling type II and type III functions which considers the effect of an increase in the viral load as it depends on the exposed population. This manuscript is quite important to the researchers working in the field of compartmental modeling of infectious diseases as the majority of researchers disregard the significance of innate immunity in the process of infection spread. This research focuses on the role of innate immunity and the effects of ignoring it so that in the future it could help in more precise and effective modeling.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The present manuscript is arranged as: In Sect. 1, a four compartmental SEIS model with innate immunity as a function of Holling types II and III has been developed. Section 2 deals with the mathematical analysis of the model. In this section, the boundedness and positivity of the solutions are proved and the reproduction number is calculated. We further deduce the conditions for the existence and stability of the equilibrium points. In the next section, simulations of the system are carried out to validate our mathematical findings numerically, while Section 4 discusses the fatality of ignoring innate immunity. The last Section summarizes the paper as a conclusion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Natural immunity or innate immunity is the cause for not everyone getting sick after being in contact with the infection carrier. We consider Holling type II and Holling type III functions for representing innate immunity in the SEIS disease model which helps an-individual to recover from the exposed class to the susceptible class. To construct the model, we have made the following assumptions:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "\u2022 The population is considered to be well mixed and the individuals interact with each other homogeneously. \u2022 The whole population N is divided into three interactive classes: susceptible class (S, individuals under the risk of being infected), exposed class (E, infected individuals who are in incubation stage but not infectious), and infected class (I , active carriers of infection). Hence, N = S + E + I . \u2022 The population is increased at the constant recruitment rate , and d is the natural death rate whereas d 1 is the disease-induced death rate. \u2022 Individuals cannot jump to the I class directly, that is, first they have to complete the incubation process to become infectious. The rate of incubation or latency is represented by \u03c3 . \u2022 The disease is communicated from the infectious class by the contact rate \u03b2. The infected population recovers into the susceptible class by the linear treatment rate \u03b3 . \u2022 The exposed individuals recover to the susceptible class with the help of natural immunity with the rate h(E), considered as Holling type functions (II and III), given as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "(1.1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "The immunity function h(E) is an increasing function of E which is continuously differentiable with the following properties:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "where \u03b1/k is the maximal immunity efficiency of the community.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "Here \u03b1 E represents the recovery due to innate immunity whereas 1/(1 + k E) and 1/(1 + k E 2 ) represent the inhibition in recovery from exposed class due to weakening of immunity caused by malnutrition, diabetes, poor sanitary conditions and HIV infection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "The above assumptions lead to the construction of the following SEIS mathematical model:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "All the parameters are considered to be nonnegative, and the initial conditions associated with the system (1.2) are following",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "The population can never be negative; therefore, it suffices to prove that every variable remains nonnegative, and the solutions of the system (1.2) are always positive subject to positive initial conditions, confined in the domain given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "The following result is basic and can be easily obtained by simple calculations. Therefore, we omit the proof. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model formulation"
+        },
+        {
+            "text": "In this section, we will calculate the basic reproduction number and deduce the existence criteria of the possible equilibrium points. The system (1.2) has two types of equilibria which are disease-free and endemic. The disease-free equilibrium point (DFE) is denoted by E 0 and is equal to ( /d, 0, 0), whereas the endemic equilibrium (EE) may not be unique depending on the value of h(E), is denoted by E * (S * , E * , I * ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of equilibria and basic properties"
+        },
+        {
+            "text": "The basic reproduction number is the average number of secondary cases generated by single infected person in a population involving susceptible only. The basic reproduction numbers are calculated by using the next generation matrix method [9, 10, 22] , which are given by",
+            "cite_spans": [
+                {
+                    "start": 240,
+                    "end": 243,
+                    "text": "[9,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 244,
+                    "end": 247,
+                    "text": "10,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 248,
+                    "end": 251,
+                    "text": "22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existence of equilibria and basic properties"
+        },
+        {
+            "text": "for Holling type II and type III, respectively. Since \u03b1 > 0, we have R 0 < R 1 0 . Clearly, R 1 0 is independent of the parameters \u03b1 and k, that is, reproduction number is independent of innate immunity whereas R 0 is dependent on it.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of equilibria and basic properties"
+        },
+        {
+            "text": "To study the existence and stability conditions of the endemic equilibrium point for the system (1.2), we equate the third equation of the system to zero:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "Solving Eq. (2.3) for I * , we obtain",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "Substituting the above value in the second equation of system (1.2) and equating it to zero, we get",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "Now, using Eqs. (2.4) and (2.5) in the first equation of the system (1.2), we obtain",
+            "cite_spans": [
+                {
+                    "start": 26,
+                    "end": 31,
+                    "text": "(2.5)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "When h(E) is considered to be Holling type II function, Eq. (2.6) reduces into the following form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "Clearly, A 2 is negative and A 0 is positive when R 0 > 1 while sign of A 1 cannot be directly defined. Hence, by Descartes' Rule of Signs [42] , the system (1.2) would have unique endemic equilibrium point independent of the sign of A 1 for R 0 > 1. Moreover, equations in (2.8) also indicate a possible presence of endemic equilibria when R 0 < 1 and A 1 > 0. If R 0 < 1, then A 0 < 0 and sign of A 1 will determine the possible number of roots of Eq. (2.7). Hence, for R 0 < 1, Eq. (2.7) would either have a zero or two positive roots, that is, either two endemic equilibria exist or none.",
+            "cite_spans": [
+                {
+                    "start": 139,
+                    "end": 143,
+                    "text": "[42]",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "When h(E * ) is Holling III function, Eq. (2.6) reduces to the following form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "(2.10)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "It can be clearly seen that A 3 is always negative while A 0 is positive only when R 1 0 > 1. The sign of A 2 and A 1 cannot be directly defined and following are the possibilities for their signs:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "Hence, by Descartes' Rule of Signs [42] , Eq. (2.9) will have either unique positive real root or three positive roots when R 1 0 > 1. Similarly, Eq. (2.9) will have either zero or two positive roots when R 1 0 < 1. Hence, the system may undergo backward bifurcation.",
+            "cite_spans": [
+                {
+                    "start": 35,
+                    "end": 39,
+                    "text": "[42]",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Existence of endemic equilibria"
+        },
+        {
+            "text": "The Jacobian matrix for system (1.2) when h(E) is a Holling type II function is given as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "The Jacobian matrix given by Eq. (2.11) evaluated at DFE, E 0 ( /d, 0, 0), is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "The characteristic equation for J (E 0 ) is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "(2.14)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "The coefficients of the quadratic polynomial of Eq. (2.13) are all positive when R 0 < 1. Hence, by using Ruth-Hurwitz stability criterion, the disease-free equilibrium point is locally asymptotically stable for R 0 < 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "Similarly, the Jacobian matrix for system (1.2) when h(E) is a Holling type III function is obtained as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "The characteristic equation for J(E 0 ) is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "Again, by using Ruth-Hurwitz Stability criterion, we can easily prove that the DFE is locally asymptotically stable for R 1 0 < 1. The above discussion leads to the following result: Theorem 2.1 For the basic reproduction number less than unity, the DFE, E 0 is locally asymptotically stable and unstable if it is greater than unity for both the cases of h(E).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Local stability of equilibria"
+        },
+        {
+            "text": "For D > 0, the nature of eigenvalues of the Variational matrix given by (2.11) , corresponding to the endemic equilibrium point is defined as 1 3 , there exist single real eigenvalue together with a pair of complex conjugate eigenvalues with negative real parts.",
+            "cite_spans": [
+                {
+                    "start": 72,
+                    "end": 78,
+                    "text": "(2.11)",
+                    "ref_id": null
+                },
+                {
+                    "start": 142,
+                    "end": 143,
+                    "text": "1",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "(2) For X 1 + X 2 = \u22122C 1 3 , there exist single real eigenvalue together with a pair of purely imaginary eigenvalues. 1 3 , there exist single real eigenvalue together with a pair of complex conjugate eigenvalues with positive real parts.",
+            "cite_spans": [
+                {
+                    "start": 24,
+                    "end": 25,
+                    "text": "1",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 119,
+                    "end": 120,
+                    "text": "1",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Proof The variational matrix corresponding to the EE is given by (2.11) , and the characteristic equation is as follows:",
+            "cite_spans": [
+                {
+                    "start": 65,
+                    "end": 71,
+                    "text": "(2.11)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "where C i s, i = 1, 2, 3 are defined in (2.20) . Consider \u03bb = \u03c9\u2212C 1 /3, and Eq. (2.21) transform in the following form:",
+            "cite_spans": [
+                {
+                    "start": 40,
+                    "end": 46,
+                    "text": "(2.20)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "where P and Q are given by (2.19) . Again, put \u03c9 = \u03b6 \u2212 (Q/3\u03b6 ). Now, Eq. (2.22) can be written as",
+            "cite_spans": [
+                {
+                    "start": 27,
+                    "end": 33,
+                    "text": "(2.19)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Next, we try to find the cube root of \u03b6 and find X 1 X 2 = \u2212Q/3. Therefore, the zeros of characteristic Eq. (2.21) are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "where \u03b4 = \u22121/2 + ( \u221a 3/2)\u03b9. Clearly, for D > 0, \u03bb 1 is the real root of Eq. (2.21) and the other two roots are complex. By using the value of \u03b4 in (2.24), we can easily conclude that for X 1 + X 2 = \u22122C 1 /3, Eq. (2.21) has a pair of purely imaginary roots with one real root. Hence, the result is proved.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "A similar result can be proved when h(E) is a Holling type III function where Ci s are the coefficients of the characteristic polynomial of the Variational matrix (2.15).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Next, we prove the local stability of the endemic equilibria with the help of center manifold theory, as described in [7, Theorem 4.1]. The system (1.2) is further simplified to use this method.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "The basic reproduction numbers of system (1.2) are given by (2.1). When h(E) is the Holling type II function, we set a bifurcation parameter \u03b2 * by simplifying R 0 = 1 and obtain",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Next, we evaluate the Jacobian matrix of the linearized system of (1.2) given by (2.12) , at the disease-free equilibrium point E 0 and the bifurcation parameter \u03b2 * denoted by J (E 0 )| \u03b2 * . It has a simple zero eigenvalue, and the remaining eigenvalues are \u2212d, \u2212\u03b1 \u2212 2d \u2212 \u03b3 \u2212 \u03c3 \u2212 d 1 , which are negative. Therefore, we can apply the center manifold theory. The right eigenvector ",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 87,
+                    "text": "(2.12)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "(2.26)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "The local stability near the bifurcation point \u03b2 * = \u03b2 is governed by the signs of the two associated constants which are denoted by a and b, defined as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "The required nonzero partial derivatives for the system (1.2) at E 0 are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "(2.28)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Now, by using the above values in (2.27) , and with trivial calculations, we get the following:",
+            "cite_spans": [
+                {
+                    "start": 34,
+                    "end": 40,
+                    "text": "(2.27)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "(2.29)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "We can clearly see that b > 0, and sign of a determines the direction of bifurcation. If a > 0, then backward bifurcation or subcritical transcritical bifurcation occurs, and if a < 0, then forward or supercritical transcritical bifurcation occurs. This establishes the existence of endemic equilibria when R 0 < 1 as seen during the simplification of Eqs. (2.7) and (2.8) . Moreover, as the endemic equilibria may still exist when R 0 < 1, the DFE is not globally stable when reproduction number is less than unity. The above observations lead to the following theorem:",
+            "cite_spans": [
+                {
+                    "start": 367,
+                    "end": 372,
+                    "text": "(2.8)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "The unique endemic equilibrium point E 1 exists for R 0 > 1, and as R 0 \u2212 1 changes its sign from negative to positive as well as a < 0, E 1 changes its stability from unstable to locally asymptotically stable, and the system goes through the supercritical transcritical bifurcation at R 0 = 1, and \u03b2 * is the bifurcation parameter. Moreover, when R 0 < 1, endemic equilibria exist when a > 0, resulting in subcritical transcritical (backward) bifurcation with \u03b2 * as the bifurcation parameter and a is defined as follows",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Clearly, for \u03b1 = 0, there is no backward bifurcation. Therefore, ignoring natural immunity in such a case may lead to wrong interpretation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Similarly, approaching as above, in the case when h(E) is a Holling type III function, we set the bifurcation parameter \u03b2 * by simplifying R 1 0 = 1. We obtain",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "The variational matrix of the model (1.2) is given by (2.16) . We evaluate it at E 0 and the bifurcation parameter \u03b2 * , and J(E 0 )| \u03b2 * has a simple zero eigenvalue while the remaining eigenvalues are \u2212d, \u22122d \u2212 \u03b3 \u2212 \u03c3 \u2212 d 1 , which are negative. Again, applying the center manifold theory, we compute the right eigenvector corresponding to the simple zero eigenvalue",
+            "cite_spans": [
+                {
+                    "start": 54,
+                    "end": 60,
+                    "text": "(2.16)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "(2.31)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "For the system (1.2), the associated nonzero partial derivatives at E 0 are",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Now, by using the above values in (2.27) , and with trivial calculations, we get the following:",
+            "cite_spans": [
+                {
+                    "start": 34,
+                    "end": 40,
+                    "text": "(2.27)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "(2.33)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Clearly, a < 0 and b > 0. Thus, Theorem 4.1 of [7] implies the existence of an EE point of the system (1.2) when R 1 0 > 1, which is locally asymptotically stable whenever \u03b2 * < \u03b2 with \u03b2 close to \u03b2 * , and the system goes through supercritical transcritical bifurcation which leads to the following result.",
+            "cite_spans": [
+                {
+                    "start": 47,
+                    "end": 50,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "Theorem 2. 4 The system (1.2) has either unique or three endemic equilibrium points when R 1 0 > 1, and as R 1 0 \u2212 1 changes its sign from negative to positive, there exists at least one endemic equilibrium, say E 1 , which changes its stability from unstable to locally asymptotically stable and the system goes through the forward (supercritical transcritical) bifurcation at R 1 0 = 1, and \u03b2 * is the bifurcation parameter.",
+            "cite_spans": [
+                {
+                    "start": 11,
+                    "end": 12,
+                    "text": "4",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 2.2 Assume h(E) be the Holling type II function and let"
+        },
+        {
+            "text": "In the present subsection, we prove the presence of limit cycle around the endemic equilibrium point E * to claim the existence of Hopf bifurcation. The following are the steps to reach this goal [24] (1) Find C 1 , X 1 and X 2 in the terms of the bifurcation parameter \u03b1 = \u03b1 * .",
+            "cite_spans": [
+                {
+                    "start": 196,
+                    "end": 200,
+                    "text": "[24]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Hopf Bifurcation"
+        },
+        {
+            "text": "(2) Find the critical value of the bifurcation parameter h 0 by solving the equation The other eigenvalue must be negative at \u03b1 = \u03b1 * . (5) Use the sign of (2.34) to prove the existence of local Hopf bifurcation. Hopf bifurcation occurs when (2.34) = 0, and the other eigenvalue is negative at a = a * . Moreover, if (2.34)> 0, then the system moves to oscillatory from equilibrium state. Similarly, if (2.34)< 0, then the system moves to equilibrium state from oscillatory state.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hopf Bifurcation"
+        },
+        {
+            "text": "We prove the existence of Hopf bifurcation by using the Hopf Bifurcation Theorem [32] .",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 85,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Hopf Bifurcation"
+        },
+        {
+            "text": "bifurcation at an endemic equilibrium point with \u03b1 = \u03b1 * as the bifurcation parameter when C 2 > 0 and C 1 (\u03b1 * )C 2 (\u03b1 * ) = C 3 (\u03b1 * ), where Ci s, i = 1, 2, 3 are given by (2.20) .",
+            "cite_spans": [
+                {
+                    "start": 175,
+                    "end": 181,
+                    "text": "(2.20)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "Proof For C 1 (\u03b1 * )C 2 (\u03b1 * ) = C 3 (\u03b1 * ), the characteristic equation of the Jacobian matrix given by (2.11) at the bifurcation parameter \u03b1 = \u03b1 * is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "where C i s = 1, 2 are given by (2.20) . The eigenvalues of the (2.35) are \u2212C 1 and \u00b1\u03b9 \u221a C 2 . For some > 0 and \u03b1 \u2208 (\u03b1 \u2212 , \u03b1 + ), the eigenvalues are of the form",
+            "cite_spans": [
+                {
+                    "start": 32,
+                    "end": 38,
+                    "text": "(2.20)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "where l i s, i = 1, 2 are real. Next, we check the transversality condition given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "Substitute \u03bb 2 (\u03b1) = l 1 (\u03b1) + \u03b9l 2 (\u03b1) in the characteristic Eq. (2.21) of the Jacobian matrix (2.11), and we get (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) 3 + C 1 (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) 2 + C 2 (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) + C 3 = 0 (2.37)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "Differentiating with respect to \u03b1, we obtain 3(l 1 (\u03b1) + \u03b9l 2 (\u03b1)) 2 (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) + 2C 1 (l 1 (\u03b1) + \u03b9l 2 (\u03b1))(l 1 (\u03b1) + \u03b9l 2 (\u03b1)) +\u010a 1 (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) 2 + C 2 (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) +\u010a 2 (l 1 (\u03b1) + \u03b9l 2 (\u03b1)) +\u010a 3 = 0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "(2.38)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "Next, we compare real and imaginary part of the above equation from both sides and obtain L 1l1 \u2212 L 2l2 + L 3 = 0, and",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "Now, solving the equations in (2.38) forl 1 , we ge\u1e6b",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.5 When h(E) is a Holling type II function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "and \u03bb 1 (\u03b1 * ) = \u2212C 1 (\u03b1 * ) < 0. Hence, the result follows by using Hopf Bifurcation Theorem [32] . The system (1.2) undergoes Hopf bifurcation where \u03b1 = \u03b1 * acts as the bifurcation parameter.",
+            "cite_spans": [
+                {
+                    "start": 94,
+                    "end": 98,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Case 2. When \u03bb"
+        },
+        {
+            "text": "Similarly, we can prove that the system (1.2) undergoes Hopf bifurcation when h(E) is a Holling type III function. Hence, the next result follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Case 2. When \u03bb"
+        },
+        {
+            "text": "bifurcation at an endemic equilibrium point with \u03b1 = \u03b1 * as the bifurcation parameter when C 2 > 0 and C 1 (\u03b1 * )C 2 (\u03b1 * ) = C 3 (\u03b1 * ), where Ci s, i = 1, 2, 3 are the coefficients of the characteristic equation of the Jacobian matrix (2.15) which is as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.6 When h(E) is a Holling type III function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "(2.42)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.6 When h(E) is a Holling type III function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "The is unstable as in Fig. 2d and the limit cycle is stable.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 22,
+                    "end": 29,
+                    "text": "Fig. 2d",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Theorem 2.6 When h(E) is a Holling type III function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "Next, we prove the global stability of the equilibria. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.6 When h(E) is a Holling type III function, the system (1.2) encounters a Hopf"
+        },
+        {
+            "text": "where X \u2208 R and I 1 \u2208 R 2 denote the number of uninfected individuals and the number of infected individuals respectively, where I 1 = (E, I ) T . The condition (H 1) [6, Section 3] is easy to deduce as F(X, I 1 ) is linear, and for (H 2),",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Global stability of equilibria"
+        },
+        {
+            "text": ", (2.44) and we obtain\u011c",
+            "cite_spans": [
+                {
+                    "start": 2,
+                    "end": 8,
+                    "text": "(2.44)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Global stability of equilibria"
+        },
+        {
+            "text": "It is clear that\u011c 1 (S, I ) 0, as S is either less than or equal to /d. Thus,\u011c(S, I ) \u2265 0, and by Theorem 2.1 for R 1 0 < 1, E 0 is locally asymptotically stable. Hence, by [6, Theorem, Section 3], we prove the following result.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Global stability of equilibria"
+        },
+        {
+            "text": "The equilibrium point E 0 = ( /d, 0, 0) is globally asymptotically stable for the system (1.2) if R 1 0 < 1. Next, we discuss the global stability of the endemic equilibria. We have already seen that in the case when h(E) is a Holling type III function, the endemic equilibrium point may not be unique for reproduction number greater than unity, hence, not globally stable. In case, when h(E) is a Holling type II function, the unique endemic equilibrium point exists for reproduction number greater than unity, which may be globally stable. We use geometric approach to prove the global stability of the endemic equilibrium point [2, 27] .",
+            "cite_spans": [
+                {
+                    "start": 631,
+                    "end": 634,
+                    "text": "[2,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 635,
+                    "end": 638,
+                    "text": "27]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Consider an autonomous dynamical syste\u1e41 where u = (u 1 , u 2 ), u \u2192 (u) is Lipschitzian on B, the wedge product \u2202\u03c6 u 1 \u2227 \u2202\u03c6 u 2 is a vector in R n 2 , and P is an n 2 \u00d7 n 2 matrix such that P \u22121 is bounded on \u03c6(B). Let x * be an equilibrium of (2.45) , that is, f (x * ) = 0. The new surface \u03c6 t corresponding to any surface \u03c6 is defined by \u03c6 t (u) = x(t, \u03c6(u)). Moreover, \u03c6 t (u), gives the solution to (2.45) that passes through the point \u03c6(u) at t = 0. The right-hand derivative of S \u03c6 t , denoted by D + S \u03c6 t [29] is given by",
+            "cite_spans": [
+                {
+                    "start": 244,
+                    "end": 250,
+                    "text": "(2.45)",
+                    "ref_id": null
+                },
+                {
+                    "start": 514,
+                    "end": 518,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "and",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "where the matrix Q f is the directional derivative of Q in the direction of the vector field f , M is the second additive compound matrix of the Jacobian matrix J , and z = P \u2202\u03c6",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "is a solution to the differential equation",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Hence, Eq. (2.47) can be written as follows: We have already proved the uniqueness of the endemic equilibrium point when R 0 > 1 using (2.8), and DFE is unstable. The instability of DFE, together with E 0 \u2208 \u2202D, implies the uniform persistence of the state variables [13] , that is, there exists a constant c > 0 such that",
+            "cite_spans": [
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "(2.50)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Hence, the boundedness together with uniform persistence is equivalent to the existence of a compact set in the interior of . Therefore, this compact set is an absorbing set for the system (1.2) [20] . Thus, we can consider D = .",
+            "cite_spans": [
+                {
+                    "start": 195,
+                    "end": 199,
+                    "text": "[20]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "As we have already observed that the model (1.2) may admit backward bifurcation, the compact absorbing set does not exist [5] , and we consider the alternative approach with sequence of surfaces that exists for time \u03b7 > 0, and minimize the functional measuring surface area. We perform the study of the global dynamics similar to [2] for a 3-D model. Define the Lozinski\u020b measure\u03bc as defined in [31] as follows:",
+            "cite_spans": [
+                {
+                    "start": 122,
+                    "end": 125,
+                    "text": "[5]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 330,
+                    "end": 333,
+                    "text": "[2]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 395,
+                    "end": 399,
+                    "text": "[31]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "where D + represents the right-hand derivative. Further, for applying the above Theorem 2.10 and obtain the global stability, we need to find such a norm ( . ) for which\u03bc(M) < 0, \u2200 x in the interior of the region D. The second additive compound matrix J [2] (E 1 ) [28] of the Jacobian matrix given by (2.11) is denoted by M and is as follows: where",
+            "cite_spans": [
+                {
+                    "start": 254,
+                    "end": 257,
+                    "text": "[2]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 265,
+                    "end": 269,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Next, we consider a matrix Q = diag(I * , E * , S * ) and obtain the matrix A as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Now, for y = (y 1 , y 2 , y 3 ) T , let y [2] be given by y = max{|y 1 | + |y 3 |, |y 2 | + |y 3 |}, 0 y 2 y 3 max{|y 1 | + |y 3 |, |y 2 |}, y 2 y 3 0 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "(2.53) Next, we shall determine D + y .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Case 1: |y 1 | > |y 2 |. Now, y = |y 1 | + |y 3 |, and the right hand derivative is calculated as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Finally,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "Case 2: |y 2 | > |y 1 |. Now, y = |y 2 | + |y 3 |, and the right hand derivative is calculated as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "and finally,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "We leave the rest of the cases, for details refer to [2] . Now from Eqs. (2.54) and (2.55), it is clear that D + is bounded. Therefore, it assures the existence of a positive constant \u03b4 such that \u2212\u03b4 and \u03b4 are two bounds, i.e.,",
+            "cite_spans": [
+                {
+                    "start": 53,
+                    "end": 56,
+                    "text": "[2]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "The following theorem gives the sufficient conditions for the global stability of the EE of the system (1.2) when R 0 > 1. The above theorem is a sufficient condition for global stability of E 1 , and it can be globally stable even when the conditions of the theorem does not hold.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 2.9"
+        },
+        {
+            "text": "In the present section, we perform numerical simulations using various sets of parameters. MATLAB is used for the simulations of the reduced system (1.2). We perform the simulation with the help of various sets of parameters as illustrated in the following examples: Using Ruth-Hurwitz criterion, we deduce that the equilibrium point E 1 is unstable while E 2 is locally stable. This is shown in Fig. 3a . Using Jacobian matrix, one can easily deduce that E 1 and E 3 are locally asymptotically stable while E 2 is an unstable EE. Hence, the system encounters bistability. This is represented in Fig. 4a. . We notice that the basic reproduction number is same as previous example, but the number of equilibria differ. Here, the system (1.2) has unique endemic, E 1 = (36.7305, 63.0416, 0.0759537) which is stable as shown in Fig. 4b . Figure 3a shows the existence of backward bifurcation, that is, the EEs exist even when R 0 is less than unity. This means that the infection can persist even when the reproduction number is less than unity, which in turn creates difficulty in eradicating the disease. Figure 3b shows the existence of unique EE when R 0 > 1. Figure 4a shows the existence of multiple equilibria when R 1 0 is greater than unity, due to which a small perturbation in the system can change the complete dynamics making it somehow unpredictable. A small change in the initial condition could lead to the convergence to a different EE. We also observe that Examples 3.2 and 3.3 above have the same values for parameters except for \u03b1 and hence have the same reproduction number. Figure 4b shows the existence of unique EE for same value of reproduction number as 4a but different value of parameter \u03b1. Therefore, when h(E) is a Holling type III function, a change in the value of the parameter \u03b1 can easily change the properties of the system keeping the basic reproduction number exactly the same.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 396,
+                    "end": 403,
+                    "text": "Fig. 3a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 596,
+                    "end": 604,
+                    "text": "Fig. 4a.",
+                    "ref_id": null
+                },
+                {
+                    "start": 825,
+                    "end": 832,
+                    "text": "Fig. 4b",
+                    "ref_id": null
+                },
+                {
+                    "start": 835,
+                    "end": 844,
+                    "text": "Figure 3a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1104,
+                    "end": 1113,
+                    "text": "Figure 3b",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1161,
+                    "end": 1170,
+                    "text": "Figure 4a",
+                    "ref_id": null
+                },
+                {
+                    "start": 1593,
+                    "end": 1602,
+                    "text": "Figure 4b",
+                    "ref_id": null
+                }
+            ],
+            "section": "Numerical simulation"
+        },
+        {
+            "text": "Next, we discuss the sensitivity of parameter \u03b1 on the disease dynamics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A B"
+        },
+        {
+            "text": "We study the sensitivity of the parameter \u03b1 on the different population classes and reproduction number. The normalized forward sensitivity index of a variable, z, depending differentiably on a parameter, \u03c6, is defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sensitivity analysis with respect to innate immunity"
+        },
+        {
+            "text": "In the case of Holling type III function, the reproduction number (R 1 0 ) is independent of innate immunity; hence, the normalized sensitivity index of R 1 0 with respect to parameter \u03b1 is zero. Figure 5 shows the effect of variation in the parameter \u03b1 onto the different compartments as well the basic reproduction number R 0 when innate immunity is a Holling type II function. Similarly, Fig. 6 depicts the effect of variation in the parameter \u03b1 onto the different population classes. We observe that when the value of innate immunity is very low the sensitivity is maximum and a small variation in the value of parameter \u03b1 can lead to convergence on a different equilibrium point.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 196,
+                    "end": 204,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 391,
+                    "end": 397,
+                    "text": "Fig. 6",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Sensitivity analysis with respect to innate immunity"
+        },
+        {
+            "text": "The main objective of this paper is to analyze the effect of innate immunity on the dynamics of an SEIS model. If we neglect the innate immunity, that is, for \u03b1 = 0, the system (1.2) changes to a basic SEIS model, and the reproduction number would be equal to R 1 0 , the reproduction number when h(E) is a Holling type III function. When we ignore the innate immunity, the system reduces to the following form: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The equilibrium points of the system (4.1) are as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Clearly, the endemic equilibrium point exists when R 1 0 > 1. Moreover, we can see that this model exhibits neither backward bifurcation nor multiple EEs which changes the actual disease dynamics to a great extent. Though the basic reproduction number here is same as the reproduction number when h(E) is considered as a Holling type III function, the The existence of multiple equilibria when R 1 0 is greater than unity due to which a small perturbation in the system can change the complete dynamics making it somehow unpredictable. A change in initial condition could lead to the convergence to a different EE. Moreover, for the same parameter values, when innate immunity is considered as a Holling type II function, there exist two endemic equilibria E 1 = (96.4471, 3.54006, 0.00426513) and E 2 = (42.0801, 57.7113, 0.0695317) which is again quite different from what we obtained while ignoring immunity. We observe that the total infected population is higher when innate immunity is ignored. Hence, the ignorance of innate immunity alters the actual scenario to a very high extent and leads to wrong predictions. Figure 7 shows the effect of innate immunity on the susceptible, exposed, and infected population. Moreover, as we have seen, when h(E) is a Holling type II function, the system may exhibit backward bifurcation, while for \u03b1 = 0, no such bifurcation occurs. When ignoring immunity, one would try to push the reproduction number below unity for disease eradication, but in the actual scenario, the disease may still persist due to the existence of backward bifurcation. Moreover, we have seen that when h(E) = 0, the system (1.2) undergoes Hopf bifurcation, and the limit cycle is formed in S \u2212 E plane, while when innate immunity is ignored, we show that no limit cycle can exist. Let",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1122,
+                    "end": 1130,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Clearly, l 1 (S, E) > 0 if S > 0 and E > 0. Let",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Then,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Hence, (S, E) < 0 for all S > 0 and E > 0. Therefore, by Bendixon-Dulac criteria, there will be no periodic orbit in the S \u2212 E plane. Therefore, Hopf bifurcation does not occur when innate immunity is ignored. Hence, ignoring innate immunity can even predict a wrong onset of an epidemic and one would get a wrong estimation of actual scenario. Therefore, trying to build the strategies for pushing that pseudo reproduction number less than unity would increase the treatment burden and cost in vain. Moreover, analysis proves the fact that higher innate immunity lowers the infection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "So far we have seen how considering innate immunity can alter the disease dynamics. The differences in the dynamics of infection spread are quite vigorous. The model with innate immunity can have multiple equilibria, can undergo backward bifurcation, bistability can be encountered as well as the Hopf bifurcation, while none of these exist when immunity is ignored. This research becomes quite important as it shows that innate immunity is as important as acquired and adaptive immunities. This would encourage the researchers to include innate immunity as an important factor while formulating a model as disregarding it can result in various modeling disasters since it has the power to change the disease dynamics drastically. Not much research is present in the literature regarding the use of innate immunity in compartmental epidemiological modeling. Hence, this opens a new gateway to explore the various dimensions of this topic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Innate immunity is a very important aspect of disease dynamics, ignoring which can lead to various modeling disasters. We have analyzed mathematically and numerically that innate immunity can cause backward bifurcation when it is considered as a Holling type II function and can lead to the existence of multiple endemic equilibria when considered as a Holling type III function. The existence of backward bifurcation makes disease eradication a difficult task since pushing reproduction number below unity becomes insufficient for disease eradication. Moreover, the existence of multiple equilibria causes uncertainty in the prediction of disease dynamics. Also, ignoring innate immunity annihilates the possibility of Andronov-Hopf bifurcation as well as bistability. Moreover, it shows higher infection than the actual and leads to wrong predictions. Hence, we conclude that innate immunity should not be ignored while modeling.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "This research can be useful while modeling diseases like Tuberculosis, flu, SARS (severe acute respiratory syndrome), MERS (Middle East respiratory syndrome), and the currently spreading coronavirus pandemic. The use of innate immunity in the SEIS model can further be extended to other compartmental models like SEIR, SEIRS, SEITRS, etc. In the present manuscript, we have constructed a basic model for studying innate immunity which can be further studied in detail with various constraints like saturated incidence and treatment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Garland Science. Innate Immunity",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Alberts",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lewis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Global results for an epidemic model with vaccination that exhibits backward bifurcation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Arino",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Mccluskey",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Driessche",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "SIAM J. Appl. Math",
+            "volume": "64",
+            "issn": "1",
+            "pages": "260--276",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Immuno-epidemiological model of two-stage epidemic growth",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Banerjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tokarev",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Volpert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Math. Model. Nat. Phenom",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1051/mmnp/2020012"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Modeling and analysis of the trans-mission dynamics of tuberculosis without and with season-ality",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bowong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kurths",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nonlinear Dyn",
+            "volume": "67",
+            "issn": "3",
+            "pages": "2027--2051",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Analysis of a tuberculosis model with a case study in Uganda",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Buonomo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lacitignola",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "J. Biol. Dyn",
+            "volume": "4",
+            "issn": "6",
+            "pages": "571--593",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "On the computation of R 0 and its role on global stability",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Castillo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Mathematical approaches for emerging and reemerging infectious diseases: an introduction",
+            "volume": "125",
+            "issn": "",
+            "pages": "229--250",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Dynamical models of tuberculosis and their applications",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Castillo",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Math. Biosci. Eng",
+            "volume": "1",
+            "issn": "2",
+            "pages": "361--404",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A new idea on density function and covariance matrix analysis of a stochastic SEIS epidemic model with degenerate diffusion",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Appl. Math. Lett",
+            "volume": "103",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "On the definition and the computation of the basic reproduction ratio R 0 in models for infectious diseases in heterogeneous populations",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A P"
+                    ],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A J"
+                    ],
+                    "last": "Metz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "J. Math. Biol",
+            "volume": "28",
+            "issn": "4",
+            "pages": "365--382",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The construction of next-generation matrices for compartmental epidemic models",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A P"
+                    ],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Roberts",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Journal of the Royal Society Interface",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A reduced mathematical model of the acute inflammatory response II. Capturing scenarios of repeated endotoxin administration",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Day",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rubin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Vodovotz",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chow",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Reynolds",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Clermont",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "J. Theor. Biol",
+            "volume": "242",
+            "issn": "",
+            "pages": "237--256",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jtbi.2006.02.015"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Optimal control of a fractional order model for granular SEIR epidemic with uncertainty",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Long",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Khastan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Commun. Nonlinear Sci. Numer. Simul",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cnsns.2020.105312"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Uniform persistence and flows near a closed positively invariant set",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Freedman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ruan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "J. Diff. Equ",
+            "volume": "6",
+            "issn": "4",
+            "pages": "583--600",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Cellular Innate Immunity: An Old Game with New Players",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Gasteiger",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Osualdo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Schubert",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Weber",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Bruscia",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hartl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J. Innate Immun",
+            "volume": "9",
+            "issn": "",
+            "pages": "111--125",
+            "other_ids": {
+                "DOI": [
+                    "10.1159/000453397"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Asymptotic behavior of an SEIR epidemic model with quadratic treatment",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J. Appl. Math. Comput",
+            "volume": "42",
+            "issn": "",
+            "pages": "245--257",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12190-012-0617-1"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Implications of vaccination and waning immunity",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Heffernan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proc Biol Sci",
+            "volume": "276",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1098/rspb.2009.0057"
+                ],
+                "PMID": [
+                    "19324753"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "The components of predation as revealed by a study of small mammal predation of the European pine sawfly",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Holling",
+                    "suffix": ""
+                }
+            ],
+            "year": 1959,
+            "venue": "Can. Entomol",
+            "volume": "91",
+            "issn": "",
+            "pages": "293--320",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Some characteristics of simple types of predation and parasitism",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Holling",
+                    "suffix": ""
+                }
+            ],
+            "year": 1959,
+            "venue": "Can. Entomol",
+            "volume": "91",
+            "issn": "",
+            "pages": "385--398",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The functional response of predators to prey density and its role in mimicry and population regulation",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Holling",
+                    "suffix": ""
+                }
+            ],
+            "year": 1965,
+            "venue": "Mem. Entomol. Soc. Can",
+            "volume": "45",
+            "issn": "",
+            "pages": "5--60",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Permanence and the dynamics of biological systems",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Hutson",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schmitt",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Math. Biosci",
+            "volume": "111",
+            "issn": "1",
+            "pages": "1--71",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Stationary states and spatial patterning in the cellular automaton SEIS epidemiology model",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ilnytskyi",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pikuta",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ilnytskyi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Phys. A",
+            "volume": "509",
+            "issn": "",
+            "pages": "241--255",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Notes on R 0",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "A contribution to the mathematical theory of epidemics",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Kermack",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Mckendrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 1927,
+            "venue": "Proc. R. Soc. Lond. A 115(772)",
+            "volume": "",
+            "issn": "",
+            "pages": "700--721",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Chaos Detection and Optimal Control in a Cannibalistic Prey-Predator System with Harvesting",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kharbanda",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kumar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Int. J. Bifur. Chaos Appl. Sci. Eng",
+            "volume": "30",
+            "issn": "12",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "The dynamics of acute inflammation",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Clermont",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Vodovotz",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chow",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "J. Theor. Biol",
+            "volume": "230",
+            "issn": "2",
+            "pages": "145--155",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Assessing the effects of treatment in HIV-TB co-infection model",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jain",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Eur. Phys. J. Plus",
+            "volume": "133",
+            "issn": "8",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "A geometric approach to global-stability problems",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Muldowney",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "SIAM J. Math. Anal",
+            "volume": "27",
+            "issn": "4",
+            "pages": "1070--1083",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "A criterion for stability of matrices",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "J. Math. Anal. Appl",
+            "volume": "225",
+            "issn": "1",
+            "pages": "249--264",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "On Bendixson's criterion",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Muldowney",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "J. Differ. Equ",
+            "volume": "106",
+            "issn": "",
+            "pages": "27--39",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "An SEI infection model incorporating media impact",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Math. Biosci. Eng",
+            "volume": "14",
+            "issn": "5-6",
+            "pages": "1317--1335",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Logarithmic norms and projections applied to linear differential systems",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Martin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1974,
+            "venue": "J. Math. Anal. Appl",
+            "volume": "45",
+            "issn": "2",
+            "pages": "432--454",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Mathematical biology",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "SEIR model for COVID-19 dynamics incorporating the environment and social distancing",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mwalili",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kimathi",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ojiambo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gathungu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mbogo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMC Res Notes",
+            "volume": "13",
+            "issn": "352",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s13104-020-05192-1."
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "SEIS model with treatment in an exponentially growing population",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ouaro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Folia Math",
+            "volume": "20",
+            "issn": "1",
+            "pages": "50--85",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "On the computational modeling of the innate immune system",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Pigozzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Macedo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Santos",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lobosco",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "BMC Bioinform",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/1471-2105-14-S6-S7"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "A reduced mathematical model of the acute inflammatory response: I. Derivation of model and analysis of anti-inflammation",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Reynolds",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rubin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Clermont",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Day",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Vodovotz",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Ermentrout",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "J. Theor. Biol",
+            "volume": "242",
+            "issn": "",
+            "pages": "220--236",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Mathematical Model of Innate and Adaptive Immunity of Sepsis: A Modeling and Simulation Study of Infectious Disease",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Arieh",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Simpson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "BioMed Res. Int",
+            "volume": "2015",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1155/2015/504259"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Mathematical modelling of immune response in tissues",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Dorman",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Comput. Math. Methods Med",
+            "volume": "10",
+            "issn": "",
+            "pages": "1748--6718",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Dynamics of an SEIR epidemic model with nonlinear incidence and treatment rates",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Upadhyay",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Pal",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kumari",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Roy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nonlinear Dyn",
+            "volume": "96",
+            "issn": "4",
+            "pages": "2351--2368",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Transmission dynamics of epidemic spread and outbreak of Ebola in West Africa: fuzzy modeling and simulation",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Verma",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Tiwari",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Upadhyay",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J. Appl. Math. Comput",
+            "volume": "60",
+            "issn": "",
+            "pages": "637--671",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12190-018-01231-0"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "In silico models of acute inflammation in animals",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Vodovotz",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chow",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bartels",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Lagoa",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Prince",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Levy",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Day",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rubin",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Constantine",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Billiar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Fink",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Gillesclermont",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Shock",
+            "volume": "26",
+            "issn": "",
+            "pages": "235--244",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "A simple proof of Descartes's rule of signs",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Am. Math. Mon",
+            "volume": "111",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2307/4145072"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Global stability of a virus dynamics model with Beddington-De Angelis incidence rate and CTL immune response",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tao",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Nonlinear Dyn",
+            "volume": "66",
+            "issn": "4",
+            "pages": "825--830",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Analyzing global stability of a viral model with general incidence rate and cytotoxic T lymphocytes immune response",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nonlinear Dyn",
+            "volume": "82",
+            "issn": "1-2",
+            "pages": "713--722",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Global stability of a delayed SEIRS epidemic model with saturation incidence rate. Nonlinear Dyn",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "61",
+            "issn": "",
+            "pages": "229--239",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Analysis of stability and bifurcation for an SEIR epidemic model with saturated recovery rate",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Commun. Nonlinear Sci. Numer. Simul",
+            "volume": "16",
+            "issn": "11",
+            "pages": "4438--4450",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cnsns.2011.03.026"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "All the solutions of the system (1.2) are bounded as well as positive when t 0 for the initial conditions given by (1.3), and the domain D is positively invariant.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Find the endemic equilibrium points for this specific set of parameter values. (4) Next, we differentiate the real part of two complex eigenvalues with respect to the bifurcation parameter \u03b1 and evaluate it at critical value \u03b1 * to check the transversality condition given by d Re(\u03bb 2,3 ) d\u03b1 \u03b1=\u03b1 * . (2.34)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "following numerical examples show the existence of Hopf bifurcation numerically. For \u03b2 = 0.25, \u03b3 = 0.5, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.12 a neutrally stable center for \u03b1 = \u03b1 * . b Time series of the population at \u03b1 = \u03b1 * . c Unstable and merging limit cycles at \u03b1 < \u03b1 * . d Stable limit cycle at \u03b1 > \u03b1 * Example 2.7 Let h(E) be a Holling type II function. Consider \u03b2 = 0.25, \u03b3 = 0.5, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.12 and \u03b1 = \u03b1 * = 14.5985 as the bifurcation parameter. The transversality condition is d d\u03b1 (Re(\u03bb i (\u03b1)Hopf bifurcation occurs at the bifurcation parameter \u03b1 = \u03b1 * around EE E 1 and following results hold for variation in the value of \u03b1 * \u2022 At \u03b1 = \u03b1 * = 14.59846, Fig. 1a shows the presence of Concentric limit cycles around the endemic equilibrium point E 1 = (65.9732, 38.1283, 8.63283) and the system is neutrally stable center. Moreover, small change in initial condition leads to the formation of a different cycle. \u2022 When \u03b1 < \u03b1 * = 14.59, the endemic equilibrium point E 1 = (65.8265, 38.2157, 8.65261) is locally asymptotically stable as shown in Fig. 1c. The limit cycles become unstable. \u2022 When \u03b1 < \u03b1 * = 14.6, the endemic equilibrium point E 1 = (65.9993, 38.1128, 8.62931) is unstable as in Fig. 1d and the limit cycle is stable. For \u03b2 = 0.25, \u03b3 = 0.8, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.8 a neutrally stable center for \u03b1 = \u03b1 * . b Time series of the population at \u03b1 = \u03b1 * . c Unstable and merging limit cycles at \u03b1 < \u03b1 * . d Stable limit cycle at \u03b1 > \u03b1 * Example 2.8 Let h(E) be a Holling type III function. Consider \u03b2 = 0.25, \u03b3 = 0.8, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.8 and \u03b1 = \u03b1 * = 18.5685 as the bifurcation parameter. The transversality condition is d d\u03b1 (Re(\u03bb i (\u03b1))) Hopf bifurcation occurs at the bifurcation parameter \u03b1 = \u03b1 * around EE E 1 and following results hold for variation in the value of \u03b1 * \u2022 At \u03b1 = \u03b1 * = 18.5685, Fig. 2a shows the presence of concentric limit cycles around the endemic equilibrium point E 1 = (47.6393, 21.1639, 20.3989) and the system is neutrally stable center. Moreover, small change in initial condition leads to the formation of a different cycle. \u2022 When \u03b1 < \u03b1 * = 18.55, the endemic equilibrium point E 1 = (47.5496, 21.1869, 20.4212) is locally asymptotically stable as shown in Fig. 2c. The limit cycles become unstable. \u2022 When \u03b1 > \u03b1 * = 18.57, the endemic equilibrium point E 1 = (47.6464, 21.1621, 20.3972)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Theorem 2.10 \"Let \u00b7 be a norm on R n 2 , and > 0 be such that D + y < \u2212 y for all y \u2208 R n 2 satisfying (2.48) and all x \u2208 D where D is simply connected. Moreover, let for any simple closed curve \u03c6 in D there exists a sequence of surfaces {\u03c8 k } that minimizes S relative to (\u03c6, D) and there exists \u03b7 > 0 such that \u03c6 k t \u2282 D for t \u2208 [0, \u03b7] and k = 1, 2, . . . Then any omega limit point of(2.45)  in the interior of D is an equilibrium.\"",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Let \u03b2 = 0.25, \u03b3 = 0.8, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.001. For \u03b1 = 0.03, the basic reproduction number R 0 = 0.95504 and the constant a = 60.3895 from (2.29). Hence, the system undergoes backward bifurcation. The system has three equilibria, that is, DFE E 0 = (130, 0, 0) and two EE's, E 1 = (129.04, 0.956551, 0.00115247) and E 2 = (50.0251893, 79.6868, 0.0960082).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "For \u03b1 = 0.02, \u03b2 = 0.25, \u03b3 = 0.8, = 1.2, d = 0.01, d 1 = 0.02, k = 0.05, \u03c3 = 0.001, we get R 0 = 1.16595, and for these values, unique endemic equilibrium point exists. The system (1.2) exhibits forward bifurcation. There exists a unique endemic E 1 = (51.5814, 68.1721, 0.0821351), which is stable as shown in Fig. 3b.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Choosing \u03b1 = 0.05, \u03b2 = 0.25, \u03b3 = 0.8, = 1, d = 0.01, d 1 = 0.02, k = 0.5, \u03c3 = 0.001, we obtain R 1 0 = 2.73823. For these numerical values, the system (1.2) has three endemic equilibria, E 1 = (99.319, 0.678557, 0.000817539), E 2 = (92.7063, 7.26742, 0.00875593) and E 3 = (48.5092, 51.3054, 0.0618137).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Examples of backward and forward bifurcation when h(E) is a Holling type II function Page 21 Examples of three and unique EE when h(E) is a Holling type III functionExample 3.4 For \u03b1 = 0.002, \u03b2 = 0.25, \u03b3 = 0.8, = 1, d = 0.01, d 1 = 0.02, k = 0.5, \u03c3 = 0.001, we get R 1 0 = 2.73823",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Effect of innate immunity on the different population classes and reproduction number when h(E) is a Holling type II function and \u03b2 = 0.25, \u03b3 = 0.8, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.001 But in case of innate immunity as Holling type II function, the normalized sensitivity index of R 0 with respect to parameter \u03b1 is \u22120.645161 where \u03b2 = 0.25, \u03b3 = 0.8, = 1.3, d = 0.01, d 1 = 0.02, k = 0.08, \u03c3 = 0.001 and \u03b1 = 0.02.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Effect of innate immunity on the different population classes and reproduction number when h(E) is a Holling type III function and \u03b2 = 0.25, \u03b3 = 0.8, = 1, d = 0.01, d 1 = 0.02, k = 0.5, \u03c3 = 0.001",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Effect of innate immunity on the different population classes when reproduction numbers are greater than unity disease dynamics is quite different. If we consider the same parameter values as in Example 3.3 of Sect. 3 and h(E) = 0, then the equilibrium points are E 0 = (100, 0, 0) and E 1 = (36.52, 63.2514, 0.0762065) while the latter case has multiple equilibria, one DFE, E 0 = (100, 0, 0) and three EEs which are E 1 = (99.319, 0.678557, 0.000817539), E 2 = (92.7063, 7.26742, 0.00875593) and E 3 = (48.5092, 51.3054, 0.0618137).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Similarly, it can be observed that there are no limit cycles in S \u2212 E and E \u2212 I planes.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "corresponding to the simple zero eigenvalue for J",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "In the previous case, when h(E) is a Holling type II function, the system undergoes backward bifurcation; therefore, the DFE is not globally stable. Next, we check the global stability of DFE in the case of Holling type III. For global stability of DFE, we follow Castillo-Chavez",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "where f : D \u2192 R n is continuously differentiable, and D \u2282 R n is an open, simply connected domain. Let \u00b7 be a norm on R",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The first author, Shikha Jain, gratefully acknowledges the financial support by the University Grant Commission (UGC), Government of India (Sr. No. 2061440971).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "Conflicts of interest The authors declare that they have no conflict of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Compliance with ethical standards"
+        }
+    ]
+}

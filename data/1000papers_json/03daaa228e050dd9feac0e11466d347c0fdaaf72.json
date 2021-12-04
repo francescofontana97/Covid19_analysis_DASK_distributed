@@ -1,0 +1,2805 @@
+{
+    "paper_id": "03daaa228e050dd9feac0e11466d347c0fdaaf72",
+    "metadata": {
+        "title": "Catala: A Programming Language for the Law",
+        "authors": [
+            {
+                "first": "Denis",
+                "middle": [],
+                "last": "Merigoux",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Jonathan",
+                "middle": [],
+                "last": "Protzenko",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Law at large underpins modern society, codifying and governing many aspects of citizens' daily lives. Oftentimes, law is subject to interpretation, debate and challenges throughout various courts and jurisdictions. But in some other areas, law leaves little room for interpretation, and essentially aims to rigorously describe a computation, a decision procedure or, simply said, an algorithm.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Unfortunately, prose remains a woefully inadequate tool for the job. The lack of formalism leaves room for ambiguities; the structure of legal statutes, with many paragraphs and sub-sections spread across multiple pages, makes it hard to compute the intended outcome of the algorithm underlying a given text; and, as with any other piece of poorly-specified critical software, the use of informal, natural language leaves corner cases unaddressed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "We introduce Catala, a new programming language that we specifically designed to allow a straightforward and systematic translation of statutory law into an executable implementation. Catala aims to bring together lawyers and programmers through a shared medium, which together they can understand, edit and evolve, bridging a gap that too often results in dramatically incorrect implementations of the law. We have implemented a compiler for Catala, and have proven the correctness of its core compilation steps using the F \u2605 proof assistant.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "We evaluate Catala on several legal texts that are algorithms in disguise, notably section 121 of the US federal income tax and the byzantine French family benefits; in doing so, we uncover a bug in the official implementation of the French benefits. We observe as a consequence of the formalization process that using Catala enables rich interactions between lawyers and programmers, leading to a greater understanding of the original legislative intent, while producing a correct-by-construction executable specification reusable by the greater software ecosystem. Doing so, Catala increases trust in legal institutions, and mitigates the risk of societal damage due to incorrect implementations of the law.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "We now know that since at least 2000 B.C.E. and the Code of Ur-Nammu [48] , various societies have attempted to edict, codify and record their governing principles, customs and rules in a set of legal texts -the law. Nowadays, most aspects of one's daily life are regulated by a set of laws or another, ranging from family law, tax law, criminal law, to maritime laws, business laws or civil rights law. No law is set in stone; laws are, over time, amended, revoked and modified by legislative bodies. The resulting legal texts eventually reflect the complexity of the process and embody the centuries of practice, debates, power struggles and political compromises between various parties.",
+            "cite_spans": [
+                {
+                    "start": 69,
+                    "end": 73,
+                    "text": "[48]",
+                    "ref_id": "BIBREF49"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "The practice of law thus oftentimes requires substantial human input. First, to navigate the patchwork of exceptions, amendments, statutes and jurisprudence relevant to a given case. Second, to fully appreciate and identify the situation at play; understand whether one party falls in a given category or another; and generally classify and categorize, in order to interpret a real-world situation into something the law can talk about. This latter aspect is perhaps the greatest challenge for a computer scientist: a general classification system remains an elusive prospect when so much human judgement and appreciation is involved. Fortunately, a subset of the law, called computational law or sometimes rules as code, concerns itself with situations where entities are well-defined, and where human appreciation, judgement or interpretation are not generally expected. Examples of computational law include, but are not limited to: tax law, family benefits, pension computations, monetary penalties and private billing contracts. All of these are algorithms in disguise: the law (roughly) defines a function that produces outcomes based on a set of inputs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "As such, one might think computational law would be easily translatable into a computer program. Unfortunately, formidable challenges remain. First, as mentioned above, the law is the result of a centuries-long process: its convoluted structure demands tremendous expertise and training to successfully navigate and understand, something that a computer programmer may not have. Second, the language in which legal statutes are drafted is so different from existing programming languages that a tremendous gap remains between the legal text and its implementation, leaving the door open for discrepancies, divergence and eventual bugs, all with dramatic societal consequences.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Examples abound. In France, the military's payroll computation involves 174 different bonuses and supplemental compensations. Three successive attempts were made to rewrite and modernize the military paycheck infrastructure; but with a complete disconnect between the military statutes and the implementation teams that were contracted, the system had to be scrapped [34] . Software engineering failures are perhaps a fact of life in the IT world; but in this particular case, actual humans bore the consequences of the failure, with military spouses receiving a 3-cent paycheck, or learning years later that they owe astronomical amounts to the French state. Perhaps more relevant to the current news, the US government issued a decree intended to provide financial relief to US taxpayers whose personal economic situation had been affected by the Covid-19 pandemic. Owing to an incorrect implementation by the Internal Revenue Service (IRS), nearly one million Americans received an incorrect Economic Impact Payment (EIP), or none at all [15] .",
+            "cite_spans": [
+                {
+                    "start": 367,
+                    "end": 371,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1041,
+                    "end": 1045,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Both examples are similar, in that a seemingly pure engineering failure turns out to have dramatic consequences in terms of human livelihoods. When a family is at the mercy of the next paycheck or EIP, a bug in those systems could mean bankruptcy. In our view, these is no doubt that these systems are yet another flavor of critical software.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "A natural thought is perhaps to try to simplify the law itself. Unfortunately, this recurrent theme of the political discourse often conflicts with the political reality that requires compromise and fined-grained distinctions. Hence, the authors do not anticipate a drastic improvement around the world concerning legal complexity. Therefore, our only hope for improvement lies on the side of programming languages and tools.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Tax law provides a quintessential example. While many of the implementations around the world are shrouded in secrecy, the public occasionally gets a glimpse of the underlying infrastructure. Recently, Merigoux et al. [31] reverse-engineered the computation of the French income tax, only to discover that the tax returns of an entire nation were processed using an antiquated system designed in 1990, relying on 80,000 lines of code written in a custom, in-house language, along with 6,000 lines of hand-written C directly manipulating tens of thousands of global variables. This particular situation highlights the perils of using the wrong tool for the job: inability to evolve, resulting in hand-written C patch-ups; exotic semantics which make reproducing the computation extremely challenging; and a lack of accountability, as the cryptic in-house language cannot be audited by anyone, except by the handful of experts who maintain it. This is by no means a \"French exception\": owing to an infrastructure designed while Kennedy was still president, the IRS recently handed over $300,000,000's worth of fraudulent refunds to taxpayers [3] . The rewrite, decades in planning, keeps being pushed further away in the future [12] .",
+            "cite_spans": [
+                {
+                    "start": 218,
+                    "end": 222,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 1140,
+                    "end": 1143,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1226,
+                    "end": 1230,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "In this work, we propose a new language, Catala, tailored specifically for the purpose of faithfully, crisply translating computational law into executable specifications. Catala is designed to follow the existing structure of legal statutes, enabling a one-to-one correspondence between a legal paragraph and its corresponding translation in Catala. Under the hood, Catala uses prioritized default logic [5] ; to the best of our knowledge, Catala is the first instance of a programming language designed with this logic as its core system. Catala has clear semantics, and compiles to a generic lambda-calculus that can then be translated to any existing language. We formalize the compilation scheme of Catala with F \u2605 and show that it is correct. In doing so, we bridge the gap between legal statutes and their implementation; we avoid the in-house language trap; and we provide a solid theoretical foundation to audit, reproduce, evaluate and reuse computational parts of the law. Our evaluation, which includes user studies, shows that Catala can successfully express complex sections of the US Internal Revenue Code and the entirety of the French family benefits computation.",
+            "cite_spans": [
+                {
+                    "start": 405,
+                    "end": 408,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "The benefits of using Catala are many: lawmakers and lawyers are given a formal language that accurately captures their intent and faithfully mirrors the prose; programmers can derive and distribute a canonical implementation, compiled to the programming language of their choice; citizens can audit, understand and evaluate computational parts of the law; and advocacy groups can shed more light on oftentimes obscure, yet essential, parts of civil society.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Legal statutes are written in a style that can be confounding for a computer scientist. While a program's control-flow (as a first approximation) makes forward progress, statutes frequently back-patch previous definitions and re-interpret earlier paragraphs within different contexts. The result more closely resembles assembly with arbitrary jumps and code rewriting, rather than a structured language.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BACKGROUND ON LEGAL TEXTS & THEIR FORMALIZATION"
+        },
+        {
+            "text": "To illustrate how the law works, we focus on Section 121 of the US Internal Revenue Code [19] , our running example throughout this paper. Section 121 is written in English, making it accessible to an international audience without awkward translations; it features every single difficulty we wish to tackle with Catala; and it is a well-studied and well-understood part of the tax law. We go through the first few paragraphs of the section; for each of them, we informally describe the intended meaning, then highlight the surprising semantics of the excerpt.",
+            "cite_spans": [
+                {
+                    "start": 89,
+                    "end": 93,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND ON LEGAL TEXTS & THEIR FORMALIZATION"
+        },
+        {
+            "text": "Section 121 is concerned with the \"Exclusion of gain from sale of principal residence\". In common parlance, if the taxpayer makes a profit from the sale of their residence, they are not required to report the profits as income, hence making such profits non-taxable. Paragraph (a) defines the exclusion itself.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of Section 121"
+        },
+        {
+            "text": "(a) Exclusion Gross income shall not include gain from the sale or exchange of property if, during the 5-year period ending on the date of the sale or exchange, such property has been owned and used by the taxpayer as the taxpayer's principal residence for periods aggregating 2 years or more.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of Section 121"
+        },
+        {
+            "text": "The part of the sentence that follows the \"if\" enumerates conditions under which this tax exclusion can be applied. This whole paragraph is valid unless specified otherwise, as we shall see shortly.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview of Section 121"
+        },
+        {
+            "text": "Paragraph (b) immediately proceeds to list limitations, that is, situations in which (a) does not apply, or needs to be refined. Section 121 thus consists of a general case, (a), followed by a long enumeration of limitations ranging from (b) to (g). We focus only on (b). The first limitation (b)(1) sets a maximum for the exclusion, \"generally\" $250,000. Left implicit is the fact that any proceeds of the sale beyond that are taxed as regular income.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Out-of-order definitions"
+        },
+        {
+            "text": "The amount of gain excluded from gross income under subsection (a) with respect to any sale or exchange shall not exceed $250,000.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(b) Limitations (1) In general"
+        },
+        {
+            "text": "We remark that even though (b)(1) is a key piece of information for the application of Section 121, the reader will find it only if they keep going after (a). This is a general feature of legal texts: relevant information is scattered throughout, and (a) alone is nowhere near enough information to make a determination of whether the exclusion applies to a taxpayer. (1) in place, stating that under certain conditions, the maximum exclusion can be $500,000.",
+            "cite_spans": [
+                {
+                    "start": 368,
+                    "end": 371,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(b) Limitations (1) In general"
+        },
+        {
+            "text": "(A) $500,000 Limitation for certain joint returns Paragraph (1) shall be applied by substituting \"$500,000\" for \"$250,000\" if-(i) either spouse meets the ownership requirements of subsection (a) with respect to such property; (ii) both spouses meet the use requirements of subsection (a) with respect to such property; and (iii) neither spouse is ineligible for the benefits of subsection (a) with respect to such property by reason of paragraph (3) .",
+            "cite_spans": [
+                {
+                    "start": 446,
+                    "end": 449,
+                    "text": "(3)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Backpatching; exceptions"
+        },
+        {
+            "text": "Several key aspects of paragraph (A) are worth mentioning. First, (A) backpatches paragraph (b)(1); the law essentially encodes a search-and-replace in its semantics. Second, (A) overrides a previous general case under specific conditions. In a functional programming language, a pattern-match first lists the most specific matching cases, and catches all remaining cases with a final wildcard. A text of law proceeds in the exact opposite way: the general case in (a) above is listed first, then followed by limitations that modify the general case under certain conditions. This is by design: legal statutes routinely follow a \"general case first, special cases later\" approach which mirrors the legislator's intentions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Backpatching; exceptions"
+        },
+        {
+            "text": "Third, conditions (i) through (iii) are a conjunction, as indicated by the \"and\" at the end of (ii). We note that (iii) contains a forward-reference to (3) which we have not seen yet. (Through our work, we fortunately have never encountered a circular reference.)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Backpatching; exceptions"
+        },
+        {
+            "text": "If limitation (A) doesn't apply, we move on to (B), which essentially stipulates that the exclusion in (b)(1) should be re-interpreted for each spouse separately as if they were not married; the final exclusion is then the sum of the two sub-computations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Re-interpreting"
+        },
+        {
+            "text": "(B) Other joint returns If such spouses do not meet the requirements of subparagraph (A), the limitation under paragraph (1) shall be the sum of the limitations under paragraph (1) to which each spouse would be entitled if such spouses had not been married. For purposes of the preceding sentence, each spouse shall be treated as owning the property during the period that either spouse owned the property.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Re-interpreting"
+        },
+        {
+            "text": "We thus observe that the law is re-entrant and can call itself recursively under different conditions. This is indicated here by the use of the conditional tense, i.e. \"would\".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Re-interpreting"
+        },
+        {
+            "text": "In another striking example, (3) cancels the whole exclusion (a) under certain conditions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Out-of-order backpatching"
+        },
+        {
+            "text": "(3) Application to only 1 sale or exchange every 2 years Subsection (a) shall not apply to any sale or exchange by the taxpayer if, during the 2-year period ending on the date of such sale or exchange, there was any other sale or exchange by the taxpayer to which subsection (a) applied.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Out-of-order backpatching"
+        },
+        {
+            "text": "Paragraph (3) comes a little further down; a key takeaway is that, for a piece of law, one must process the entire document; barring that, the reader might be missing a crucial limitation that only surfaces much later in the text.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Out-of-order backpatching"
+        },
+        {
+            "text": "Paragraph (4) concerns the specific case of a surviving spouse that sells the residence within two years of the death of their spouse, knowing that the conditions from (A) applied (i.e. \"returned true\") right before the date of the death.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A final example"
+        },
+        {
+            "text": "(4) Special rule for certain sales by surviving spouses In the case of a sale or exchange of property by an unmarried individual whose spouse is deceased on the date of such sale, paragraph (1) shall be applied by substituting \"$500,000\" for \"$250,000\" if such sale occurs not later than 2 years after the date of death of such spouse and the requirements of paragraph (2)(A) were met immediately before such date of death.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A final example"
+        },
+        {
+            "text": "Paragraph (4) combines several of the complexities we saw above. It not only back-patches (1), but also recursively calls (2)(A) under a different context, namely, executing (2)(A) at a previous date in which the situation was different. In functional programming lingo, one might say that there is a hidden lambda in (2)(A), that binds the date of the sale.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A final example"
+        },
+        {
+            "text": "We have now seen how legal statutes are written, the thought process they exhibit, and how one is generally supposed to interpret them. We wish to emphasize that the concepts described are by no means specific to tax law or the US legal system: we found the exact same patterns in other parts of US law and non-US legal systems. Section 121 contains many more paragraphs; however, the first few we saw above are sufficient to illustrate the challenges in formally describing the law.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formal insights on legal logic"
+        },
+        {
+            "text": "The main issue in modeling legal texts therefore lies in their underlying logic, which relies heavily on the pattern of having a default case followed by exceptions. This nonmonotonic logic is known as default logic [40] . Several refinements of default logic have been proposed over time; the one closest to the purposes of the law is known as prioritized default logic [5] , wherein default values are guarded by justifications, and defaults can be ordered according to their relative precedence. Lawsky [24] argues that this flavor of default logic is the best suited to expressing the law. We concur, and adopt prioritized default logic as a foundation for Catala.",
+            "cite_spans": [
+                {
+                    "start": 216,
+                    "end": 220,
+                    "text": "[40]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 371,
+                    "end": 374,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 506,
+                    "end": 510,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Formal insights on legal logic"
+        },
+        {
+            "text": "In default logic, formulas include defaults, of the form : \u00ec / , wherein: if formula holds; if the \u00ec are consistent with the set of known facts; then holds. Prioritized logic adds a strict partial order over defaults, to resolve conflicts when multiple defaults may be admissible at the same time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formal insights on legal logic"
+        },
+        {
+            "text": "The main design goal of Catala is to provide the design and implementation of a language tailored for the law, using default logic as its core building block, both in its syntax and semantics. Catala thus allows lawyers to express the general case / exceptions pattern naturally. We now informally present Catala.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formal insights on legal logic"
+        },
+        {
+            "text": "Our introduction to legal texts in Section 2 mixes informal, high-level overviews of what each paragraph intends to express, along with excerpts from the law itself. Our English prose is too informal to express anything precisely; but \"legalese\" requires a high degree of familiarity with the law to successfully grasp all of the limitations and compute what may or may not be applicable to a given taxpayer's situation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A CATALA TUTORIAL"
+        },
+        {
+            "text": "We now introduce Catala by example, and show how the subtleties of each paragraph can be handled unambiguously and clearly by Catala. Our guiding principle is twofold: we want to formally express the intended meaning without being obscured by the verbosity of legal prose; yet, we wish to remain close to the legal text, so that the formal specification remains in close correspondence with the reference legal text, and can be understood by lawyers. Catala achieves this with a dedicated surface language that follows the thought process of legal minds.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A CATALA TUTORIAL"
+        },
+        {
+            "text": "Legal prose is very dense, and uses a number of concepts without explicitly defining them in the text. For instance, in Section 121, the notion of time period is implicit, and so are the various types of tax returns one might file (individual or joint). Furthermore, entities such as the taxpayers (whom we will call \"Person 1\" and \"Person 2\") need to be materialized. Finally, for each one of those entities, there are a number of inputs that are implicitly referred to throughout the legal statute, such as: time periods in which each Person was occupying the residence as their primary home; whether there was already a sale in the past two years; and many more, as evidenced by the myriad of variables involved in (i)-(iii).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Metadata: turning implicits into explicits"
+        },
+        {
+            "text": "Our first task when transcribing legal prose into a formal Catala description is thus to enumerate all structures, entities and variables relevant to the problem at stake. We provide the definitions and relationships between variables later on. This is a conscious design choice of Catala: before even talking about how things are computed, we state what we are talking about. In doing so, we mimic the behavior of lawyers, who are able to infer what information is relevant based on the legal text. We call this description of entities the metadata. The snippet above shows an excerpt from Section 121's metadata. The first two declarations declare product types via the structure keyword. Catala features a number of built-in types, such as date, condition (i.e. a boolean) and money. The higher-kinded type collection is also built-in. The type Period contains two fields, start and end.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Metadata: turning implicits into explicits"
+        },
+        {
+            "text": "A word about aesthetics: while programmers generally prize compactness of notation, advocating e.g. point-free-styles or custom operators, non-experts are for the most part puzzled by compact notations. Our surface syntax was designed in collaboration with lawyers, who confirmed that the generous keywords improve readability, thus making Catala understandable by legal minds.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Metadata: turning implicits into explicits"
+        },
+        {
+            "text": "Line 10 declares Section121SinglePerson, a scope. A key technical device and contribution of Catala, scopes allow the programmer to follow the law's structure, revealing the implicit modularity in legal texts. Scopes are declared in the metadata section: the context keyword indicates that the value of the field might be determined later, depending on the context. Anticipating on Section 4, the intuition is that scopes are functions and contexts are their parameters and local variables.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Metadata: turning implicits into explicits"
+        },
+        {
+            "text": "The main purpose of Section 121 is to talk about the gain that a person derived from the sale of their residence (line 11), of type money. Paragraph (a) implicitly assumes the existence of time periods of ownership and usage of the residence; we materialize these via the personal field which holds two collection Periods. These in turn allow us to define whether the ownership and usage requirements are met (of type condition, lines [13] [14] . A further condition captures whether all requirements are met (line 15). The outcome of the law is the amount that can be excluded from the gross income, of type money (line 19). (The need for an intermediary variable at line 18 becomes apparent in Section 3.3.) A local helper computes the aggregate number of days in a set of time periods; the helper takes a single argument of type collection Period (line 21) and, being a local closure, can capture other context variables.",
+            "cite_spans": [
+                {
+                    "start": 435,
+                    "end": 439,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 440,
+                    "end": 444,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Metadata: turning implicits into explicits"
+        },
+        {
+            "text": "We now continue with our formalization of (a) and define the context-dependent variables, as well as the relationships between them. Catala is declarative: the user relates context variables together, via the definition keyword, or the rule keyword for conditions. We offer separate syntax for two reasons. First, for legal minds, conditions and data are different objects and reflecting that in the surface syntax helps with readability. Second, there is a core semantic difference: booleans (conditions) are false by default in the law; however, other types of data have no default value. Internally, Catala desugars rules to definitions equipped with a default value of false ( \u00a74.1). Lines 2-4 capture the ownership requirement, by calling the helper aggregate_periods_... with argument property_ownership, a previously-defined context variable. (The full definition of the helper, which involves another context variable for the date of sale, is available in Appendix A.) Paragraph (a) states \"for periods aggregating 2 years or more\": for the purposes of Section 121, and as defined in Regulation 1.121-1(c)(1), a year is always 365 days. Catala resolves the ambiguity by simply not offering any built-in notion of yearly duration, and thus makes the law clearer. The\u015d uffix of the comparison operator >=^means that we are comparing durations. The ownership requirement is \"fulfilled\" (i.e. defined to true) under a certain condition. This is our first taste of prioritized default logic expressed through the syntax of Catala: the built-in default, set to false, is overridden with a rule that has higher priority. This is a simple case and more complex priorities appear in later sections. However, this example points to a key insight of Catala: rather than having an arbitrary priority order resolved at run-time between various rules, we encode priorities statically in the surface syntax of the language, and the pre-order is derived directly from the syntax tree of rules and definitions. We explain this in depth later on (Section 4.1).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scopes and contexts: declarative rules and definitions"
+        },
+        {
+            "text": "Similarly, lines 6-9 define the usage requirement using the rule keyword to trigger a condition: the value of requirements_usage_met is false unless the boolean expression at lines 7-8 is true. One legal subtlety, implicit in (a), is that ownership and usage periods do not have to overlap. The Catala program makes this explicit by having two collections of time periods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scopes and contexts: declarative rules and definitions"
+        },
+        {
+            "text": "The requirements are met if both ownership and usage requirements are met (lines [11] [12] [13] . In that case, the income gain can be excluded from the income tax (lines [15] [16] [17] . The latter is defined via the definition keyword, as rule is reserved for booleans.",
+            "cite_spans": [
+                {
+                    "start": 81,
+                    "end": 85,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 86,
+                    "end": 90,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 171,
+                    "end": 175,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 176,
+                    "end": 180,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 181,
+                    "end": 185,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Scopes and contexts: declarative rules and definitions"
+        },
+        {
+            "text": "We have now formalized Paragraph (a) in Catala. At this stage, if the user fills out the remaining inputs, such as the gain obtained from the sale of the property, and the various time periods, the interpreter automatically computes the resulting value for the amount to be excluded from the gross income. The interpreter does so by performing a control-flow analysis and computing a topological sort of assignments. Cycles are rejected, since the law is not supposed to have dependency cycles. (Section 4 describes the full semantics of the language.)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scopes and contexts: declarative rules and definitions"
+        },
+        {
+            "text": "We note that a single sentence required us to explicitly declare otherwise implicit concepts, such as the definition of a year; and to clarify ambiguities, such as whether time periods may overlap. With this concise example, we observe that the benefits of formalizing a piece of law are the same as formalizing any piece of critical software: numerous subtleties are resolved, and non-experts are provided with an explicit, transparent executable specification that obviates the need for an expert legal interpretation of implicit semantics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Scopes and contexts: declarative rules and definitions"
+        },
+        {
+            "text": "We now move on to limitations ( \u00a72.2). A key feature of Catala is that it enables a literate programming style [21] , where each paragraph of law is immediately followed by its Catala transcription. Now that we're done with (a), we insert a textual copy of the legal prose for (b), then proceed to transcribe it in Catala. In Paragraph (b)(1), the law overwrites the earlier definition from (a) and re-defines it to be capped by $250,000. In line with our earlier design choices, we rule out confusion and rely on the auxiliary variable (the \"uncapped\" variant), to then compute the final amount excluded from the gross income (lines 4-8). Out-of-order definitions that are provided at a later phase in the source are an idiomatic pattern in Catala.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 115,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Split scopes: embracing the structure of the law"
+        },
+        {
+            "text": "Before making any further progress, we need to introduce new entities to take into account the fact that we may now possibly be dealing with a joint return. We introduce a new abstraction or, in Catala lingo, scope: Section121Return. We follow the out-of-order structure of the law; only from here on do we consider the possibility of a joint return. Having introduced a new level of abstraction, we need to relate the return_type to the persons involved. We do so by introducing new equalities, of which we show the first one. rule paragraph_A_applies under condition 5 (return_data is JointReturn) and 6 (person1.requirements_ownership_met or person2.requirements_ownership_met) and 7 (person1.requirements_usage_met and person2.requirements_usage_met) and 8 (not (paragraph_3_applies of person1.other_section_121a_sale)) and 9 (not (paragraph_3_applies of person2.other_section_121a_sale)) Until now, the gain cap was defined to be that of the taxpayer, that is, Person 1 (line 2). We now need to determine whether the conditions from Paragraph (A) apply (line 4). To that end, we introduce an intermediary variable, paragraph_A_applies. This variable will be used later on for (B), whose opening sentence is \"if such spouses do not meet the requirements of (A)\".",
+            "cite_spans": [
+                {
+                    "start": 569,
+                    "end": 570,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 759,
+                    "end": 760,
+                    "text": "8",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 828,
+                    "end": 829,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Complex usage of the default calculus; exceptions"
+        },
+        {
+            "text": "We now introduce the notion of exception (line 12). In Catala, if, at run-time, more than a single applicable definition for any context variable applies, program execution aborts with a fatal error. In the absence of the exception keyword, and in the presence of a joint return that satisfies paragraph (A), the program would be statically accepted by Catala, but would be rejected at run-time: there are two definitions for gain_cap, both their conditions hold (true and paragraph_A_applies), and there is no priority ordering indicating how to resolve the conflict. The exception keyword allows solving this very issue. The keyword indicates that, in the pre-order of definitions, the definition at line 12 has a higher priority than the one at 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Complex usage of the default calculus; exceptions"
+        },
+        {
+            "text": "Generally, Catala allows an arbitrary tree of definitions each refined by exceptions, including exceptions to exceptions (which we have encountered in the law); the rule of thumb remains: only one single definition should be applicable at a time, and any violation of that rule indicates either programmer error, or a fatal flaw in the law.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Complex usage of the default calculus; exceptions"
+        },
+        {
+            "text": "Modeling the law is labor-intensive, owing to all of the implicit assumptions present in what is seemingly \"just legalese\". In our experience, this process is best achieved through pair-programming, in which a Catala expert transcribes a statute with the help of a legal expert. We thus stop here our Catala tutorial and defer the full modelization of Section 2 to Appendix A. Briefly, modeling (B) requires introducing a new scope for a two-pass processing that models the re-entrancy (\"if such spouses had not been married\"). Modeling the forward-reference to (3) requires introducing a helper paragraph_3_applies whose definition is provided later on, after Paragraph (3) has been suitably declared (line 8, above).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recapping"
+        },
+        {
+            "text": "As this tutorial wraps up, we look back on all of the language features we presented. While Catala at first glance resembles a lambda-calculus with heavy syntactic sugar, diving into the subtleties of the law exhibits the need for two features that are not generally found in lambda-calculi. First, we allow the user to define context variables through a combination of an (optional) default case, along with an arbitrary number of special cases, either prioritized or non-overlapping. The theoretical underpinning of this feature is the prioritized default calculus. Second, the out-of-order nature of definitions means that Catala is entirely declarative, and it is up to the Catala compiler to compute a suitable dependency order for all the definitions in a given program.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recapping"
+        },
+        {
+            "text": "Fortunately, the law does not have general recursion, meaning that we do not need to compute fixed points, and do not risk running into circular definitions. Hence, our language is not Turingcomplete, purposefully. We thus focus on what makes Catala special: its default calculus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recapping"
+        },
+        {
+            "text": "We now formally introduce the semantics and compilation of Catala. To that end, we describe a series of compilation steps: we desugar the concrete syntax to a scope language; we define the semantics of scopes via a translation to a default calculus; we then finally compile the default calculus to a language equipped with exceptions, such as OCaml. This last part is where the most crucial compilation steps occur: we prove its soundness via a mechanization in the F \u2605 proof assistant. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "FORMALIZING CATALA"
+        },
+        {
+            "text": "The scope language resembles Catala's user-facing language: the notion of scope is still present; rules and definitions remain, via a unified def declaration devoid of any syntactic sugar. Perhaps more importantly, definitions are provided in-order and our usage of default calculus becomes clear. Figure 1 presents the syntax of the scope language. We focus on the essence of Catala, i.e. how to formalize a language with default calculus at its core; to that end, and from this section onwards, we omit auxiliary features, such as data types, in order to focus on a core calculus.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 298,
+                    "end": 306,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF21"
+                }
+            ],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "To avoid carrying an environment, a reference to a sub-scope variable, such as person1.personal earlier, is modeled as a reference to a sub-scope annotated with a unique identifier, such as Section121SinglePerson 1 .personal. Therefore, locations are either a local variable , or a sub-scope variable, of the form [ ].",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "Types and expressions are standard, save for default terms of the form \u27e8\u00ec | \u2032 :-\u2032\u2032 \u27e9 which informally reduce as follows. Each of the exceptions is evaluated; if two or more are valid (i.e. not of the form \u2205), a conflict error \u229b is raised. If exactly one exception is valid, the final result is . If no exception is valid, and \u2032 evaluates to true the final result is \u2032\u2032 . If no exception is valid, and \u2032 evaluates to false, the final result is \u2205. We provide a full formal semantics of default terms in \u00a74.2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "The syntactic form \u27e8\u00ec | \u2032 :-\u2032\u2032 \u27e9 encodes a static tree of priorities, baking the pre-order directly in the syntax tree of each definition. We thus offer a restricted form of prioritized default logic, in which each definition is its own world, equipped with a static pre-order.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "Atoms either define a new location, gathering all default cases and exceptions in a single place; or, rules indicate that a sub-scope needs to be called to compute further definitions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "We now explain how to desugar the surface syntax, presented in Section 3, to this scope language. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "(iv) exception def. X exception L def. X Table 1 . Desugaring the surface language into an explicit surface syntax Syntactic sugar. Table 1 presents rewriting rules, whose transitive closure forms our desugaring. These rules operate within the surface language; Table 1 abbreviates surface-level keywords for easier typesetting.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 41,
+                    "end": 48,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 132,
+                    "end": 139,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 262,
+                    "end": 269,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "In its full generality, Catala allows exceptions to definitions, followed by an arbitrary nesting of exceptions to exceptions. This is achieved by a label mechanism: all exceptions and definitions are labeled, and each exception refers to the definition or exception it overrides. Exceptions to exceptions are actually found in the law, and while we spared the reader in our earlier tutorial, we have found actual use-cases where this complex scenario was needed. Exceptions to exceptions remain rare; the goal of our syntactic sugar is to allow for a more compact notation in common cases, which later gets translated to a series of fully labeled definitions and exceptions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "After desugaring, definitions and exceptions form a forest, with exactly one root definitions node for each variable , holding an -ary tree of exception nodes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "We start with the desugaring of rule which, as mentioned earlier, is a boolean definition with a base case of false (i). Definitions without conditions desugar to the trivial true condition (ii).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "The formulation of (iiia) allows the user to provide multiple definitions for the same variable without labeling any of them; thanks to (iiia), these are implicitly understood to be a series of exceptions without a default case. The surface syntax always requires a default to be provided; internally, the nodefault simply becomes condition true consequence equals \u2205.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "We provide another alternative to the fully labeled form via (iiib); the rule allows the user to provide a single base definition, which may then be overridden via a series of exceptions. To that end, we introduce a unique label which un-annotated exceptions are understood to refer to (iv).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "Materializing the default tree. Equipped with our default expressions , we show how to translate a scattered series of Catala definitions into a single def rule from the scope language. We write , \u21dd , meaning that the definition of labeled , along with all the (transitive) exceptions to , collectively translate to . We use an auxiliary helper lookup( , ) = , , \u00ec , meaning that at label , under condition , is defined to be , subject to a series of exceptions labeled . Reordering definitions. Our final steps consists in dealing with the fact that defs remain unordered. To that end, we perform two topological sorts. First, for each scope , we collect all definitions and re-order them according to a local dependency relation \u2192:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "After re-ordering, we obtain a scope where definitions can be processed linearly. Sub-scope nodes of the form become calls, to indicate the position at which the sub-scope computation can be performed, i.e. once its parameters have been filled and before its outputs are needed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "We then topologically sort the scopes themselves to obtain a linearized order. We thus move from a declarative language to a functional language where programs can be processed in evaluation order. In both cases, we detect the presence of cycles, and error out. General recursion is not found in the law, and is likely to indicate an error in modeling. Bounded recursion, which we saw in Section 2.2, can be manually unrolled to make it apparent.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From Catala to the scope language"
+        },
+        {
+            "text": "For the next step of our translation, we remove the scope mechanism, replacing defs and calls with regular -abstractions and applications. The resulting language, a core lambda calculus equipped only with default terms, is the default calculus (Figure 3) . The typing rules of the default calculus are standard ( Figure 4) ; we note that the error terms from the default calculus are polymorphic.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 244,
+                    "end": 254,
+                    "text": "(Figure 3)",
+                    "ref_id": null
+                },
+                {
+                    "start": 313,
+                    "end": 322,
+                    "text": "Figure 4)",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "From the scope language to a default calculus"
+        },
+        {
+            "text": "::= ( : ). functions | true | false booleans | \u229b | \u2205 errors Evaluation ::= \u00b7 | \u00b7 function application evaluation contexts | \u27e8 * | \u00b7 :-\u27e9 default justification evaluation | \u27e8 * | true :-\u00b7\u27e9 default consequence evaluation ::= regular contexts | \u27e8 * ,\u00b7, * | :-\u27e9 default exceptions evaluation Reduction rules. We present small-step operational semantics, of the form \u2212\u2192 \u2032 . For efficiency, we describe reduction under a context, using a standard notion of value ( Figure 5 ), which includes our two types of errors, \u229b and \u2205. We intentionally distinguish regular contexts from general contexts . Figure 6 presents the reduction rules for the default calculus. Rule D-Context follows standard call-by-value reduction rules for non-error terms; D-Beta needs no further comment. \u229b is made fatal by D-ContextConflictError: the reduction aborts, under any context . The behavior of \u2205 is different: such an error propagates only up to its enclosing \"regular\" context ; this means that such an \u2205-error can be caught, as long as it appears in the exception list of an enclosing default expression. Therefore, we now turn our attention to the rules that govern the evaluation of default expressions.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 458,
+                    "end": 466,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 589,
+                    "end": 597,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Values"
+        },
+        {
+            "text": "If no exception is valid, i.e. if the left-hand side contains only \u2205s; and if after further evaluation, the justification is true for the consequence , then the whole default reduces to (D-DefaultTrueNoExceptions). If no exception is valid, and if the justification is false, then we do not need to evaluate the consequence, and the default is empty, i.e. the expression reduces to \u2205. If exactly one exception is a non-empty value , then the default reduces to . In that case, we evaluate neither the justification or the consequence (D-DefaultOneException). Finally, if two or more exceptions are non-empty, we cannot determine the priority order between them, and abort program execution (D-DefaultExceptionsConflict). Compiling the scope language. We succinctly describe the compilation of the scope language to the default calculus in Figure 7 . Our goal is to get rid of scopes in favor of regular lambdaabstractions, all the while preserving the evaluation semantics; incorrect order of evaluation might lead to propagating premature errors (i.e. throwing exceptions too early).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 839,
+                    "end": 847,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF11"
+                }
+            ],
+            "section": "Values"
+        },
+        {
+            "text": "We assume for simplicity of presentation that we are equipped with tuples, where ( 1 , . . . , ) is concisely written ( \u00ec). We also assume that we are equipped with let-bindings, of the form let ( 1 , . . . , ) = , for which we adopt the same concise notation. Given a scope made up of atoms \u00ec, local_vars( ) returns all variables for which def \u2208 \u00ec. Note that this does not include rules that override sub-scope variables, which are of the form def [ ]. We now turn to our judgement, of the form , \u0394 \u22a2 \u21a9\u2192 , to be read as \"in the translation of scope , knowing that variables in \u0394 have been forced, scope rule translates to default calculus expression \".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C-Scope"
+        },
+        {
+            "text": "A scope with local variables \u00ec compiles to a function that takes an -uple ( \u00ec) containing potential overrides for all of its context variables (C-Scope). In the translation, each therefore becomes a thunk, so as to preserve reduction semantics: should the caller decide to leave a local variable to be \u2205, having a thunk prevents D-ContextEmptyError from triggering and returning prematurely. Rule C-Scope performs additional duties. For each one of the sub-scopes used by , we set all of the arguments to , denoted",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C-Scope"
+        },
+        {
+            "text": "to be a thunked \u2205 to start with. Advancing through the scope , we may encounter definitions or calls. For definitions (C-Def), we simply insert a shadowing let-binding, and record that \u2113 has been forced by extending \u0394. Whether \u2113 is of the form or [ ], we know that the previous binding was thunked, since our previous desugaring guarantees that any variable \u2113 now has a single definition. The rewritten default expression gives the caller-provided argument higher precedence; barring any useful information provided by the caller, we fall back on the existing definition . This key step explains how our law-centric syntax, which allows caller scopes to override variables local to a callee scope, translates to the default calculus. For calls (C-Call), we ensure all of the arguments are thunked before calling the sub-scope; the return tuple contains forced values, which we record by extending \u0394 with all",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C-Scope"
+        },
+        {
+            "text": "The premise \u2260 captures the fact that recursion is not allowed. Finally, after all rules have been translated and we are left with nothing but the empty list [] (C-Empty), we simply force all scope-local variables \u00ec and return them as a tuple.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C-Scope"
+        },
+        {
+            "text": "While sufficient to power the Catala surface language, the relatively simple semantics of our default calculus are non-standard. We now wish to compile to more standard constructs found in existing programming languages. We remark that the reduction semantics for default terms resembles that of exceptions: empty-default errors propagate (\"are thrown\") only up to the enclosing default term (\"the try-catch\"). Confirming this intuition and providing a safe path from Catala to existing programming languages, we now present a compilation scheme from the default calculus to a lambda calculus enriched with a few standard additions: lists, options and exceptions. Figure 8 shows the syntax of the target lambda calculus. In order to focus on the gist of the translation, we introduce list and option as special, built-in datatypes, rather than a full facility for user-defined inductive types. For those reasons, we offer the minimum set of operations we need: constructors and destructors for option, and a left fold for lists. We omit typing and reduction rules, which are standard. The only source term that does not belong to the target lambda calculus is the default term \u27e8\u00ec | just :cons \u27e9. Hence, translating this term is the crux of our translation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 664,
+                    "end": 672,
+                    "text": "Figure 8",
+                    "ref_id": null
+                }
+            ],
+            "section": "From the default calculus to a lambda calculus"
+        },
+        {
+            "text": "Our translation is of the form \u21d2 \u2032 , where is a term of the default calculus and \u2032 is a term of the target lambda calculus. Figure 9 presents our translation scheme. The semantics of default terms are intertwined with those of \u2205 and \u229b. The translation of \u2205 and \u229b is simple: both compile to exceptions in the target language. We now focus on C-Default, which deals with default terms. As a warm-up, we start with a special case: \u27e8 | just :cons \u27e9. We translate this term to if just then cons else raise \u2205, which obeys the evaluation semantics of both D-DefaultTrueNoExceptions and D-DefaultFalseNoExceptions. This simple example serves as a C-Default blueprint for the more general case, which has to take into account the list of exceptions \u00ec, and specifically count how many of them are \u2205.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 124,
+                    "end": 132,
+                    "text": "Figure 9",
+                    "ref_id": "FIGREF12"
+                }
+            ],
+            "section": "From the default calculus to a lambda calculus"
+        },
+        {
+            "text": "In the general case, C-Default relies on a helper, process_exceptions; each exception is translated, thunked, then passed to the helper; if the helper returns Some , exactly one exception did not evaluate to \u2205; we return it. If the helper returns None, no exception applied, and we fall back to the simple case we previously described.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "From the default calculus to a lambda calculus"
+        },
+        {
+            "text": "We now review process_exceptions defined in Figure 10 . It folds over the list of exceptions, with the accumulator initially set to None, meaning no applicable exception was found. Each exception is forced in order, thus implementing the reduction semantics of the default calculus. The accumulator transitions from None to Some if a non-empty exception is found, thus implementing a simple automaton that counts the number of non-empty exceptions. If two non-\u2205 exceptions are found, the automaton detects an invalid transition and aborts with a non-catchable \u229b.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 44,
+                    "end": 53,
+                    "text": "Figure 10",
+                    "ref_id": "FIGREF13"
+                }
+            ],
+            "section": "From the default calculus to a lambda calculus"
+        },
+        {
+            "text": "The translation from scope language to default calculus focuses on turning scopes into the lambdaabstractions that they truly are underneath the concrete syntax. This is a mundane transformation, concerned mostly with syntax. The final step from default calculus to lambda calculus with exceptions is much more delicate, as it involves compiling custom evaluation semantics. To rule out Fig. 11 . Translation correctness theorems. A shows a regular simulation; B shows our variant of the theorem.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 387,
+                    "end": 394,
+                    "text": "Fig. 11",
+                    "ref_id": "FIGREF21"
+                }
+            ],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "any errors in the most sensitive compilation step of Catala, we formally prove our translation correct, using F \u2605 [1, 30, 45] , a proof assistant based on dependent types, featuring support for semi-automated reasoning via the SMT-solver Z3 [9] .",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 117,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 118,
+                    "end": 121,
+                    "text": "30,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 122,
+                    "end": 125,
+                    "text": "45]",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 241,
+                    "end": 244,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "Correctness statement. We wish to state two theorems about our translation scheme. First, typing is preserved: if \u21d2 \u2032 and \u2205 \u22a2 : , then \u2205 \u22a2 \u2032 : in the target lambda calculus. Second, we want to establish a simulation result, i.e. the compiled program faithfully simulates a reduction step from the source language, using steps in the target language.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "The usual simulation result is shown in Figure 11 , A. If d is a term of the default calculus and if d \u2212\u2192 \u2032 d , and d \u21d2 , then there exists a term \u2032 of the lambda calculus such that \u2212\u2192 * \u2032 and \u2032 d \u21d2 \u2032 . This specific theorem does not apply in our case, because of the thunking we introduce in our translation. As a counter-example, consider the reduction of 1 within default term \u27e8 0 , 1 | just :cons \u27e9. If 1 steps to \u2032 1 in the default calculus, then the whole term steps to \u27e8 0 , \u2032 1 | just :cons \u27e9. However, we translate exceptions to thunks; and our target lambda calculus does not support strong reduction, meaning _ \u2192 ,1 does not step into _ \u2192 \u2032 ,1 . Diagram A is therefore not applicable in our case.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 40,
+                    "end": 49,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF21"
+                }
+            ],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "The theorem that actually holds in our case is shown as diagram B (Figure 11 ). The two translated terms and \u2032 eventually reduce to a common form target . Taking the transitive closure of form B, we obtain that if reduces to a value , then its translation reduces to a value that is the translation of , a familiar result.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 66,
+                    "end": 76,
+                    "text": "(Figure 11",
+                    "ref_id": "FIGREF21"
+                }
+            ],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "Overview of the proof. We have mechanically formalized the semantics of both the default calculus and target lambda calculus, as well as the translation scheme itself, inside the F \u2605 proof assistant. Figure 12 shows the exact theorem we prove, using concrete F \u2605 syntax; the theorem as stated establishes both type preservation and variant B, via the take_l_steps predicate and the existentially quantified n1 and n2.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 200,
+                    "end": 209,
+                    "text": "Figure 12",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "Proof effort and engineering. Including the proof of type safety for the source and target language, our F \u2605 mechanization amounts to approximately 3,500 lines of code and required 1 person-month. We rely on partial automation via Z3, and the total verification time for the entire development is of the order of a few minutes. The choice of F \u2605 was not motivated by any of its advanced features, such as its effect system: the mechanization fits inside the pure fragment of F \u2605 . Our main motivation was the usage of the SMT solver which can typically perform a fair amount of symbolic reasoning and definition unrolling, thus decreasing the amount of manual effort involved.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "To focus the proof effort on the constructs that truly matter (i.e. default expressions), the semantics of lists, folds and options are baked into the target calculus. That is, our target calculus does not support user-defined algebraic data types. We believe this is not a limitation, and instead allows the proof to focus on the key parts of the translation. We use De Bruijn indices for our binder representation, since the unrolling of process_exceptions results in variable shadowing. Given those simplifications, we were surprised to find that our proof still required 3,500 lines of F \u2605 . A lot It is during the mechanization effort that we found out that theorem A does not hold, and that we need to establish B instead. Our mechanized proof thus significantly increases our confidence in the Catala compilation toolchain; the proof is evidence that even for a small calculus and a simple translation, a lot of subtleties still remain. While F \u2605 extracts to OCaml, we chose not to use the extracted F \u2605 code within the Catala compiler. First, the proof does not take into account all language features. Second, the actual translation occupies about 100 lines of code in both the production Catala compiler and the proof; we are content with comparing both side-by-side. Third, the Catala compiler features advanced engineering for locations, error messages, and propagating those to the proof would be difficult.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Certifying the translation"
+        },
+        {
+            "text": "Based on this formalization, we implement Catala in a standalone compiler and interpreter. The architecture of the compiler is based on a series of intermediate representations, in the tradition of CompCert [28] or Nanopass [20] . Figure 13 provides a high-level overview of the architecture, with links to relevant sections alongside each intermediate representation.",
+            "cite_spans": [
+                {
+                    "start": 207,
+                    "end": 211,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 224,
+                    "end": 228,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 231,
+                    "end": 240,
+                    "text": "Figure 13",
+                    "ref_id": "FIGREF15"
+                }
+            ],
+            "section": "THE CATALA COMPILER"
+        },
+        {
+            "text": "The compiler is written in OCaml and features approximately 13,000 lines of code. This implementation, available as open-source software on anonymized, makes good use of the rich and state-of-the art library ecosystem for compiler writing, including ocamlgraph [8] for the e.g. the two topological sorts we saw (Section 4.1), bindlib [27] for efficient and safe manipulation of variables and terms, and the menhir parser generator [38] . Thanks to these libraries, we estimate that the development effort was 5 person-months.",
+            "cite_spans": [
+                {
+                    "start": 261,
+                    "end": 264,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 334,
+                    "end": 338,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 431,
+                    "end": 435,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "THE CATALA COMPILER"
+        },
+        {
+            "text": "We devoted a great of attention towards the usability of the compiler. Indeed, while we don't expect lawyers to use Catala unaccompanied, we would not want to restrict its usage to -savvy functional programmers. To improve the programmer experience, we use the special parser error reporting scheme of menhir [37] , to provide customized and context-aware syntax error messages that depend on the set of tokens acceptable by the grammar at the site of the erroneous token (see Figure 14 ). The shape of the error messages is heavily inspired by the Rust compiler design [46] . [ERROR] Syntax error at token \"years\"",
+            "cite_spans": [
+                {
+                    "start": 309,
+                    "end": 313,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 570,
+                    "end": 574,
+                    "text": "[46]",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 477,
+                    "end": 486,
+                    "text": "Figure 14",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Usability"
+        },
+        {
+            "text": "[ERROR] Message: expected a unit for this literal, or a valid operator [ERROR] to complete the expression [ERROR] Autosuggestion: did you mean \"year\", or maybe \"or\", or maybe \"and\", [ERROR] or maybe \"day\", or maybe \".\", or maybe \">\", [ This structure enables on-the-fly rewriting of error messages as they propagate up the call stack, which is useful for e.g. adding a new piece of context linking to a code position of a surrounding AST node. In this spirit, error messages for scope variable cycle detection display the precise location for where the variables in the cycle are used; error messages for default logic conflict errors \u229b show the location of the multiple definitions that apply at the same time for a unique variable definition. Finally, we have instrumented the Catala interpreter with helpful debugging features. Indeed, when pair programming with a lawyer and a programmer over the formalization of a piece of law, it is helpful to see what the execution of the program would look like on carefully crafted test cases. While test cases can be directly written in Catala using a top-level scope that simply defines the arguments of the sub-scope to test, the compilation chain inserts special log hooks at critical code points. When executing a test case, the interpreter then displays a meaningful log (shown in Appendix B) featuring code positions coupled with the position inside the legal statute for each default logic definition taken.",
+            "cite_spans": [
+                {
+                    "start": 71,
+                    "end": 78,
+                    "text": "[ERROR]",
+                    "ref_id": null
+                },
+                {
+                    "start": 182,
+                    "end": 189,
+                    "text": "[ERROR]",
+                    "ref_id": null
+                },
+                {
+                    "start": 234,
+                    "end": 235,
+                    "text": "[",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Usability"
+        },
+        {
+            "text": "We believe that this latter feature can easily be extended to provide a comprehensive and legaloriented explanation of the result of a Catala program over a particular input. Such an explanation would help increase trust of the system by its users, e.g. citizens subject to a complex taxation regime; thereby constituting a concrete instance of a much sought-after \"explainable AI\" [11, 14] .",
+            "cite_spans": [
+                {
+                    "start": 382,
+                    "end": 386,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 387,
+                    "end": 390,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Usability"
+        },
+        {
+            "text": "Based on a preliminary set of benchmarks, we estimate that a typical program as complex as Section 121 of the US Internal Revenue Code but featuring approximately 1500 lines of Catala code (literate programming included), interprets in approximately 150ms, meaning that the performance of the interpreter remains acceptable even for a production environment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance"
+        },
+        {
+            "text": "When the code is compiled to OCaml, execution time drops to 0.5ms. Therefore, we conclude that performance problems are, at this stage of the project, nonexistent.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance"
+        },
+        {
+            "text": "A crucial consideration in designing a DSL is the interoperability story within existing environments. While some DSLs operate in isolation, we envision Catala programs being exposed as reusable libraries that can be called from any development platform, following the needs of our adopters. In the context of legal systems, this is a very strong requirement: such environments oftentimes include legacy, mainframe-based systems operating in large private organizations or government agencies [29] . Furthermore, since the algorithms that Catala is designed to model are at the very heart of e.g. tax collection systems, proposing a classic interoperability scheme based on APIs or inter-language FFIs might create an undesirable barrier to adoption; a system designed in the 1960s probably has no notion of API or FFI whatsoever! Instead, we choose for Catala an unusually simple and straightforward interoperability scheme: direct source code generation to virtually any programming language. This solution is generally impractical, requiring considerable workarounds to reconcile semantic mismatches between target and source, along with a significant runtime support library. In the case of Catala, however, our intentional simplicity makes this \"transpiling\" scheme possible.",
+            "cite_spans": [
+                {
+                    "start": 493,
+                    "end": 497,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Extensible compiler backend"
+        },
+        {
+            "text": "Indeed, the final intermediate representation of the Catala compiler is a pure and generic lambda calculus operating over simply-typed values. By re-using standard functional compilation techniques such as closure conversion [32] , we claim that it is possible to compile Catala to any programming language that has functions, arrays, structures, unions, and support for exceptions. We also believe that a more complex version of the compilation scheme presented in Section 4.3 would remove the need for exceptions (in favor of option types), but leave this as future work.",
+            "cite_spans": [
+                {
+                    "start": 225,
+                    "end": 229,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Extensible compiler backend"
+        },
+        {
+            "text": "The runtime required for generated programs only has to include an infinite precision arithmetic library (or can default to fixed-sized arithmetic and floats) and a calendar library to compute the days difference between two dates, taking leap years into account. We demonstrate this with the OCaml backend of the Catala compiler, which amounts to 350 lines of compiler code and 150 lines of runtime code (excluding the zarith [33] and calendar [44] libraries). Merely compiling to OCaml already unlocks multiple target environments, such as the Web, via the js_of_ocaml compiler [47] . We thus effortlessly bring Catala to the Web.",
+            "cite_spans": [
+                {
+                    "start": 427,
+                    "end": 431,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 445,
+                    "end": 449,
+                    "text": "[44]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 580,
+                    "end": 584,
+                    "text": "[47]",
+                    "ref_id": "BIBREF48"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Extensible compiler backend"
+        },
+        {
+            "text": "The solid formal and technical foundations of Catala would be quite useless if the language was not fit for its target audience: lawyers and legal expert systems programmers. We claim that the design process of Catala as well as our comprehensive code co-production process proposal maximizes the potential for adoption by professionals. To support this claim, we report early user study results and demonstrate an end-to-end use case with the computation of an important French social benefit.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "PUTTING CATALA TO WORK"
+        },
+        {
+            "text": "Catala's design has been supervized and influenced by lawyers since its inception. Indeed, the project started out of Sarah Lawsky's insight on the logical structure of legal statutes [22] [23] [24] [25] . As well as providing the formal base building block of Catala, lawyers also reviewed the syntax of Catala, choosing the keywords and providing insights counter-intuitive to programmers, such as the rule/definition distinction of Section 3.2.",
+            "cite_spans": [
+                {
+                    "start": 184,
+                    "end": 188,
+                    "text": "[22]",
+                    "ref_id": null
+                },
+                {
+                    "start": 189,
+                    "end": 193,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 194,
+                    "end": 198,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 199,
+                    "end": 203,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "We also conducted a careful analysis of the production process of legal expert systems. We found that in France, administrative agencies always use a V-shaped development cycle for their legal expert systems. In practice, lawyers of the legal department take the input set of legal statutes and write a detailed natural language specification, that is supposed to make explicit the different legal interpretations required to turn the legal statute into an algorithm. Then, legal expert systems programmers from the IT department take the natural specification and turn it into code, often never referring back to the original statute text.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "Exclusive interviews conducted by the authors with legal expert systems programmers and lawyers inside a high-profile French administration reveal that this theoretical division of labor is artificial. Indeed, the natural language specification often proves insufficient or ambiguous to programmers, which leads to programmers having to spend hours on the phone with the lawyers to clarify and get the algorithm right. Furthermore, the validation of the implementation depends on lawyer-written test cases, whose number and quality suffer from budget restrictions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "This insight suggests that a more agile development process associating lawyers and programmers from the beginning would be more efficient. We claim the Catala is the right tool for the job, since it allows lawyers and programmers to perform pair programming on a shared medium that locally combines the legal text as well as the executable code.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "We do not expect lawyers to write Catala code by themselves. A number of frameworks such as Drools [39] are built on this promise. For our part, we believe that software engineering expertise is needed to produce maintainable, performant, high-quality code. Hence, we envision for lawyers to act as observers and reviewers of the code production process, safeguarding the correctness with respect to the legal specification.",
+            "cite_spans": [
+                {
+                    "start": 99,
+                    "end": 103,
+                    "text": "[39]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "We don't expect adoption difficulties from the programmers' side, since Catala is morally a pure functional language with a few oddities that makes it well-suited to legal specifications. To assess our claim of readability by lawyers, we conducted a small user study with = 15 law graduate students enrolled in the Masters program \"Droit de la cr\u00e9ation et num\u00e9rique\" (Intellectual Property and Digital Law) at Universit\u00e9 Panth\u00e9on-Sorbonne. The methodology of the study is the following: the participants were given a 30 min. presentation of Catala's context and goals, but were not exposed to any program or syntax. Then, participants were briefed during 15 min. about Section 121 and its first paragraph (Section 2.1) and received a copy of the corresponding Catala code (Section 3.1 and Section 3.2). After 10 min. of observation, they were asked to answer a series of questions. Then, 15 min. were spent answering participants' questions about the Catala code. Finally, the participants filled the questionnaire again. Table 2 presents the questions asked to the participants, while Figure 15 shows the results for the second and final filling of the questionnaire by the participants. The results for the first round are similar, albeit featuring less positive answers.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1022,
+                    "end": 1029,
+                    "text": "Table 2",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 1086,
+                    "end": 1095,
+                    "text": "Figure 15",
+                    "ref_id": "FIGREF18"
+                }
+            ],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "These early results, while lacking the rigor of a scientific user study, indicate a relatively good reception of the literate programming paradigm by lawyers. After investigation, we believe that mixed results for question (5) could be explained by a lack of familiarity with the US Internal Revenue Code from the French lawyers. Indeed, the wording of the question (\"certify\") implies that the lawyer would be confident enough to defend their opinion in court. We believe, from deeper interactions with lawyers closer to the project, that familiarity with the formalized law combined with basic Catala training could bring the lawyers' confidence to this level.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interacting with lawyers"
+        },
+        {
+            "text": "We have used Section 121 of the US Internal Revenue Code as an support medium for introducing Catala in Section 3. But more interestingly, this piece of law is also our complexity benchmark for legal statutes, as it was deemed (by a lawyer collaborator) to be one of the most difficult sections of the tax code. This reputation comes from its dense wording featuring various layers of exceptions to every parameter of the gross income deduction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A look back to Section 121"
+        },
+        {
+            "text": "We have so far formalized it up to paragraph (b)(4), which is approximately 15% of the whole section and around 350 lines of code (including the text of the law), but contain its core and most used exceptions. We include the result of this effort in Appendix A. The current formalization was done in four 2-hour sessions of pair programming between the authors and lawyers specialized in the US Internal Revenue Code. Progress is relatively slow because we consider in the process every possible situation or input that could happen, as in a real formalization process. However, this early estimate indicates that formalizing the whole US Internal Revenue Code is a completely reachable target for a small interdisciplinary team given a few years' time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A look back to Section 121"
+        },
+        {
+            "text": "While finishing the formalization of Section 121 is left as future work, we are confident that the rest of the section can be successfully expressed in Catala: the maze of exceptions is localized to (a) and (b), and the rest of the limitations are just a long tail of special cases; with our general design that supports arbitrary trees of exceptions in default logic, this should pose no problem.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A look back to Section 121"
+        },
+        {
+            "text": "Section 6.1 argues that Catala is received positively by lawyers. This is only half of the journey: we need to make sure Catala is also successfully adopted by the large private or public organization where legacy systems are ripe for a principled rewrite. To support our claims concerning the toolchain and interoperability scheme in a real-world setting, we formalized the entire French family benefits computation in Catala and exposed the compiled program as an OCaml library and JavaScript Web simulator. The full code of this example can be found in the supplementary material of this article, although it is written in French.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Case study: French Family Benefits"
+        },
+        {
+            "text": "A crucial part of the French welfare state, family benefits are distributed to households on the basis of the number of their dependent children. Created in the early 1930's, this benefit was designed to boost French natality by offsetting the additional costs incurred by child custody to families. Family benefits are a good example of a turbulent historical construction, as the conditions to access the benefits have been regularly amended over the quasi-century of existence of the program. For instance, while family benefits were distributed to any family without an income cap, a 2015 reform lowered the amount of the benefit for wealthy households [4, 6] .",
+            "cite_spans": [
+                {
+                    "start": 657,
+                    "end": 660,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 661,
+                    "end": 663,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Case study: French Family Benefits"
+        },
+        {
+            "text": "The computation can be summarized with the following steps. First, determine how many dependent children are relevant for the family benefits (depending on their age and personal income). Second, compute the base amount, which depends on the household income, the location (there are special rules for overseas territories) and a coefficient updated each year by the government to track inflation. Third, modulate this amount in the case of alternating custody or social services custody. Fourth, apply special rules for when a child is exactly at the age limit for eligibility, or when the household income is right above a threshold. All of these rules are specified by 27 articles of the French Social Security Code, as well as various executive orders.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Case study: French Family Benefits"
+        },
+        {
+            "text": "The Catala formalization of this computation amounts to approximately 1,500 lines of code, including the text of the law. The code is split between 6 different scopes featuring 63 context variables and 83 definitions and rules. We believe these numbers to be fairly representative. Distributed as an OCaml library, our code for the computation of the French family benefits is also used to power an online simulator (see Figure 16) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 421,
+                    "end": 431,
+                    "text": "Figure 16)",
+                    "ref_id": "FIGREF19"
+                }
+            ],
+            "section": "Case study: French Family Benefits"
+        },
+        {
+            "text": "After writing the code as well as some test cases, we compared the results of our program with the official state-sponsored simulator mes-droits-sociaux.gouv.fr, and found no issue. However, the case where a child is in the custody of social services was absent from the official simulator, meaning we could not compare results for this case. Fortunately, the source code of the simulator is available as part of the OpenFisca software project [43] . The OpenFisca source file corresponding to the family benefits, amounts to 365 lines of Python. After close inspection of the OpenFisca code, a discrepancy was located with the Catala implementation. Indeed, according to article L755-12 of the Social Security Code, the income cap for the family benefits does not apply in overseas territories with single-child families. This subtlety was not taken into account by OpenFisca, and was fixed after its disclosure by the authors.",
+            "cite_spans": [
+                {
+                    "start": 444,
+                    "end": 448,
+                    "text": "[43]",
+                    "ref_id": "BIBREF44"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Case study: French Family Benefits"
+        },
+        {
+            "text": "Formalizing a piece of law is thus no different from formalizing a piece of software with a proof assistant. In both cases, bugs are found in existing software, and with the aid of a formal mechanization, can be reported and fixed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Case study: French Family Benefits"
+        },
+        {
+            "text": "Catala follows a long tradition of scholarly works that aim to extract the logical essence of legal statutes, starting as early as 1914 [10] . To provide some context, we compare our work with two seminal articles in the field.",
+            "cite_spans": [
+                {
+                    "start": 136,
+                    "end": 140,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "In his visionary 1956 article, Allen [2] notes that symbolic logic can be used to remove ambiguity in the law, and proposes its use for a wide range of applications: legal drafting, interpretation, simplification and comparison. Using custom notations that map transparently to first-order logic, Allen does not provide an operational tool to translate law into formalism but rather points out the challenges such as law ambiguity and rightfully sets the limits of his approach, stating for instance that in generality, \"filling of gaps in legislation by courts cannot and should not be entirely eliminated\". Interestingly, he also manually computes a table of truth to prove that two sections of the US Internal Revenue Code are equivalent.",
+            "cite_spans": [
+                {
+                    "start": 37,
+                    "end": 40,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "The vision laid out by Allen is refined in 1986 by Sergot et al. [42] . This article narrows the range of its formalism to statutory law (as opposed to case law), and focuses on the British Nationality Act, a statute used to determine whether a person can qualify for the British nationality based on various criteria. Co-authored by Robert Kowalski, this works features the use of Prolog [7] as the target programming language, showing the usefulness of declarative logic programming for the formalization task. However, the work acknowledges a major limitation concerning the expression of negation in the legal text, and points out that \"the type of default reasoning that the act prescribes for dealing with abandoned infants is nonmonotonic\", confirming the later insights of Lawsky [24] . A major difference with Catala is the absence of literate programming; instead, Sergot et al. derived a synthetic and/or diagram as the specification for their Prolog program.",
+            "cite_spans": [
+                {
+                    "start": 65,
+                    "end": 69,
+                    "text": "[42]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 389,
+                    "end": 392,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 788,
+                    "end": 792,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "However, the line of work around logic programming never took hold in the industry and the large organizations managing legal expert systems. The reasons, various and diagnosed by Leigh [26] , mix the inherent difficulty of translating law to code, with the social gap between the legal and computer world. As a reaction, several and so far unsuccessful attempts were made to automate the translation using natural language processing techniques [17, 36] . Others claim that the solution is to lower the barriers to the programming world using low-code/no-code tools, so that lawyers can effectively code their own legal expert systems [35] .",
+            "cite_spans": [
+                {
+                    "start": 186,
+                    "end": 190,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 446,
+                    "end": 450,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 451,
+                    "end": 454,
+                    "text": "36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 636,
+                    "end": 640,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "The main recent research direction around the formalization of law is spearheaded by optimistic proponents of computational law [13] , promising a future based on Web-based, automated legal reasoning by autonomous agents negotiating smart contracts on a blockchain-powered network [16, 18, 41, 49] .",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 132,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 281,
+                    "end": 285,
+                    "text": "[16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 286,
+                    "end": 289,
+                    "text": "18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 290,
+                    "end": 293,
+                    "text": "41,",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 294,
+                    "end": 297,
+                    "text": "49]",
+                    "ref_id": "BIBREF50"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "By contrast, we focus on the challenges related to maintaining existing legal expert systems in large public or private organizations, providing essential services to millions of citizens and customers. Catala aims to provide an industrial-grade tool that enables close collaboration of legal and IT professionals towards the construction of correct, comprehensive and performant implementations of algorithmic statutory law.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "The wide range of applications imagined by Layman in 1956 has yet to be accomplished in practice. With its clear and simple semantics, we hope for Catala formalizations of statutes to provide ideal starting point for future formal analyses of the law, enabling legal drafting, interpretation, simplification and comparison using the full arsenal of modern formal methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION & RELATED WORK"
+        },
+        {
+            "text": "This document presents some notable differences with the code presented in Section 3. Indeed, we adapted some of the excerpts to better serve the introductory nature of the tutorial, as Section 121 of the US Tax Code was not written to be a tutorial for a domain specific language. For instance, the scope Section121Return in Section 3.4 is named Section121TwoPersons here, and covers slightly more features.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A FULL CODE OF THE SECTION 121 EXAMPLE"
+        },
+        {
+            "text": "This document is to be read linearly, as would be a literate programming document. The implementation begins with a lot of metadata (Section 3.1), then features the Catala code intertwined with the legal prose of Section 2. Note that this L A T E Xdocument was generated automatically from the Catala source code of the Section 121, using the compiler of Section 5. We believe this PDF-friendly output to be more palatable to lawyers, that do not yet know the joys of version control systems. (2) Special rules for joint returns. In the case of a husband and wife who make a joint return for the taxable year of the sale or exchange of the property-(A) $500,000 Limitation for certain joint returns. Paragraph (1) shall be applied by substituting \"$500,000\" for \"$250,000\" if-(i) either spouse meets the ownership requirements of subsection (a) with respect to such property;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A FULL CODE OF THE SECTION 121 EXAMPLE"
+        },
+        {
+            "text": "(ii) both spouses meet the use requirements of subsection (a) with respect to such property; and (iii) neither spouse is ineligible for the benefits of subsection (a) with respect to such property by reason of paragraph (3). In the case of a sale or exchange of property by an unmarried individual whose spouse is deceased on the date of such sale, paragraph (1) shall be applied by substituting \"$500,000\" for \"$250,000\" if such sale occurs not later than 2 years after the date of death of such spouse and the requirements of paragraph (2)(A) were met immediately before such date of death. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "THE US TAX CODE"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Dijkstra monads for free",
+            "authors": [
+                {
+                    "first": "C\u0103t\u0103lin",
+                    "middle": [],
+                    "last": "Danel Ahman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kenji",
+                    "middle": [],
+                    "last": "Hri\u0163cu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guido",
+                    "middle": [],
+                    "last": "Maillard",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gordon",
+                    "middle": [],
+                    "last": "Mart\u00ednez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Plotkin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aseem",
+                    "middle": [],
+                    "last": "Protzenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nikhil",
+                    "middle": [],
+                    "last": "Rastogi",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Swamy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 44th ACM SIGPLAN Symposium on Principles of Programming Languages",
+            "volume": "",
+            "issn": "",
+            "pages": "515--529",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Symbolic logic: A razor-edged tool for drafting and interpreting legal documents",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Layman E Allen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1956,
+            "venue": "Yale LJ",
+            "volume": "66",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "IRS trudges on with aging computers",
+            "authors": [
+                {
+                    "first": "Anne",
+                    "middle": [],
+                    "last": "Broache",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "La modulation des allocations familiales : une erreur historique. Travail, genre et soci\u00e9t\u00e9s",
+            "authors": [
+                {
+                    "first": "Marie-Andr\u00e9e",
+                    "middle": [],
+                    "last": "Blanc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "35",
+            "issn": "",
+            "pages": "157--161",
+            "other_ids": {
+                "DOI": [
+                    "10.3917/tgs.035.0157"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Prioritizing Default Logic",
+            "authors": [
+                {
+                    "first": "Gerhard",
+                    "middle": [],
+                    "last": "Brewka",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "Eiter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "27--45",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Plaidoyer pour la modulation. Travail, genre et soci\u00e9t\u00e9s",
+            "authors": [
+                {
+                    "first": "Marie-Fran\u00e7oise",
+                    "middle": [],
+                    "last": "Clergeau",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "35",
+            "issn": "",
+            "pages": "173--177",
+            "other_ids": {
+                "DOI": [
+                    "10.3917/tgs.035.0173"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "The Birth of Prolog",
+            "authors": [
+                {
+                    "first": "Alain",
+                    "middle": [],
+                    "last": "Colmerauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Philippe",
+                    "middle": [],
+                    "last": "Roussel",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "331--367",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Designing a Generic Graph Library Using ML Functors. Trends in functional programming",
+            "authors": [
+                {
+                    "first": "Jean-Christophe",
+                    "middle": [],
+                    "last": "Sylvain Conchon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Julien",
+                    "middle": [],
+                    "last": "Filli\u00e2tre",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Signoles",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "8",
+            "issn": "",
+            "pages": "124--140",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Z3: An Efficient SMT Solver",
+            "authors": [
+                {
+                    "first": "Leonardo",
+                    "middle": [],
+                    "last": "De Moura",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nikolaj",
+                    "middle": [],
+                    "last": "Bj\u00f8rner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Tools and Algorithms for the Construction and Analysis of Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "337--340",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Logical method and law",
+            "authors": [
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Dewey",
+                    "suffix": ""
+                }
+            ],
+            "year": 1914,
+            "venue": "Cornell LQ",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "What does explainable AI really mean? A new conceptualization of perspectives",
+            "authors": [
+                {
+                    "first": "Derek",
+                    "middle": [],
+                    "last": "Doran",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sarah",
+                    "middle": [],
+                    "last": "Schulz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tarek R",
+                    "middle": [],
+                    "last": "Besold",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1710.00794"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The IRS system processing your taxes is almost 60 years old",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Konkel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Computational Law. The Cop in the Backseat",
+            "authors": [
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Genesereth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Explainable ai: the new 42?. In International cross-domain conference for machine learning and knowledge extraction",
+            "authors": [
+                {
+                    "first": "Randy",
+                    "middle": [],
+                    "last": "Goebel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ajay",
+                    "middle": [],
+                    "last": "Chander",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katharina",
+                    "middle": [],
+                    "last": "Holzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Freddy",
+                    "middle": [],
+                    "last": "Lecue",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zeynep",
+                    "middle": [],
+                    "last": "Akata",
+                    "suffix": ""
+                },
+                {
+                    "first": "Simone",
+                    "middle": [],
+                    "last": "Stumpf",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Kieseberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andreas",
+                    "middle": [],
+                    "last": "Holzinger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "295--303",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "COVID-19: Urgent Actions Needed to Better Ensure an Effective Federal Response -Report to Congressional Committees",
+            "authors": [],
+            "year": null,
+            "venue": "Government Accountability Office (GAO). 2021",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Spesc: A specification language for smart contracts",
+            "authors": [
+                {
+                    "first": "Xiao",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bohan",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xing",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yi",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE 42nd Annual Computer Software and Applications Conference (COMPSAC)",
+            "volume": "1",
+            "issn": "",
+            "pages": "132--137",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "A Dataset for Statutory Reasoning in Tax Law Entailment and Question Answering",
+            "authors": [
+                {
+                    "first": "Nils",
+                    "middle": [],
+                    "last": "Holzenberger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [],
+                    "last": "Blair-Stanek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Benjamin",
+                    "middle": [],
+                    "last": "Van Durme",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2005.05257"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Contract formalisation and modular implementation of domain-specific languages",
+            "authors": [
+                {
+                    "first": "Tom",
+                    "middle": [],
+                    "last": "Hvitved",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Exclusion of gain from sale of principal residence",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "A nanopass framework for commercial compiler development",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Andrew",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Keep",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kent Dybvig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceedings of the 18th ACM SIGPLAN international conference on Functional programming",
+            "volume": "",
+            "issn": "",
+            "pages": "343--350",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Literate Programming",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Knuth",
+                    "suffix": ""
+                }
+            ],
+            "year": 1984,
+            "venue": "Comput. J",
+            "volume": "27",
+            "issn": "",
+            "pages": "97--111",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Formalizing the Code",
+            "authors": [
+                {
+                    "first": "Sarah",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lawsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Tax Law Review",
+            "volume": "70",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "A Logic for Statutes",
+            "authors": [
+                {
+                    "first": "Sarah",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lawsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Florida Tax Review",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Form as Formalization",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Sarah",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lawsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ohio State Technology Law Journal",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "The rise and fall of the legal expert system",
+            "authors": [
+                {
+                    "first": "Philip",
+                    "middle": [],
+                    "last": "Leith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "International Review of Law",
+            "volume": "30",
+            "issn": "",
+            "pages": "94--106",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Abstract representation of binders in ocaml using the bindlib library",
+            "authors": [
+                {
+                    "first": "Rodolphe",
+                    "middle": [],
+                    "last": "Lepigre",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christophe",
+                    "middle": [],
+                    "last": "Raffalli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1807.01872"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Formal Certification of a Compiler Back-end or: Programming a Compiler with a Proof Assistant",
+            "authors": [
+                {
+                    "first": "Xavier",
+                    "middle": [],
+                    "last": "Leroy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "SIGPLAN Not",
+            "volume": "41",
+            "issn": "",
+            "pages": "42--54",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "New Jersey needs volunteers who know COBOL, a 60-year-old programming language",
+            "authors": [
+                {
+                    "first": "Kif",
+                    "middle": [],
+                    "last": "Leswing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Aseem Rastogi, and Nikhil Swamy. 2019. Meta-F*: Proof Automation with SMT, Tactics, and Metaprograms. In Programming Languages and Systems, Lu\u00eds Caires",
+            "authors": [
+                {
+                    "first": "Guido",
+                    "middle": [],
+                    "last": "Mart\u00ednez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Danel",
+                    "middle": [],
+                    "last": "Ahman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Victor",
+                    "middle": [],
+                    "last": "Dumitrescu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nick",
+                    "middle": [],
+                    "last": "Giannarakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Hawblitzel",
+                    "suffix": ""
+                },
+                {
+                    "first": "C\u0103t\u0103lin",
+                    "middle": [],
+                    "last": "Hri\u0163cu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Monal",
+                    "middle": [],
+                    "last": "Narasimhamurthy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zoe",
+                    "middle": [],
+                    "last": "Paraskevopoulou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cl\u00e9ment",
+                    "middle": [],
+                    "last": "Pit-Claudel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Protzenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tahina",
+                    "middle": [],
+                    "last": "Ramananandro",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "30--59",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "A Modern Compiler for the French Tax Code",
+            "authors": [
+                {
+                    "first": "Denis",
+                    "middle": [],
+                    "last": "Merigoux",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rapha\u00ebl",
+                    "middle": [],
+                    "last": "Monat",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Protzenko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Typed closure conversion",
+            "authors": [
+                {
+                    "first": "Yasuhiko",
+                    "middle": [],
+                    "last": "Minamide",
+                    "suffix": ""
+                },
+                {
+                    "first": "Greg",
+                    "middle": [],
+                    "last": "Morrisett",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Harper",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Proceedings of the 23rd ACM SIGPLAN-SIGACT symposium on principles of programming languages",
+            "volume": "",
+            "issn": "",
+            "pages": "271--283",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "The Zarith OCaml library",
+            "authors": [
+                {
+                    "first": "Antoine",
+                    "middle": [],
+                    "last": "Min\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xavier",
+                    "middle": [],
+                    "last": "Leroy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pascal",
+                    "middle": [],
+                    "last": "Cuoq",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christophe",
+                    "middle": [],
+                    "last": "Troestler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Louvois, le logiciel qui a mis l'arm\u00e9e \u00e0 terre",
+            "authors": [
+                {
+                    "first": "Jacques",
+                    "middle": [],
+                    "last": "Monin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Spreadsheets for Legal Reasoning: The Continued Promise of Declarative Logic Programming in Law",
+            "authors": [
+                {
+                    "first": "Jason",
+                    "middle": [],
+                    "last": "Morris",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Available at SSRN",
+            "volume": "3577239",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Towards Formalizing Statute Law as Default Logic through Automatic Semantic Parsing",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Marcos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sarah",
+                    "middle": [],
+                    "last": "Pertierra",
+                    "suffix": ""
+                },
+                {
+                    "first": "Erik",
+                    "middle": [],
+                    "last": "Lawsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "Una-May O&apos;",
+                    "middle": [],
+                    "last": "Hemberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Reilly",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "ASAIL@ ICAIL",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Reachability and error diagnosis in LR (1) parsers",
+            "authors": [
+                {
+                    "first": "Fran\u00e7ois",
+                    "middle": [],
+                    "last": "Pottier",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 25th International Conference on Compiler Construction",
+            "volume": "",
+            "issn": "",
+            "pages": "88--98",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Fran\u00e7ois Pottier and Yann R\u00e9gis-Gianat",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Drools: A Rule Engine for Complex Event Processing",
+            "authors": [
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Proctor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Proceedings of the 4th International Conference on Applications of Graph Transformations with Industrial Relevance",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "A logic for default reasoning",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Reiter",
+                    "suffix": ""
+                }
+            ],
+            "year": 1980,
+            "venue": "Special Issue on Non-Monotonic Logic",
+            "volume": "13",
+            "issn": "",
+            "pages": "81--132",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Smart contract negotiation in cloud computing",
+            "authors": [
+                {
+                    "first": "Vincenzo",
+                    "middle": [],
+                    "last": "Scoca",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rafael",
+                    "middle": [],
+                    "last": "Brundo Uriarte",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rocco",
+                    "middle": [
+                        "De"
+                    ],
+                    "last": "Nicola",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 IEEE 10th International Conference on Cloud Computing (CLOUD)",
+            "volume": "",
+            "issn": "",
+            "pages": "592--599",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "The British Nationality Act As a Logic Program",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sergot",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sadri",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kowalski",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Kriwaczek",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hammond",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Cory",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "Commun. ACM",
+            "volume": "29",
+            "issn": "",
+            "pages": "370--386",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Un logiciel libre pour lutter contre l'opacit\u00e9 du syst\u00e8me sociofiscal. Revue francaise de science politique",
+            "authors": [
+                {
+                    "first": "S\u00e9bastien",
+                    "middle": [],
+                    "last": "Shulz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "69",
+            "issn": "",
+            "pages": "845--868",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "The Calendar OCaml library",
+            "authors": [
+                {
+                    "first": "Julien",
+                    "middle": [],
+                    "last": "Signoles",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Dependent Types and Multi-Monadic Effects in F*",
+            "authors": [
+                {
+                    "first": "Nikhil",
+                    "middle": [],
+                    "last": "Swamy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Catalin",
+                    "middle": [],
+                    "last": "Hritcu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chantal",
+                    "middle": [],
+                    "last": "Keller",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aseem",
+                    "middle": [],
+                    "last": "Rastogi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Antoine",
+                    "middle": [],
+                    "last": "Delignat-Lavaud",
+                    "suffix": ""
+                },
+                {
+                    "first": "Simon",
+                    "middle": [],
+                    "last": "Forest",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karthikeyan",
+                    "middle": [],
+                    "last": "Bhargavan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C\u00e9dric",
+                    "middle": [],
+                    "last": "Fournet",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pierre-Yves",
+                    "middle": [],
+                    "last": "Strub",
+                    "suffix": ""
+                },
+                {
+                    "first": "Markulf",
+                    "middle": [],
+                    "last": "Kohlweiss",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jean-Karim",
+                    "middle": [],
+                    "last": "Zinzindohou\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "Santiago",
+                    "middle": [],
+                    "last": "Zanella-B\u00e9guelin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "43rd ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL)",
+            "volume": "",
+            "issn": "",
+            "pages": "256--270",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Shape of errors to come",
+            "authors": [
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Turner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "From bytecode to JavaScript: the Js_of_ocaml compiler. Software: Practice and Experience",
+            "authors": [
+                {
+                    "first": "J\u00e9r\u00f4me",
+                    "middle": [],
+                    "last": "Vouillon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vincent",
+                    "middle": [],
+                    "last": "Balat",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "44",
+            "issn": "",
+            "pages": "951--972",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Wikipedia contributors. 2021. Code of Ur-Nammu -Wikipedia, The Free Encyclopedia",
+            "authors": [],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Towards verification of Ethereum smart contracts: a formalization of core of Solidity",
+            "authors": [
+                {
+                    "first": "Jakub",
+                    "middle": [],
+                    "last": "Zakrzewski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Working Conference on Verified Software: Theories, Tools, and Experiments",
+            "volume": "",
+            "issn": "",
+            "pages": "229--247",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": ".. context amount_excluded_from_gross_income_uncapped content money 19 context amount_excluded_from_gross_income content money 20 , Vol. 1, No. 1, Article . Publication date: March 2021. context aggregate_periods_from_last_five_years content duration 22 depends on collection Period",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "person1.personal equals match return_data with 3 --SingleReturn of personal1 : personal1 4 --JointReturn of couple : couple.personal1 5 ...Having set up a proper notion of joint return, we now to turn our attention to (b)(2)(A) ( \u00a72.gain_cap equals person1.gain_cap",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Building the default tree and translating surface definitions",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Typing rules for the default calculus Rule D-Label performs the bulk of the work, and gathers the exception labels ; each of them translates to a default expression , all of which appear on the left-hand side of the resulting translation; if all of the are empty, the expression evaluates to guarded under condition . As an illustration, if no exceptions are to be found, the translation is simply \u27e8 | :-\u27e9. Finally, rule D-EntryPoint states that the translation starts at the root definition nodes.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Evaluation \u27e8\u2205,. . .,\u2205 | true :-\u27e9 \u2212\u2192 D-DefaultFalseNoExceptions \u27e8\u2205,. . .,\u2205 | false :-. . .,\u2205, ,\u2205,. . .,\u2205 | 1 :-. ., ,. . ., ,. . . | 1 :-2 \u27e9 \u2212\u2192 \u229b Reduction rules for the default calculus",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Compiling the scope language to a default calculus",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Translation rules from default calculus to lambda calculus process_exceptions : list (unit \u2192 ) \u2192 option process_exceptions \u225c fold_left ( ( : option ) ( \u2032 : unit \u2192 ). let \u2032 : = try Some ( \u2032 ()) with \u2205 \u2192 None in match ( , \u2032 ) with | (None, \u2032 ) \u2192 \u2032 | (Some , None) \u2192 Some | (Some , Some \u2032 ) \u2192 raise \u229b ) None",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "process_exceptions translation helper",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "module D = DefaultCalculus module L = LambdaCalculus val translation_correctness (de: D.exp) (dtau: D.ty) : Lemma (requires (D.typing D.empty de dtau)) (ensures ( let le = translate_exp de in let ltau = translate_ty dtau in L.typing L.empty le ltau \u2227 begin if D.is_value de then L.is_value le else begin D.progress de dtau; D.preservation de dtau; let de' = Some?.v (D.step de) in translation_preserves_empty_typ de dtau; translation_preserves_empty_typ de' dtau; let le' : typed_l_exp ltau = translate_exp de' in exists (n1 n2:N) (target: typed_l_exp ltau). (take_l_steps ltau le n1 == Some target \u2227 take_l_steps ltau le' n2 == Some target) end end)) Fig. 12. Translation certification theorem, in F \u2605 of the complexity budget was spent on the deep embedding of the process_exceptions helper.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "High-level architecture of the Catala compiler (red box)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "Can you link the code to the meaning of the law it codifies? (5) Can you certify that the code does exactly what the law says and nothing more? If not, are there any mistakes in the code?",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF18": {
+            "text": "Results of the second round of questions in the user study",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "Screenshot of the Web family benefits simulator powered by Catala",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF20": {
+            "text": "a) Exclusion. Gross income shall not include gain from the sale or exchange of property if, during the 5-year period ending on the date of the sale or exchange, such property has been owned and used by the taxpayer as the taxpayer's principal residence for periods aggregating 2 years or more.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "either the period began less that 5 years before the 165 # date_of_sale_or_exchange in which case we count if full 166 # -either the period ended more that 5 years before the 167 # date_of_sale_or_exchange in which case we don't count it 168 # -either the 5 years mark is inside the period and we only 169 # cound the half after 5 years 170 definition aggregate_periods_from_last_five_years of periods equals 171 sum duration for period in periods of ( 172 if date_of_sale_or_exchange \u2a7d@ period.begin +@ 5 year then 173 period.end -@ period.begin 174 else (if date_of_sale_or_exchange \u2a7e@ period.end +@ 5 In general. The amount of gain excluded from gross income under subsection (a) with respect to any sale or exchange shall not exceed $250,000.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF23": {
+            "text": "of data_couple.person2.other_section_121a_sale)) joint returns. If such spouses do not meet the requirements of subparagraph (A), the limitation under paragraph (1) shall be the sum of the limitations under paragraph (1) to which each spouse would be entitled if such spouses had not been married. For purposes of the preceding sentence, each spouse shall be treated as owning the property during the period that either spouse owned the property. period_merge.periods1 equals match return_type with pattern JointReturn of joint_return: joint_return.person1.property_ownership SingleReturnSurvivingSpouse of dead_spouse_info : [] # does not happen SingleReturn of return : [] # does not happen 312 definition period_merge.periods2 equals match return_type with pattern 313 -JointReturn of joint_return: joint_return.person2.property_ownership 314 -SingleReturnSurvivingSpouse of dead_spouse_info : [] # does not happen 315 -SingleReturn of return : [] Application to only 1 sale or exchange every 2 years. Subsection (a) shall not apply to any sale or exchange by the taxpayer if, during the 2-year period ending on the date of such sale or exchange, there was any other sale or exchange by the taxpayer to which subsection (a) applied.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF24": {
+            "text": "@ other_sale.date_of_sale_or_exchange \u2a7d^2 year (4) Special rule for certain sales by surviving spouses. 346 # Sarah: the year when your spouse dies, do you file a joint return or 347 # separate returns?",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF25": {
+            "text": "SingleReturnSurvivingSpouse of single_data: single_data.date_of_spouse_death SingleReturn of return: date_of_sale_or_exchange # does not happen JointReturn of return: date_of_sale_or_exchange # does not happen 369 definition second_pass.gain_cap equals $500,000 B EXCERPT OF THE INTERPRETER LOG OF A SECTION121 RUN",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Fig. 1. The scope language, our first intermediate representation",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "rule X under cond. Y cons. fulfilled label L def. X equals false (inserted once) exception L def. X under cond. Y cons. equals true",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Fig. 3. The default calculus, our second intermediate representation",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Selected questions of the user study",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "declaration structure Person: data id content integer SECTION 121 Metadata # TODO: This requires implementing the merging of two collections of date 19 # periods into a single non-overlapping collection of date periods such 20 # that the output covers both input date ranges. This algorithm involves 21 # sorting the collections, something we can't express in Catala. This is 22 # the classical DSL fallacy, and its classical solution is simply to assume 23 # the scope PeriodMerge as external and implement it in the target programming definition person1 equals match return_type with pattern 100 -SingleReturn of data_person1 : data_person1 101 -JointReturn of data_couple : data_couple.person1 102 -SingleReturnSurvivingSpouse of data_single: data_single.return 103 104 definition person2 equals match return_type with pattern 141 definition first_pass.return_type equals return_type 142 definition second_pass.return_type equals return_type 143 144 definition first_pass.return_date equals return_date 145 definition second_pass.return_date equals return_date 146 147 definition first_pass.gain_from_sale_or_exchange_of_property equals",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We want to thank first the lawyers at the heart of the Catala project: Sarah Lawsky and Liane Huttner. Theirs insights and continued collaboration were invaluable for the success of this endeavor. We also thank Pierre-\u00c9variste Dagand for its useful advice of encoding the default logic partial order into a syntactic tree; this trick helped simplify a lot the formalization, without loss of generality with respect to legislative texts.This work is partially supported by the European Research Council under the CIRCUS (683032) Consolidator Grant Agreement.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS"
+        }
+    ]
+}

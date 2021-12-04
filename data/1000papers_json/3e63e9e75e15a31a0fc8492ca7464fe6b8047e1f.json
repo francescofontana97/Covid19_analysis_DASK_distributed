@@ -1,0 +1,1650 @@
+{
+    "paper_id": "3e63e9e75e15a31a0fc8492ca7464fe6b8047e1f",
+    "metadata": {
+        "title": "SGCN: A Graph Sparsifier Based on Graph Convolutional Networks",
+        "authors": [
+            {
+                "first": "Jiayu",
+                "middle": [],
+                "last": "Li",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Syracuse University",
+                    "location": {
+                        "postCode": "13244",
+                        "settlement": "Syracuse",
+                        "region": "NY",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Tianyun",
+                "middle": [],
+                "last": "Zhang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Syracuse University",
+                    "location": {
+                        "postCode": "13244",
+                        "settlement": "Syracuse",
+                        "region": "NY",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hao",
+                "middle": [],
+                "last": "Tian",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Syracuse University",
+                    "location": {
+                        "postCode": "13244",
+                        "settlement": "Syracuse",
+                        "region": "NY",
+                        "country": "USA"
+                    }
+                },
+                "email": "haotian@data.syr.edu"
+            },
+            {
+                "first": "Shengmin",
+                "middle": [],
+                "last": "Jin",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Syracuse University",
+                    "location": {
+                        "postCode": "13244",
+                        "settlement": "Syracuse",
+                        "region": "NY",
+                        "country": "USA"
+                    }
+                },
+                "email": "shengmin@data.syr.edu"
+            },
+            {
+                "first": "Makan",
+                "middle": [],
+                "last": "Fardad",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Syracuse University",
+                    "location": {
+                        "postCode": "13244",
+                        "settlement": "Syracuse",
+                        "region": "NY",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Reza",
+                "middle": [],
+                "last": "Zafarani",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Syracuse University",
+                    "location": {
+                        "postCode": "13244",
+                        "settlement": "Syracuse",
+                        "region": "NY",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Graphs are ubiquitous across the globe and within science and engineering. With graphs growing in size, node classification on large graphs can be space and time consuming, even with powerful classifiers such as Graph Convolutional Networks (GCNs). Hence, some questions are raised, particularly, whether one can keep only some of the edges of a graph while maintaining prediction performance for node classification, or train classifiers on specific subgraphs instead of a whole graph with limited performance loss in node classification. To address these questions, we propose Sparsified Graph Convolutional Network (SGCN), a neural network graph sparsifier that sparsifies a graph by pruning some edges. We formulate sparsification as an optimization problem, which we solve by an Alternating Direction Method of Multipliers (ADMM)based solution. We show that sparsified graphs provided by SGCN can be used as inputs to GCN, leading to better or comparable node classification performance with that of original graphs in GCN, DeepWalk, and GraphSAGE.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Graphs have become universal and are growing in scale in many domains, especially on the Internet and social media. Addressing graph-based problems with various objectives has been the subject of many recent studies. Examples include studies on link prediction [16] and graph clustering [21] , or node classification [2] , which is the particular focus of this study.",
+            "cite_spans": [
+                {
+                    "start": 261,
+                    "end": 265,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 287,
+                    "end": 291,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 317,
+                    "end": 320,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In node classification, one aims to classify nodes in a network by relying on node attributes and the network structure. There are two main categories of node classification methods: (1) methods that directly use node attributes and structural information as features and use [local] classifiers (e.g., decision trees) to classify nodes, and (2) random walk-based methods (often used in semisupervised learning), which classify nodes by determining the probability p that a random walk starting from node v i \u2208 V with label c will end at a node with the same label c. The performance of random walk-based methods implicitly relies on graph structural properties, e.g., degrees, neighborhoods, and reachabilities.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 186,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 276,
+                    "end": 283,
+                    "text": "[local]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In recent studies, neural network classifiers [27] are widely used for both types of methods due to their performance and flexibility. A well-established example is the Graph Convolutional Network (GCN) [14] , a semi-supervised model that uses the whole adjacency matrix as a filter in each neural network layer.",
+            "cite_spans": [
+                {
+                    "start": 46,
+                    "end": 50,
+                    "text": "[27]",
+                    "ref_id": null
+                },
+                {
+                    "start": 203,
+                    "end": 207,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, there is a major difficulty faced by methods that directly use the whole graph to extract structural information: the size of the graph. Unlike node attributes, as a graph with n nodes grows, the size of its adjacency matrix increases at an O(n 2 ) rate, which introduces an unavoidable space and computational cost to classifiers. One engineering solution is to store the adjacency matrix in a sparse matrix (i.e., save non-zeros); however, the process is still extremely slow and requires massive storage when the graph is dense or large.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To address space and computational challenge in node classification, we explore whether one can just rely on a subgraph instead of the whole graph, or some edges (potentially weighted), to extract structural information. We propose Sparsified Graph Convolutional Network (SGCN), a neural network graph sparsifier to prune the input graph to GCN without losing much accuracy in node classification. We formulate graph sparsification as an optimization problem, which we efficiently solve via the Alternating Direction Method of Multipliers (ADMM) [3] . We also introduce a new gradient update method for the pruning process of the adjacency matrices, ensuring updates to the matrices are consistent within SGCN layers.",
+            "cite_spans": [
+                {
+                    "start": 546,
+                    "end": 549,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Present Work: Sparsified Graph Convolutional Network (SGCN)."
+        },
+        {
+            "text": "To evaluate SGCN, we compare its performance with other classical graph sparsifiers on multiple real-world graphs. We demonstrate that within a range of pruning ratios, SGCN provides better sparsified graphs compared to other graph sparsifiers. We also show that node classification performance using these sparsified graphs can be better or comparable to when original graphs are used in GCN, DeepWalk [18] , and GraphSAGE [11] . In sum, our contributions can be summarized as:",
+            "cite_spans": [
+                {
+                    "start": 403,
+                    "end": 407,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 424,
+                    "end": 428,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Present Work: Sparsified Graph Convolutional Network (SGCN)."
+        },
+        {
+            "text": "1. We propose Sparsified Graph Convolutional Network (SGCN), the first neural network graph sparsifier aiming to sparsify graphs for node classification; 2. We design a gradient update method that ensures adjacency matrices in the two SGCN layers are updated consistently; 3. We demonstrate the sparsified graphs from SGCN perform better in node classification that those provided by other graph sparsifiers; and 4. We show that sparsified graphs obtained from SGCN with various pruning ratios, if used as inputs to GCN, lead to classification performances similar to that of GCN, DeepWalk and GraphSAGE using the whole graphs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Present Work: Sparsified Graph Convolutional Network (SGCN)."
+        },
+        {
+            "text": "The paper is organized as follows. We review related work in Sect. 2. We provide the SGCN problem definition in Sect. 3. Section 4 details the problem formulation, solution, and time complexity of SGCN. We conduct experiments in Sect. 5 and conclude in Sect. 6.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Present Work: Sparsified Graph Convolutional Network (SGCN)."
+        },
+        {
+            "text": "Graph Neural Networks. Inspired by the major success of convolutional neural networks in computer vision research, new convolutional methods have emerged for solving graph-based problems. There are two main types of graph convolutional networks: spectral-based methods and spatial-based methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Spectral-based methods, which include GCNs [6, 14] , are based on spectral graph theory. Spectral-based convolutional networks often rely on graph signal processing and are mostly based on normalized graph Laplacian. Other examples include the work of Bhagat et al. [17] , which aims to represent a graph by extracting its locally connected components. Another is DUIF, proposed by Geng et al. [9] , which uses a hierarchical softmax for forward propagation to maximize modularity. One main drawback of spectral-based methods is the need to perform matrix multiplication on the adjacency matrix, which is costly for large graphs.",
+            "cite_spans": [
+                {
+                    "start": 43,
+                    "end": 46,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 47,
+                    "end": 50,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 394,
+                    "end": 397,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Spatial-based methods focus on aggregating the neighborhood for each node. These methods can be grouped into (1) recurrent-based and (2) compositionbased methods. Recurrent-based methods update latest node representation using that of their neighbors until convergence [5, 20] . Composition-based methods update the nodes' representations by stacking multiple graph convolution layers. For example, Gilmer et al. [10] develop a message passing neural network to embed any existing GCN model into a message passing (the influence of neighbors) and readout pattern. Spatial-based methods are often more flexible and easier to apply to large networks.",
+            "cite_spans": [
+                {
+                    "start": 269,
+                    "end": 272,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 273,
+                    "end": 276,
+                    "text": "20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 413,
+                    "end": 417,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Graph Sparsification. For graph sparsification, previous studies have distinct objectives from that of ours. Generally speaking, most graph properties of a dense graph can be approximated from its [sparsified] sparse graph. Cut sparsifiers [1, 8, 13] ensure the total weight of cuts in the sparsified graph approximates that of cuts in the original graph within some bounded distance. Spectral sparsifiers [23, 24] ensure sparsified graphs preserve spectral properties of the graph Laplacian. There are various applications for graph sparsification. Some examples include, the work of Serrano et al. [22] , which aims to identity the backbone of a network that preserves structural and hierarchical information in the original graph; the study by Satuluri et al. [19] , which applies local sparsification to preprocess a graph for clustering; the study by Lindner et al. [15] , which proposes a local degree sparsifier to preserve nodes surrounding local hub nodes by weighing edges linking to higher degree nodes more; and the work by Wilder and Sukthankar [26] , which aims to minimize divergence of stationary distribution of a random walk while sparsifying the graph.",
+            "cite_spans": [
+                {
+                    "start": 240,
+                    "end": 243,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 244,
+                    "end": 246,
+                    "text": "8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 247,
+                    "end": 250,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 406,
+                    "end": 410,
+                    "text": "[23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 411,
+                    "end": 414,
+                    "text": "24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 600,
+                    "end": 604,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 763,
+                    "end": 767,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 871,
+                    "end": 875,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1058,
+                    "end": 1062,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "These studies are similar, but with different objectives from that of ours. Instead of preserving graph properties, the neural network sparsifier proposed in this work focuses on node classification, so that the space cost is reduced due to sparsification, while node classification performance is maintained.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Consider an undirected graph G = (V, E), its nodes V = {v 1 , . . . , v n }, and its edges E = {e 1 , . . . , e m }. Let n = |V | denote the number of nodes and m = |E| denote the number of edges. Given adjacency matrix A of G and features for each node v : X(v) = [x 1 , . . . , x k ], the forward model (i.e., output) of a two-layered graph convolutional network (GCN), as formulated by Kipf and Welling [14] , is",
+            "cite_spans": [
+                {
+                    "start": 406,
+                    "end": 410,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Definition"
+        },
+        {
+            "text": "X is the matrix of node feature vectors X(v), and W (0) and W (1) are the weights in the first and second layer, respectively. Functions softmax(x i ) = exp(x i )/ i exp(x i ) and ReLU(\u00b7) = max(0, \u00b7) both perform entry-wise operations on their arguments. Graph sparsification aims to reduce the number of edges |E| in the original graph G to |E s | in a subgraph G s , i.e., |E s | < |E|, such that subgraph G s , when used as input to GCN, results in similar classification performance to that of the original graph G. In pruning, adjacency A is pruned to",
+            "cite_spans": [
+                {
+                    "start": 62,
+                    "end": 65,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Definition"
+        },
+        {
+            "text": "is a matrix and is Hadamard product. Thus, the new A is A = A p + I N and\u00c2 is the updated filter for A p . We will explore how the ratio of graph sparsification in this filter affects SGCN performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Definition"
+        },
+        {
+            "text": "We first illustrate the problem formulation and solution, followed by SGCN algorithm, a new gradient update method, and the SGCN time complexity analysis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SGCN: Sparsified Graph Convolutional Networks"
+        },
+        {
+            "text": "Problem Formulation. The output of graph convolutional networks in Eq. (1) is a function of\u00c2 and W , but as\u00c2 can be written as a function of A, the output can be stated as Z(A, W ). For semi-supervised multiclass classification, loss function of the neural networks is the cross-entropy error over labeled examples:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "where Y L is the set of node indices that have labels, Y lf is a matrix of labels, and Z lf is the output of the GCN forward model. Our aim is to achieve a sparse graph, with weight matrices being fixed in SGCN. In the following, we will use f (A) to present the loss function and formulate our problem as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "For Eq. (3), we define an indicator function to replace constraint:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "Therefore, Eq. (3) formulation can be rewritten as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "Solution. In Eq. (4), the first term f (\u00b7) is the differentiable loss function of the GCN, while the second term g(\u00b7) is the non-differentiable indicator function; hence, problem (4) cannot be solved directly by gradient descent. To deal with this issue, we propose to use Alternating Direction Method of Multipliers (ADMM) to rewrite problem (4). ADMM is a powerful method for solving convex optimization problems [3] . Recent studies [12, 25] have demonstrated that ADMM also works well for some nonconvex problems.",
+            "cite_spans": [
+                {
+                    "start": 415,
+                    "end": 418,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 436,
+                    "end": 440,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 441,
+                    "end": 444,
+                    "text": "25]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "The general form of a problem solvable by ADMM is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "The problem can be decomposed to two subproblems via augmented Lagrangian. One subproblem contains f (\u03b1) and a quadratic term of \u03b1; the other contains g(\u03b2) and a quadratic term of \u03b2. Since the quadratic term is convex and differentiable, the two subproblems can often be efficiently solved. Hence, we rewrite problem (4) as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "The augmented Lagrangian [3] of problem (6) is given by",
+            "cite_spans": [
+                {
+                    "start": 25,
+                    "end": 28,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "where \u039b is the Lagrangian multiplier (i.e., the dual variable) corresponding to constraint A = V , the positive scalar \u03c1 is the penalty parameter, Tr(\u00b7) is the trace, and \u00b7 2 F is the Frobenius norm. By defining the scaled dual variable U = (1/\u03c1)\u039b, the augmented Lagrangian can be equivalently expressed in the scaled form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "When we apply ADMM [3] to this problem, we alternately update the variables according to",
+            "cite_spans": [
+                {
+                    "start": 19,
+                    "end": 22,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "V k+1 := arg min",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "In (7), we solve the first subproblem:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "In the above problem, as the loss function f (A) and the 2 -norm are differentiable, we can use gradient descent to solve it. As f (A) is nonconvex with respect to the variable A, there has been no theoretical guarantee on the convergence, when solving problem (11) . We present a method to solve (11) in Sect. 4.3.",
+            "cite_spans": [
+                {
+                    "start": 261,
+                    "end": 265,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 297,
+                    "end": 301,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "In (8), we solve the second subproblem, which is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "As g(\u00b7) is the indicator function, problem (12) can be solved analytically [3] , where the solution is",
+            "cite_spans": [
+                {
+                    "start": 43,
+                    "end": 47,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 75,
+                    "end": 78,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "where \u03a0 S (\u00b7) is the Euclidean projection onto set S = {\u039b | \u039b 0 \u2264 \u03b7}. Finally, we update the scaled dual variable U according to (9) . This is one ADMM iteration. We update the variables iteratively until condition (10) is satisfied, indicating the convergence of ADMM.",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 132,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation and Solution"
+        },
+        {
+            "text": "In the solution provided in Sect. 4.1, we need to maintain \u03b7, the number of nonzero elements. The Euclidean projection in Eq. (13) maintains \u03b7 elements in A k+1 + U k with the largest magnitude and sets the rest to zero. This is proved to be the optimal and the analytical solution to subproblem (12) for edge pruning of graphs. In GCN, filters in the loss function in Eq. (2) consist of D \u2212 1 2 A D \u2212 1 2 , where A = A + I N and D = j A ij . Variable I N is the identity matrix and A is a [modified] adjacency matrix. Variables A and D in each layer are fixed and non-trainable in the original GCN. To solve graph sparsification based on GCN and maintain classification performance, variable A should be trained and updated iteratively. As variable D depends on A, A in the original loss function cannot be directly differentiated. Thus, we expand the forward model into:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SGCN Algorithm"
+        },
+        {
+            "text": "In Eq. (14) , no variable depends on A. However, we cannot still train variables A and W simultaneously as the differentiation of A depends on W and vice versa. Hence, we first train weights variable W in SGCN. By fixing variable W in this model, the adjacency matrix A can be regarded as a trainable variable. With ADAptive Moment estimation (ADAM) optimizer, gradients of the variable (adjacency matrix A) can be updated in SGCN. Algorithm 1 provides the SGCN pseudo-code. We use variable A to initialize variable V in each layer using function Initialize() and apply function Zerolike() to V to ensure variable U has the same shape as V with all the zero elements. ",
+            "cite_spans": [
+                {
+                    "start": 7,
+                    "end": 11,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SGCN Algorithm"
+        },
+        {
+            "text": "When training adjacency matrix A in Algorithm 1, we should maintain the adjacency matrices in the first and second layer consistent. To address this issue, we propose a method to update the gradients of the adjacency matrix, when fixing weight matrices W in the two layers. A mask m is defined using the adjacency matrix A. As we use gradient descent, the following equation based on Eqs. (2) and (14) can be applied to update the trainable variable (adjacency matrix A) at each step to solve problem in Eq. (11):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Adjacency Matrix Training"
+        },
+        {
+            "text": "for i = 1, . . . , n, where \u03b3 is the learning rate. In the process of updating A, we keep the gradient matrices of the adjacency matrix symmetric in two layers and gradients are set to zero when there are no edges between nodes. Also, diagonal elements are zero in the gradient matrix as we only update the adjacency matrix and consider no self-loops at each node. To maintain the adjacency matrices in the two layers identical, we compute average gradients for the same edge in the two adjacency matrices. We assign these average gradients to the corresponding edges in the matrices for updating elements of the adjacency matrices.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Adjacency Matrix Training"
+        },
+        {
+            "text": "The GCN training time complexity is O(L|A 0 |F + LN F 2 ), where L is the number of layers, N is the number of nodes, |A 0 | is the number of non-zeros in an adjacency matrix, and F is the number of features [4] . Hence, assuming ADMM takes k iterations, the SGCN time complexity is O(kL|A 0 |F + kLN F 2 ). Compared to SGCN training time complexity, the time to update variables V and U according to Eqs. (13) and (9) is negligible. In our SGCN, k = 4 and L = 2. Also, we need only a few iterations to solve subproblem (11) , which indicates the training time complexity of SGCN is similar to that of GCN. The time complexity for the forward model in SGCN is O(|\u0393 |F C), where |\u0393 | is linear in the number of edges and C is the dimension of feature maps. Hence, it is less than that of GCN: O(| |F C), as we have |\u0393 | \u2264 | |.",
+            "cite_spans": [
+                {
+                    "start": 208,
+                    "end": 211,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 406,
+                    "end": 410,
+                    "text": "(13)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 520,
+                    "end": 524,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Time Complexity Analysis"
+        },
+        {
+            "text": "There are two natural ways to measure the effectiveness of SGCN.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "-First, is to compare the node classification performance of sparsified subgraphs obtained using SGCN with that of other sparsifiers. For that, we use GCN for node classification, and compare the node classification performance of SGCN with two well-known sparsifiers: Random Pruning (RP) sparsifier and Spectral Sparsifier (SS). The RP removes edges uniformly at random from a graph with some probabilities. The SS is the state of the art spectral sparsifier [7] , which sparsifies graphs in near linear-time. -Second, is to compare the node classification performance of the sparsified graphs compared to that of the original graphs. For that, we compare the performance of GCN using sparsified subgraphs provided by SGCN with that of GCN, DeepWalk, and GraphSAGE using original graphs.",
+            "cite_spans": [
+                {
+                    "start": 460,
+                    "end": 463,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "Datasets. To evaluate the performance of node classification on sparsified graphs, we conduct our experiments on four attributed graphs. These graphs have been utilized for evaluation in previous studies and are hence used for evaluation. All datasets are available online. 1 Here, we briefly introduce these datasets:",
+            "cite_spans": [
+                {
+                    "start": 274,
+                    "end": 275,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "-CiteSeer: A citation network of publications classified into six categories. Each publication is attributed by a 0/1-valued word vector indicating the absence/presence of the corresponding word from the dictionary; -Cora: Similar to CiteSeer, a citation network with 7 categories; -Terrorists: This dataset contains information about terrorists and their relationships. Each terrorist is described by a 0/1-valued vector providing features of the individual; and -Terrorist Attacks: The dataset provides information on terrorist attacks classified into 6 different categories, while a 0/1-valued vector provides the absence/presence of a feature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "Preprocessing. We preprocess the data for existing node classification models [14, 28] . We split the data into 10 folds for cross validation. In each training fold, we only select 20 instances for each label as the labeled instances. Other instances remain unlabeled, from which we randomly select 500 instances for validation set, which is used to train our hyper-parameters. We filter and reorder the adjacency matrices and attribute vectors to ensure they are ordered according to training/testing folds. Parameter Setup. We vary the pruning ratio (p in Algorithm 1) from 10% to 90% in SGCN and RP. When pruning ratio is 0%, the model is the original GCN. We use the default parameters in GCN, DeepWalk, and GraphSAGE. In RP, we set random seeds from 0 to 9. For SGCN, we set \u03c1 to 0.001 and the training learning rate to 0.001. In SS, we use the default suggested parameters for spectral sparsifier [7] . Due to obtaining 10 folds for each dataset, we run SGCN, RP and SS, in each fold of each dataset to obtain sparsified subgraphs and use these subgraphs as inputs for GCN.",
+            "cite_spans": [
+                {
+                    "start": 78,
+                    "end": 82,
+                    "text": "[14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 83,
+                    "end": 86,
+                    "text": "28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 903,
+                    "end": 906,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "Comparing Sparsifiers. Fig. 1 provides the average performance of GCN with sparsified subgraphs obtained from SGCN and other graph sparsifiers. In Figs. 1(a), (b) , (c) and (d), performances are provided in relative accuracy, where accuracy is divided by the baseline: accuracy of models from GCN. In Cora dataset, sparsified subgraph provided by SGCN perform better in GCN than those provided by RP, as shown in Fig. 1(a) . For CiteSeer dataset, Fig. 1(b) shows that sparsified subgraph provided by SGCN with pruning ratios between 0% and 30%, when used as input to GCN, can yield accurate classification models. In Terrorists datasets, applying subgraphs from SGCN as inputs to GCN can easily obtain a higher accuracy, as shown in Fig. 1(c) . Finally, in Fig. 1(d) , we observe that GCN performance increases as pruning ratio increase in the Terrorist Attack dataset. Here also SGCN provides better subgraphs than RP does. Figures 1(e) , (f), (g) and (h) illustrate the performance of GCN using subgraphs from SGCN, RP, and SS. We compare their best performance, and the performance under the same pruning ratio, as for Spectral Sparsifier (SS) we cannot set pruning ratio. The results show that subgraphs from SGCN perform the best in node classification, and SGCN is more flexible than SS as SGCN allows different pruning ratios. Fig. 3 . Space and computational cost using subgraphs from SGCN as inputs to GCN dataset ( Fig. 2(a) ), SGCN-GCN outperforms GraphSAGE, and has a comparable performance to DeepWalk and GCN. On other datasets (Figs. 2(b) , (c) and (d)), SGCN-GCN outperforms other methods, with the exception of Terrorist dataset (Fig. 2(c) ) on which it performs similarly to DeepWalk. Therefore, even though many edges are pruned, subgraphs provided by SGCN when used as inputs to GCN can lead to better or comparable node classification performance over these datasets.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 23,
+                    "end": 29,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 147,
+                    "end": 162,
+                    "text": "Figs. 1(a), (b)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 413,
+                    "end": 422,
+                    "text": "Fig. 1(a)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 447,
+                    "end": 456,
+                    "text": "Fig. 1(b)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 733,
+                    "end": 742,
+                    "text": "Fig. 1(c)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 757,
+                    "end": 766,
+                    "text": "Fig. 1(d)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 925,
+                    "end": 937,
+                    "text": "Figures 1(e)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1334,
+                    "end": 1340,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1425,
+                    "end": 1434,
+                    "text": "Fig. 2(a)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1542,
+                    "end": 1553,
+                    "text": "(Figs. 2(b)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1646,
+                    "end": 1656,
+                    "text": "(Fig. 2(c)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Results and Performance Analysis"
+        },
+        {
+            "text": "Space and Computational Cost. Here, we feed the subgraphs from SGCN as inputs to GCN and show the actual space and computational cost. The space cost in a graph is O(|V | + |E|). As SGCN decreases the number of edges |E|, the space cost is obviously reduced, as shown in Fig. 3(a) . Figure 3(b) and (c) show average training and prediction times in seconds, which have declining trends when the pruning ratio increases. Hence the proposed framework reduces space and computational cost.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 271,
+                    "end": 280,
+                    "text": "Fig. 3(a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 283,
+                    "end": 294,
+                    "text": "Figure 3(b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results and Performance Analysis"
+        },
+        {
+            "text": "When a graph is large or dense, node classification often requires massive storage or is computationally expensive. In this paper, we address this issue by proposing the first neural network architecture that can sparsify graphs for node classification. We propose Sparsified Graph Convolutional Network (SGCN), a neural network sparsifier. In SGCN, we formulate sparsification as an optimization problem and provide an ADMM-based solution to solve it. Experimental results on real-world datasets demonstrate that the proposed framework can sparsify graphs and its output (sparsified graphs) can be used as inputs to GCN to obtain classification models that are as accurate as using the whole graphs. Hence, SGCN reduces storage and computational cost with a limited loss in classification accuracy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Approximating s-t minimum cuts in\u00d5(n 2 ) time",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Bencz\u00far",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Karger",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Proceedings of the Twenty-Eighth Annual ACM Symposium on the Theory of Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "47--55",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Node classification in social networks",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhagat",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cormode",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Muthukrishnan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Distributed optimization and statistical learning via the alternating direction method of multipliers",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Boyd",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Parikh",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Peleato",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Eckstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Found. Trends R Mach. Learn",
+            "volume": "3",
+            "issn": "1",
+            "pages": "1--122",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Cluster-GCN: an efficient algorithm for training deep and large graph convolutional networks",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Si",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hsieh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Learning phrase representations using RNN encoder-decoder for statistical machine translation",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Cho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Comput. Sci",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Convolutional neural networks on graphs with fast localized spectral filtering",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Defferrard",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Bresson",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Vandergheynst",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Spectral graph sparsification in nearly-linear time leveraging efficient spectral perturbation analysis",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 53rd Annual Design Automation Conference, DAC 2016",
+            "volume": "57",
+            "issn": "",
+            "pages": "1--57",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "A general framework for graph sparsification",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Fung",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hariharan",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Harvey",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Panigrahi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the Forty-third Annual ACM Symposium on Theory of Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "71--80",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Learning image and user features for recommendation in social networks",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Geng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bian",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Chua",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "IEEE International Conference on Computer Vision (ICCV)",
+            "volume": "",
+            "issn": "",
+            "pages": "4274--4282",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Neural message passing for quantum chemistry",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gilmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Schoenholz",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Riley",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Vinyals",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Dahl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Inductive representation learning on large graphs",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hamilton",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Convergence analysis of alternating direction method of multipliers for a family of nonconvex problems",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Razaviyayn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "SIAM J. Optim",
+            "volume": "26",
+            "issn": "1",
+            "pages": "337--364",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Random sampling in cut, flow, and network design problems",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Karger",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Proceedings of the Twenty-Sixth Annual ACM Symposium on Theory of Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "648--657",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Semi-supervised classification with graph convolutional networks",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Kipf",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Welling",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Structurepreserving sparsification of social networks",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lindner",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Staudt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hamann",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Meyerhenke",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wagner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the IEEE/ACM International Conference on Advances in Social Networks Analysis and Mining",
+            "volume": "",
+            "issn": "",
+            "pages": "448--454",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Link prediction in complex networks: a survey",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "L\u00fc",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Physica A",
+            "volume": "390",
+            "issn": "6",
+            "pages": "1150--1170",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Learning convolutional neural networks for graphs",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Niepert",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kutzkov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Deepwalk: online learning of social representations",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Perozzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Al-Rfou",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Skiena",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 20th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+            "volume": "",
+            "issn": "",
+            "pages": "701--710",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Local graph sparsification for scalable clustering",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Satuluri",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Parthasarathy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ruan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the ACM SIGMOD International Conference on Management of Data",
+            "volume": "",
+            "issn": "",
+            "pages": "721--732",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The graph neural network model",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Scarselli",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gori",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Tsoi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hagenbuchner",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Monfardini",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Trans. Neur. Netw",
+            "volume": "20",
+            "issn": "1",
+            "pages": "61--80",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Survey: graph clustering",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Schaeffer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Comput. Sci. Rev",
+            "volume": "1",
+            "issn": "1",
+            "pages": "27--64",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Extracting the multiscale backbone of complex weighted networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "\u00c1"
+                    ],
+                    "last": "Serrano",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bogu\u00f1\u00e1",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proc. Nat. Acad. Sci. U.S.A",
+            "volume": "106",
+            "issn": "16",
+            "pages": "6483--6491",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Graph sparsification by effective resistances",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Spielman",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Srivastava",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Nearly-linear time algorithms for preconditioning and solving symmetric, diagonally dominant linear systems",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Spielman",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Teng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A simple effective heuristic for embedded mixed-integer quadratic programming",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Takapoui",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Moehle",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Boyd",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bemporad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Int. J. Control",
+            "volume": "",
+            "issn": "",
+            "pages": "1--11",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Sparsification of social networks using random walks 2015",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wilder",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Wilder",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Revisiting semi-supervised learning with graph embeddings",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Salakhutdinov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 33rd International Conference on International Conference on Machine Learning, ICML 2016",
+            "volume": "48",
+            "issn": "",
+            "pages": "40--48",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Performance of GCN using sparsified subgraphs provided by SGCN, RP, and SS sparsifiers. SGCN outperforms all other sparsifiers across datasets. (Color figure online)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "The performance of SGCN-GCN, GCN, GraphSAGE, and DeepWalk. SGCN-GCN either outperforms or is comparatively accurate, using much smaller graphs. (Colorfigure online)",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "The SGCN Algorithm input : Adjacency matrix A, feature matrix X, ADMM iterations k, and pruning ratio p% = \u03b7 |E| \u00d7 100% output: Pruned adjacency matrix Ap Train weight matrix W in SGCN; for i \u2190 1 to the number of layers do",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Node Classification Performance. When using sparsified subgraphs provided by SGCN as inputs to GCN, we obtain a node-classification model, which we denote as SGCN-GCN. On all datasets, SGCN-GCN either outperforms other methods or yields comparable performance using much smaller graphs. On Cora",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,254 @@
+{
+    "paper_id": "3db14419bf4d34829157b539fc44b7d8aa21c3bd",
+    "metadata": {
+        "title": "",
+        "authors": []
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "the K value set to 30 and the distance parameter set to 'cosine'. In order to get high-quality cell clusters, we used the Leiden community detection implemented in the R package leiden, a wrapper of the python package leidenalg. The leiden() function was applied to the KNN graphs with default parameters for each analysis. Marker genes were identified using the getDifferentialGenes() function. UMAP low dimensional embedding was computed using the uwot R package, and more precisely the umap() function with the n_neighbors parameter set to 30, and the metric parameter set to 'cosine'. In order to group clusters of cells in the first round of analysis, mean gene expression of the most variable genes was computed using the aggregate() function. Spearman's correlation matrix was then com-puted using the cor() function with the method parameter set to 'Spearman'. Hierarchical clustering was then performed on this matrix using Ward's method and the resulting tree used to aggregate the cell clusters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Correspondence Analysis of the scRNA-seq data. In order to identify trends in cellular composition across samples we used a multivariate technique called Correspondance Analysis (CA). CA is highly similar to PCA but is applied to contingency table instead of classical continuous data table. First data are pre-processed by dividing each entry by the sum of all matrix entries resulting in the matrix S. Then a second matrix is computed by subtracting the expected distribution of samples (obtained by multiplying the row and column marginal probably vectors) resulting in a new matrix M. M is then decomposed using singular value decomposition. Because CA is a descriptive technique, it has the advantage of being applicable to tables whether or not the chi-squared statistic is appropriate. We used the R implementation of CA from the package FactoMineR (CA() function) with default parameters. To determine the significant components we looked at the scree plot and selected the eigenvalues/component located before the elbow. To improve the quality of our analysis, we re-moved cell clusters corresponding to red blood cells, platelets and cancer cells from patient 8.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "To detect clinical and biological variables associated with the computed correspondance compo-nents we used the following strategy: for cytokine concentrations, we first took the square root of the initial values to get normally distributed variables and then computed Pearson's correlation with each component independently. For the other continuous variables (clinical scores, age, BMI\u2026), Pearson's correlation was directly computed. To test the association between CA component or a specific cell type proportion and a categorical variable (i.e. patient clinical status and survival) we either applied a Tukey's range test (TukeyHSD() function) if the variable is not heavy tailed. If the cell proportions are clearly heavy-tailed, we applied a Kruskall-Wallis rank test. Normality of the variables was checked using the Shapiro-Wilk test, through the R function shapiro.test().",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Viral-Track analysis. To detect and study viruses in our scRNA-seq samples we used Viral-Track, a computational tool that screen the raw sequencing files to find viral reads (32479746). As previous-ly described, processing of the file was performed using UMI-tool (28100584). First, cell barcodes were extracted and a putative whitelist computed using the umi_tools whitelist command with the parameters '-stdinbc-pattern = CCCCCCCCCCCCCCCCNNNNNNNNNN -log2stderr'. Fol-lowing the mapping of the reads to viral genomes and transcript assembly, the mapped reads were assigned to transcripts using the R package Rsubread through the function featureCounts() with de-fault parameters. The command 'umi_tools count' is then used to compute the final expression table with the following parameters:-per-gene-gene-tag = XTassigned-status-tag = XS-per-cell. In the case of patient 8, cells were not filtered on total host UMIs and proportion of MT UMIs but only on total combined host and viral UMIs to avoid removing apoptotic cells containing a high vi-ral load but expressing few host genes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Quantification of HSV-1 gene expression. Transcriptome annotation file for the NC_001806 viral segment was manually downloaded from the NCBI server. BAM files containing the HSV-1 reads from patients 4 and 25 were loaded into R using the GenomicAlignments package and gene expres-sion quantification done using the featureCounts() function from the Rsubread package with de-fault parameters. Analysis of the serum cytokine, blood cell count and clinical data. Using a Cullen and Frey graph (descdist() function from the fitdistrplus package)we observed that both serum cytokine and blood cell count variables could be transformed into gaussian-like variables by applying a simple square root function and then used for further analysis. Association between blood cell counts or serum cytokine concentration and patient clinical status was assessed by fitting an ANOVA model to the transformed variables (aov() and anova() functions). Correction for multiple testing was done using the p.adjust function with parameter method set to 'BH'. When correlations with a CA dimension were computed, the cor() function with default parameters was used. To validate the association between the SOFA score and the lymphoid CA dimension 1 we fitted a basic linear model with the lm() function and assessed the significance of the association by performing a Fisher test with the anova() function.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Analysis of the immuno-suppression, flow cytometry and cytokine secretion data. As both both flow cytometry and cytokine secretion data were extremely heavy-tailed we applied a logarithmic trans-formation with a pseudo count of 1 (log10(1+x)). Spearman correlations between protein MFI or cytokine concentration and immune-suppression was computed using the cor() function. In order to model the relationship between ARG1 MFI and immune-suppression we applied a func-tion similar to the Hill function used in biochemistry and to model drug dose-response curves.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Here S corresponds to the immune-suppression, x to the transformed ARG1 MFI, Emin to the basal immune-suppression, Emax to the maximal suppression that can be induced by ARG1, K to the trans-formed ARG1 MFI required to get half of the maximal suppression (Emin +Emax) and n the coopera-tion coefficient. This function was fitted using the nls() function with default parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Quantitative variables indicated in table 1 were expressed as the median and interquartile range (IQR), qualitative ones as percentages. All statistical analyses were performed using R 3.6.1 on an Ubuntu 18.04 workstation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "FlowJo software v.10 (Tree star, Inc, Ashland,OR, USA) was used for flow cytometry data analysis nature research | reporting summary",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Data Policy information about availability of data All manuscripts must include a data availability statement. This statement should provide the following information, where applicable:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "-Accession codes, unique identifiers, or web links for publicly available datasets -A list of figures that have associated raw data -A description of any restrictions on data availability Field-specific reporting Please select the one below that is the best fit for your research. If you are not sure, read the appropriate sections before making your selection. The authors declare that all the other data supporting the findings of this study are available within the article and its supplementary information files and from the corresponding authors upon request. ScRNA-seq expression data were deposited in the Gene Expression Omnibus (GEO) under accession code GSE157344. Figures associated with available raw data are : Fig 2e, S2e, S2f; Fig.2f, 2g s2g; Fig s2i; Fig 3e;Fig4e .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 723,
+                    "end": 780,
+                    "text": ": Fig 2e, S2e, S2f; Fig.2f, 2g s2g; Fig s2i; Fig 3e;Fig4e",
+                    "ref_id": null
+                }
+            ],
+            "section": "April 2020"
+        },
+        {
+            "text": "The study was designed as an observational trial. This study includes a group of 21 severe COVID-19 patients admitted to ICU, 10 mild SARS-CoV-2 patients and 5 HDs. The clinical features of the 3 groups of individuals are recapitulated in table 1. All 31 patients with COVID-19 were admitted, within the period from March 12th to April 20th 2020 to the University Hospital of Verona. At sampling, the stage of disease was categorized as mild (patients not requiring non-invasive/mechanical ventilation and/or admission to ICU, WHO ordinal score 3-4) or severe (patients requiring admission to ICU and/or non-invasive/mechanical ventilation, WHO ordinal score 6-7). All patients were hospitalized in ICU for respiratory organ failure as proved by their clinical parameters (SOFA score, pCO2, pO2, FiO2, P/F ratio). The sample size was not predetermined. We analyzed all the available samples in that time window.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "Patients that withdraw informed consent and indiviaduals younger than 18 years old were excluded from the study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "Not applicable to our clinical study, set to collect biological fluids at the time of positive Sars-Cov-2 infection only.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "Randomization was not applied to this study. Considering the catastrophic health and social crisis that COVID-19 generated in the Northern part of Italy at the time of the study began (March 12th to April 20th 2020), any patient admitted to the hospital, proved to be positive for Sars-Cov-2 and older that 18 years of age, was elegible to be enrolled in our study, providing the signed informed consent.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "The medical staff and researchers that collected the samples were awared of the severity of the disease (severe, mild and healthy donors). However the data collection and analysis were blinded. For 335791 we did not find any information from the company. Cell lines used in the study were negative for Mycoplasma contamination and were regularly tested.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "Not applicable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "April 2020",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "April 2020"
+        },
+        {
+            "text": "Outcomes All 31 patients with COVID-19 were admitted, within the period from March 12th to April 20th 2020 to the University Hospital of Verona. The patients were admitte to the ER than transfered to either COVID -19 department (Department of internal medicine Pulmonary/respiratory unit or ICU. The aim of the project is to evaluate the immunological features of COVID-19 patients. Patients are recruited without any pharmacological treatments restriction. The number of samples is estimated on the basis of feasibility, that means on the maximum number of patients with COVID-19, who are expected to be able to be enrolled by the units involved. Based on the investigators' experience, gained in the onco-immunological field, considering the time and economic resources available, the investigators expect to enroll at least 80 patients. The study aims to: 1) Determine the frequency of circulating immune cells (i.e. T cells, B cells, Neutrophils, Monocytes absolute numbers) in COVID-19 patients at Hospital Trust of Verona.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        },
+        {
+            "text": "2) Determine the plasma levels of soluble factors (i.e. IL-1beta, IL-6, IL-10, TNFalfa) in COVID-19 patients at Hospital Trust of Verona.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        },
+        {
+            "text": "3)Determinate the immune composition of lung and blood of COVID-19 patients that will be enrolled at Hospital Trust of Verona through single-cell sequencing analysis, capable of detecting also the viral sequences in each leukocyte populations. 4) Determine any potential links between cytokine storm, immune cells composition and clinical parameters (i.e.) in COVID-19 patients 5)Profile patients with a different stage of disease to identify potential biomarkers 6)Identify SARS-CoV-2-associated sequences in immune cells 7)To define differences in immune cell composition the immune profiling will be done before and after patients treatment used as part of clinical care in COVID-19 patients.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        },
+        {
+            "text": "Once clinical care has commenced, a blood sample will be collected in three different moments: T0 = at diagnosis (which is equivalent for severe symptoms that will begin a therapeutic course, or for light symptoms within 72 hours from the COVID-19 diagnosis) ; T1= after 7 days from diagnosis (for patients admitted to the UOC the collection will be carried out at the Operative Unit while for asymptomatic patients this collection will be done at the patient's home by health workers and then the sample will be sent to the Immunology Section); T2 = after 14 days from diagnosis similar to that described for the previous collection. All the samples will be collected into vacutainer serum separator tubes. In some cases, patients admitted to ICU also receive BAL (bronchiole-alveolar lavage) or tracheal / mini BAL aspiration. The BAL will be collected whenever it is an integral part of the patient's diagnostic path or within thirty minutes of the patient's confirmed death. In all cases, together with the BAL it will also be necessary to collect a test tube of blood, independently and in addition to the samples described above. These samples will be analyzed for: a) a complete immune phenotype by flow cytometry; b) a panel of soluble factots (i.e. cytokines), c) a deep immunological composition by single-cell RNA sequencing, d) presence of viral sequences. All biological materials will be stored after anonymisation at of Medicine Department of University and Hospital Trust of Verona for the duration of the study (8 months). After that, all biological materials will be transferred at Biobanca of University and Hospital Trust of Verona. All patients data will be only accessed by researchers involved in the study with a personnel account. All patients are anonymzed during immunological analysis. All data are protected by software and database of University and Hospital Trust of Verona.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data collection"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Quantification of plasma levels of different solubles factors",
+            "authors": [
+                {
+                    "first": "Gm-Csf",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G-Csf",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M-Csf",
+                    "middle": [],
+                    "last": "Ifn-\uf024",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ifn-\uf022 ; Mip-3\uf022/Ccl20",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ccl2",
+                    "middle": [],
+                    "last": "Tnf-\uf022",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tnf-\uf023",
+                    "middle": [],
+                    "last": "Tgf\uf023)",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Quantification of plasma levels of different solubles factors",
+            "authors": [
+                {
+                    "first": "Gm-Csf",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G-Csf",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M-Csf",
+                    "middle": [],
+                    "last": "Ifn-\uf024",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ifn-\uf022",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Il-",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "IL-12 (p70), IL-13, IL-15",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Wirthmueller U, Kurosaki T, Murakami MS, Ravetch JV. Signal transduction by Fc gamma RIII (CD16) is mediated through the gamma chain. J Exp Med. 1992; 175(5):1381-1390. For 560835, Beverley PC, Callard RE. Distinctive functional characteristics of human \"T\" lymphocytes defined by E rosetting or a monoclonal anti-T cell antibody. Eur J Immunol. 1981; 11(4):329-334. For 335795, Grouard G, Durand I, Filgueira L, Banchereau J, Liu YL. Dendritic cells capable of stimulating T cells in germinal centres. Nature. 1996;384:364-367. For 563738, Freeman GJ, Long AJ, Iwai Y, et al. Engagement of PD-1 immunoinhibitory receptor by a novel B7 family member leads to negative regulation of lymphocyte activation. J Exp Med. 2000; 192:1027-1034. For 31410, A cellular model reflecting the phenotypic heterogeneity of mutant HRAS driven squamous cell carcinoma. Cantari\u00f1o N,Fern\u00e1ndez-Figueras MT,Valero V,Musul\u00e9n E,Malinverni R,Granada I,Goldie SJ,Mart\u00edn-Caballero J,Douet J,Forcales SV,Buschbeck M. International journal of cancer. For SA1-35467, Production of the Main Celiac Disease Autoantigen by Transient Expression in Nicotiana benthamiana. Mar\u00edn Viegas VS,Acevedo GR,Bayardo MP,Chirdo FG,Petruccelli S. Frontiers in plant science. For 561927, Kuroki M, Matsuo Y, Kinugasa T, Matsuoka Y. Augmented expression and release of nonspecific cross-reacting antigens (NCAs), members of the CEA family, by human neutrophils during cell activation. J Leukoc Biol. 1992; 52(5):551-557. For 16-0037-81, A library-based screening method identifies neoantigen-reactive T cells in peripheral blood prior to relapse of ovarian cancer. Martin SD,Wick DA,Nielsen JS,Little N,Holt RA,Nelson BH. Oncoimmunology. For 16-0289-81, A mobile endocytic network connects clathrin-independent receptor endocytosis to recycling and promotes T cell activation. Compeer EB,Kraus F,Ecker M,Redpath G,Amiezer M,Rother N,Nicovich PR,Kapoor-Kaushik N,Deng Q,Samson GPB,Yang Z,Lou J,Carnell M,Vartoukian H,Gaus K,Rossy J. Nature communications. For 563423, Van Wauwe JP, Goossens JG, Beverley PC. Human T lymphocyte activation by monoclonal antibodies; OKT3, but not UCHT1, triggers mitogenesis via an interleukin 2-dependent mechanism. J Immunol. 1984; 133(1):129-132. For MOPC-21, Trend of telomerase activity change during human iPSC self-renewal and differentiation revealed by a quartz crystal microbalance based assay. Zhou Y et al. Scientific reports 2014 NOV. ATCC No authentification was performed.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "For a reference copy of the document with all sections, see nature.com/documents/nr-reporting-summary-flat.pdfLife sciences study designAll studies must disclose on these points even when the disclosure is negative.Reporting for specific materials, systems and methods We require information from authors about some types of materials, experimental systems and methods used in many studies. Here, indicate whether each material, system or method listed is relevant to your study. If you are not sure if a list item applies to your research, read the appropriate section before selecting a response.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

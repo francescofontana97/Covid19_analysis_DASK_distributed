@@ -1,0 +1,4562 @@
+{
+    "paper_id": "3dea0c4a44b6f60d9f31197c77e5d4b8789fca65",
+    "metadata": {
+        "title": "Decentralizing cell-free RNA sensing with the use of low-cost cell extracts",
+        "authors": [
+            {
+                "first": "Anibal",
+                "middle": [],
+                "last": "Arce",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Fernando",
+                "middle": [],
+                "last": "Guzman Chavez",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Cambridge",
+                    "location": {
+                        "postCode": "CB2 3EA",
+                        "settlement": "Cambridge",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Chiara",
+                "middle": [],
+                "last": "Gandini",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Cambridge",
+                    "location": {
+                        "addrLine": "Philippa Fawcett Drive",
+                        "postCode": "CB3 0AS",
+                        "settlement": "Cambridge",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Juan",
+                "middle": [],
+                "last": "Puig",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Tamara",
+                "middle": [],
+                "last": "Matute",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Jim",
+                "middle": [],
+                "last": "Haseloff",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Cambridge",
+                    "location": {
+                        "postCode": "CB2 3EA",
+                        "settlement": "Cambridge",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Neil",
+                "middle": [],
+                "last": "Dalchau",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Microsoft Research",
+                    "location": {
+                        "addrLine": "21 Station Road",
+                        "postCode": "CB1 2FB",
+                        "settlement": "Cambridge",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jenny",
+                "middle": [],
+                "last": "Molloy",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Cambridge",
+                    "location": {
+                        "addrLine": "Philippa Fawcett Drive",
+                        "postCode": "CB3 0AS",
+                        "settlement": "Cambridge",
+                        "country": "United Kingdom"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Keith",
+                "middle": [],
+                "last": "Pardee",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Toronto",
+                    "location": {
+                        "settlement": "Toronto",
+                        "region": "Ontario",
+                        "country": "Canada"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Fern\u00e1n",
+                "middle": [],
+                "last": "Federici",
+                "suffix": "",
+                "affiliation": {},
+                "email": "ffederici@bio.puc.cl"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Cell-free gene expression systems have emerged as a promising platform for field-deployed biosensing and diagnostics. When combined with programmable toehold switch-based RNA sensors, these systems can be used to detect arbitrary RNAs and freeze-dried for room temperature transport to the point-of-need. These sensors, however, have been implemented using reconstituted PURE cell-free protein expression systems that are difficult to source in the Global South due to their high commercial cost and cold-chain shipping requirements. Here, we describe the implementation of RNA toehold switch-based sensors using E. coli cell lysate-based cell-free protein expression systems, which can be produced locally and reduce the cost of sensors by two orders of magnitude. We then demonstrate that these in-house cell lysates provide sensor performance comparable to commercial PURE cell-free systems. We further optimize use of these lysates with a CRISPRi strategy to enhance the stability of linear DNAs, enabling the direct use of PCR products for fast screening of new designs. As a proof-of-concept, we develop novel toehold sensors for the plant pathogen Potato Virus Y (PVY), which dramatically reduces the yield of this important staple crop. The local implementation of low-cost cell-free toehold sensors could enable biosensing capacity at the regional level and lead to more decentralized models for global surveillance of infectious disease.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Cell-free sensors have emerged as a promising technology for fast and field-deployable detection of nucleic acids (Pardee et al., 2014 (Pardee et al., , 2016 Ma et al., 2018; Takahashi et al., 2018; Verosloff et al., 2019) and chemical pollutants (Didovyk et al., 2017; Jung et al., 2020; Liu et al., 2020; Silverman et al., 2020; Thavarajah et al., 2020) . Cell-free toehold RNA sensors (CFTS) have been shown to detect viruses such as Ebola (Pardee et al., 2014) , norovirus (Ma et al., 2018) , and Zika (ZIKV) (Pardee et al., 2016) at femtomolar concentrations of viral RNA when combined with isothermal RNA amplification (Pardee et al., 2016) . Toehold RNA sensors are de novo designed genetic structures that can be programmed to detect RNAs of arbitrary sequences . A toehold switch relies on the formation of a hairpin loop at the 5\u2032-end of a reporter gene that structurally prohibits an interaction between the ribosome binding site (RBS) and ribosomes, thereby preventing translation. This structure is released via toehold-mediated strand displacement by an unstructured RNA 'trigger' with sequence-specific complementarity to the switch , thus enabling ribosomal-binding and subsequent protein translation. These CFTS can be lyophilized and transported at room temperature for in-field detection of viral RNAs (Pardee et al., 2014 (Pardee et al., , 2016 Ma et al., 2018) .",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 134,
+                    "text": "(Pardee et al., 2014",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 135,
+                    "end": 157,
+                    "text": "(Pardee et al., , 2016",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 158,
+                    "end": 174,
+                    "text": "Ma et al., 2018;",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 175,
+                    "end": 198,
+                    "text": "Takahashi et al., 2018;",
+                    "ref_id": "BIBREF61"
+                },
+                {
+                    "start": 199,
+                    "end": 222,
+                    "text": "Verosloff et al., 2019)",
+                    "ref_id": "BIBREF67"
+                },
+                {
+                    "start": 247,
+                    "end": 269,
+                    "text": "(Didovyk et al., 2017;",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 270,
+                    "end": 288,
+                    "text": "Jung et al., 2020;",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 289,
+                    "end": 306,
+                    "text": "Liu et al., 2020;",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 307,
+                    "end": 330,
+                    "text": "Silverman et al., 2020;",
+                    "ref_id": "BIBREF54"
+                },
+                {
+                    "start": 331,
+                    "end": 355,
+                    "text": "Thavarajah et al., 2020)",
+                    "ref_id": "BIBREF63"
+                },
+                {
+                    "start": 443,
+                    "end": 464,
+                    "text": "(Pardee et al., 2014)",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 477,
+                    "end": 494,
+                    "text": "(Ma et al., 2018)",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 513,
+                    "end": 534,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 625,
+                    "end": 646,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1321,
+                    "end": 1341,
+                    "text": "(Pardee et al., 2014",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1342,
+                    "end": 1364,
+                    "text": "(Pardee et al., , 2016",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1365,
+                    "end": 1381,
+                    "text": "Ma et al., 2018)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "CFTS are implemented in a reconstituted cell-free expression system, known commercially as PURExpress, which consists of a mixture of 34 individually purified components involved in transcription, translation and energy generation (Shimizu et al., 2001) . Despite the potential of CFTS for point-of-care deployment, constraints in the accessibility to PURE systems in South America impose significant barriers to locally engineer de novo sensors. PURE systems are expensive and proprietary (Laohakunakorn et al., 2020) . Furthermore, they need to be imported from the Northern hemisphere under cold-chain shipping, which increases their costs and the risk of activity loss. PURE systems can also be prepared in the laboratory by purifying the components individually or as a single step from a bacterial consortium of strains (Shimizu et al., 2001; Horiya et al., 2017; Villarreal et al., 2018; Lavickova and Maerkl, 2019) . Alternatively, cell lysate-based protein expression systems, made from E. coli crude extract that do not require purification of particular components, can also be used as a substrate for CFTS . Lehr et al. have shown the implementation of CFTS in commercially available cell-free transcription-translation systems (TX-TL) based on cell extracts (Lehr et al., 2019) , which are also sourced from the US and shipped under cold chain. Encouragingly, Silverman et al. (2019) and McNerney et al. (2019) have recently shown the successful implementation of CFTS in home-made cell extracts, offering a path for local prototyping de novo sensors of interest (McNerney et al., 2019; Silverman et al., 2019) .",
+            "cite_spans": [
+                {
+                    "start": 231,
+                    "end": 253,
+                    "text": "(Shimizu et al., 2001)",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 490,
+                    "end": 518,
+                    "text": "(Laohakunakorn et al., 2020)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 826,
+                    "end": 848,
+                    "text": "(Shimizu et al., 2001;",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 849,
+                    "end": 869,
+                    "text": "Horiya et al., 2017;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 870,
+                    "end": 894,
+                    "text": "Villarreal et al., 2018;",
+                    "ref_id": "BIBREF68"
+                },
+                {
+                    "start": 895,
+                    "end": 922,
+                    "text": "Lavickova and Maerkl, 2019)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1120,
+                    "end": 1136,
+                    "text": "Lehr et al. have",
+                    "ref_id": null
+                },
+                {
+                    "start": 1271,
+                    "end": 1290,
+                    "text": "(Lehr et al., 2019)",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1373,
+                    "end": 1396,
+                    "text": "Silverman et al. (2019)",
+                    "ref_id": "BIBREF55"
+                },
+                {
+                    "start": 1401,
+                    "end": 1423,
+                    "text": "McNerney et al. (2019)",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1576,
+                    "end": 1599,
+                    "text": "(McNerney et al., 2019;",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1600,
+                    "end": 1623,
+                    "text": "Silverman et al., 2019)",
+                    "ref_id": "BIBREF55"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Cell extracts are cell lysate-based protein expression systems that have been instrumental to molecular biology and biotechnology for decades (Nirenberg and Matthaei, 1961) . Cell extracts have also become a versatile tool for engineering complex biomolecular systems outside living cells (Garenne and Noireaux, 2019; Laohakunakorn et al., 2020) . Diverse genetic systems have been implemented in cell extracts, e.g. for sensing small molecules (Salehi et al., 2018; Jung et al., 2020; Silverman et al., 2020; Thavarajah et al., 2020) , engineering metabolic pathways (Dudley et al., 2016; Grubbe et al., 2020; Swartz, 2020) , producing virus-like particles (Bundy et al., 2008; Rustad et al., 2018) , and prototyping genetic devices (Siegal-Gaskins et al., 2014; Moore et al., 2017) , including RNA circuits (Takahashi et al., 2015) , transcriptional cascades (Shin and Noireaux, 2012; Garamella et al., 2016) and oscillators (Niederholtmeyer et al., 2015; Tayar et al., 2017; Yelleswarapu et al., 2018) . Various protocols have been crafted to simplify extract preparation and optimize lysate performance, including methods based on cell homogenization (Kim et al., 2006) , sonication (Shrestha et al., 2012; Kwon and Jewett, 2015) , bead-beating (Sun et al., 2013) , enzymatic lysis or flash freezing (Didovyk et al., 2017) .",
+            "cite_spans": [
+                {
+                    "start": 142,
+                    "end": 172,
+                    "text": "(Nirenberg and Matthaei, 1961)",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 289,
+                    "end": 317,
+                    "text": "(Garenne and Noireaux, 2019;",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 318,
+                    "end": 345,
+                    "text": "Laohakunakorn et al., 2020)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 445,
+                    "end": 466,
+                    "text": "(Salehi et al., 2018;",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 467,
+                    "end": 485,
+                    "text": "Jung et al., 2020;",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 486,
+                    "end": 509,
+                    "text": "Silverman et al., 2020;",
+                    "ref_id": "BIBREF54"
+                },
+                {
+                    "start": 510,
+                    "end": 534,
+                    "text": "Thavarajah et al., 2020)",
+                    "ref_id": "BIBREF63"
+                },
+                {
+                    "start": 568,
+                    "end": 589,
+                    "text": "(Dudley et al., 2016;",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 590,
+                    "end": 610,
+                    "text": "Grubbe et al., 2020;",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 611,
+                    "end": 624,
+                    "text": "Swartz, 2020)",
+                    "ref_id": "BIBREF59"
+                },
+                {
+                    "start": 658,
+                    "end": 678,
+                    "text": "(Bundy et al., 2008;",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 679,
+                    "end": 699,
+                    "text": "Rustad et al., 2018)",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 734,
+                    "end": 763,
+                    "text": "(Siegal-Gaskins et al., 2014;",
+                    "ref_id": "BIBREF53"
+                },
+                {
+                    "start": 764,
+                    "end": 783,
+                    "text": "Moore et al., 2017)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 809,
+                    "end": 833,
+                    "text": "(Takahashi et al., 2015)",
+                    "ref_id": "BIBREF60"
+                },
+                {
+                    "start": 861,
+                    "end": 886,
+                    "text": "(Shin and Noireaux, 2012;",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 887,
+                    "end": 910,
+                    "text": "Garamella et al., 2016)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 927,
+                    "end": 957,
+                    "text": "(Niederholtmeyer et al., 2015;",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 958,
+                    "end": 977,
+                    "text": "Tayar et al., 2017;",
+                    "ref_id": "BIBREF62"
+                },
+                {
+                    "start": 978,
+                    "end": 1004,
+                    "text": "Yelleswarapu et al., 2018)",
+                    "ref_id": "BIBREF70"
+                },
+                {
+                    "start": 1155,
+                    "end": 1173,
+                    "text": "(Kim et al., 2006)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1187,
+                    "end": 1210,
+                    "text": "(Shrestha et al., 2012;",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 1211,
+                    "end": 1233,
+                    "text": "Kwon and Jewett, 2015)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1249,
+                    "end": 1267,
+                    "text": "(Sun et al., 2013)",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 1304,
+                    "end": 1326,
+                    "text": "(Didovyk et al., 2017)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "With the goal of making cell-free toehold sensor technology more accessible and affordable, here, we describe the implementation of CFTS in cell extracts supplemented with maltodextrin as an energy source. These CFTS, can detect RNA at similar sensitivity to the PURExpressbased CFTS but for a fraction of the cost. Furthermore, using a CRISPRi strategy for silencing nucleases before harvesting cells, we increased DNA stability, enabling cell-free protein synthesis from linear, PCR-derived templates. These optimized extracts were suitable for fast prototyping of novel toehold sensors directly from linear PCR products using a lacZ gene template. As a proof-of-concept demonstration, we applied our framework to engineer costeffective CFTS for PVY virus detection, which poses a significant economic threat to local potato farmers and producers of potato seeds.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Crude extract preparation BL21 DE3 Star cells (Invitrogen, C601003), BL21dLacGold cells (Didovyk et al., 2017) (Agilent, 230132), or the CRISPR+, CRISPR-derivatives from this work were grown overnight at 37 \u00b0C on 2xYT agar plates with the appropriate antibiotics. A single colony was grown in a 5 ml 2xYT culture overnight at 37 \u00b0C. The next day, a 50 mL culture was started with a 1:1000 dilution overnight at 37 \u00b0C. On the fourth day, a total of 2 liters of culture was started and split in 5 2-liter Erlenmeyer, at an initial OD600 0.05 in 2xYT supplemented with 40 mM phosphate dibasic (Sigma, 94046), 22 mM phosphate monobasic (Sigma, 74092) and 20 g/L D-glucose. This culture was grown at 37 \u00b0C with vigorous agitation (230 rpm) until OD600 reached 0.6-0.8 (approximately 2.5 hours) and cells were induced with 1 mM IPTG for another 3 hours at 37 \u00b0C before harvesting by centrifugation at 5000 g and 4 \u00b0C. Pellets were washed twice with cold S30B buffer (5 mM tris acetate pH 8.2, 14 mM magnesium acetate, 60 mM potassium glutamate, and 2 mM dithiothreitol) (Sun et al., 2013) . The pellet was then weighted, and a relationship of 0.9 mL of S30B and 5 g of 0.1 mm diameter silica beads (Biospec, 11079101) were added per gram of pellet obtained. 2.5 mL bead-beating tubes and cups were filled with the viscous solution composed of cells and glass beads, without generating bubbles, sealed and beaten for 30 seconds using a homogenizer (MP Biomedicals, . To remove the beads from extracts, processed samples were placed on the top of a micro-chromatography column (Biorad, 7326204), which was placed into an empty bead-beating tube. The bead-beaten tube attached to the micro-chromatography column and the empty recipient tube was placed into a 15 ml Falcon tube and centrifuged at 6000 g for 5 minutes at 4 \u00b0C. Properly beat extracts should appear clear, and two distinct layers should be observed. The supernatant from all tubes was pooled and agitated at 37 \u00b0C inside a 5 ml unsealed tube for one hour for runoff. After the run-off reaction, the tubes were placed on ice and re-centrifuged at 6000 g for 10 minutes at 4 \u00b0C to pull down the debris generated during the run-off reaction. The supernatant from this centrifugation, i.e. the crude extract, was aliquoted, frozen, and stored at -80 \u00b0C until use. A link to the full protocol of crude extract and cell-free reaction preparation can be found here: https://www.protocols.io/ view/preparation-of-cell-free-rnapt7-reactions-kz2cx8e.",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 110,
+                    "text": "(Didovyk et al., 2017)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1064,
+                    "end": 1082,
+                    "text": "(Sun et al., 2013)",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 1441,
+                    "end": 1457,
+                    "text": "(MP Biomedicals,",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "The in-house cell-free reactions were composed of 45% crude lysate and 40% reaction buffer. The remaining 15% included DNA input solution chlorophenol red-\u03b2-D-galactopyranoside (Sigma, 59767 at final concentration of 0.6 mg/mL), and in the case of the RNA sensing reactions, trigger RNA from in vitro transcription. A typical reaction is composed of 50 mM HEPES pH 8, 1.5 mM ATP and GTP, 1.4 mM CTP and UTP as triphosphate ribonucleotides, 0.2 mg/ml tRNA (Roche, 01109541001), 0.26 mM Coenzyme A, 0.33 mM NAD, 0.756 mM cAMP, 0.0068 mM folinic acid, 0.112 mg/mL spermidine, 2% PEG-8000, 3.4 mM of each of the 20 amino acids (glutamate is also added in excess in potassium and magnesium salts), and 12 mg/ mL maltodextrin and 0.6 mg/mL sodium hexametaphosphate (Sigma, 305553) or 30 mM 3-PGA as an energy source. Cell-free reactions were mounted on ice in a final volume of 10 \u00b5L in 1.5 ml Eppendorf tubes and vortexed for 30 seconds before sampling 5\u00b5L that were loaded in V-bottom 96 well plates (Corning, CLS3957) or rounded 384 well-plates (Corning, CLS3540). All the reactions were incubated at 29 \u00b0C in a Synergy HTX plate reader (BioTek).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cell-free transcription-translation reaction"
+        },
+        {
+            "text": "All plasmids used in this work correspond to single transcriptional units (Level 1 plasmids) that were prepared using Golden Gate assembly from Level 0 parts (T7 Promoter, T7 terminator, Toehold Sensors, Triggers, etc.) (Pollak et al., 2019) . The level 0 parts were previously prepared by Gibson assembly (Gibson et al., 2009 ) from PCR linear DNA amplified from gblocks (IDT). All plasmids were commercially sequenced before use. Plasmid DNA input was produced by midi prepping an overnight culture of 200 mL LB with the appropriate strain (Promega, A2492) and cleaned again using PCR cleanup (Promega, A6754). Plasmid DNA inputs were used in a set of concentrations ranging from 0.5 nM to 10 nM. Input linear DNA was produced by PCR and cleaned with PCR cleanup kit (Promega, A6754), quantified and diluted to desired concentrations using ultra-pure water. A list of all the primers and plasmids used in this work is shown in Supplementary Table S1 and Supplementary Table S2 , respectively.",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 241,
+                    "text": "(Pollak et al., 2019)",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 306,
+                    "end": 326,
+                    "text": "(Gibson et al., 2009",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 929,
+                    "end": 978,
+                    "text": "Supplementary Table S1 and Supplementary Table S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Input DNA preparation"
+        },
+        {
+            "text": "Trigger RNA preparation PCR products containing the trigger T7 transcriptional unit were cleaned by PCR cleanup kit (Promega, A6754) and 250 ng were processed by in vitro transcription using the HiScribe T7 kit (Promega, E2040S) and incubated at 37 \u00b0C overnight. The products were then treated with DNAseI for one hour at 37 \u00b0C and the enzyme was inactivated by heat at 70\u00b0C for 10 minutes. Next, standard RNA clean up steps were performed according to the RNeasy MinElute kit (Qiagen, 74204) before quantification.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input DNA preparation"
+        },
+        {
+            "text": "We used the NASBA lyophilized kit from Life Sciences following the manufacturer's instructions. Negative controls and RNA dilutions in the range 27 mM to 0.2 fM were prepared in ultra-pure water just before use. The lyophilized reaction buffer containing nucleotide mix (Life Sciences, LRB-10) was reconstituted with DRB-10 diluent (Life Sciences, DRB-10), heated at 41 \u00b0C for 5 minutes and kept at room temperature. The initial mixture consisted of 10 \u00b5L of the reconstituted reaction buffer, 1 \u00b5L RNAsin (Promega, N2111), 380 mM of each DNA primer, 2 \u00b5L ultra-pure water and a 1 \u00b5L RNA amplicon dilution were assembled at 4 \u00b0C and incubated at 65 \u00b0C for 2 min, followed by a 10 min annealing at 41 \u00b0C. During annealing, the lyophilized enzyme mix, consistent of AMV RT, RNaseH, T7 RNAP, and high molecular weight sugar mix (Life Sciences, LEM-10), was reconstituted with cold D-PDG (Life Sciences, D-PDG-10) and placed on ice. Immediately after annealing, 5 \u00b5L of the dissolved enzyme mix was added to the reaction, to a final volume of 20 \u00b5L, and the mixture was incubated at 41 \u00b0C for 2 h with thermocycler lid at 98 \u00b0C. A 10 minute incubation at 70 \u00b0C was performed for enzyme inactivation. The amplified product was subsequently cleaned up with the RNeasy MinElute kit (Qiagen, 74204).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Isothermal NASBA amplification"
+        },
+        {
+            "text": "Lyophilization was performed by assembling 9 \u00b5L of cell extracts and 8 \u00b5L of reaction buffer in a PCR tube. In a separate tube, 3 \u00b5L of the corresponding plasmid were mixed with 1 \u00b5L of substrate (9 mg/ml), when LacZ reporter was used. Tubes containing the assembled reactions were closed with adhesive aluminum film and punctured with a 16-gauge needle to create a hole.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lyophilization and storage of cell-free reactions"
+        },
+        {
+            "text": "The tubes were placed in a FreeZone 2.5 L Triad Benchtop Freeze Dryer (Labconco), previously pre-chilled at -75 \u00b0C (shelf temperature), for overnight freeze-drying of two segments. The first segment was at -75 \u00b0C (shelf temperature) with a temperature collector of -80 \u00b0C for 12 hours and 0.04 mbar of pressure. The second segment was performed at -20 \u00b0C for 4 h with the same pressure. Samples were stored at room temperature in open plastic bags over 30 g of silica inside a closed Tupperware. Rehydration of cell-free reactions was done with 20 \u00b5L of a plasmid solution in ultra-pure water. pT7:sfGFP was used at 6 nM or 8 nM final concentration whereas ZIKV Toehold 27 was used at 10 nM final concentration. Trigger 27 RNA was added at a final concentration of 300 nM.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lyophilization and storage of cell-free reactions"
+        },
+        {
+            "text": "With the aim of designing novel toehold sensors, we implemented an in silico tool called NupackSensors, which is based on an algorithm described by Green et al. (Green et al., 2014) (http://www.github.com/elanibal/NupackSensors). To identify possible triggers from a target sequence, the algorithm first determines all contiguous 36 nucleotide sub-sequences. Each possible trigger defines one specific toehold sensor. After filtering out the sensors that contained stop codons, potential structural defects of each design were calculated, along with a set of thermodynamic parameters ( Supplementary Fig. S1 , Supplementary Table S3 and S4). The following score function was implemented, and one score value was assigned to each of the possible designs (Ma et al., 2018) :",
+            "cite_spans": [
+                {
+                    "start": 148,
+                    "end": 181,
+                    "text": "Green et al. (Green et al., 2014)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 753,
+                    "end": 770,
+                    "text": "(Ma et al., 2018)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 586,
+                    "end": 607,
+                    "text": "Supplementary Fig. S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Design of novel toehold sensors:"
+        },
+        {
+            "text": "Here, represents the average number of incorrectly paired nucleotides respecting the ))))...))))))))))).....................\" (Pardee et al., 2016) in dot-bracket notation (Supplementary Figure S1) . Similarly, the parameter represents the average number of incorrectly paired nucleotides respecting the ideal activated sensor structure. represents the deviations from the perfect single-stranded binding site in the toehold domain, which is essential for the initial trigger binding and subsequent strand-displacement reaction. After assigning one score to each toehold sensor design, they are ranked.",
+            "cite_spans": [
+                {
+                    "start": 126,
+                    "end": 147,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 187,
+                    "end": 197,
+                    "text": "Figure S1)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Design of novel toehold sensors:"
+        },
+        {
+            "text": "For the PVY toehold sensor design, two RNA target sequences were evaluated in NupackSensors, corresponding to the long and short sequences found to be conserved in several PVY strains (Supplementary Tables S5 and S6 ). For each of them, four of the highest scores were picked for experimental evaluation. Linear DNA encoding the PVY toeholds were prepared by PCR using specific primers that add the T7 promoter and each toehold sensor sequence on Table S1 for primer sequences).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 184,
+                    "end": 215,
+                    "text": "(Supplementary Tables S5 and S6",
+                    "ref_id": null
+                },
+                {
+                    "start": 447,
+                    "end": 455,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Design of novel toehold sensors:"
+        },
+        {
+            "text": "Sequences of each operon of the genes that are part of the RecBCD complex and the EndI endonuclease were identified in E.coli K12 strain genome using the web platform RegulonDB (Salgado et al., 2013) . sgRNAs were designed according to ), following these steps: all available 5'->3 'PAM sites (CCN) within the nucleotide sequence of the gene of interest were marked, identifying contiguous sites as target candidates; the target candidates were analyzed and selected as the 18-22 bp contiguous to the PAM sequence that are within the first ~ 156nt of the CDS (i.e. counting from the ATG); sequences that end in C or T were selected so that the sgRNA begins with A or G (corresponding to nucleotide +1 of the sgRNA transcript) since this increases the transcription of the promoter used Qi et al., 2013) . The designed sgRNA corresponded to the reverse complementary sequences of the chosen target. These steps were performed in ApE open source software (https://jorgensen.biology.utah.edu/ wayned/ape/). We designed three sgRNAs that targeted the cistron of recB and recD, recC and endA genes, respectively.",
+            "cite_spans": [
+                {
+                    "start": 177,
+                    "end": 199,
+                    "text": "(Salgado et al., 2013)",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 786,
+                    "end": 802,
+                    "text": "Qi et al., 2013)",
+                    "ref_id": "BIBREF44"
+                }
+            ],
+            "ref_spans": [],
+            "section": "sgRNA design:"
+        },
+        {
+            "text": "Linear DNA fragments of 1.5 kb and 500 bp were prepared via PCR for its use as linear DNA input and standards, respectively. Those were purified by wizard gel and PCR clean-up kit (Promega), achieving a final concentration of 200 ng/\u00b5L. 600 ng of the 1.5 kb linear DNA were added to 20 \u00b5L cell-free reactions and incubated at 29 \u00b0C for 0, 30, 60 or 120 minutes and quickly submerged in liquid nitrogen to stop the reaction. Frozen samples were put on ice; and immediately, a volume of binding buffer from PCR clean-up kit (Promega, A9282) was added followed by 2 \u00b5L (300 ng) of the 500 bp linear DNA that served as an internal standard for the purification. The samples were then purified following standard supplier's protocol and eluted with 30 \u00b5L of ultra-pure water. Next, 0.3 volumes of loading buffer were added to the purified samples and 10 \u00b5L were run on a 1 % agarose gel electrophoresis containing 1X SYBR-Safe for DNA visualization. 1.5 kb and 500 bp DNA fragments were placed in two independent lines along with another line for 1 kb Ladder (NEB, N232). Once bands were clearly identifiable, the gel was photographed on a blue LED light transilluminator with a blue-light filter. The intensity of the 1.5 kb bands in each sample was integrated using ImageJ and normalized with the intensity of the 500 bp band of the same lane.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stability of PCR-derived linear DNA in cell-free reactions"
+        },
+        {
+            "text": "We first sought to implement of a low-cost and simple protocol for cell-free gene expression. To do this, we combined the use of S12 crude extracts -a simple post lysate processing which does not require ultracentrifugation nor dialysis (Kim et al., 2008 ) -with a highly concentrated amino acid mixture (Caschera and Noireaux, 2015b ) and a cost-effective energy source. This energy source is based on maltodextrin and polyphosphates, which do not require cold-chain transportation (Caschera and Noireaux, 2015a) . We characterized our system measuring the dynamics or endpoints of the pT7:sfGFP constitutive expression ( Figure 1A) . Initially, we prepared four different batches and tested optimum magnesium concentration in the reaction buffer for the cell-free expression of sfGFP. Optimal values ranged between 8.5 nM and 10 nM for all extracts ( Supplementary Fig. S2 ). With the goal of reducing the cost of lysate preparation, we compared maltodextrin and polyphosphates (HMP) to the conventional and more expensive 3-phosphoglyceric acid (3-PGA) energy source. In a side-by-side comparison with 3-PGA, maltodextrin produced a similar initial rate in sfGFP fluorescence ( Supplementary Fig. S3) . Moreover, the endpoint measurements were significantly higher for the cost-effective maltodextrin-based energy source in each batch tested ( Figure 1B ). Next, we measured the dynamics of constitutive pT7:sfGFP ( Figure 1A ) expression in these extracts compared to two RNAP T7-based commercial kits. In comparison to these commercial cell-free systems, our inhouse cell lysates generated higher endpoint fluorescent values, although variability was observed between different batches of cell-free extracts ( Figure 1C) . A cost-breakdown analysis of lab-scale extract production of this optimized cell-free lysate system was performed, comparing reagent prices available to the collaborating institutions in Chile and the UK (Supplementary Tables S7 -S13 ). The cost per reaction (5 \u00b5L) in Chile was $0.069 USD for the maltodextrin-based preparation in comparison to $7.80 USD for the locally purchased commercial PURExpress, representing a reduction of two orders of magnitude. In comparison, the home-made preparations were about two times less expensive in the UK than in Chile ( Supplementary Fig. S4, Supplementary Table S7 ). Maltodextrin-based reactions were approximately 20% cheaper than the 3-PGA alternative.",
+            "cite_spans": [
+                {
+                    "start": 237,
+                    "end": 254,
+                    "text": "(Kim et al., 2008",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 304,
+                    "end": 333,
+                    "text": "(Caschera and Noireaux, 2015b",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 483,
+                    "end": 513,
+                    "text": "(Caschera and Noireaux, 2015a)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 623,
+                    "end": 633,
+                    "text": "Figure 1A)",
+                    "ref_id": null
+                },
+                {
+                    "start": 853,
+                    "end": 874,
+                    "text": "Supplementary Fig. S2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1181,
+                    "end": 1203,
+                    "text": "Supplementary Fig. S3)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1347,
+                    "end": 1356,
+                    "text": "Figure 1B",
+                    "ref_id": null
+                },
+                {
+                    "start": 1419,
+                    "end": 1428,
+                    "text": "Figure 1A",
+                    "ref_id": null
+                },
+                {
+                    "start": 1715,
+                    "end": 1725,
+                    "text": "Figure 1C)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1932,
+                    "end": 1961,
+                    "text": "(Supplementary Tables S7 -S13",
+                    "ref_id": null
+                },
+                {
+                    "start": 2290,
+                    "end": 2335,
+                    "text": "Supplementary Fig. S4, Supplementary Table S7",
+                    "ref_id": null
+                }
+            ],
+            "section": "Implementation of an in-house cell-free gene expression system"
+        },
+        {
+            "text": "Left: Scheme of the strategy for testing the performance of home-made or commercial cell-free systems using the sfGFP constitutive reporter. Right: Example of the endpoint sfGFP reaction and negative control (without input DNA) in a home-made cell-free system supplemented with maltodextrin energy source. Tubes were photographed under white light or blue light plus an amber filter that allows visualizing the sfGFP fluorescence. (B) Endpoint sfGFP fluorescence was measured in four different cell extracts (Batch A, B, C, D) supplemented with either maltodextrin and polyphosphates (light blue) or 3-PGA (green) as energy source. Grey dots represent the arithmetic mean of three measurements performed on each batch, and error bars represent standard deviations of the means of the four batches tested (N=4). T-test for paired measurements was performed and statistically significance was found between the two groups (p-value = 0.03, shown by *). Assumptions of the paired t-test were verified using the Shapiro-Wilk test for normality of the differences between energy sources for a given batch (p-value = 0.97), and Levene test for homoscedasticity of the 3-PGA and maltodextrin data sets (p-value = 0.25). (C) sfGFP production dynamics in reactions performed at 29 \u00b0C using NEB PURExpress and Promega S30 T7 High Yield commercial kits along with four optimized in-house cell-free reactions (Batch A, B, C, D) using maltodextrin and polyphosphates as the energy source. Error bars represent the standard deviations of three independent replicates, dots are centered at the arithmetic mean for each time point.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Figure 1: Optimized in-house cell-free reactions compared to commercial alternatives. (A)"
+        },
+        {
+            "text": "To investigate whether RNA toehold sensors would be functional in the in-house prepared cell extracts, we used Zika virus (ZIKV) toehold sensors already shown to work well in PURExpress (Pardee et al., 2016) . We selected ZIKV toehold sensors 8 and 27 and their respective triggers due to their high dynamic range and orthogonality (Pardee et al., 2016) . These toehold sensors, controlling full-length LacZ expression, were incubated with the corresponding RNA trigger (400 nM) independently ( Fig. 2A) . For each sensor, we chose the highest DNA concentration that ensures low-background in PURExpress and used this concentration for comparison with inhouse cell-free reactions. Sensor 8 (at 0.8 nM plasmid DNA) behaved similarly in both reaction conditions, achieving a near-maximal response about 120 minutes after induction while maintaining a low signal in the absence of the trigger (Fig. 2B) . Sensor 27 (2 nM input DNA), also displayed comparable performance and sequence-specific activation in both systems used (Fig. 2B, 2C) . We also compared the performance of the full-length LacZ with LacZ-alpha reporters supplemented with the previously expressed LacZ-omega peptide in commercial and in-house cell-free extracts ( Supplementary Fig. S5 ). Full-length LacZ reporters exhibited higher ON/OFF endpoint absorbance values in both systems tested ( Supplementary Fig. S6 , far right). This can be explained by the slightly higher OFF state observed on both toehold sensors when using LacZ-alpha as a reporter ( Supplementary Fig. S6 ).",
+            "cite_spans": [
+                {
+                    "start": 186,
+                    "end": 207,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 332,
+                    "end": 353,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 495,
+                    "end": 503,
+                    "text": "Fig. 2A)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 890,
+                    "end": 899,
+                    "text": "(Fig. 2B)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1022,
+                    "end": 1035,
+                    "text": "(Fig. 2B, 2C)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1231,
+                    "end": 1252,
+                    "text": "Supplementary Fig. S5",
+                    "ref_id": null
+                },
+                {
+                    "start": 1359,
+                    "end": 1380,
+                    "text": "Supplementary Fig. S6",
+                    "ref_id": null
+                },
+                {
+                    "start": 1521,
+                    "end": 1542,
+                    "text": "Supplementary Fig. S6",
+                    "ref_id": null
+                }
+            ],
+            "section": "2.-Implementation of CFTS in low-cost cell-free reactions"
+        },
+        {
+            "text": "Next, we studied the effect of plasmid DNA input concentration on the leaky expression and saturation of sensing reactions. We tested three ZIKV toehold sensors controlling full-length LacZ expression (ZIKV Sensors 8, 27, and 32) (Pardee et al., 2016) in concentrations ranging from 0.5 nM to 10 nM. In all sensors, OFF state signal increased as a function of the input DNA concentration. (Supplementary Fig. S7 ). These results indicate that input DNA concentration can affect the dynamic range of RNA toehold sensors and that optimal concentrations may be different for each sensor.",
+            "cite_spans": [
+                {
+                    "start": 230,
+                    "end": 251,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 389,
+                    "end": 411,
+                    "text": "(Supplementary Fig. S7",
+                    "ref_id": null
+                }
+            ],
+            "section": "2.-Implementation of CFTS in low-cost cell-free reactions"
+        },
+        {
+            "text": "To increase the sensitivity of CFTS in home-made cell-free preparations, we performed NASBA amplification of the target RNA before adding it to the reactions containing the sensors (Pardee et al., 2016) . While unamplified RNA was detected at concentrations no lower than 3 nM, the NASBA amplification of target RNAs upstream in the workflow permitted the detection of RNA at concentrations as low as 3 fM ( Figure 2D ), representing a sensitivity increment of six orders of magnitude. (D) Endpoint measurement of RNA sensing reactions performed with ZIKV sensor 27 and trigger 27 in a range of concentrations with and without NASBA isothermal amplification. Gray dots represent data from six independent measurements performed from two independent NASBA amplifications performed on different days. Black error bars correspond to standard deviations of these six measurements.",
+            "cite_spans": [
+                {
+                    "start": 181,
+                    "end": 202,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 408,
+                    "end": 417,
+                    "text": "Figure 2D",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "2.-Implementation of CFTS in low-cost cell-free reactions"
+        },
+        {
+            "text": "Deployment of RNA sensors in point-of-care settings is facilitated by the lyophilization of cellfree reactions, enabling room temperature transportation and use upon rehydration (Pardee et al., 2016) . In order to test whether home-made CFTS can also be freeze-dried and stored at roomtemperature, we lyophilized reactions supplemented with pT7:sfGFP plasmid. These reactions were sealed immediately after lyophilization and kept at room temperature for up to 90 days in a closed tupperware containing desiccant and, upon rehydration, compared to a fresh sample for reference. We observed more than 60 % recovery of the endpoint sfGFP expression one week after lyophilization, which decreased to 17 % after 90 days at room temperature ( Supplementary  Fig. S8 ). The ZIKV Sensor 27 was also tested in home-made cell extracts after one and seven days of lyophilization. Besides the evident decrease in dynamic range, especially after seven days, these reactions retained the ability to detect its target trigger, while maintaining target specificity ( Supplementary Fig. S9 ). Taken together, these results indicate that the home-made cell-free system is compatible with lyophilization both for constitutive protein expression and for toehold RNA sensing reactions. The efficiency loss during storage at room temperature indicates that the preservation conditions should be addressed for further optimization and the use of cryoprotectants (Karig et al., 2017) .",
+            "cite_spans": [
+                {
+                    "start": 178,
+                    "end": 199,
+                    "text": "(Pardee et al., 2016)",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1439,
+                    "end": 1459,
+                    "text": "(Karig et al., 2017)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 737,
+                    "end": 759,
+                    "text": "Supplementary  Fig. S8",
+                    "ref_id": null
+                },
+                {
+                    "start": 1051,
+                    "end": 1072,
+                    "text": "Supplementary Fig. S9",
+                    "ref_id": null
+                }
+            ],
+            "section": "3.-Lyophilization and shelf-stability of in-house cell-free reactions"
+        },
+        {
+            "text": "The use of linear DNA for CFTS offers several advantages compared to plasmid DNA that has to be generated by cloning and then amplified using bacterial cultures prior to use (Yang et al., 1980; Bassett and Rawson, 1983; Thomas Hoffmann et al., 2001; Michel-Reydellet et al., 2005; Seki et al., 2008; Shrestha et al., 2012; Sun et al., 2014; Marshall et al., 2017) . Linear DNA can be produced by PCR amplification from a lacZ gene template, enabling the design of toehold structures as primer tails for rapid screening of CFTS libraries. The use of linear dsDNA in cellfree, however, is affected by nuclease-mediated DNA degradation in crude cell extracts. This effect is primarily due to the action of Exonuclease V (Yang et al., 1980; Bassett and Rawson, 1983 ) (encoded in the RecBCD operon) (Dillingham and Kowalczykowski, 2008) and Endonuclease I (encoded by endA), which are the dominant sources of endonuclease activity in E. coli (I. R. Lehman et al., 1962) . Previous studies have shown an increase in the efficiency of cell-free protein synthesis from PCR products using several approaches, such as supplementing with Exonuclease V inhibitors (Sitaraman et al., 2004; Sun et al., 2014) , using modified nucleotides downstream the PCR reaction (Thomas Hoffmann et al., 2001) , incorporating competitive DNA strands containing \u03c7-sites (Marshall et al., 2017) , adding dsDNA binding proteins (Zhu et al., 2020) , depleting Exonuclease V in the crude extracts (Seki et al., 2008) , deleting RecBCD with the lambda phage red recombinase (Michel-Reydellet et al., 2005) , and generating strains lacking endA (Michel-Reydellet et al., 2005; Hong et al., 2015) .",
+            "cite_spans": [
+                {
+                    "start": 174,
+                    "end": 193,
+                    "text": "(Yang et al., 1980;",
+                    "ref_id": "BIBREF69"
+                },
+                {
+                    "start": 194,
+                    "end": 219,
+                    "text": "Bassett and Rawson, 1983;",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 220,
+                    "end": 249,
+                    "text": "Thomas Hoffmann et al., 2001;",
+                    "ref_id": "BIBREF66"
+                },
+                {
+                    "start": 250,
+                    "end": 280,
+                    "text": "Michel-Reydellet et al., 2005;",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 281,
+                    "end": 299,
+                    "text": "Seki et al., 2008;",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 300,
+                    "end": 322,
+                    "text": "Shrestha et al., 2012;",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 323,
+                    "end": 340,
+                    "text": "Sun et al., 2014;",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 341,
+                    "end": 363,
+                    "text": "Marshall et al., 2017)",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 717,
+                    "end": 736,
+                    "text": "(Yang et al., 1980;",
+                    "ref_id": "BIBREF69"
+                },
+                {
+                    "start": 737,
+                    "end": 761,
+                    "text": "Bassett and Rawson, 1983",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 795,
+                    "end": 832,
+                    "text": "(Dillingham and Kowalczykowski, 2008)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 945,
+                    "end": 965,
+                    "text": "Lehman et al., 1962)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1153,
+                    "end": 1177,
+                    "text": "(Sitaraman et al., 2004;",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 1178,
+                    "end": 1195,
+                    "text": "Sun et al., 2014)",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 1253,
+                    "end": 1283,
+                    "text": "(Thomas Hoffmann et al., 2001)",
+                    "ref_id": "BIBREF66"
+                },
+                {
+                    "start": 1343,
+                    "end": 1366,
+                    "text": "(Marshall et al., 2017)",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 1399,
+                    "end": 1417,
+                    "text": "(Zhu et al., 2020)",
+                    "ref_id": "BIBREF71"
+                },
+                {
+                    "start": 1466,
+                    "end": 1485,
+                    "text": "(Seki et al., 2008)",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 1542,
+                    "end": 1573,
+                    "text": "(Michel-Reydellet et al., 2005)",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1612,
+                    "end": 1643,
+                    "text": "(Michel-Reydellet et al., 2005;",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1644,
+                    "end": 1662,
+                    "text": "Hong et al., 2015)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "4.-Increasing PCR-product stability in home-made cell-free reactions"
+        },
+        {
+            "text": "To increase the stability of PCR-derived linear DNA, we explored a CRISPRi-based strategy to control the genes encoding Exonuclease V and Endonuclease I in cells before harvesting. We designed sgRNAs targeting the 5' ends of these genes and an IPTGinducible dCas9 (Supplementary Fig. S10 ). Once established in the E. coli strain of interest, this method is cost-effective as it does not require the supplementation with extra components, or in vitro modifications of the PCR product. To test this approach, our crude extracts of each genotype (BL21 DE3 STAR/CRISPRi+, BL21 DE3 STAR/CRISPRi-and BL21 DE3 STAR) were prepared and the stability of a 1.5 Kb linear DNA was quantified over a 2-hour time course using agarose gel electrophoresis ( Supplementary Fig. S11 ). As a control, an off-target sgRNA that does not have a known target in the E.coli genome (Nu\u00f1ez et al., 2017) was tested in parallel. The following exponential degradation model was fitted to the data:",
+            "cite_spans": [
+                {
+                    "start": 857,
+                    "end": 877,
+                    "text": "(Nu\u00f1ez et al., 2017)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 264,
+                    "end": 287,
+                    "text": "(Supplementary Fig. S10",
+                    "ref_id": null
+                },
+                {
+                    "start": 742,
+                    "end": 764,
+                    "text": "Supplementary Fig. S11",
+                    "ref_id": null
+                }
+            ],
+            "section": "4.-Increasing PCR-product stability in home-made cell-free reactions"
+        },
+        {
+            "text": "where is the initial concentration of DNA, is the remaining concentration of DNA at a given time , and the degradation rate of the DNA. Modelling was undertaken assuming the lower plateau equal to zero, and the ordinary least squares approach was used for parameter estimation. Model screening indicated no statistical evidence of the parameters being different across the data sets evaluated (F-test for extra sum of squares, P=0.9285), finding the best fit value at = 0.9797. Statistical analysis of the parameters showed significant differences between cell extract genotypes (F-test for extra sum of squares, p<0.001).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "4.-Increasing PCR-product stability in home-made cell-free reactions"
+        },
+        {
+            "text": "Degradation rate decreased significantly between the CRISPRi-optimized extracts ( ) to the two controls ( for the CRISPRi-negative control, and for the BL21-derived crude extract). Also, the CRISPRi optimized extracts significantly increased protein production capacity from PCR products, leading to a two-fold increase in the sfGFP endpoint signal ( Supplementary Fig. S12 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 351,
+                    "end": 373,
+                    "text": "Supplementary Fig. S12",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "4.-Increasing PCR-product stability in home-made cell-free reactions"
+        },
+        {
+            "text": "We prepared CRISPRi-optimized extracts using the BL21-Gold-dLac strain and tested the RNA sensing capability of ZIKV toehold sensors expressed directly from PCR linear products. Using these CRISPRi extracts, both ZIKV sensors, 8 and 27, were able to detect RNA in a sequencespecific manner and behaved similarly to the plasmid derived sensors (Supplementary Fig. S13 ). Subsequently, we used these CRISPRi-optimized crude extracts to prototype novel RNA sensors for Potato Virus Y (PVY), a virus affecting local agriculture in Chile. First, we selected a conserved sequence from a wide range of PVY strains ( Supplementary Fig. S14 ), which was The majority of published toehold sensors have been designed with NUPACK, a software tool for modeling the thermodynamics properties of DNA and RNA molecules Pardee et al., 2016; Ma et al., 2018) . In this work, we have developed an algorithm that leverages NUPACK and can be generally applied to the analysis and design of novel toehold sensors according to ideal designs ( Supplementary Fig. S1 ). Using NupackSensors (see Methods), we analyzed the consensus sequence identified previously and selected eight different toehold RNA sensors for experimental screening. Transcriptional units encoding for each PVY sensor were prepared by PCR amplification and incubated with synthetic RNA direct or reverse complementary (RC) to test their ability to detect RNA in a sequence-specific manner ( Figure  3A , Supplementary Figure S15) . A control without RNA was used as a baseline in the ON/OFF endpoint calculations. Among the 8 sensors tested, two PVY sensors had ON/OFF endpoint measurements greater than 2 and background level lower than 1.2 ( Figure 3B ).",
+            "cite_spans": [
+                {
+                    "start": 803,
+                    "end": 823,
+                    "text": "Pardee et al., 2016;",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 824,
+                    "end": 840,
+                    "text": "Ma et al., 2018)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 343,
+                    "end": 366,
+                    "text": "(Supplementary Fig. S13",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 609,
+                    "end": 631,
+                    "text": "Supplementary Fig. S14",
+                    "ref_id": null
+                },
+                {
+                    "start": 1020,
+                    "end": 1041,
+                    "text": "Supplementary Fig. S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1438,
+                    "end": 1448,
+                    "text": "Figure  3A",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1465,
+                    "end": 1476,
+                    "text": "Figure S15)",
+                    "ref_id": null
+                },
+                {
+                    "start": 1691,
+                    "end": 1700,
+                    "text": "Figure 3B",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "5.-Fast Prototyping de-novo designed sensors"
+        },
+        {
+            "text": "In order to validate the fast characterization of PVY toehold sensors using PCR-derived linear DNA, the best scored sensors (PVY Sensor 1 and PVY Sensor 7) were cloned in plasmids and compared side by side with the plasmid version of ZIKV Sensor 27 in a gradient of input DNA concentrations ranging from 1nM to 4 nM (Supplementary Figure S16) . Consistent with previous observations (Supplementary Figure S7) , input DNA concentrations affect the performance of the toehold sensors, finding best performance of PVY Sensor 7 at a lower concentration than for PVY Sensor 1 whose optimal concentration was between 2 nM to 4 nM. Once a good working concentration was identified, PVY Sensor 1 and ZIKV Sensor 27 were incubated in home-made cell-free reactions (at 3.5 nM final concentration) and supplemented with ZIKV Trigger 27 or PVY RNA (at 480 nM final concentration). PVY Sensor 1 displayed sequence-specific activation comparable with ZIKV Sensor 27 ( Figure 3C ). These results showed that the fast-prototyping pipeline presented here, followed by an optimization of input DNA concentration, is a suitable strategy for identifying novel RNA toehold sensors of good performance. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 331,
+                    "end": 342,
+                    "text": "Figure S16)",
+                    "ref_id": null
+                },
+                {
+                    "start": 398,
+                    "end": 408,
+                    "text": "Figure S7)",
+                    "ref_id": null
+                },
+                {
+                    "start": 954,
+                    "end": 963,
+                    "text": "Figure 3C",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "5.-Fast Prototyping de-novo designed sensors"
+        },
+        {
+            "text": "The increasing frequency of infectious disease outbreaks and the long-standing impact of viral pathogens on agriculture and livestock highlight the need for more efficient, cost-effective and ubiquitous surveillance of viruses. Cell-free toehold sensors have emerged as a promising technology to address this challenge (Pardee et al., 2014 (Pardee et al., , 2016 Ma et al., 2018) . However, in Latin America the high cost and shipping constraints of the commercial in vitro transcription and translation systems has limited the local production and distributed development of new sensors.",
+            "cite_spans": [
+                {
+                    "start": 319,
+                    "end": 339,
+                    "text": "(Pardee et al., 2014",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 340,
+                    "end": 362,
+                    "text": "(Pardee et al., , 2016",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 363,
+                    "end": 379,
+                    "text": "Ma et al., 2018)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "These constraints could lead to centralized production models and fragile technological dependencies prone to failure, as evidenced recently by the disrupted supply chain of diagnostic reagents for SARS-CoV-2 testing (The COVID-19 testing debacle, 2020; John Nkengasong). These shortages highlight the relevance of biotechnological tools that can be shared, produced and deployed locally at a lower cost and without the restrictions of intellectual property (Kellner et al., 2020; Mascuch et al., 2020; Thomas G.W. et al., 2020 ; JOGL (Just One Gigant Lab)-Open COVID19 Initiative, 2020; Reclone, 2020). In-house prepared cell-free toehold sensors, implemented in cell lysates or home-made PURE systems (Shimizu et al., 2001; Villarreal et al., 2018; Lavickova and Maerkl, 2019) , could contribute to the decentralization of this technology and its adaptation to local needs.",
+            "cite_spans": [
+                {
+                    "start": 458,
+                    "end": 480,
+                    "text": "(Kellner et al., 2020;",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 481,
+                    "end": 502,
+                    "text": "Mascuch et al., 2020;",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 503,
+                    "end": 527,
+                    "text": "Thomas G.W. et al., 2020",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 703,
+                    "end": 725,
+                    "text": "(Shimizu et al., 2001;",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 726,
+                    "end": 750,
+                    "text": "Villarreal et al., 2018;",
+                    "ref_id": "BIBREF68"
+                },
+                {
+                    "start": 751,
+                    "end": 778,
+                    "text": "Lavickova and Maerkl, 2019)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Here, we demonstrate the implementation and rapid prototyping of novel sensors using low-cost, locally produced cell-free lysates. As our cost analysis showed, we estimate that this approach could enable the manufacture of bespoke diagnostic tests to meet local needs (for instance in Chile the cost was $0.069 USD/test, considering a 5 \u00b5L reaction). While the RNA amplification step still requires commercial inputs, such reactions can also be made in-house (J. Compton, 1991; Lauren M. Aufdembrink et al., 2020) . Future work will focus on the in-house preparation of NASBA from locally purified, and IP-free RNAseH, T7 RNAP, pyrophosphatase, and reverse transcriptase enzymes (Lauren M. Aufdembrink et al., 2020; Reclone, 2020; Matute et al., 2021) .",
+            "cite_spans": [
+                {
+                    "start": 463,
+                    "end": 477,
+                    "text": "Compton, 1991;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 478,
+                    "end": 513,
+                    "text": "Lauren M. Aufdembrink et al., 2020)",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 690,
+                    "end": 715,
+                    "text": "Aufdembrink et al., 2020;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 716,
+                    "end": 730,
+                    "text": "Reclone, 2020;",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 731,
+                    "end": 751,
+                    "text": "Matute et al., 2021)",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Future lines of research will also address the cost efficiency of crude extract preparation. 45-60% of the maltodextrin-based reaction cost relates to growing, inducing, and processing cells, where IPTG (used for induction) and the micro-chromatography columns (used for separation of the cell extract from the glass beads) add up to more than one third of the cost per reaction (Supplementary Figure S4) . Therefore, sonication (Shrestha et al., 2012) , or other column-free methods for disrupting the cells should be evaluated, along with the use of alternatives to the relatively expensive IPTG such as use of the autolysis strain (Didovyk et al., 2017) or the autoinduction media formulation (Levine et al., 2019) .",
+            "cite_spans": [
+                {
+                    "start": 429,
+                    "end": 452,
+                    "text": "(Shrestha et al., 2012)",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 634,
+                    "end": 656,
+                    "text": "(Didovyk et al., 2017)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 696,
+                    "end": 717,
+                    "text": "(Levine et al., 2019)",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 394,
+                    "end": 404,
+                    "text": "Figure S4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "A key aspect of cell-free biology is the possibility of freeze-drying genetic systems into pellets or paper-based reactions that can be transported at room temperature and deployed in the field. Here, we have tested the performance of toehold sensors in lyophilized cell extracts stored at room temperature for up to seven days. The decay of the activity after lyophilization highlights the need for further optimization of the storage conditions. Modifications of the storage atmosphere conditions either by replacing air with an inert gas, such as nitrogen or argon, in addition to the use of vacuum sealing, oxygen absorbers, and desiccants (Jung et al., 2020) , remains to be explored.",
+            "cite_spans": [
+                {
+                    "start": 644,
+                    "end": 663,
+                    "text": "(Jung et al., 2020)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "In vitro coupled transcription-translation of linear DNA fragments in a lysate derived from a recB rna pnp strain of Escherichia coli",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bassett",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Rawson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1983,
+            "venue": "J. Bacteriol",
+            "volume": "156",
+            "issn": "",
+            "pages": "1359--1362",
+            "other_ids": {
+                "DOI": [
+                    "10.1128/JB.156.3.1359-1362.1983"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Escherichia coli-based cell-free synthesis of virus-like particles",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Bundy",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Franciszkowicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Swartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Biotechnol. Bioeng",
+            "volume": "100",
+            "issn": "",
+            "pages": "28--37",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/bit.21716"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A cost-effective polyphosphate-based metabolism fuels an all E. coli cell-free expression system",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Caschera",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Metab. Eng",
+            "volume": "27",
+            "issn": "",
+            "pages": "29--37",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Preparation of amino acid mixtures for cell-free expression systems",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Caschera",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "BioTechniques",
+            "volume": "58",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2144/000114249"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Rapid and Scalable Preparation of Bacterial Lysates for Cell-Free Gene Expression",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Didovyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Tonooka",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tsimring",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hasty",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "ACS Synth. Biol",
+            "volume": "6",
+            "issn": "",
+            "pages": "2198--2208",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.7b00253"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "RecBCD Enzyme and the Repair of Double-Stranded DNA Breaks. Microbiol",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Dillingham",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kowalczykowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Mol. Biol. Rev",
+            "volume": "72",
+            "issn": "",
+            "pages": "642--671",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Cell-Free Mixing of Escherichia coli Crude Extracts to Prototype and Rationally Engineer High-Titer Mevalonate Synthesis",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Dudley",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "ACS Synth. Biol",
+            "volume": "5",
+            "issn": "",
+            "pages": "1578--1588",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.6b00154"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "The All E. coli TX-TL Toolbox 2.0: A Platform for Cell-Free Synthetic Biology",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Garamella",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Marshall",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rustad",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "ACS Synth. Biol",
+            "volume": "5",
+            "issn": "",
+            "pages": "344--355",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.5b00296"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Cell-free transcription-translation: engineering biology from the nanometer to the millimeter scale",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Garenne",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Curr. Opin. Biotechnol",
+            "volume": "58",
+            "issn": "",
+            "pages": "19--27",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.copbio.2018.10.007"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Enzymatic assembly of DNA molecules up to several hundred kilobases",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Gibson",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Young",
+                    "suffix": ""
+                },
+                {
+                    "first": "R.-Y",
+                    "middle": [],
+                    "last": "Chuang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Venter",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hutchison",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Nat. Methods",
+            "volume": "6",
+            "issn": "",
+            "pages": "343--345",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nmeth.1318"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Toehold Switches: De-Novo-Designed Regulators of Gene Expression",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Green",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Silver",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Collins",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yin",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Cell",
+            "volume": "159",
+            "issn": "",
+            "pages": "925--939",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Cell-free styrene biosynthesis at high titers",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Grubbe",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Rasor",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kr\u00fcger",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Karim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Metab. Eng",
+            "volume": "61",
+            "issn": "",
+            "pages": "89--95",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ymben.2020.05.009"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Improving Cell-Free Protein Synthesis through Genome Engineering of Escherichia coli Lacking Release Factor 1",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Hong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-C",
+                    "middle": [],
+                    "last": "Kwon",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Martin",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Des Soye",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "De Paz",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Swonger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "ChemBioChem",
+            "volume": "16",
+            "issn": "",
+            "pages": "844--853",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Directed Evolution of Glycopeptides Using mRNA Display",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Horiya",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Krauss",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Methods in Enzymology",
+            "volume": "",
+            "issn": "",
+            "pages": "83--141",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The Deoxyribonucleases of Escherichia coli",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Lehman",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Roussos",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Pratt",
+                    "suffix": ""
+                }
+            ],
+            "year": 1962,
+            "venue": "Int. J. Biol. Chem",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Nucleic acid sequence-based amplification",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Compton",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "Nature",
+            "volume": "350",
+            "issn": "",
+            "pages": "91--92",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/350091a0"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "JOGL-Open COVID19 Initiat",
+            "authors": [],
+            "year": 2020,
+            "venue": "Open COVID19 Initiative",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "John Nkengasong Let Africa into the market for COVID-19 diagnostics",
+            "authors": [],
+            "year": null,
+            "venue": "Nature",
+            "volume": "580",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/d41586-020-01265-0"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Cell-free biosensors for rapid detection of water contaminants",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Alam",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Verosloff",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Capdevila",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Desmau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Clauer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Biotechnol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41587-020-0571-7"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Preservation of protein expression systems at elevated temperatures for portable therapeutic production",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Karig",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bessling",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Thielen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wolfe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J. R. Soc. Interface",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1098/rsif.2016.1039"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A rapid, highly sensitive and open-access SARS-CoV-2 detection assay for laboratory and home testing",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kellner",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ross",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schnabl",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P S"
+                    ],
+                    "last": "Dekens",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Heinen",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Grishkovskaya",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Molecular Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.06.23.166397"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Simple procedures for the construction of a robust and cost-effective cell-free protein synthesis system",
+            "authors": [
+                {
+                    "first": "T.-W",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-W",
+                    "middle": [],
+                    "last": "Keum",
+                    "suffix": ""
+                },
+                {
+                    "first": "I.-S",
+                    "middle": [],
+                    "last": "Oh",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-Y",
+                    "middle": [],
+                    "last": "Choi",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-G",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "D.-M",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "J. Biotechnol",
+            "volume": "126",
+            "issn": "",
+            "pages": "554--561",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jbiotec.2006.05.014"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "A highly efficient and economical cellfree protein synthesis system using the S12 extract of Escherichia coli",
+            "authors": [
+                {
+                    "first": "T.-W",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-C",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "I.-S",
+                    "middle": [],
+                    "last": "Oh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D.-M",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Biotechnol. Bioprocess Eng",
+            "volume": "13",
+            "issn": "",
+            "pages": "464--469",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12257-008-0139-8"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "High-throughput preparation methods of crude extract for robust cell-free protein synthesis",
+            "authors": [
+                {
+                    "first": "Y.-C",
+                    "middle": [],
+                    "last": "Kwon",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Sci. Rep",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/srep08663"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Bottom-Up Construction of Complex Biomolecular Systems With Cell-Free Synthetic Biology",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Laohakunakorn",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Grasemann",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lavickova",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Michielin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shahein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Swank",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Front. Bioeng. Biotechnol",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3389/fbioe.2020.00213"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "CRISPR interference (CRISPRi) for sequence-specific control of gene expression",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Larson",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gilbert",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Weissman",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Qi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Nat. Protoc",
+            "volume": "8",
+            "issn": "",
+            "pages": "2180--2196",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nprot.2013.132"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Highly specific, multiplexed isothermal pathogen detection with fluorescent aptamer readout",
+            "authors": [
+                {
+                    "first": "Lauren",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Aufdembrink",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pavana",
+                    "middle": [],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nathaniel",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gaut",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katarzyna",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Adamala",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aaron",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "RNA",
+            "volume": "26",
+            "issn": "",
+            "pages": "1283--1290",
+            "other_ids": {
+                "DOI": [
+                    "10.1261/rna.075192.120"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "A Simple, Robust, and Low-Cost Method To Produce the PURE Cell-Free System",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lavickova",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Maerkl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ACS Synth. Biol",
+            "volume": "8",
+            "issn": "",
+            "pages": "455--462",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Cell-Free Prototyping of AND-Logic Gates Based on Heterogeneous RNA Activators",
+            "authors": [
+                {
+                    "first": "F.-X",
+                    "middle": [],
+                    "last": "Lehr",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hanst",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Vogel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kremer",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "G\u00f6ringer",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Suess",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ACS Synth. Biol",
+            "volume": "8",
+            "issn": "",
+            "pages": "2163--2173",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.9b00238"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Redesigned upstream processing enables a 24-hour workflow from E. coli cells to cell-free protein synthesis",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "So",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Mullin",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Watts",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Oza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Synthetic Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/729699"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Design of a Transcriptional Biosensor for the Portable, On-Demand Detection of Cyanuric Acid",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Silverman",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Alam",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Iverson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lucks",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ACS Synth. Biol",
+            "volume": "9",
+            "issn": "",
+            "pages": "84--94",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.9b00348"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Low-cost detection of norovirus using paper-based cell-free systems and synbody-based viral enrichment",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Diehnelt",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Green",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Synth. Biol",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/synbio/ysy018"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Short DNA containing \u03c7 sites enhances DNA stability and gene expression in E. coli cell-free transcription-translation systems: Enhancing TXTL-Based Expression With \u03c7-Site DNA",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Marshall",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Maxwell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Collins",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Beisel",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Biotechnol. Bioeng",
+            "volume": "114",
+            "issn": "",
+            "pages": "2137--2141",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/bit.26333"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "A blueprint for academic labs to produce SARS-CoV-2 RT-qPCR test kits",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Mascuch",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Fakhretaha-Aval",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Bowman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "T H"
+                    ],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Bommarius",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J. Biol. Chem",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1074/jbc.RA120.015434"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Homebrew reagents for low cost RT-LAMP. Public and Global Health",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Matute",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Nu\u00f1ez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rivera",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Reyes",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bl\u00e1zquez-S\u00e1nchez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Arce",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2021.05.08.21256891"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Point-of-care biomarker quantification enabled by sample-specific calibration",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Mcnerney",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Steppe",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Silverman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Styczynski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Sci. Adv",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/sciadv.aax4473"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Increasing PCR Fragment Stability and Protein Yields in a Cell-Free System with Genetically Modified Escherichia coli Extracts",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Michel-Reydellet",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Woodrow",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Swartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "J. Mol. Microbiol. Biotechnol",
+            "volume": "9",
+            "issn": "",
+            "pages": "26--34",
+            "other_ids": {
+                "DOI": [
+                    "10.1159/000088143"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Cell-free synthetic biology for in vitro prototype engineering",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Moore",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Macdonald",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Freemont",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Biochem. Soc. Trans",
+            "volume": "45",
+            "issn": "",
+            "pages": "785--791",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Rapid cell-free forward engineering of novel genetic ring oscillators",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Niederholtmeyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hori",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Verpoorte",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7554/eLife.09771"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "The Dependence of Cell-Free Protein Synthesis in E. coli upon Naturally Occurring or Synthetic Polyribonucleotides",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Nirenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Matthaei",
+                    "suffix": ""
+                }
+            ],
+            "year": 1961,
+            "venue": "Proc. Natl. Acad. Sci. U. S. A",
+            "volume": "47",
+            "issn": "",
+            "pages": "1588--1602",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Artificial Symmetry-Breaking for Morphogenetic Engineering Bacterial Colonies",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Nu\u00f1ez",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Matute",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Valle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Choksi",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Endy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "ACS Synth. Biol",
+            "volume": "6",
+            "issn": "",
+            "pages": "256--265",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.6b00149"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Paper-Based Synthetic Gene Networks",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Pardee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Green",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ferrante",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Cameron",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Daleykeyser",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Cell",
+            "volume": "159",
+            "issn": "",
+            "pages": "940--954",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Rapid, Low-Cost Detection of Zika Virus Using Programmable Biomolecular Components",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Pardee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Green",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Takahashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Braff",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Lambert",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Cell",
+            "volume": "165",
+            "issn": "",
+            "pages": "1255--1266",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cell.2016.04.059"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Universal Loop assembly (uLoop): open, efficient, and species-agnostic DNA fabrication",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Pollak",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Matute",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Nu\u0148ez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cerda",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Lopez",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vargas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Synthetic Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/744854"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Repurposing CRISPR as an RNA-Guided Platform for Sequence-Specific Control of Gene Expression",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Qi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Larson",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gilbert",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Doudna",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Weissman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Arkin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Cell",
+            "volume": "152",
+            "issn": "",
+            "pages": "1173--1183",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cell.2013.02.022"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Recloneorg Glob",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Reclone",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Collab. Equitable Access Biotechnol. Available",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Cell-free TXTL synthesis of infectious bacteriophage T4 in a single test tube reaction",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rustad",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Eastlund",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jardine",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Synth. Biol",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Biosensing estrogenic endocrine disruptors in human blood and urine: A RAPID cell-free protein synthesis approach",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "S M"
+                    ],
+                    "last": "Salehi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Earl",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Shakalli Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Porter Hunt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Toxicol. Appl. Pharmacol",
+            "volume": "345",
+            "issn": "",
+            "pages": "19--25",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "RegulonDB v8.0: omics data sets, evolutionary conservation, regulatory phrases, cross-validated gold standards and more",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Salgado",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Peralta-Gil",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gama-Castro",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Santos-Zavaleta",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mu\u00f1iz-Rascado",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Garc\u00eda-Sotelo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Nucleic Acids Res",
+            "volume": "41",
+            "issn": "",
+            "pages": "203--213",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/gks1201"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Cell-free protein synthesis system from Escherichia coli cells cultured at decreased temperatures improves productivity by decreasing DNA template degradation",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Seki",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Matsuda",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yokoyama",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kigawa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Anal. Biochem",
+            "volume": "377",
+            "issn": "",
+            "pages": "156--161",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Cell-free translation reconstituted with purified components",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shimizu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Inoue",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tomari",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Suzuki",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yokogawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nishikawa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Nat. Biotechnol",
+            "volume": "19",
+            "issn": "",
+            "pages": "751--755",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/90802"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "An E. coli Cell-Free Expression Toolbox: Application to Synthetic Gene Circuits and Artificial Cells",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shin",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "ACS Synth. Biol",
+            "volume": "1",
+            "issn": "",
+            "pages": "29--41",
+            "other_ids": {}
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Streamlined extract preparation for Escherichia coli -based cell-free protein synthesis by sonication or bead vortex mixing",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Shrestha",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Holland",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Bundy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "BioTechniques",
+            "volume": "53",
+            "issn": "",
+            "pages": "163--174",
+            "other_ids": {
+                "DOI": [
+                    "10.2144/0000113924"
+                ]
+            }
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Gene Circuit Performance Characterization and Resource Usage in a Cell-Free \"Breadboard",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Siegal-Gaskins",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Tuza",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "ACS Synth. Biol",
+            "volume": "3",
+            "issn": "",
+            "pages": "416--425",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/sb400203p"
+                ]
+            }
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "Design and Optimization of a Cell-Free Atrazine Biosensor",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Silverman",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Akova",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Alam",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lucks",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ACS Synth. Biol",
+            "volume": "9",
+            "issn": "",
+            "pages": "671--677",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.9b00388"
+                ]
+            }
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Deconstructing Cell-Free Extract Preparation for in Vitro Activation of Transcriptional Genetic Circuitry",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Silverman",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kelley-Loughnane",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lucks",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ACS Synth. Biol",
+            "volume": "8",
+            "issn": "",
+            "pages": "403--414",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.8b00430"
+                ]
+            }
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "A novel cell-free protein synthesis system",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sitaraman",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Esposito",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Klarmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Le Grice",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hartley",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "J. Biotechnol",
+            "volume": "110",
+            "issn": "",
+            "pages": "257--263",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jbiotec.2004.02.014"
+                ]
+            }
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "Protocols for Implementing an Escherichia coli Based TX-TL Cell-Free Expression System for Synthetic Biology",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hayes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shin",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Caschera",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Murray",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J. Vis. Exp",
+            "volume": "50762",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3791/50762"
+                ]
+            }
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "Linear DNA for Rapid Prototyping of Synthetic Biological Circuits in an Escherichia coli Based TX-TL Cell-Free System",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hayes",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Murray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "ACS Synth. Biol",
+            "volume": "3",
+            "issn": "",
+            "pages": "387--397",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/sb400131a"
+                ]
+            }
+        },
+        "BIBREF59": {
+            "ref_id": "b59",
+            "title": "Opportunities toward hydrogen production biotechnologies",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Swartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Curr. Opin. Biotechnol",
+            "volume": "62",
+            "issn": "",
+            "pages": "248--255",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.copbio.2020.03.002"
+                ]
+            }
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Rapidly Characterizing the Fast Dynamics of RNA Genetic Circuitry with Cell-Free Transcription-Translation (TX-TL) Systems",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Takahashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chappell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hayes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Singhal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "ACS Synth. Biol",
+            "volume": "4",
+            "issn": "",
+            "pages": "503--515",
+            "other_ids": {}
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "A low-cost paper-based synthetic biology platform for analyzing gut microbiota and host biomarkers",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Takahashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dy",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Braff",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Akana",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Furuta",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Commun",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41467-018-05864-4"
+                ]
+            }
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "Synchrony and pattern formation of coupled genetic oscillators on a chip of artificial cells",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Tayar",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Karzbrun",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Noireaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Bar-Ziv",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proc. Natl. Acad. Sci",
+            "volume": "114",
+            "issn": "",
+            "pages": "11609--11614",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.1710620114"
+                ]
+            }
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "Point-of-Use Detection of Environmental Fluoride via a Cell-Free Riboswitch-Based Biosensor",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Thavarajah",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Silverman",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Verosloff",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kelley-Loughnane",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lucks",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ACS Synth. Biol",
+            "volume": "9",
+            "issn": "",
+            "pages": "10--18",
+            "other_ids": {}
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "The COVID-19 testing debacle",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "38",
+            "issn": "",
+            "pages": "653--653",
+            "other_ids": {}
+        },
+        "BIBREF65": {
+            "ref_id": "b65",
+            "title": "BEARmix: Basic Economical Amplification Reaction one-step RT-qPCR master mix",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gina",
+                    "suffix": ""
+                },
+                {
+                    "first": "Claire",
+                    "middle": [],
+                    "last": "Dailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "N E"
+                    ],
+                    "last": "Dugast-Darzacq",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BEARmix. Available",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF66": {
+            "ref_id": "b66",
+            "title": "High-Level Cell-Free Protein Expression from PCR-Generated DNA Templates",
+            "authors": [
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "Hoffmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cordula",
+                    "middle": [],
+                    "last": "Nemetz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Regina",
+                    "middle": [],
+                    "last": "Schweizer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wolfgang",
+                    "middle": [],
+                    "last": "Mutter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mandred",
+                    "middle": [],
+                    "last": "Watzele",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Cell-Free Translation Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF67": {
+            "ref_id": "b67",
+            "title": "PLANT-Dx: A Molecular Diagnostic for Point-of-Use Detection of Plant Pathogens",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Verosloff",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chappell",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Perry",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Lucks",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ACS Synth. Biol",
+            "volume": "8",
+            "issn": "",
+            "pages": "902--905",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.8b00526"
+                ]
+            }
+        },
+        "BIBREF68": {
+            "ref_id": "b68",
+            "title": "Synthetic microbial consortia enable rapid assembly of pure translation machinery",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Villarreal",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Contreras-Llano",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chavez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Chem. Biol",
+            "volume": "14",
+            "issn": "",
+            "pages": "29--35",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nchembio.2514"
+                ]
+            }
+        },
+        "BIBREF69": {
+            "ref_id": "b69",
+            "title": "Cell-free coupled transcription-translation system for investigation of linear DNA segments",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ivashkiv",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zubay",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cashel",
+                    "suffix": ""
+                }
+            ],
+            "year": 1980,
+            "venue": "Proc. Natl. Acad. Sci",
+            "volume": "77",
+            "issn": "",
+            "pages": "7029--7033",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.77.12.7029"
+                ]
+            }
+        },
+        "BIBREF70": {
+            "ref_id": "b70",
+            "title": "Sigma Factor-Mediated Tuning of Bacterial Cell-Free Synthetic Genetic Oscillators",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Yelleswarapu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Van Der Linden",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Van Sluijs",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Pieters",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dubuc",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "F A"
+                    ],
+                    "last": "De Greef",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "ACS Synth. Biol",
+            "volume": "7",
+            "issn": "",
+            "pages": "2879--2887",
+            "other_ids": {
+                "DOI": [
+                    "10.1021/acssynbio.8b00300"
+                ]
+            }
+        },
+        "BIBREF71": {
+            "ref_id": "b71",
+            "title": "Increasing cell-free gene expression yields from linear templates in Escherichia coli and Vibrio natriegens extracts by using DNA-binding proteins",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Cabezas",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kojima",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nicol",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jewett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biotechnol. Bioeng",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/bit.27538"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "s \" . . . . . . . . . . . . . . . . . . . . . . . . . ( (( ( ( ( ( ( ( ( ( . . .  (((((............)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Performance of low-cost ZIKV toehold sensors in low-cost cell-free lysate reactions. (A) Schematic representation of toehold-mediated RNA sensing. (B) Dynamics of the RNA sensing reactions performed with ZIKV toehold sensor 8 (0.7 nM plasmid DNA) and 27 (2 nM plasmid DNA), regulating the expression of the full-length LacZ in home-made cell extracts and PURExpress cell-free reactions. Error bars represent the standard deviations of three independent experiments, dots are centered at the arithmetic mean for each time point. (C) Example of the endpoint visualization of the experiments after four hours of incubation at 29 \u00b0C.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "0.008/min K deg = 0.022/min K deg = 0.040/min subsequently generated as a synthetic fragment, transcribed in vitro and used for screening potential toehold sensors(Figure 3,Supplementary Table S5 and S6).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Fast prototyping de-novo designed sensors in low-cost optimized cell-free systems. (A) Scheme of the global strategy for fast prototyping de-novo designed RNA toeholds sensors against synthetic fragments of PVY virus. (B) PCR-purified transcriptional units (at 10 nM final concentration) encoding for PVY RNA toehold sensors were incubated with synthetic RNA direct or RNA reverse complementary (RC) (at 300 nM final concentration) and absorbance at 570 nm was measured in plate reader. Endpoint ON/OFF absorbance was calculated at 200 minutes with respect to an untriggered control. Heatmap values correspond to the average of six experimental replicates from two PCR amplifications performed on different days. (C) PVY Sensor 1 and ZIKV Sensor 27 encoded in plasmids (at 3.5 nM final concentration) were incubated with ZIKV Trigger 27 RNA or with PVY Trigger RNA (at 480 nM final concentration). Plotted values correspond to arithmetic mean and standard deviation of two independent experiments.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Score = \u2212 71 d Sensor \u2212 49.1 d ActiveSensor \u2212 22.6 d BindingSite + 54.3 their 5' tails along with the UNSXR reverse primer. LacZ full length was used as template (Supplementary",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank Dr. Jonathan Dhalin (Technical University of Denmark) and Dr. Vincent Noireaux (University of Minnesota) for providing positive controls and examples for cell-free protein synthesis reactions at early stages of the project.We thank the Pardee lab (University of Toronto) for welcoming Anibal during his internship. We thank the Federici lab (Pontificia Universidad Cat\u00f3lica de Chile) for comments and feedback on the manuscript.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of Interest"
+        }
+    ]
+}

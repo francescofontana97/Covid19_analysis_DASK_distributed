@@ -1,0 +1,2671 @@
+{
+    "paper_id": "3e43f71d3a3b58b74311672a1a94efea95c2da30",
+    "metadata": {
+        "title": "Algorithmic Ethics: Formalization and Verification of Autonomous Vehicle Obligations",
+        "authors": [
+            {
+                "first": "Colin",
+                "middle": [],
+                "last": "Shea-Blymyer",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Oregon State University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Houssam",
+                "middle": [],
+                "last": "Abbas",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Oregon State University",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We develop a formal framework for automatic reasoning about the obligations of autonomous cyber-physical systems, including their social and ethical obligations. Obligations, permissions and prohibitions are distinct from a system's mission, and are a necessary part of specifying advanced, adaptive AI-equipped systems. They need a dedicated deontic logic of obligations to formalize them. Most existing deontic logics lack corresponding algorithms and system models that permit automatic verification. We demonstrate how a particular deontic logic, Dominance Act Utilitarianism (DAU) [23] , is a suitable starting point for formalizing the obligations of autonomous systems like self-driving cars. We demonstrate its usefulness by formalizing a subset of Responsibility-Sensitive Safety (RSS) in DAU; RSS is an industrial proposal for how self-driving cars should and should not behave in traffic. We show that certain logical consequences of RSS are undesirable, indicating a need to further refine the proposal. We also demonstrate how obligations can change over time, which is necessary for long-term autonomy. We then demonstrate a model-checking algorithm for DAU formulas on weighted transition systems, and illustrate it by model-checking obligations of a self-driving car controller from the literature.",
+            "cite_spans": [
+                {
+                    "start": 586,
+                    "end": 590,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Shea-Blymyer and Abbas these social norms of interaction, and more particularly on the robot's respect for ethical guidelines that are as necessary as they are ambiguous. These obligations are distinct from the CPS' mission, which is, for example, to go from A to B without collisions. Obligations place constraints on how the CPS achieves its mission, and might be violated. Safety and performance are no longer sufficient criteria for a successful CPS design: ethical, and more generally social, obligations must be formalized, verified, and where possible, enforced. In this work we tackle the challenges of formalizing ethical obligations in a useful and interpretable way, analyzing the properties of these obligations, and automatically verifying that a system has given obligations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "In the fields of Artificial Intelligence (AI) and Logic, the formalization of ethical and social obligations dates back at least to Mally [28, 30] , with most of the focus going towards developing the 'right' logics and simulation-based studies of normative systems. While these logics are interpretable, they lack system models of the agents under obligation. In [19] , limited ethical requirements are modeled in the costs and/or constraints of a classical optimal control problem.",
+            "cite_spans": [
+                {
+                    "start": 138,
+                    "end": 142,
+                    "text": "[28,",
+                    "ref_id": null
+                },
+                {
+                    "start": 143,
+                    "end": 146,
+                    "text": "30]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 364,
+                    "end": 368,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Precisely defining the costs and constraints that embed ethics into a control problem is challenging, and providing a high-level interpretation of what a particular choice logically entails is generally not possible. E.g. how does the behavior change qualitatively if a slack variable is increased or a weight is decreased? In CPS, The formalization, verification, and enforcement of ethical and social obligations has not been adequately tackled. This paper develops a formal framework and tool for the analysis of the ethical obligations of human-scale CPS, with applications in self-driving cars.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The formal verification and control of CPS safety and performance has relied on alethic temporal logics, like Linear Temporal Logic [34] , to express behavioral specifications of system models. Alethic logic is the logic of necessity and possibility: for example, if is a predicate, says that is true in every accessible world -that is, is necessary.",
+            "cite_spans": [
+                {
+                    "start": 132,
+                    "end": 136,
+                    "text": "[34]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Possibility is then formalized as := \u00ac \u00ac : saying that is possible is the same as saying that it is not the case that \u00ac is necessary. And so on. The best known instantiation of this in Verification is LTL [31], in which an accessible world is a moment in the linear future. Thus formalizes ' is true in every future moment', and formalizes ' is true in some future moment'. It is natural to want to leverage alethic logics and associated tools to formalize and study CPS obligations as well. However, it has been understood for over 70 years that the logic of obligations is different from that of necessity [32]: applying alethic logic rules to obligation statements can lead to conclusions that are intuitively paradoxical or undesirable. Consider the following statements:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "A. The car will eventually change lanes: this is a statement about necessity. It says nothing about whether the car plays an active role in the lane change (e.g., perhaps it will hit a slippery patch), or whether it should change lanes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "B. The car can change lanes: this is a statement about ability. The car might be able to do something, but does not actually do it.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "C. The car sees to it that it changes lanes: this is a statement about agency. It tells us that the car ensures that it changes lanes. 1 I.e., it is an active agent in the lane change.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "D. The car ought to change lanes: this is a statement about obligation. The car, for example, might fail to meet its obligation, either by choice or because it can't change lanes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "These are qualitatively different statements and there is no a priori equivalence between any two of them. The logic we adopt should reflect this: its operators and inference rules should model these aspects in the logic, without having to add new atomic propositions for every new concept and situation that occurs to us. Alethic logics like LTL cannot do so. 2 1 The 'see to it' phraseology is very common in Logic and we use it in this paper. 2 Anderson and Kanger attempted a reduction of obligations to alethic logic. See [32, Section 3] for a discussion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The need for embodied Cyber-Physical Systems (CPS) that are fully autonomous, update their own objectives and interact with us in our daily lives is more obvious today than ever. To cite one example, the Covid-19 pandemic has highlighted the need for nursing robots that can check on patients in high-risk situations, self-driving vehicles that deliver essential goods to people who cannot get them, and companion robots that understand and adapt to different living situations like those of elderly people or incapacitated persons. We refer to these different types of systems as human-scale CPS : embodied CPS that interact with humans and their environment, and are perceived as being reasonably intelligent and autonomous. The common thread to all of these applications is that the autonomous CPS is seen as just another agent in our environment, and our interactions with it assume a wide range of social expectations built through our interactions with other humans. Indeed, the success of these systems depends on their respect for We now give a simple but fundamental example, drawn from [32] , illustrating this inability of alethic logic. One might be tempted to formalize obligation using the necessity operator : that is, formalize 'The car ought to change lane' by change-lane. However, in alethic logic, =\u21d2 : if is necessarily true then it is true. If we use for obligation this reads as Obligatory =\u21d2 : this inference is clearly unacceptable because agents sometimes violate their obligations so some obligatory things are not true. This leads to the question of what an agent ought to do when some primary obligations are violated. I.e. the study of statements of the form Obligatory \u2227 \u00ac =\u21d2 .... This is not possible if obligation is formalized using in pure alethic logic, since \u2227 \u00ac =\u21d2 is trivially true for any and .",
+            "cite_spans": [
+                {
+                    "start": 1096,
+                    "end": 1100,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Deontic logic [18] has been developed specifically to reason about obligations, starting with von Wright [42] . It is used in contract law, including software contracts, and is an active area of research in Logic-based AI [26] . There are many flavors of deontic logic [22] . In this paper, we adopt the logic of Dominance Act Utilitarianism (DAU) developed by Horty [23] because it explicitly models all four aspects above: necessity, agency, ability and obligation. We first extend DAU to formalize the obligations of human-scale CPS with complex missions. We then formalize a subset of Intel's Responsibility-Sensitive Safety, or RSS, in DAU [39] . RSS proposes a set of rules to be followed by self-driving cars to avoid collisions. To promote 'naturalistic driving', RSS places an obligation to avoid aggressive driving while giving permission to drive assertively. Using our DAU formalization of RSS, we demonstrate that RSS allows a car to facilitate an accident in traffic, clearly an undesirable position; this points to the need to further refine the RSS proposal.",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 18,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 105,
+                    "end": 109,
+                    "text": "[42]",
+                    "ref_id": null
+                },
+                {
+                    "start": 222,
+                    "end": 226,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 269,
+                    "end": 273,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 367,
+                    "end": 371,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 645,
+                    "end": 649,
+                    "text": "[39]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "We develop the first model-checking algorithm for DAU formulas, to determine whether a system model has a given obligation or not. We implemented the model-checker and present results on a self-driving car controller. An obligation constitutes a constraint on the CPS controller, and can be integrated into the controller's objective; thus designing obligations and checking them is conceptually akin to reward shaping in Reinforcement Learning [43] .",
+            "cite_spans": [
+                {
+                    "start": 445,
+                    "end": 449,
+                    "text": "[43]",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "When studying an autonomous CPS' obligations, it is also necessary to analyze how these obligations change over time, as a result of the agent's choices [13] . For example if I ought to visit an ill relative today or tomorrow, and I don't visit them today, then it's reasonable to say that tomorrow, my residual obligation is to visit them. It is important that the formal conclusions yielded by the logic match such intuitive conclusions, in order to build trust in human-scale CPS. We prove obligation propagation patterns for obligations expressed in DAU.",
+            "cite_spans": [
+                {
+                    "start": 153,
+                    "end": 157,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Our contributions in this paper are to 3 :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "(1) formalize the obligations of RSS in DAU, and highlight the subtle decisions that need to be made when developing a rigorous specification;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "(2) derive undesirable consequences of the RSS obligations, pointing to the need for further refinements of RSS;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "(3) demonstrate patterns for temporal propagation of obligations in DAU, allowing evaluation of obligations inheritance;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "(4) develop a model-checking algorithm of DAU specifications that allows us to establish whether a system has a given obligation or not; and (5) implement the model-checker and demonstrate its use on a self-driving car from the litterature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Paper Organization. Section 2 defines DAU. Section 3 gives a first case study: the formalization of a subset of RSS rules in DAU, and some of their logical consequences. Section 4 proves propagation patterns that hold in DAU. Section 5 gives a model-checking algorithm for absolute and conditional DAU statements. Section 6 demonstrates the use of the model-checker on a highway driving controller from the literature. Related work is reviewed in Section 7, and Section 8 concludes the paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "We adopt the logic of Dominance Act Utilitarianism (DAU) developed by Horty [23] because it explicitly models all four aspects listed in the Introduction: necessity, agency, ability and obligation. It includes a temporal logic as a component so we can describe temporal behaviors essential to system design, and it uses branching time, essential for modeling uncontrollable environments. It has an intrinsic computational structure which makes it appealing for CPS verification and control purposes: the agent's obligations are derived from maximizing utility, so DAU can be viewed as the deontic logic of utility maximization in non-deterministic systems. As such, it gives a logical interpretation to the behavior of systems that maximize utility, such as [19] . This section summarizes the main aspects of DAU developed in [23] .",
+            "cite_spans": [
+                {
+                    "start": 76,
+                    "end": 80,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 758,
+                    "end": 762,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 826,
+                    "end": 830,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Syntax. Let be a finite set of agents, which represent, for example, the cars in traffic. A DAU formula is obtained as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "where \u2208 , \u2227, \u00ac are the usual boolean connectives, and is a formula in the logic CTL * . We use CTL * to specify the CPS' mission and to describe states of affairs in the world. We give the informal description of CTL * operators and refer the reader to [17] Branching time. Let be a set of moments with an irreflexive, transitive ordering relation < such that for any three moments 1 , 2 , 3 in , if 1 < 3 and 2 < 3 then either 1 < 2 or 2 < 1 . There is a unique root moment which we denote by 0. A history is a maximal linearly ordered set of moments from : intuitively, it is a branch of the tree that extends infinitely into the future. Given a moment \u2208 , the set of histories that go through is := {\u210e | \u2208 \u210e}. See Fig. 1 . We will frequently refer to moment/history pairs /\u210e, where \u2208 Tree and \u210e \u2208 . ",
+            "cite_spans": [
+                {
+                    "start": 253,
+                    "end": 257,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 717,
+                    "end": 723,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "where is a tree of moments with ordering < and is a function that maps moments in M to sets of atomic propositions from 2 , the set of subsets of . 4 In this paper, to retain a uniform satisfaction relation like [23] , we will speak of formulas holding or not at an /\u210e pair and write M, /\u210e |= , where it is always the case that \u210e \u2208 . When the formula is in CTL * there should be no confusion as a CTL * path formula is evaluated along \u210e and a state formula is evaluated at . Given a DAU statement , 4 In the DAU formulation of [23] , maps /\u210e pairs, rather than moments , to subsets of . This is more general but disagrees with the common usage of atomic propositions in CPS Verification, so we adopt this more classical definition of . The ideas of this paper are best explained without such (currently) unnecessary generalities. ",
+            "cite_spans": [
+                {
+                    "start": 148,
+                    "end": 149,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 212,
+                    "end": 216,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 499,
+                    "end": 500,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 527,
+                    "end": 531,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "the proposition it expresses at moment is the set of histories where it holds starting at",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Where there's no risk of ambiguity, we drop M from the notation, writing | | , /\u210e |= , etc.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Choice. Consider an agent \u2208 . Formally, at , an action is a subset of : this is the subset of histories that are still realizable after taking the action. At every moment , is faced with a choice of actions which we denote by \u210e . So \u210e \u2282 2 . See actions in Fig. 1 . \u210e must obey certain constraints given in the Supplementary material. In what follows, \u210e is assumed finite for every and .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 256,
+                    "end": 262,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Agency. Agency is defined via the 'Chellas sees to it' operator , named after Brian Chellas [16] . Intuitively, an agent sees to it, or ensures, that holds at /\u210e if it takes an action s.t., whatever other history \u210e \u2032 could've resulted from , is true at /\u210e \u2032 as well. I.e., the non-determinism does not prevent from guaranteeing . Optimal actions. To speak of an agent's obligations, we will need to speak of 'optimal actions', those actions that bring about an ideal state of affairs. Let : 0 \u2192 R be a value function that maps histories of M to utility values from the real line R. This value represents the utility associated by all the agents to this common history. Given two sets of histories and , we order them as",
+            "cite_spans": [
+                {
+                    "start": 92,
+                    "end": 96,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Let := \u210e \\{ } be the set of background states against which 's decisions are to be evaluated. These are the choices of action available to other agents. Given two actions , \u2032 in \u210e , \u2aaf \u2032 iff \u2229 \u2264 \u2032 \u2229 for all \u2208 . That is, \u2032 dominates iff it is preferable to it regardless of what the other agents do (known as sure-thing reasoning). Strict inequalities are naturally defined. Optimal actions are given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "is non-empty in models with finite \u210e [23, Thm. 4.10].",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Dominance Ought. We are now ready to define Ought statements, i.e., obligations. Intuitively we will want to say that at moment , agent ought to see to it that iff is a necessary condition of all the histories considered ideal at moment . This is formalized in the following dominance Ought operator, which is pronounced \" ought to see to it that holds\". The intuitive meaning of permission is that can ensure without violating any obligations. Moreover, having a permission does not imply that one actually sees to it that is true. This is quite different from , which simply says that actually happens, and from \u2203[ : ] which says that can ensure , neither of which refers to obligations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Conditional obligation. It is often necessary to say that an obligation is imposed only under certain conditions. Let be a proposition, i.e. = | | for some . The choice of actions available to at under the condition that holds is defined as \u210e / := { \u2208 \u210e | \u2229 \u2260 \u2205}. This is the right definition because non-determinism might make it impossible to have \u2286 (i.e., an action that guarantees ), but future actions might still ensure the finally realized history will satisfy . Thus in Fig. 1 ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 478,
+                    "end": 484,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Conditional dominance is then defined by comparing only histories that satisfy : for two actions , \u2032 from \u210e ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "The conditionally optimal actions are then",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Finally, where is an obligation and a formula in the underlying temporal logic, the conditional Ought is defined by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "We note that conditional obligation is not the same as =\u21d2 \u2299[ : ]. Conditional obligation only compares -satisfying histories, while this latter formula still compares all histories.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Terminology abuse. In what follows, histories that belong to optimal actions will be called optimal.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DOMINANCE ACT UTILITARIANISM"
+        },
+        {
+            "text": "Responsibility-Sensitive Safety, or RSS, is a proposal put forth by Intel's Mobileye division [39] . It proposes rules or requirements that, if followed by all cars in traffic, would lead to zero accidents. RSS attempts to promote a natural way of driving by drawing the line between acceptable assertive driving, and unacceptable aggressive driving. We consider these notions, of assertive vs. aggressive driving, to be fundamentally social because they refer to what a particular society accepts. Thus we may say that RSS places an obligation to avoid aggressive driving while giving permission to drive assertively. The RSS proposal is expressed in the language of continuous-time dynamical systems and ordinary differential equations, but the rules to be followed are not formalized logically, so it is not possible to reason about them or derive their logical consequences. This work complements the dynamical equations-based presentation of RSS in [39] with a deontic logic formalism. We have three objectives in doing so: demonstrating the usefulness of DAU in a real use case; highlighting the ambiguities implicit in such proposals, which would go unnoticed without formalization; and automating the checking of logical consistency and deriving of conclusions. We first present the RSS rules in natural language (Section 3.1), then their formalization (Section 3.2), and finally we analyze the rules' logical consequences.",
+            "cite_spans": [
+                {
+                    "start": 94,
+                    "end": 98,
+                    "text": "[39]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 954,
+                    "end": 958,
+                    "text": "[39]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CASE STUDY IN MODELING: RESPONSIBILITY-SENSITIVE SAFETY FOR SELF-DRIVING CARS"
+        },
+        {
+            "text": "Three important points must be made:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CASE STUDY IN MODELING: RESPONSIBILITY-SENSITIVE SAFETY FOR SELF-DRIVING CARS"
+        },
+        {
+            "text": "(A) The formalization does not depend on the dynamical equations that govern the cars because we wish our conclusions to be independent of these lower-level concerns. This is consistent with the standard AV control architecture where a logical planner decides what to do next ('change lanes' or 'turn right') and a lower-level motion planner executes these decisions. Our logical analysis concerns the logical planner.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CASE STUDY IN MODELING: RESPONSIBILITY-SENSITIVE SAFETY FOR SELF-DRIVING CARS"
+        },
+        {
+            "text": "(B) We are not trying to formalize general traffic laws [38] or driving scenarios, which is outside the scope of this paper. We are only formalizing the RSS rules.",
+            "cite_spans": [
+                {
+                    "start": 56,
+                    "end": 60,
+                    "text": "[38]",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CASE STUDY IN MODELING: RESPONSIBILITY-SENSITIVE SAFETY FOR SELF-DRIVING CARS"
+        },
+        {
+            "text": "(C) Every formalization, in any logic, can always be refined. We are not aiming for the most detailed formalization; we aim for a useful formalization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CASE STUDY IN MODELING: RESPONSIBILITY-SENSITIVE SAFETY FOR SELF-DRIVING CARS"
+        },
+        {
+            "text": "The rules for Responsibility-Sensitive Safety are [39] :",
+            "cite_spans": [
+                {
+                    "start": 50,
+                    "end": 54,
+                    "text": "[39]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS1. Do not hit someone from behind.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS2. Do not cut-in (to a neighboring lane) recklessly.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS3. Right-of-way is given, not taken.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS4. Be careful of areas with limited visibility.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS5. If you can avoid an accident without causing another one, you must do it.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS6. To change lanes, you do not have wait forever for a perfect gap: i.e., you do not have to wait for a gap large enough to get into even when the other car, already in the lane, maintains its current motion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "RSS6 is derived directly from the following in [39, Section 3]: \"the interpretation [of the duty-of-care law] should lead to [...] an agile driving policy rather than an overly-defensive driving which inevitably would confuse other human drivers and will block traffic [...]. As an example of a valid, but not useful, interpretation is to assume that in order to be \"careful\"",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "our actions should not affect other road users. Meaning, if we want to change lane we should find a gap large enough such that if other road users continue their own motion uninterrupted we could still squeeze-in without a collision.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "Clearly, for most societies this interpretation is over-cautious and will lead the AV to block traffic and be non-useful. \"",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "Note that, consistently with points (A)-(C) above, this is stated without any reference to dynamics or specific scenarios.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "The RSS authors are concerned that overly cautious driving might lead to unnatural traffic, so RSS aims to allow cars to move a bit assertively, and defines correct reactions to that.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "Note finally that RSS4 is explicitly formulated in terms of obligations and ability. However, we will not study RSS4",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "and RSS5 as they are currently too vague for formalization.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The RSS rules"
+        },
+        {
+            "text": "Formalizing RSS1. Let denote 'collision with car ahead of me'. A plausible formalization of RSS1 is then",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "That is, ought to see to it that there is no collision with a car ahead of it. A positive aspect of this formalization is that if at some , a rear-end collision is inevitable, then 1 ceases to hold:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": ". This provides an automatic and interpretable update of control objectives. In a deployed system, an automatic proof engine could update which obligations hold and which don't, based on the current situation [3] . An alternative formalization is",
+            "cite_spans": [
+                {
+                    "start": 209,
+                    "end": 212,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "This says that should see to it that it does not deliberately ensure an accident . This form of obligation is called refraining [24] : refrains from hitting anyone from behind. If a rear-end collision is inevitable at some , then 1 still holds (unlike 1) and is trivially satisfied. This might be computationally cheaper than having to use a proof engine to tell us that the obligation no longer holds.",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 132,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "In the general case, some actions at guarantee a collision, some guarantee no collision, and the rest don't guarantee either: the future could evolve either way. If we are interested in guaranteeing no collision over a long horizon, then, because of non-determinism, it is unlikely that any action in the present moment can guarantee that. In such a case 1 will be violated repeatedly in a rather trivial way; on the other hand, 1 is more permissive, since it can be met by taking any optimal action that allows the possibility of no collision over the horizon. A lower-level controller, running at a higher rate, could then ensure freedom from collision forever.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Formalizing RSS2. Define formulas, : a non-reckless cut-in, and : a reckless cut-in. Then RSS2 is formalizable as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "That is, should see to it that always, if a cut-in happens, then it is a non-reckless cut-in.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Formalizing RSS3. Formalizing this rule requires some care. First, note that RSS3 should probably be amended to say that 'Right-of-way is given, not taken, and some car is given the right-of-way' -otherwise, traffic comes to a standstill.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "We will first focus on formalizing the prohibition (nobody should take the right-of-way), then we will formalize the positive obligation (somebody must be given it). taking the right-of-way: proceeds without being given the right-of-way by everybody. We could now express the Manuscript submitted to ACM prohibition in RSS3: every ought to see to it that it does not take the right-of-way:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "The difficulty with this formulation is that it could lead to being obliged to force everybody else to give it the right-of-way -something over which, a priori, it has no control. To see this, we need the following.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Proposition 3.1. Given obligations and , \u2299[",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "In words, if ought to ensure or at /\u210e, but every available history violates , then its obligation is effectively to ensure .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Applied to Eq. (7) with = \u00ac and = \u2227 \u2260 , Thm. 3.1 says that if is in a situation where it has no choice but to proceed (e.g. as a result of slippage on a wet road, say), then its obligation is to see to it that everybody else gives it the right-of-way, which is unreasonable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Instead, we adopt a more passive attitude: every agent sees to it that if they are not given the right-of-way, then they do not pass. Letting atomic proposition denote that right-of-way is Granted to ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "The positive obligation, that somebody must be given the right-of-way, seems to be a group obligation: the group must give right-of-way to one of its members. Group obligations are formally defined in [23, Ch. 6 ]. Then we formalize",
+            "cite_spans": [
+                {
+                    "start": 201,
+                    "end": 205,
+                    "text": "[23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 206,
+                    "end": 211,
+                    "text": "Ch. 6",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "This says the group has an obligation to give right-of-way to someone, and the only choice is in who gets it.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Finally, we formalize 3 as the conjunction of 3 \u210e and 3 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Formalizing assertiveness and RSS6. This rule says that if the car wants to change lanes, it shouldn't have to wait forever for the perfect gap (otherwise, traffic is stalled). It is one way in which RSS attempts to promote 'assertive driving', a style of driving that tries to obtain right-of-way in a 'polite' way. The key difficulty, of course, is to distinguish between assertive driving, which is acceptable, and aggressive driving, which is not. Deontic logic can help in that regard. We model assertiveness as a permission to not drive conservatively or defensively. That is, if is a formula that describes conservative driving behavior in a particular context \u03a9, then driving assertively is the conditional permission",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "This is a permission: it does not constitute an obligation to drive assertively. Depending on its reward structure, the agent might choose to drive conservatively after all. Importantly, Eq. (10) This matches our intuition: to not refrain from facilitating an accident even though one could (left-hand side in previous equation) is the same as facilitating it (right-hand side). In other words, under this formalization, the RSS position is tantamount to allowing AVs to facilitate accidents between others -clearly, an undesirable conclusion. This aspect of RSS, therefore, needs refinement to take into account longer-range interactions between traffic participants.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Formalization of RSS Rules"
+        },
+        {
+            "text": "Obligations vary over time: the obligation at moment is the set of necessary conditions (formulas in the tense logic) satisfied by all histories optimal at , and the set of optimal histories can change from moment to moment. There is thus a need to understand how obligations change over time: for example if the agent does not act optimally at , does the obligation disappear at the next moment? Or does it persist, perhaps in a modified form? The formal study of obligation propagation is also a way to interpret the temporal evolution of utility-maximizing controllers: as the controller (and the environment) act, obligations change, placing new constraints on the controller.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": "The following examples show that these questions must be studied formally, since intuition usually fails us. Consider the following tentative propagation pattern, in which is a CTL * formula:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": "This says that an obligation now to ensure that holds at the next moment implies an obligation at the next moment to ensure that holds, which sounds plausible. However, it is not valid in DAU. Fig. 2a As a second example, the following tentative pattern says that if the agent has an obligation to ensure that eventually holds, does not do so now, but it is still possible to do so at the next moment, then at the next moment the agent still has an obligation to ensure eventually : . If 2 will be taken, then 2 /\u210e 2 \u0338 |= \u2299[ : ] because 3 is optimal at 2 , so Eq. (13) is also invalid.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 193,
+                    "end": 200,
+                    "text": "Fig. 2a",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": "Both counter-examples exploited the fact that along the /\u210e pair where the left-hand side is evaluated, the agent acts non-optimally. This suggests that to derive valid temporal propagation patterns, we must assume the agent is acting optimally. So we define the distinguished atomic proposition a * for this purpose:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": "The following pattern is valid in DAU. Let + (\u210e) be the moment that follows in \u210e; e.g., + 1 (\u210e 1 ) = 3 in Fig. 2a .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 106,
+                    "end": 113,
+                    "text": "Fig. 2a",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": "Proof. The pair /\u210e satisfies the left-hand side iff \u2286 | | for all optimal at . By a * , we have that \u210e (\u210e)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": "is optimal, thus /\u210e |= , which implies that + (\u210e)/\u210e |= , which is the definition of /\u210e |= \u2299 [ : ]. \u25a1 Acting optimally is not always enough however. The following valid pattern says that if ought to see to it that , acts optimally, but it is impossible to satisfy now, then at the next moment still ought to see to it that . Here, \u2200\u00ac is necessary in the antecedent: the implication fails trivially without it.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "OBLIGATION PROPAGATION"
+        },
+        {
+            "text": ":",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "Finally we present a pattern of obligation propagation which does not require optimal behavior, but which is only satisfied in certain models. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "This says that if has an obligation to ensure \u2228 , guarantees \u00ac now, but next it is still possible to guarantee , then the next obligation is to guarantee .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "Proof. Let /\u210e be an index in M at which the DAU formula (16) is evaluated. Let \u210e be the action to which \u210e belongs, and for brevity, write \u2032 = + (\u210e).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "Case 1: \u210e \u2208 \u222a \u2208 . Then \u210e \u2286 | \u2228 | = | | \u222a | | . By hypothesis, \u210e \u2286 |\u00ac | also so \u210e \u2286 | | \\ |\u00ac | . By construction, \u2032 \u2286 \u2032 \u2286 \u210e so for every * \u2208 \u2032 and every \u210e \u2032 \u2208 * , \u2032 /\u210e \u2032 |= , which is the definition of /\u210e |= \u2299 [ : ].",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "Case 2: \u210e \u2209 \u222a \u2208 . From the formula antecedent, we have that \u210e \u2286 |\u00ac | and that \u2032 /\u210e |= \u2203[ : ].",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "Therefore the model constraint yields that all optimal actions at \u2032 guarantee , which is the definition of /\u210e |= \u2299 [ : ]. \u25a1 Finally, the proof also establishes the following pattern.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "Proposition 4.2. The following is valid (i.e., satisfied in all models) in DAU:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2299 ["
+        },
+        {
+            "text": "The expressive power of DAU makes the logic a useful tool in the hands of a system designer. The system designer can use DAU to specify the obligations the system ought to have. While DAU derives obligations from stit trees, control engineers often model agents as some kind of automata. How then can we verify that the controller has the obligations the system designer has specified? Note that having an obligation is not the same as meeting that obligation: the obligation is a constraint that might or might not be met. This section's algorithms verify that a system has a given obligation, i.e. that it has the given constraints on its behavior.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "MODEL CHECKING DAU"
+        },
+        {
+            "text": "We can ensure that an agent has an obligation by framing the question as a model checking problem. In this section we cast agents as stit automata, and introduce novel algorithms to perform model checking for obligations. All proofs not given here can be found in the supplementary material.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "MODEL CHECKING DAU"
+        },
+        {
+            "text": "For a set , let denote the set of infinite sequences ( ) \u2208N with \u2208 . When dealing with multiple automata, we will sometimes write . , . , etc, to clarify which automaton is involved.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stit Automata"
+        },
+        {
+            "text": "Note that is a type of non-deterministic weighted automaton. Its unweighted counterpart is a classical transition system, thus for a CTL * formula , we could model-check whether |= . Denote by \u0394( ) the set of outgoing Examples of include the functions min/max, discounted sum and long-run average: Because of non-determinism, a tactic can produce multiple executions. A set of agents is modeled by the product of all individual stit automata, which is itself a stit automaton. (When taking the product, we must define how weights are combined and how to construct the product's accumulation function, which are application-specific considerations.)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stit Automata"
+        },
+        {
+            "text": "Therefore the rest of this section applies to stit automata, whether they model one or multiple agents. We will continue to refer to one agent for simplicity. Model-checking determines whether a stit automaton, at a given state, satisfies an Ought statement. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stit Automata"
+        },
+        {
+            "text": "Thus the histories in * are identically ranked in both models, which implies that optimal actions are the same. This, combined with the fact that they satisfy the same formulas, yields the desired conclusion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stit Automata"
+        },
+        {
+            "text": "Similarly, if is liminfAvg, then for = 1, 2,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stit Automata"
+        },
+        {
+            "text": "So histories of * are identically ranked by liminfAvg in both models, yielding the desired conclusion. \u25a1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stit Automata"
+        },
+        {
+            "text": "The problem of cstit model checking is: given a stit automaton that models an agent , a state \u2208 . , and a formula which is either a CTL * formula, or a statement of the We restrict the algorithm to statements of the above forms for conciseness of the presentation; DAU formulas with additional nesting levels can be handled by extending the algorithms we present below.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Checking of Unconditional Obligations"
+        },
+        {
+            "text": "Recalling Definition 2.4, the cstit model checking problem can be broken into two parts: what is the set of optimal actions at 0 (i.e. \u2208 0 ), and do all these optimal actions guarantee the truth of (i.e. \u2286 | | M 0 )? If all optimal actions guarantee then, by Def. 2.4, M has obligation at 0/\u210e. Algorithm 1 solves this problem, and is discussed in depth below. action , we find those ranges whose is not less than any \u2113 \u2032 . These value ranges are un-dominated. The optimal actions 0 are those actions whose corresponding value ranges are un-dominated. This completes the first step of the algorithm: finding the optimal actions at 0 . The second step determines if all optimal actions guarantee .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Checking of Unconditional Obligations"
+        },
+        {
+            "text": "In this algorithm |= CTL * denotes the classical CTL * satisfaction relation. If the obligation is a CTL * formula, then we simply check if every execution of \u2032 satisfies the by checking \u2200 . If the obligation is a statement containing a CTL * formula , then we must verify two conditions: that not all actions in \u210e 0 guarantee , so \u2203\u00ac , and that every execution of \u2032 with \u2208 0 satisfies .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Checking of Unconditional Obligations"
+        },
+        {
+            "text": "In line 8 of algorithm 1, the maximum-and minimum-valued executions of an automaton \u2032 must be found. This problem is related to, but distinct from, temporal logic accumulation [10] and quantitative languages [15] . A realistic example of a that can be computed is = min. For instance, if a transition's weight (( , , \u2032 )) is the time-to-collision when taking that transition, then the value of an execution ( ) is the shortest time-to-collision encountered along that execution. The best history, then, is the one with the greatest minimum time-to-collision. To compute ( ) for = min we proceed as follows. To avoid trivialities assume every cycle in is reachable. Every infinite execution visits one or more cycles. A simple cycle is one that does not contain any other cycles. A prefix is a path connecting to a simple cycle, and which does not itself contain a cycle. We call an execution simple if it only loops around one simple cycle forever, possibly after traversing a prefix to get there from . There are finitely many simple cycles, and their prefixes are obtainable using backward reachability, so we can compute the value of every simple execution by taking the min along every connected prefix-cycle pair. The value of a non-simple execution equals the value of some simple execution, since the transition of with minimum weight is also a transition of a simple execution, be it on a simple cycle or a prefix. Thus, the maximum execution value equals the maximum simple execution value. Similarly for the minimum execution value \u2113 .",
+            "cite_spans": [
+                {
+                    "start": 176,
+                    "end": 180,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 208,
+                    "end": 212,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computing Extremal History Utilities."
+        },
+        {
+            "text": "A second common accumulation function is the discounted sum function in Eq. (17) . To find find the histories that carry the highest and lowest values, we cast the automaton as an extreme case of a Markov decision process (MDP). Create a copy ren of 6 Create the automaton \u2032 as a union of ren and , with every transition ( , , ren . ) in ren replaced by a transition ( , , . ) 8 8 Compute the max value, , and min value, \u2113 , of any \u2032 tactic starting at 9 An MDP is a control process modeled in discrete time where actions are chosen by a decision making agent, the outcomes of those actions are stochastic, and each outcome gives the agent some reward [6] . We specify the construction of the cast from an automaton in the supplementary material.",
+            "cite_spans": [
+                {
+                    "start": 76,
+                    "end": 80,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 250,
+                    "end": 251,
+                    "text": "6",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 377,
+                    "end": 380,
+                    "text": "8 8",
+                    "ref_id": null
+                },
+                {
+                    "start": 453,
+                    "end": 454,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 652,
+                    "end": 655,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computing Extremal History Utilities."
+        },
+        {
+            "text": "Value iteration is a dynamic programming algorithm used to solve MDPs [36] . Solving an MDP generates a policy for choosing an action at each state that optimizes some reward aggregation function . Following this policy from a given state (called an \"optimal policy\" and denoted by * ( )) will produce the sequence of state transitions (denoted by * ( )) that maximizes accumulated rewards. The expected accumulated reward for following an optimal policy from \u2208 is denoted by * ( ). is a finite horizon condition, meaning that there exists a \u2265 0 such that every history of length either satisfies or violates . We note that if is a state formula, then either all -rooted histories satisfy or none do. To avoid such trivialities, we only consider conditions that are specified by path formulae. In this section we introduce modifications to algorithm 1 and its proof (in the supplementary material ) that reflect this difference in determining optimal actions. Proposition 5.8. Algorithm 2 returns True iff M, /\u210e |= \u2299([ : ]/ ). It has complexity ( (| |+ | | 2 2 | | + \u00b7 ) + | |2 | | ), where is the maximum out-degree from any state in , is the cost of computing the minimum and maximum values of a tactic executed on automaton , | | is the number of states and transitions in , | | is the size of the CTL * formula in A, and | | is the size of the CTL * formula for the condition.",
+            "cite_spans": [
+                {
+                    "start": 70,
+                    "end": 74,
+                    "text": "[36]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computing Extremal History Utilities."
+        },
+        {
+            "text": "Conceptually, getting the histories that satisfy can be done by brute force: unroll 's executions up to depth and retain actions \u2208 \u210e 0 that contain -satisfying histories. The values of these -satisfying histories are compared to determine conditionally optimal actions, as per Def. 2.2 and Eq. (6) . Once the conditionally optimal actions are determined, the algorithm continues as in Algo. 1.",
+            "cite_spans": [
+                {
+                    "start": 294,
+                    "end": 297,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computing Extremal History Utilities."
+        },
+        {
+            "text": "The actual model-checker constructs incrementally automata \u2032 , : every such automaton has one initial action , has a single execution up to the horizon , and behaves like the original automaton after . Its unique execution up to satisfies . Algo. 2 uses these automata to determine the conditionally optimal actions by comparing -satisfying histories, in the same way that Algo. 1 uses \u2032 to compute (unconditionally) optimal actions. Alg. 3 shows how to construct \u2032 , . Each \u2032 , has two components: a \"fragment\" of | | followed by a copy of . The fragment is obtained by beginning with \u2032 , removing all transitions from except for one ( , , \u2032 ), forming the union between the resulting automaton and a copy of , and checking this new automaton to see if there exists an execution that accepts . If it does not, it aborts this branch (line 13). If it does, it sets = \u2032 (that is, we change the state we remove transitions from) and repeats the process of removing transitions, taking the union with , and checking that the automaton accepts \u2203 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Computing Extremal History Utilities."
+        },
+        {
+            "text": "This process repeats a maximum of times, ensuring that the resulting automaton has a single history for moments, and accepts . This final automaton is \u2032 , .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Computing Extremal History Utilities."
+        },
+        {
+            "text": "As discussed in section 5, it is common for a control engineer to model agents as an automaton, and it is natural to want to verify that the automata have some given obligations. The formalizations given thus far are required to Data: A stit automaton = ( , , K, , \u0394, , , ) , an obligation , a horizon-limited condition , the condition's horizon",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 254,
+                    "end": 273,
+                    "text": "( , , K, , \u0394, , , )",
+                    "ref_id": null
+                }
+            ],
+            "section": "CASE STUDY IN MODEL CHECKING SELF-DRIVING CARS OBLIGATIONS"
+        },
+        {
+            "text": ". . , } // First step: find optimal actions at 3 for 1 \u2264 \u2264 do /* Construct automaton \u2032 s.t. every execution of \u2032 is an execution of starting with action . This is exactly like lines 4, 5, 6 in Algorithm 1 */ /* Generate all automata whose first action is and have one history up to depth , that history satisfies , and after that, it behaves like */ of Section 5, and applied it to a controller for autonomous driving (adapted from [21] ). We check the automaton for relevant CTL * missions, and for obligations and permissions related to the RSS rules.",
+            "cite_spans": [
+                {
+                    "start": 432,
+                    "end": 436,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CASE STUDY IN MODEL CHECKING SELF-DRIVING CARS OBLIGATIONS"
+        },
+        {
+            "text": "We implemented our algorithms for model checking obligations in Python, using calls to the nuXmv symbolic model checker [14] to dispatch CTL * model checking. Our implementation regards Stit automata models as directed graphs with edges labeled with action and weight. Operations on the graphs allow us to copy and take unions of automata as needed.",
+            "cite_spans": [
+                {
+                    "start": 120,
+                    "end": 124,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Implementation"
+        },
+        {
+            "text": "The graphs can be translated to MDPs to find an action's extremal history utilities, or to a nuXmv model for CTL * model checking. The source code for our implementation can be found at https://github.com/sabotagelab/MC-DAU.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implementation"
+        },
+        {
+            "text": "A hybrid continuous-time controller for autonomous highway driving is presented in [21] . The controller is meant to allow a car to merge onto a highway, and exit when desired. It is shown in [21] that if all cars are equipped with this controller, then no collisions can occur and all cars either merge and exit successfully, or drop-out, meaning that they safely abort the maneuver and go into the doNotEnter state. We modeled this controller in Fig. 4a as a stit automaton, which we will refer to as . Each state is labeled with the atomic propositions that hold in it, and edges are labeled with 's actions, both of which are self-explanatory. The controller's objective is to ensure safe entry, cruising, and exit;",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 87,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 192,
+                    "end": 196,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 448,
+                    "end": 455,
+                    "text": "Fig. 4a",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "it does not determine when to enter or exit. That is determined by a higher-level decision code and is captured here with atoms wantEntry and wantExit. It is important to note that the collision state can be reached from almost every other state: this reflects the understanding that if another agent, , which is not equipped with this controller, takes a reckless action then it is impossible for to avoid an accident.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "We will state a number of missions, obligations, and permissions, that we might expect this automaton to satisfy, and model-check whether that is indeed the case. If not, we will amend the controller accordingly, thus demonstrating the value of obligation modeling and verification.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "Missions. We formulate the following missions in CTL * 5 :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "The existential quantifier is used since, as noted, freedom from collision is not satisfied on all paths.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "The automaton depicted in figure 4a satisfies all the missions formulated above. The first mission ( 1 ) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "(2)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "(1) [21] . Each state is labeled with the atomic propositions that hold in it, and each edge is labeled with its weight, and 's actions. Edges without action labels indicate loops in absorbing states. The collide action can be taken from any state except doNotEnter, and so is denoted by the large arrow. The proposition means the agent has been given the right of way, while means that is proceeding through a conflict region. (b) Modified automaton adds an edge from passEntry to reachExit with action doNotYield. It also now models implicitly a second car , via its actions Drive and D-. Alternative weights are given in red brackets to make the automaton fail the \"no next collision\" obligation and gain the \"aggressive\" permission.",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 8,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "No-collision: the role of modeling agency. The natural obligation \u2299[",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": ": \u00accollision] is expected to fail in all states not in since, as pointed above, there is nothing that alone can do to guarantee no collision. Formally, every action of contains a history which satisfies collision at some moment. The model-checker returns UNSAT in this case, as expected. Perhaps surprisingly, the conditional obligation \u2299([ : \u00accollision]/ \u00accollision) also fails in all states not in . This obligation says that under the condition that the collision state is never visited, ought to see to it that there is never a collision -which first sounds almost like a tautology. This is where DAU's ability to model agency proves essential for a proper understanding and formalization of individual obligation. Indeed, recall that in DAU, an agent has an obligation to ensure only if it can guarantee regardless of what other agents do (recall sure-thing reasoning and the definition of in Section 2). The condition \u00accollision restricts our value comparisons to those actions that permit the condition to hold (Eq. (6)). However, it is still logically false that alone can ensure no collisions: none of the conditionally optimal actions available to guarantees no collisions. Avoidance of collisions is still a group task, i.e. both and must act to guarantee this -we take this up in section 6.3",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "No collision next. Are there any states not in at which the agent has an obligation not to collide next? To answer, we model-check the obligation",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "The model-checker confirms that this obligation can not be satisfied from any state not in . Since the agent can't guarantee another car won't collide with it, collision is included in the consequence of every action available.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "Permission vs Eventually. Suppose the vehicle is actually an ambulance, that occasionally has to be able to exit the highway early. We thus want to give it permission to exit early, without forcing that behavior, and while respecting its obligations. So we model-check the permission",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "from the start state (The number 4 is rather arbitrary and is meant to suggest 'early'). The model-checker informs us that the model does have this permission. Indeed, as long as the permission is checked from a state where reachExit is reachable within steps, the permission",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "will succeed for this automaton.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "Assertive vs aggressive. Finally, we model-check the 6 permission at state passEntry.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "The model-checker determines that this is satisfied. However, we can show that this is a trivial satisfaction, which holds regardless of the weights. It is due to the fact that all executions of this automaton starting in passEntry satisfy R\u00ac . On the other hand, consider the following aggressive DAU statement:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "This says that is permitted to deliberately ensure that its driving is not defensive; morally, this is a less defensible permission. It does not hold because there is no action in this automaton that guarantees \u00ac( R\u00ac ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Agent Model and Model Checking Results"
+        },
+        {
+            "text": "To draw out the effects of changing weights, we modify the automaton in Fig. 4a to get the automaton in Fig. 4b Permission vs Eventually. Suppose again this is an ambulance that occasionally needs to exit the highway early.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 72,
+                    "end": 79,
+                    "text": "Fig. 4a",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 104,
+                    "end": 111,
+                    "text": "Fig. 4b",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Modified automaton."
+        },
+        {
+            "text": "The permission P[ : \u2264 reachExit] no longer necessarily holds in states where reachExit is reachable within steps. We demonstrate this from the onHighway state reached by the civil merge action. By making civil cruise the optimal action, we guarantee that the optimal histories spend at least one moment in onHighway before moving to reachExit. This yields an ethically difficult position where an insistence on defensive driving negates the permission to exit the highway early, though it might be needed. However, by changing the weights of this automaton as depicted by the red, bracketed weights in Fig. 4b , we can satisfy permissions 2 and 3 at the cost of the \"no next collision\" obligation in Eq. (23) . By ensuring that do not yield is an optimal action, we know that not all optimal actions guarantee R\u00ac (thus 2 is satisfied), and we know that there exists an optimal action that guarantees \u00ac( R\u00ac ) (thus 3 is satisfied). As a consequence of do not yield being counted as an optimal action, the \"no collision next\" obligation fails.",
+            "cite_spans": [
+                {
+                    "start": 704,
+                    "end": 708,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 602,
+                    "end": 609,
+                    "text": "Fig. 4b",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Modified automaton."
+        },
+        {
+            "text": "Deontic logic and autonomous systems ethics. The need to encode and study ethical and social obligations for human-scale CPS is well-recognized [26, 27, 41] , though little explored technically. This paper follows the logicist program [11] in approaching this problem, within which the deontic family of logics takes pride of place having been created specifically to reason about obligations. Standard Deontic Logic has many well-known paradoxes [22] , which have spurred the proposal of alternatives to remedy them [18] . Some variations are used to specify legal and software contracts as in [35] . Alternating-time Temporal Logic (ATL) was proposed in [2] to reason about groups of agents, and used in [12] to reason about strategic obligations, and it will be interesting to connect the modeling of agency between DAU and ATL. Finally, RSS rules have been encoded in Signal Temporal Logic for the purpose of monitoring them over linear traces in [7] , but notions of obligation and uncertainty were not investigated.",
+            "cite_spans": [
+                {
+                    "start": 144,
+                    "end": 148,
+                    "text": "[26,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 149,
+                    "end": 152,
+                    "text": "27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 153,
+                    "end": 156,
+                    "text": "41]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 235,
+                    "end": 239,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 447,
+                    "end": 451,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 517,
+                    "end": 521,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 595,
+                    "end": 599,
+                    "text": "[35]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 656,
+                    "end": 659,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 706,
+                    "end": 710,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 951,
+                    "end": 954,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Temporal propagation. The most relevant work on the propagation of obligations is [13] , which takes a nearproduct of Standard Deontic Logic and LTL to study propagation, and ends up with a semantics that resembles DAU (albeit LTL is linear time). Works that integrate deontic and temporal modalities more generally include [20] (to specify business processes), [37] for interpreted systems, and [1] for contextualized (normed) obligations.",
+            "cite_spans": [
+                {
+                    "start": 82,
+                    "end": 86,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 324,
+                    "end": 328,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 362,
+                    "end": 366,
+                    "text": "[37]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 396,
+                    "end": 399,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Algorithmic aspects. Most of the work in deontic logic has been concerned with finding the 'right' axioms and inference rules that formalize our intuition about obligations and permissions, with algorithmic aspects receiving comparatively little attention. Broader work in normative multi-agent systems relies on simulation to study, for example, ways in which social norms arise [9] . Decision procedures exist for some logics, like the KED theorem prover for Standard Deontic Logic [4] , and the decision procedures in [5] . There are even fewer implemented tools, such as MCMAS, the OBDD-based checker in [29] for the logic of [37] , and the implementation of dyadic deontic logic in Isabelle/HOL in [8] . A proof system for a simplified version of DAU has been developed in [3, 33] to determine whether certain obligations follow from others (a 'trusted base'). We propose a model-checker, to determine whether a given automaton has an obligation, by examining directly the values it assigns to its executions. In a deployed system, theorem-proving and model-checking are likely to play complementary roles.",
+            "cite_spans": [
+                {
+                    "start": 380,
+                    "end": 383,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 484,
+                    "end": 487,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 521,
+                    "end": 524,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 608,
+                    "end": 612,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 630,
+                    "end": 634,
+                    "text": "[37]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 703,
+                    "end": 706,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 778,
+                    "end": 781,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 782,
+                    "end": 785,
+                    "text": "33]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Interpretability. In DAU, an agent that always performs optimal actions is one that always meets its obligations. Therefore, DAU can be viewed, informally, as the logic of utility maximization. As such, it gives a logical interpretation to the behavior of controlled systems that maximize long-term utility, such as [19] . This connects DAU to the field of interpretable AI [25] , albeit from a non-statistical perspective.",
+            "cite_spans": [
+                {
+                    "start": 316,
+                    "end": 320,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 374,
+                    "end": 378,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "We have discussed and demonstrated the use of Dominance Act Utilitarian deontic logic for the formalization of obligations and permissions for autonomous systems. We investigated the interaction of temporal and deontic modalities to find patterns for temporal propagation of obligations. We expressed self-driving car obligations from RSS in DAU, and found undesirable consequences of these norms. We introduced algorithms to allow system designers to automatically determine if a system has an obligation, and demonstrated an implementation of these algorithms.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSIONS"
+        },
+        {
+            "text": "In the pursuit of an algorithmic account of a system's obligations, it would be desirable next to synthesize given obligations by automatically adjusting the weights. DAU could also be used in tandem with inverse reinforcement learning to learn the obligations of an agent by observing its behavior. It will also be important to study the inheritance of obligations between groups and individuals, i.e. knowing how the obligation of a group of agents impacts the obligations of agents in that group. Since deontic logic was designed for the study of ethics, this work opens the way for formal ethical analysis of autonomous system design. These considerations will help determine the suitability of DAU, and deontic logic more generally, for the design and verification of autonomous systems.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSIONS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "A Temporal Logic of Normative Systems",
+            "authors": [
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "\u00c5gotnes",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wiebe Van\u00e2 Der",
+                    "suffix": ""
+                },
+                {
+                    "first": "Juan",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hoek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carles",
+                    "middle": [],
+                    "last": "Rodr\u00edguez-Aguilar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Sierra",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wooldridge",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "69--106",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-1-4020-9084-4_5"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Alternating-time Temporal Logic",
+            "authors": [
+                {
+                    "first": "Rajeev",
+                    "middle": [],
+                    "last": "Alur",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Henzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Orna",
+                    "middle": [],
+                    "last": "Kupferman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "J. ACM",
+            "volume": "49",
+            "issn": "",
+            "pages": "672--713",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/585265.585270"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Toward Ethical Robots via Mechanized Deontic",
+            "authors": [
+                {
+                    "first": "Konstantine",
+                    "middle": [],
+                    "last": "Arkoudas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Selmer",
+                    "middle": [],
+                    "last": "Bringsjord",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paul",
+                    "middle": [],
+                    "last": "Bello",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "AAAI Fall Symposium on Machine Ethics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "KED: A Deontic Theorem Prover",
+            "authors": [
+                {
+                    "first": "Alberto",
+                    "middle": [],
+                    "last": "Artosi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paola",
+                    "middle": [],
+                    "last": "Cattabriga",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guido",
+                    "middle": [],
+                    "last": "Governatori",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "on Legal Application of Logic Programming, ICLP'94",
+            "volume": "",
+            "issn": "",
+            "pages": "60--76",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Decision Procedures for a Deontic Logic Modeling Temporal Inheritance of Obligations",
+            "authors": [
+                {
+                    "first": "Philippe",
+                    "middle": [],
+                    "last": "Balbiani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jan",
+                    "middle": [],
+                    "last": "Broersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Julien",
+                    "middle": [],
+                    "last": "Brunel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proceedings of the 5th Workshop on Methods for Modalities",
+            "volume": "231",
+            "issn": "",
+            "pages": "69--89",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.entcs.2009.02.030"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A Markovian Decision Process",
+            "authors": [
+                {
+                    "first": "Richard",
+                    "middle": [],
+                    "last": "Bellman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1957,
+            "venue": "Indiana Univ. Math. J",
+            "volume": "6",
+            "issn": "",
+            "pages": "679--684",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Encoding and Monitoring Responsibility Sensitive Safety Rules for Automated Vehicles in Signal Temporal Logic",
+            "authors": [
+                {
+                    "first": "Aviral",
+                    "middle": [],
+                    "last": "Heni Ben Amor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lina",
+                    "middle": [],
+                    "last": "Shrivastava",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adel",
+                    "middle": [],
+                    "last": "Karam",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shakiba",
+                    "middle": [],
+                    "last": "Dokhanchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mohammad",
+                    "middle": [],
+                    "last": "Yaghoubi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Georgios",
+                    "middle": [],
+                    "last": "Hekmatnejad",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fainekos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3359986.3361203"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "A Dyadic Deontic Logic in HOL",
+            "authors": [
+                {
+                    "first": "Christoph",
+                    "middle": [],
+                    "last": "Benzm&apos;uller",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ali",
+                    "middle": [],
+                    "last": "Farjami",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xavier",
+                    "middle": [],
+                    "last": "Parent",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Introduction to normative multiagent systems",
+            "authors": [
+                {
+                    "first": "Guido",
+                    "middle": [],
+                    "last": "Boella",
+                    "suffix": ""
+                },
+                {
+                    "first": "Harko",
+                    "middle": [],
+                    "last": "Leendert Van Der Torre",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Verhagen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Computational & Mathematical Organization Theory",
+            "volume": "12",
+            "issn": "",
+            "pages": "71--79",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Temporal Specifications with Accumulative Values",
+            "authors": [
+                {
+                    "first": "Udi",
+                    "middle": [],
+                    "last": "Boker",
+                    "suffix": ""
+                },
+                {
+                    "first": "Krishnendu",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Henzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Orna",
+                    "middle": [],
+                    "last": "Kupferman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "ACM Trans. Comput. Logic",
+            "volume": "15",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Toward a General Logicist Methodology for Engineering Ethically Correct Robots",
+            "authors": [
+                {
+                    "first": "Selmer",
+                    "middle": [],
+                    "last": "Bringsjord",
+                    "suffix": ""
+                },
+                {
+                    "first": "Konstantine",
+                    "middle": [],
+                    "last": "Arkoudas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paul",
+                    "middle": [],
+                    "last": "Bello",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "IEEE Intelligent Systems",
+            "volume": "21",
+            "issn": "",
+            "pages": "38--44",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/MIS.2006.82"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Strategic Deontic Temporal Logic as a Reduction to ATL, with an Application to Chisholm's Scenario",
+            "authors": [],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "53--68",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "What I fail to do Today, I Have to Do Tomorrow': A Logical Study of the Propagation of Obligations",
+            "authors": [
+                {
+                    "first": "Jan",
+                    "middle": [],
+                    "last": "Broersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Julien",
+                    "middle": [],
+                    "last": "Brunel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Computational Logic in Multi-Agent Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "82--99",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The nuXmv Symbolic Model Checker",
+            "authors": [
+                {
+                    "first": "Roberto",
+                    "middle": [],
+                    "last": "Cavada",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Cimatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michele",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alberto",
+                    "middle": [],
+                    "last": "Griggio",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Mariotti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrea",
+                    "middle": [],
+                    "last": "Micheli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sergio",
+                    "middle": [],
+                    "last": "Mover",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marco",
+                    "middle": [],
+                    "last": "Roveri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stefano",
+                    "middle": [],
+                    "last": "Tonetta",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "CAV",
+            "volume": "8559",
+            "issn": "",
+            "pages": "334--342",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Quantitative Languages",
+            "authors": [
+                {
+                    "first": "Krishnendu",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Laurent",
+                    "middle": [],
+                    "last": "Doyen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Henzinger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "385--400",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "The Logical Form of Imperatives",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Chellas",
+                    "suffix": ""
+                }
+            ],
+            "year": 1968,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Orna Grumberg, and Doron A. Peled. 1999. Model Checking",
+            "authors": [
+                {
+                    "first": "Edmund",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Clarke",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Handbook of deontic logic and normative systems",
+            "authors": [],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Implementable Ethics for Autonomous Vehicles",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christian",
+                    "middle": [],
+                    "last": "Gerdes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sarah",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Thornton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "87--102",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Temporal Deontic Action Logic for the Verification of Compliance to Norms in ASP",
+            "authors": [
+                {
+                    "first": "Laura",
+                    "middle": [],
+                    "last": "Giordano",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alberto",
+                    "middle": [],
+                    "last": "Martelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniele",
+                    "middle": [
+                        "Theseider"
+                    ],
+                    "last": "Dupr\u00e9",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proc. of the 14th Intl. Conf. on Artificial Intelligence and Law",
+            "volume": "",
+            "issn": "",
+            "pages": "53--62",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A hybrid controller for autonomous vehicles driving on automated highways",
+            "authors": [
+                {
+                    "first": "Alain",
+                    "middle": [],
+                    "last": "Girault",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Transportation Research Part C: Emerging Technologies",
+            "volume": "12",
+            "issn": "",
+            "pages": "421--452",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.trc.2004.07.008"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Deontic Logic: A historical survey and introduction",
+            "authors": [
+                {
+                    "first": "Risto",
+                    "middle": [],
+                    "last": "Hilpinen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paul",
+                    "middle": [],
+                    "last": "Mcnamara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Agency and Deontic Logic",
+            "authors": [
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Horty",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The deliberative stit: A study of action, omission, ability, and obligation",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "John",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nuel",
+                    "middle": [],
+                    "last": "Horty",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Belnap",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "J. Philos. Logic",
+            "volume": "",
+            "issn": "",
+            "pages": "583--644",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Explaining AI Decisions Using Efficient Methods for Learning Sparse Boolean Formulae",
+            "authors": [
+                {
+                    "first": "Susmit",
+                    "middle": [],
+                    "last": "Jha",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tuhin",
+                    "middle": [],
+                    "last": "Sahai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vasumathi",
+                    "middle": [],
+                    "last": "Raman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Pinto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Francis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "J Autom Reasoning",
+            "volume": "",
+            "issn": "",
+            "pages": "1055--1075",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Towards a Formal Ethics for Autonomous Cars",
+            "authors": [
+                {
+                    "first": "Piotr",
+                    "middle": [],
+                    "last": "Kulicki",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Trypuz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Musielewicz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Deontic Logic and Normative Systems -14th International Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "193--209",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Robot Ethics: The Ethical and Social Implications of Robotics",
+            "authors": [],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "The Stanford Encyclopedia of Philosophy",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mally&apos;s Deontic",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Logic",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "MCMAS: an open-source model checker for the verification of multi-agent systems",
+            "authors": [
+                {
+                    "first": "Alessio",
+                    "middle": [],
+                    "last": "Lomuscio",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hongyang",
+                    "middle": [],
+                    "last": "Qu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Franco",
+                    "middle": [],
+                    "last": "Raimondi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Intl. Jrnl. on Software Tools for Technology Transfer",
+            "volume": "19",
+            "issn": "",
+            "pages": "9--30",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Grundgesetze des Sollens. Elemente der Logik des Willens",
+            "authors": [
+                {
+                    "first": "Ernst",
+                    "middle": [],
+                    "last": "Mally",
+                    "suffix": ""
+                }
+            ],
+            "year": 1926,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "The Temporal Logic of Reactive and Concurrent Systems -Specification",
+            "authors": [
+                {
+                    "first": "Zohar",
+                    "middle": [],
+                    "last": "Manna",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amir",
+                    "middle": [],
+                    "last": "Pnueli",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Deontic Logic. The Stanford Encyclopedia of Philosophy",
+            "authors": [
+                {
+                    "first": "Paul",
+                    "middle": [],
+                    "last": "Mcnamara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Utilitarian Deontic Logic",
+            "authors": [
+                {
+                    "first": "Yuko",
+                    "middle": [],
+                    "last": "Murakami",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "in 'Proceedings of the Fifth International Conference on Advances in Modal Logic",
+            "volume": "",
+            "issn": "",
+            "pages": "288--302",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "The Temporal Logic of Programs",
+            "authors": [
+                {
+                    "first": "Amir",
+                    "middle": [],
+                    "last": "Pnueli",
+                    "suffix": ""
+                }
+            ],
+            "year": 1977,
+            "venue": "Proceedings of the 18th IEEE Symposium Foundations of Computer Science",
+            "volume": "",
+            "issn": "",
+            "pages": "46--57",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "A dynamic deontic logic for complex contracts",
+            "authors": [
+                {
+                    "first": "Cristian",
+                    "middle": [],
+                    "last": "Prisacariu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gerardo",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "The Journal of Logic and Algebraic Programming",
+            "volume": "81",
+            "issn": "",
+            "pages": "458--490",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Markov decision processes : discrete stochastic dynamic programming",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Martin L Puterman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Automatic Verification of Deontic Interpreted Systems by Model Checking via OBDD's",
+            "authors": [
+                {
+                    "first": "Franco",
+                    "middle": [],
+                    "last": "Raimondi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessio",
+                    "middle": [],
+                    "last": "Lomuscio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Procs. of the 16th European Conf. on Artificial Intelligence",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Formalising Traffic Rules for Accountability of Autonomous Vehicles",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rizaldi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Althoff",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "IEEE 18th International Conference on Intelligent Transportation Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "1658--1665",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "On a Formal Model of Safe and Scalable Self-driving Cars",
+            "authors": [
+                {
+                    "first": "Shai",
+                    "middle": [],
+                    "last": "Shalev-Shwartz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shaked",
+                    "middle": [],
+                    "last": "Shammah",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amnon",
+                    "middle": [],
+                    "last": "Shashua",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1708.06374v6"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "A Deontic Logic Analysis of Autonomous Systems' Safety",
+            "authors": [
+                {
+                    "first": "Colin",
+                    "middle": [],
+                    "last": "Shea",
+                    "suffix": ""
+                },
+                {
+                    "first": "-",
+                    "middle": [],
+                    "last": "Blymyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Houssam",
+                    "middle": [],
+                    "last": "Abbas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the 23rd International Conference on Hybrid Systems: Computation and Control",
+            "volume": "26",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3365365.3382203"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Ethics Aspects of Embedded and Cyber-Physical Systems",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Thekkilakattil",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Dodig-Crnkovic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "2015 IEEE 39th Annual Computer Software and Applications Conference",
+            "volume": "2",
+            "issn": "",
+            "pages": "39--44",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Reward Shaping",
+            "authors": [
+                {
+                    "first": "Eric",
+                    "middle": [],
+                    "last": "Wiewiora",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "863--865",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-0-387-30164-8_731"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Dominance Ought). With an agent and an obligation in a model M, M, /\u210e |= \u2299[ : ] iff \u2286 | | M for all \u2208 (4) See Fig. 1 for examples. The dominance ought satisfies a number of intuitive logical properties; we refer the reader to [23, Ch. 4]. The dual of the Ought is (weak, a.k.a. negative) Permission: P[ : ] := \u00ac \u2299 [ : \u00ac ]",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Let = { , , , . . .} be a finite set of agents. Define the atomic propositions : gives right-of-way to and : proceeds/drives through the conflict region. Then := \u2227 \u00ac( \u2227 \u2227 . . .) formalizes",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Counter-examples to tentative obligation propagation patterns. (a) Pattern in Eq. (12); (b) Pattern in Eq. (13)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": ". 2b shows a counter-example to this second pattern: we have 1 /\u210e 2 |= \u2299[ : ], and that 1 /\u210e 2 |= \u2203[ : ]",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Stit automaton). Let be a finite set of atomic propositions. A stit automaton is a tuple = ( , , K, , \u0394, , , ), where is a finite non-empty set of states, is the initial state, K is a finite non-empty set of actions, \u2282 is a set of final states, \u0394 \u2282 \u00d7 K \u00d7 is a finite transition relation such that if ( , , \u2032 ) and ( , \u2032 , \u2032 ) are in \u0394 then = \u2032 , : \u2192 2 is a labeling function, : \u0394 \u2192 R is a weight function, and : R \u2192 R is an accumulation function.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Left: a stit model generated by executing the stit automaton (transition weights not shown). Center and right: Automata and \u2032 used in Algorithm 1. 1 only has 1 as first action, and \u2032 1 is obtained by re-naming states of 1 and adding a copy of 1 to it. Executions of \u2032 1 are simply the execution of that start with 1 .transitions from (\u0394( ) = {( , , \u2032 ) \u2208 \u0394}), by K ( ) = { \u2208 K | \u2203( , , \u2032 ) \u2208 \u0394} the set of actions available at .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Execution). Let be a stit automaton and 0 a state in . A 0 -rooted execution of is a sequence of transitions of the form = ( 0 , 0 , 1 )( 1 , 1 , 2 ) . . . \u2208 \u0394 . The corresponding sequence of actions 0 , 1 , . . . \u2208 K is called a tactic. The value of execution = [0] [1] [2] . . ., where [ ] \u2208 \u0394, is defined to be ( ( [0]) ( [1]) ( [2]) . . .), and abbreviated ( ).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "From stit automata to stit models. An automaton , along with a state 0 \u2208 , induce a stit model M , 0 in the natural way, which we now describe somewhat informally: state 0 maps to the root moment 0 of M , 0 . From 0 , has a choice of actions K ( 0 ), which map to the actions available at 0 in M , 0 . Each action in K ( 0 ) non-deterministically causes one or more transitions, each of which maps to a moment in M , 0 ; all transitions caused by a given map to moments in histories that originate in the same action in M , 0 . And so on from each next state. SeeFig. 3for an example. We let : \u0394 \u2192 denote the map from transitions to moments, and lift it to executions in the natural way, i.e., ( ) := ( [0]) ( [1]) . . . By construction, ( ) is a history in M , 0 . Its utility ( ( )) is the -value of the generating execution, i.e., ( ). The atoms labeling (( , , \u2032 )) are ( (( , , \u2032 ))) := ( \u2032 ). The formal construction and proof of the following proposition can be found in the supplementary material. Proposition 5.3. The structure M , 0 is a utilitarian stit model with finite \u210e for every agent and moment .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Given an automaton , one of its states , the induced model M , and an obligation , we say that , satisfies \u2299[ : ], written , |= \u2299[ : ], iff M , , 0/\u210e |= \u2299[ : ] for an arbitrary history \u210e \u2208 0 . The history \u210e is arbitrary since the truth of \u2299[ : ] does not depend on the history but only on the moment. The construction of M , roots all histories at moment 0. However, what if the automaton can only reach state after time steps? Then a priori, it might be that whether an Ought holds at depends on , because the accumulation function can be time-dependent. The following shows that for certain accumulation functions important in practice, the choice of root moment does not matter. Proposition 5.5. Given a stit automaton and an obligation , let , \u2032 be states of s.t. is reachable from \u2032 in transitions along an execution . Let \u210e be an arbitrary history of M , , let \u210e \u2032 = ( ) be the history that connects ( [0]) to ( [ \u2212 1]) in M , \u2032 , and let \u2032 = ( [ \u2212 1]). Then, if is discounted sum or long-run average, M , , 0/\u210e |= \u2299[ : ] iff M , \u2032 , \u2032 /\u210e \u2032 |= \u2299[ : ] Proof. For clarity, we write M = M , and M \u2032 = M , \u2032 , and write M.() vs M \u2032 .() to disambiguate something in M vs something in M \u2032 . We will show that the trees rooted at 0/\u210e in M and /\u210e \u2032 in M \u2032 have the same structure and that the value ordering of their histories is the same in both models. This implies that the same Oughts hold at both. The histories of M are images, under , of executions that start at . Because transition [ \u2212 1] ends in , the histories of M \u2032 rooted at \u2032 = ( [ \u2212 1]) are also images of executions that start at . Therefore, M \u2032 . \u2032 is identical to M. 0 . In particular they satisfy the same set of CTL * formulas. We refer to this common set of histories as * . Take two arbitrary \u210e 1 , \u210e 2 \u2208 * and their pre-images 1 , 2 by . By construction, [ + ] = 1 [ ] = 2 [ ], \u2265 0, and the concatenation := \u210e \u2032 [0] . . . \u210e \u2032 [ \u2212 1]\u210e [0]\u210e [1] . . . is a 0-rooted history in M \u2032 , = 1, 2. If = DiscSum then M. 2 ) iff M \u2032 .( 1 ) \u2264 M \u2032 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Algorithm 1 returns True iff M, /\u210e |= \u2299[ : ]. It has complexity (2 (| | + + | | \u00b7 2 | | )), where is the maximum out-degree from any state in , is the cost of computing the minimum and maximum values of a tactic executed on automaton , | | is the number of states and transitions in , and | | is the size of the CTL * formula in . Algorithm 1 begins by considering each action available to the agent at root: \u2208 \u210e 0 . For each of these actions, a version \u2032 of the automaton is constructed such that each of its executions is an execution of starting with action . In this way we can determine the best ( ) and worst (\u2113 ) possible values of the executions in each action by analyzing the automaton \u2032 (this is discussed further in Section 5.2.1). With the range of values [\u2113 , ] known for each",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Data: A stit automaton = ( , , K, , \u0394, , , ), an obligation Result: M , Set \u210e 0 = { \u2208 K | ( , , \u2032 ) \u2208 \u0394 for some \u2032 } = { 1 , . . . , } // First step: find optimal actions at 3 for 1 \u2264 \u2264 do /* Construct automaton \u2032 s.t. every execution of \u2032 is an execution of starting with action . See Fig. 3. */ 4 Create automaton by deleting all transitions ( , , \u2032 ) with \u2260 5",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Given a stit automaton , let \u2212 be a copy of where the edge weights are negated, let be the stit MDP cast from , and let \u2212 be the stit MDP cast from \u2212 . Then, if is discounted sum, the extremal values of are = * ( ) in and \u2113 = \u2212 * ( ) in \u2212 5.3 Model Checking Conditional Obligations The problem of conditional cstit model checking is: given a stit automaton that models an agent , a state \u2208 . , and a formula as in Section 5.2 (i.e. is either in CTL * , or a statement of the form [ : ] or \u00ac[ : ] where is in CTL * ), and a finite-horizon formula , determine whether M , , 0/\u210e |= \u2299([ : ]/ ) for some \u210e \u2208 0 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Compute the max value, , , and min value, \u2113 , , of any \u2032 , max ( , ); Set \u2113 = max (\u2113 , ); 11 end13 13  Find all un-dominated intervals [\u2113 , ]15 15  Set0 / = { \u2208 \u210e 0 | [\u2113 ,] is un-dominated} /* Once all conditionally optimal actions are found, this algorithm proceeds exactly like algorithm 1 starting from line 13 */ Algorithm 2: Conditional model checking DAU.Data: A stit automaton = ( , , K, , \u0394, , , ), a horizon-limited condition , the condition's horizon , the automaton depth , an anchor state Result: The set of stit automata that model fragments of | | 1 Set { 1 , . . . , } = { \u2032 \u2208 | ( , , \u2032 ) \u2208 \u0394 for some \u2032 and some } // First step: find condition accepting actions at current 2 for 1 \u2264 \u2264 do /* Construct automaton \u2032 s.t. every execution of \u2032 is an execution of starting with a transition to . */ 3 Create automaton by deleting all transitions ( , , ) with \u2260 4 Create a copy ren of 5 Create the automaton \u2032 as a union of ren and , with every transition ( , , ren . , ) in ren replaced by a transition ( , , . , ) where , is any state on an execution from to fragmentStep( , , , , ): Recursively generating fragments of | |. reason about obligations while performing model checking and are a necessary component of our implementation To demonstrate the practical uses of DAU, we developed a software implementation of the model-checking algorithms",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "Assertive vs. Aggressive. Finally, we model-check again the RSS-type permission in Eq. (26) from passEntry. This does not hold in this model, as determined by the model-checker.Similarly, the permission in Eq. (27) does not hold because no optimal action guarantees \u00ac( R\u00ac ).",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "for formal semantics: the temporal operator means Always (now and in every future moment along this trace), means Eventually (now or at some future moment along this trace), and R means Release: R means that either always holds, or it does not hold at some future moment and sometime before then holds. The path quantifier \u2200 means For all paths, and \u2203 means There exists a path. The DAU-specific operators informally mean the following: [ : ] is the agency operator and says that sees to it, or ensures, that is true; [ : ] is a says that under the condition , ought to ensure that is true. The rest of this section gives the formal semantics of these deontic operators.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Fig. 1. A utilitarian stit model for an agent illustrating the main DAU definitions. Moments < \u2032 with sets of histories = {\u210e 1 , . . . , \u210e 6 } and \u2032 = {\u210e 1 , . . . , \u210e 4 }. Each moment is marked with the actions available to at that moment: \u210e satisfy . On the other hand, /\u210e 1 \u0338 |= [ : ] since \u210e (\u210e 1 ) = 1 = {\u210e 1 , \u210e 2 , \u210e 3 , \u210e 4 } and \u210e 4 does not satisfy . = { 2 } so /\u210e 5 |= \u2299 [ : ]. \u2032 = { 4 , 5 } and so has no obligations at \u2032 since there is no formula",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "If \u2286 | | we say guarantees . SeeFig. 1. A deliberative stit operator is also defined, which captures the notion that an agent can only truly be said to do something if it also has the choice of not doing it. SeeFig. 1.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "states that the agent can drive assertively without violating any obligations it does have.For RSS6, conservative driving consists in waiting for the perfect gap before passing, that is, waiting until the other car, already in the lane, gives the right-of-way. Thus we may take = R\u00ac , where, recall, means ' proceeds through the conflict region' and means ' is granted the right-of-way'. Finally, with meaning ' wants to changeOne of the main tenets of RSS is that an Autonomous Vehicle (AV) is only responsible for avoiding potential accidents between itself and other cars (so-called 'star calculations'); interactions between 2 other cars are not its concern [39,Remarks 1 and 8]. Yet everyday driving experience makes clear that our actions can be faulted for at least facilitating an accident: e.g., by repeated braking, I may cause the car behind me to do the same, leading the car behind it to rear-end it. Or I might make a sudden lane change over two lanes, causing the car in the lane next to me to over-react when I speed past it, and collide with someone else. We now show how this intuition is automatically captured by the DAU logic, and that RSS star-calculations lead to undesirable behavior of the AV. Let \u2208 CTL * denote a formula expressing \"Accident between two other cars\", and the accident is such that can facilitate it as in the above 2 examples. Then [ : ] says that (deliberately) sees to it that the accident happens even though it could avoid doing so; given what we assumed about this accident, this means facilitates the accident. Then [ : \u00ac[ : ]] expresses that sees to it that it does not facilitate the accident: this is a form of refraining. Finally, [ : \u00ac[ : \u00ac[ : ]]] says that refrains from refraining, that is, does not refrain from facilitating the accident (even though it could). The RSS position is that it is OK for to refrain from refraining [39, Remarks 1 and 8]. However, refraining from refraining is the same as doing. Formally [23, 2.3.3.]",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Lemma 4.1. With , CTL * formulas, let M be a stit model which satisfies the following constraint at every moment : for all actions \u2208 \u210e s.t. \u2286 |\u00ac | and which contain a history \u210e s.t.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Use CTL * model-checking to check whether \u2032 |= CTL * \u2200",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF10": {
+            "text": "Fig. 4. Highway driving agent automaton. (a) Automaton for one agent",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF11": {
+            "text": ", which varies in two ways. First, when the vehicle merges onto the highway it may choose to always yield to future traffic (by doing a 'civil merge'), or to allow not yielding (by doing an 'uncivil merge'). Second, another agent is modeled implicitly, removing most transitions to the collision state. This represents the agent avoiding collisions with agent by taking a drive action. The remaining transition to collision is taken when chooses the do not yield action and chooses a determined aggression (or D-) action. We confirmed that this automaton still satisfies the mission formulae 1 , 2 , and 3 .No collision. With these changes, we can revisit the problem of specifying an obligation to not collide. While the obligation \u2299[ : \u00accollision] still fails from start, it holds (though trivially) from the many states that no longer have a path to collision. On the other hand, the obligation \u2299[: \u00accollision] in equation(23) non-trivially holds from the passEntry state adjacent to collision. This is ensured by weighting the yield transition relatively heavilyguaranteeing that the yield action is the only optimal action.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

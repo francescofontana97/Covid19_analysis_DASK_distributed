@@ -1,0 +1,2923 @@
+{
+    "paper_id": "3e3d088477e5f3aab3b39fae2d381e5e89a8073a",
+    "metadata": {
+        "title": "Gaze and Event Tracking for Evaluation of Recommendation-Driven Purchase",
+        "authors": [
+            {
+                "first": "Piotr",
+                "middle": [],
+                "last": "Sulikowski",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "West Pomeranian University of Technology",
+                    "location": {
+                        "addrLine": "ul.\u017bo\u0142nierska 49",
+                        "postCode": "71-210",
+                        "settlement": "Szczecin",
+                        "country": "Poland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Tomasz",
+                "middle": [],
+                "last": "Zdziebko",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Szczecin",
+                    "location": {
+                        "addrLine": "ul. Adama Mickiewicza 64",
+                        "postCode": "71-101",
+                        "settlement": "Szczecin",
+                        "country": "Poland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Kristof",
+                "middle": [],
+                "last": "Coussement",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Krzysztof",
+                "middle": [],
+                "last": "Dyczkowski",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Adam Mickiewicz University",
+                    "location": {
+                        "addrLine": "ul. Uniwersytetu Pozna\u0144skiego 4",
+                        "postCode": "61-614",
+                        "settlement": "Pozna\u0144",
+                        "country": "Poland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Krzysztof",
+                "middle": [],
+                "last": "Kluza",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "AGH University of Science and Technology",
+                    "location": {
+                        "addrLine": "al. Adama Mickiewicza 30",
+                        "postCode": "30-059",
+                        "settlement": "Krak\u00f3w",
+                        "country": "Poland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Karina",
+                "middle": [],
+                "last": "Sachpazidu-W\u00f3jcicka",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Citation: Sulikowski, P.; Zdziebko, T.; Coussement, K.; Dyczkowski, K.; Kluza, K.; Sachpazidu-W\u00f3jcicka, K. Gaze and Event Tracking for Evaluation of Recommendation-Driven Purchase.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The continuous growth of e-commerce, especially nowadays due to the coronavirus disease (COVID-19) pandemic, requires tools, particularly recommendation systems that aim to help discover relevant products for individuals. While online shopping benefits generally exceed disadvantages, lack of personal touch, especially when a customer is overwhelmed by many alternative products is perceived as a major obstacle to shopping online. To alleviate this problem, online stores invest in personalization tools, recommendation systems being a very popular example of them. Recommendation adequacy plays a vital role in overall commercial success and customer satisfaction. However, due to the significant loads of marketing content and increasing browsing speeds, users may often not notice the displayed recommendations. Therefore, the way of presenting a recommendation, and its positioning and usability seem to have an important role in the ultimate recommendation effectiveness.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In a personalized recommendation system, a user model is created based on user demographic data and his/her behavior and transactions [1] . A digital representation of this model is a user profile, which usually reflects the user's preferences and needs. Online websites can collect a broad spectrum of data [2] [3] [4] [5] concerning users' demographics and behavior, which are used to construct user profiles and generate personalized recommendations aimed to generate sales.",
+            "cite_spans": [
+                {
+                    "start": 134,
+                    "end": 137,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 308,
+                    "end": 311,
+                    "text": "[2]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 312,
+                    "end": 315,
+                    "text": "[3]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 316,
+                    "end": 319,
+                    "text": "[4]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 320,
+                    "end": 323,
+                    "text": "[5]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Most popular recommender engines use well-established, collaborative filtering with improvements, e.g., including user interest [6, 7] . Another type of content-based recommender engine relies on presenting products similar to products the user liked in the past. The major advantages and disadvantages of each approach are presented in Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 131,
+                    "text": "[6,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 132,
+                    "end": 134,
+                    "text": "7]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 337,
+                    "end": 344,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "Recently, the use of deep neural networks has grown in interest among recommender system researchers [8] . Shahriar et al. (2020) used eye tracking to learn user behavior by counting how many times a user looked at a particular website element in order to generate a cluster of similar products to constitute a base for recommendations [9] . Lack of recommendation novelty Over-specialization Cold start problem for both user and item Requires description of products/items",
+            "cite_spans": [
+                {
+                    "start": 101,
+                    "end": 104,
+                    "text": "[8]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 107,
+                    "end": 129,
+                    "text": "Shahriar et al. (2020)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 336,
+                    "end": 339,
+                    "text": "[9]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The recommendation system's performance and effectiveness depend on the underlying recommendation algorithm itself, but it also goes far beyond this point [10] . There is much less research in selecting the best ways the products should be presented to the customer compared to massive research in the field of recommendation algorithms [11, 12] . The most appropriate ways of presenting a recommendation item to users can be learned by observing human-computer interaction, with websites and recommending interfaces in particular. While interacting with websites, human behavior can be observed via eye tracking [13] or by collecting events inside modern web browsers [2] , based respectively on gaze sensors and mouse/keystroke sensors. The investigation of visual aspects of recommending interfaces could better integrate those interfaces in online stores [10, 14] . The position and layout of a recommendation zone, the number of recommendations, the size of associated images, product titles and prices, etc. can all be evaluated toward interface improvement [15] . In the era of information overload, in particular enormous marketing content, the habituation effect often comes into action, resulting in the banner blindness phenomenon [16] . Even the best recommendations from the algorithm perspective may have little effect unless they are properly presented [16] [17] [18] -with the right layout and position on a website, at the right moment of the browsing and purchase process, with the right visual intensity (understood as the level of content intrusiveness) [19] and in the right context, etc. [20] [21] [22] [23] .",
+            "cite_spans": [
+                {
+                    "start": 155,
+                    "end": 159,
+                    "text": "[10]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 337,
+                    "end": 341,
+                    "text": "[11,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 342,
+                    "end": 345,
+                    "text": "12]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 613,
+                    "end": 617,
+                    "text": "[13]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 669,
+                    "end": 672,
+                    "text": "[2]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 859,
+                    "end": 863,
+                    "text": "[10,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 864,
+                    "end": 867,
+                    "text": "14]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1064,
+                    "end": 1068,
+                    "text": "[15]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1242,
+                    "end": 1246,
+                    "text": "[16]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1368,
+                    "end": 1372,
+                    "text": "[16]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1373,
+                    "end": 1377,
+                    "text": "[17]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1378,
+                    "end": 1382,
+                    "text": "[18]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1574,
+                    "end": 1578,
+                    "text": "[19]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1610,
+                    "end": 1614,
+                    "text": "[20]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1615,
+                    "end": 1619,
+                    "text": "[21]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1620,
+                    "end": 1624,
+                    "text": "[22]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1625,
+                    "end": 1629,
+                    "text": "[23]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This paper is a substantial extension of a conference paper [24] , which presented the initial results of an eye-tracking experiment on visual intensity and layout for a simplestructure recommending interface with regard to reducing habituation. The general aim of the study was to evaluate two layouts and three visual intensity levels of item presentation and varied positions of recommendations in a basic-structure recommending interface, while the levels of attention drawn and inspired product interest were monitored. This paper focuses on the analysis of the effectiveness of recommendation interfaces based on the eye-tracking research in relation to purchasing based on recommendations using a number of machine learning methods. The eye-tracking study results were compared with the results of an implicit feedback study performed via browser add-ons on a group of participants for major e-commerce websites in Poland. The results were analyzed and models for predicting recommendation effectiveness were built using different machine learning methods to find the best-performing ones. This paper's original contribution also relates to using two different methods of tracking user behaviors and thus user interest-eye tracking and collecting implicit feedback via a web browser add-on-to compare their applicability for building automated mechanisms of recommending interface personalization.",
+            "cite_spans": [
+                {
+                    "start": 60,
+                    "end": 64,
+                    "text": "[24]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The remainder of the article is structured as follows: Assumptions for the study and methodology are presented in Section 2. The structure and procedures of the experiment are provided in Section 3. Results are discussed in Section 4, and conclusions are presented in Section 5.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The study's main objective is to verify the effectiveness of recommending interfaces of e-commerce websites with their visual aspects in mind using gaze tracking and humancomputer interaction events tracking. Different layouts (vertical versus horizontal) different positions, and varying visual intensities of recommending interfaces were compared with regard to attracting customer interest and recommendation-driven purchase (RDP) from the perspective of user experience and business goals.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "While users are usually most interested in the main content of a website, positioning and modifying the intensity of the most accurate recommendations so that they would attract the highest possible attention of users allows for the achievement of various website goals. In turn, that could lead to increased customer satisfaction, retention, long-term increased sale, and finally boosting profits.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "User interest can be determined by asking the user explicitly or by observing the interaction implicitly in order to infer it. Unfortunately, explicit questioning may disturb natural behavior as it adds an additional burden on the user [25] [26] [27] . Furthermore, in the case of fast Internet browsing, there could be a lot of unconscious attraction caused by some webpage parts. Therefore, inobtrusive implicit measures are better suited for the purpose of the study, allowing the monitored subjects to focus only on tasks performed, not causing additional cognitive load, and not requiring unique motivation to provide explicit ratings [28, 29] .",
+            "cite_spans": [
+                {
+                    "start": 236,
+                    "end": 240,
+                    "text": "[25]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 241,
+                    "end": 245,
+                    "text": "[26]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 246,
+                    "end": 250,
+                    "text": "[27]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 640,
+                    "end": 644,
+                    "text": "[28,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 645,
+                    "end": 648,
+                    "text": "29]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "For the purpose of this study, the results of experiments using various observation techniques have been analyzed. Eye-tracking technology was used for implicit user visual behavior observation and analysis. Eye tracking is the most popular technique of observing human visual activity and providing a large amount of implicit feedback and can be performed with standalone or wearable devices. Within the scope of the study, gaze-based data were used and interpreted in a simple e-commerce scenario. Eye movements were used to discover which areas of a shopping website are mostly looked at, attracting user attention as being the most relevant to the user. Raw data were processed and analyzed with the help of popular eye-tracking software and data analytics algorithms to generate metrics regarding eye fixation and gaze. Although eye movements are often unconscious and chaotic in nature, they are generally tightly connected with cognitive processes [30] . Thus, based on gaze data from eye tracking, it is possible to conclude about user attention and interest. Gaze is an invaluable source of data for providing information on how much attention a user pays to contents on the screen [31] . For the following analyses, total fixation duration is the main gaze-based measure used. This parameter is used as an indicator of attractiveness by a lot of other studies [32] [33] [34] . It is calculated as the sum of durations of fixations aggregated on a website section, an area of interest (AOI), one with recommendation content (RC), i.e., presentation of the recommended items, and the main section with editorial content (EC), i.e., the main viewed product description, pictures, etc.",
+            "cite_spans": [
+                {
+                    "start": 955,
+                    "end": 959,
+                    "text": "[30]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1191,
+                    "end": 1195,
+                    "text": "[31]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 1370,
+                    "end": 1374,
+                    "text": "[32]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1375,
+                    "end": 1379,
+                    "text": "[33]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1380,
+                    "end": 1384,
+                    "text": "[34]",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "An important property of a recommending interface on a website, in addition to the positioning of recommending interface and recommended items within that interface, is the aspect of visual intensity [35] , which is also considered in the study. Changing visual intensity is a popular marketing approach to counteract habituation and attract more attention [35] . Three basic levels of intensity were used.",
+            "cite_spans": [
+                {
+                    "start": 200,
+                    "end": 204,
+                    "text": "[35]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 357,
+                    "end": 361,
+                    "text": "[35]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "Another possible technique for implicit monitoring of user behavior on websites is based on human-computer interaction monitoring solutions such as scripts or browser extensions that allow registering events resulting from interacting with the website on the client's side. With this method, it is possible to observe user behavior unobtrusively without extra attention from them [36] or additional equipment.",
+            "cite_spans": [
+                {
+                    "start": 380,
+                    "end": 384,
+                    "text": "[36]",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "Our e-commerce customer preference monitor (ECPM) was built in order to collect e-customer behavior data [2] . This monitoring tool was implemented as an extension for the Mozilla Firefox browser, with the core monitoring code being easily detachable and available for external use. ECPM allows for monitoring of human-website interaction by exploiting document object model (DOM) events. HTML document object model events allow JavaScript to register different event handlers on elements in an HTML document. Our ECPM unobtrusively collects data on visited product pages and user interactions, recording numerous parameters describing the page's physical attributes and interactions. Among many collected parameters connected with the recommending interfaces were times of mouse cursor spent inside recommendation zones and their physical size measured as the number of characters within recommended products section. As other research shows, mouse position may be quite strongly correlated with eye gaze [37] [38] [39] . Tracking mouse movements can be used as a lower-quality and easier to perform alternative to eye tracking for the purpose of identification of user interest. Measured times with cursor being over recommended products were related to other measures such as total time spent on the product page and page height and length measured by a number of characters, images, etc. In this way, relative measures of cursor times spent inside particular recommendation interfaces were generated.",
+            "cite_spans": [
+                {
+                    "start": 105,
+                    "end": 108,
+                    "text": "[2]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1006,
+                    "end": 1010,
+                    "text": "[37]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1011,
+                    "end": 1015,
+                    "text": "[38]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 1016,
+                    "end": 1020,
+                    "text": "[39]",
+                    "ref_id": "BIBREF44"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "The conceptual system architecture is presented in Figure 1 . The goal of the system is to adapt recommending interfaces to maximize its efficiency. The core of the system is recommending interface efficiency models based on user browsing characteristics. Adaptation is performed on recognized user behavior characteristics. Those models are generated based on data gathered from all users via implicit tracking of their behavior inside browsers. Current use is matched against models' database, and the most efficient recommending interface is to be selected. a larger group of participants. Both experiments used simple e-commerce scenarios where participants were browsing products and expressing interest in them. The main goal was to analyze recommending interface efficiency for two groups of users with different ways of collecting data about users' activity. Results from both methods have been cross-compared in order to estimate their applicability for automatic recommending interface personalization in e-commerce scenarios, but not limited to them. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 51,
+                    "end": 59,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Conceptual System Architecture"
+        },
+        {
+            "text": "The research experiment procedure is presented in Figure 2 . Results presented in this paper are based on two experiments on recommending interfaces in e-commerce websites, described in detail in the next two sections, one performed with eye-tracking equipment and software on a smaller group of participants, and the other performed using our own implicit browsing behavior monitoring tool in the form of a web browser extension-on a larger group of participants. Both experiments used simple e-commerce scenarios where participants were browsing products and expressing interest in them. The main goal was to analyze recommending interface efficiency for two groups of users with different ways of collecting data about users' activity. Results from both methods have been cross-compared in order to estimate their applicability for automatic recommending interface personalization in e-commerce scenarios, but not limited to them. Figure 3 shows the unified modeling language (UML) activity diagram depicting implicit data processing with our ECPM behavior monitoring system. Three decision paths exist between the start point and the finish point while the activity is being executed for different types of events. Figure 3 shows the unified modeling language (UML) activity diagram depicting implicit data processing with our ECPM behavior monitoring system. Three decision paths exist between the start point and the finish point while the activity is being executed for different types of events. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 50,
+                    "end": 58,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 934,
+                    "end": 942,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 1219,
+                    "end": 1227,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Research Experiment Procedure"
+        },
+        {
+            "text": "This section describes the experiment performed to collect behavior data, which were used to train five different classifiers responsible for evaluating of recommending interfaces. The experimental group of users consisted of 52 people, 14 women and 38 men, all of whom produced valid eye-tracking data. Most of them were attracted by advertisements for the study or invited in person. They ranged in age from 14 years old to 54 years old (mean = 25.2, \u03c3 = 8.0). One limitation of the study was the large difference in the ratio of women to men and the big age span, although 90.4% of the participants were 18-39 years old. The group of subjects taking part in the study was not randomly selected and did not constitute a representative subset of the whole population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The study design was within subjects. All participants were given the same task-to shop online to furnish a studio apartment with six kinds of furniture fully. A subject was asked to go from one product category to another and choose an item from each category. For the purpose of the experiment, a dedicated e-commerce website was developed using Drupal CMS. The website was composed of a recommending interface. Each participant was provided with the same website and the same product sets. The pages were written in Polish and consisted of the title, menu, product images, and descriptive text. The website covered functions such as product list, buying cart, and recommendations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The editorial content was placed in the central part of the screen, under the main menu, and included product lists that were approximately three-screen pages long and contained 10 products for each product category. Each product had three unique features-name, an image of the product, and price. Products in a category were quite similar visually and similarly priced. There were six product categories PCj-wardrobes, chests ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "This section describes the experiment performed to collect behavior data, which were used to train five different classifiers responsible for evaluating of recommending interfaces. The experimental group of users consisted of 52 people, 14 women and 38 men, all of whom produced valid eye-tracking data. Most of them were attracted by advertisements for the study or invited in person. They ranged in age from 14 years old to 54 years old (mean = 25.2, \u03c3 = 8.0). One limitation of the study was the large difference in the ratio of women to men and the big age span, although 90.4% of the participants were 18-39 years old. The group of subjects taking part in the study was not randomly selected and did not constitute a representative subset of the whole population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The study design was within subjects. All participants were given the same task-to shop online to furnish a studio apartment with six kinds of furniture fully. A subject was asked to go from one product category to another and choose an item from each category. For the purpose of the experiment, a dedicated e-commerce website was developed using Drupal CMS. The website was composed of a recommending interface. Each participant was provided with the same website and the same product sets. The pages were written in Polish and consisted of the title, menu, product images, and descriptive text. The website covered functions such as product list, buying cart, and recommendations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The editorial content was placed in the central part of the screen, under the main menu, and included product lists that were approximately three-screen pages long and contained 10 products for each product category. Each product had three unique features-name, an image of the product, and price. Products in a category were quite similar visually and similarly priced. There were six product categories PCj-wardrobes, chests of drawers, beds, bedside cabinets, tables, and chairs. Moreover, an \"Add to Cart\" button was placed under the description of a piece of furniture allowing to store customer selections in a database. From the moment a product is selected, its short description is available in cart preview and the main cart page. It is possible to remove a product from the cart in order to allow a user to make necessary changes to the final selection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "There were two alternative recommendation modes, i.e., horizontal and vertical recommending interface layout, which means that the RC section was anchored in one of two dedicated parts of the screen below the main menu, either on the left side of the page next to the general product list (vertical mode) or at the top of the page, above the general product list (horizontal mode). Only one recommendation layout was available at one time, i.e., when the horizontal mode was on, the vertical one was deactivated and vice versa. of drawers, beds, bedside cabinets, tables, and chairs. Moreover, an \"Add to Cart\" button was placed under the description of a piece of furniture allowing to store customer selections in a database. From the moment a product is selected, its short description is available in cart preview and the main cart page. It is possible to remove a product from the cart in order to allow a user to make necessary changes to the final selection. There were two alternative recommendation modes, i.e., horizontal and vertical recommending interface layout, which means that the RC section was anchored in one of two dedicated parts of the screen below the main menu, either on the left side of the page next to the general product list (vertical mode) or at the top of the page, above the general product list (horizontal mode). Only one recommendation layout was available at one time, i.e., when the horizontal mode was on, the vertical one was deactivated and vice versa. Figures 4 and 5 show two alternatives to the general location of the recommended content. The RC section always consisted of four recommendation items, RC1 to RC4, randomly selected from all products in a given category. The section in each variant did not change its location on the screen throughout browsing products in a product category, regardless of the EC section's user scroll. Only the general product lists were actually scrollable in order to ensure reliable subject exposure to recommendations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1494,
+                    "end": 1509,
+                    "text": "Figures 4 and 5",
+                    "ref_id": "FIGREF11"
+                }
+            ],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "It was ensured that product features, i.e., name, image, and price did not stand out from other products in a category. It was intended that the distinction of a particular RCi location would be accomplished only by means of visual intensity (VI). Three levels of intensity were used-standard (no highlight) VI1, flickering (slowly disappearing and reappearing every 1-2 s) VI2, and background in red VI3. For each product category, there of drawers, beds, bedside cabinets, tables, and chairs. Moreover, an \"Add to Cart\" button was placed under the description of a piece of furniture allowing to store customer selections in a database. From the moment a product is selected, its short description is available in cart preview and the main cart page. It is possible to remove a product from the cart in order to allow a user to make necessary changes to the final selection. There were two alternative recommendation modes, i.e., horizontal and vertical recommending interface layout, which means that the RC section was anchored in one of two dedicated parts of the screen below the main menu, either on the left side of the page next to the general product list (vertical mode) or at the top of the page, above the general product list (horizontal mode). Only one recommendation layout was available at one time, i.e., when the horizontal mode was on, the vertical one was deactivated and vice versa. Figures 4 and 5 show two alternatives to the general location of the recommended content. The RC section always consisted of four recommendation items, RC1 to RC4, randomly selected from all products in a given category. The section in each variant did not change its location on the screen throughout browsing products in a product category, regardless of the EC section's user scroll. Only the general product lists were actually scrollable in order to ensure reliable subject exposure to recommendations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1405,
+                    "end": 1420,
+                    "text": "Figures 4 and 5",
+                    "ref_id": "FIGREF11"
+                }
+            ],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "It was ensured that product features, i.e., name, image, and price did not stand out from other products in a category. It was intended that the distinction of a particular RCi location would be accomplished only by means of visual intensity (VI). Three levels of intensity were used-standard (no highlight) VI1, flickering (slowly disappearing and reappearing every 1-2 s) VI2, and background in red VI3. For each product category, there The RC section always consisted of four recommendation items, RC1 to RC4, randomly selected from all products in a given category. The section in each variant did not change its location on the screen throughout browsing products in a product category, regardless of the EC section's user scroll. Only the general product lists were actually scrollable in order to ensure reliable subject exposure to recommendations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "It was ensured that product features, i.e., name, image, and price did not stand out from other products in a category. It was intended that the distinction of a particular RCi location would be accomplished only by means of visual intensity (VI). Three levels of intensity were used-standard (no highlight) VI1, flickering (slowly disappearing and reappearing every 1-2 s) VI2, and background in red VI3. For each product category, there was a maximum of one RCi at VI2 or VI3. An example of the visual intensity of the last kind (VI3) is presented in Figure 6 . was a maximum of one RCi at VI2 or VI3. An example of the visual intensity of the last kind (VI3) is presented in Figure 6 . An experimental run proceeded in a way that the examined person was explained what the device for sensing eye movements was, and the eye tracker was calibrated using Gazepoint Control software (Gazepoint, Vancouver, BC, Canada) and a nine-point calibration method. For better accuracy, the calibration was always performed twice the first time to familiarize the subject with the process. There was a double monitor setup, and the operator's screen was invisible to the participant. Due to the correct calibration, it was possible to determine precise coordinates of the place the user was looking at. We did not employ data loss measures because in these short tasks with a given goal, the data loss rate is very low. To overcome any data loss, calibration was performed twice, as mentioned earlier. All recordings from the eye tracker were also carefully analyzed in order to confirm the proper performance of the experiment. There was no eyewear that could interfere with pupil tracking.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 553,
+                    "end": 561,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF19"
+                },
+                {
+                    "start": 678,
+                    "end": 686,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF19"
+                }
+            ],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "Each participant was informed what their task was, but they were not told about the study's goal yet. After this introduction, the subject had to furnish the apartment. After choosing one item from a category, the subject clicked \"Next\" and was automatically moved to the next category. Category after category, the visual intensity of recommendation items changed each time, following the same order for each participant. Furthermore, for the first three categories, the RC layout was vertical. After moving to the fourth category, it changed to horizontal and remained this way for the following categories. On the whole, there were at least six subsequent pages with different recommendation variants presented to each participant.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The eye-tracker device used was Gazepoint GP3 (Gazepoint, Vancouver, BC, Canada) with a 60 Hz update rate (satisfactory taking into account the nature of the research and observing fixation times), the device's nominal accuracy being 0.5-1\u00b0 of visual angle, the range of depth movement \u00b115 cm, calibration 5-and 9-point. Every session was recorded and controlled live using Gazepoint Analysis 4.3.0 software (www.gazept.com), and it was double-checked continuously on the operator's monitor that the experimental setup was correct. After completing the task by the participant, basic data such as age were collected, and a question was asked whether a subject felt recommendations influenced them. Finally, all data were saved and stored for further analysis. A typical experimental run lasted around 12 min.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "Results from Gazepoint Analysis software have been preprocessed with a simple algorithm whose goal was to calculate total fixation time while the user gazed at particular areas of interest. The fixation point-of-gaze (POG) coordinates data FPOGX and FPOGY, which provide the user's point-of-gaze as determined by the internal fixation filter, have been used together with information about the location of particular sections (e.g., recommending interface elements) of analyzed websites. Based on those data, the total time An experimental run proceeded in a way that the examined person was explained what the device for sensing eye movements was, and the eye tracker was calibrated using Gazepoint Control software (Gazepoint, Vancouver, BC, Canada) and a nine-point calibration method. For better accuracy, the calibration was always performed twice the first time to familiarize the subject with the process. There was a double monitor setup, and the operator's screen was invisible to the participant. Due to the correct calibration, it was possible to determine precise coordinates of the place the user was looking at. We did not employ data loss measures because in these short tasks with a given goal, the data loss rate is very low. To overcome any data loss, calibration was performed twice, as mentioned earlier. All recordings from the eye tracker were also carefully analyzed in order to confirm the proper performance of the experiment. There was no eyewear that could interfere with pupil tracking.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "Each participant was informed what their task was, but they were not told about the study's goal yet. After this introduction, the subject had to furnish the apartment. After choosing one item from a category, the subject clicked \"Next\" and was automatically moved to the next category. Category after category, the visual intensity of recommendation items changed each time, following the same order for each participant. Furthermore, for the first three categories, the RC layout was vertical. After moving to the fourth category, it changed to horizontal and remained this way for the following categories. On the whole, there were at least six subsequent pages with different recommendation variants presented to each participant.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The eye-tracker device used was Gazepoint GP3 (Gazepoint, Vancouver, BC, Canada) with a 60 Hz update rate (satisfactory taking into account the nature of the research and observing fixation times), the device's nominal accuracy being 0.5-1 \u2022 of visual angle, the range of depth movement \u00b115 cm, calibration 5-and 9-point. Every session was recorded and controlled live using Gazepoint Analysis 4.3.0 software (www.gazept.com (accessed on 16 February 2021)), and it was double-checked continuously on the operator's monitor that the experimental setup was correct. After completing the task by the participant, basic data such as age were collected, and a question was asked whether a subject felt recommendations influenced them. Finally, all data were saved and stored for further analysis. A typical experimental run lasted around 12 min.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "Results from Gazepoint Analysis software have been preprocessed with a simple algorithm whose goal was to calculate total fixation time while the user gazed at particular areas of interest. The fixation point-of-gaze (POG) coordinates data FPOGX and FPOGY, which provide the user's point-of-gaze as determined by the internal fixation filter, have been used together with information about the location of particular sections (e.g., rec-ommending interface elements) of analyzed websites. Based on those data, the total time while the user was actively gazing at particular elements of the website was calculated. Only valid fixation POG data points (flag FPOGV) have been counted. It needs to be noted that some gaze tracking signals may occur in the absence of any specific state. The nature of gaze itself is variable due to breathing, the gravity of expressed interactions, etc.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Experiment Structure and Procedure"
+        },
+        {
+            "text": "The ECPM tool was instrumented for five major Polish online stores: Merlin.pl, Agito.pl, Electro.pl, Komputronik.pl, and Morele.net. From the perspective of assortment at the time of the study, Agito.pl and Merlin.pl were horizontal shops, whereas Electro.pl and Morele.net offered mostly electronic goods. Merlin.pl was a major Polish online bookstore.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implicit Event Tracking via ECPM Browser Extension"
+        },
+        {
+            "text": "All 85 participants for the study were non-profit volunteers who were active web users located in Poland, aged between 19 years old and 33 years old, all holding at least a high school degree. The task given to participants was to browse for interesting products and rate them. After leaving the product page, a rating form was displayed, where the user could express his/her level of being pleased by the product. User activity was monitored at the most granular level. Every DOM-fired event connected with the mouse and keyboard was registered together with detailed information about the source element and its position in the structure of a web page. In addition, the HTML code of every visited product page was collected. Those data were used to generate parameters describing user behavior, which were classified into four groups-describing product page attributes, describing user interaction times (in ms), describing user behavior per se, and also relative parameters describing user behavior.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implicit Event Tracking via ECPM Browser Extension"
+        },
+        {
+            "text": "During the study, 1396 products were rated, and all customer interactions with websites were monitored via ECPM. About half of the participants rated below 14 products, while the upper quartile rated more than 20 products. Higher ratings were more popular than lower ones. Among many parameters, ECPM monitored user interaction with recommending interfaces. The main monitored measure was the total time while the mouse pointer was positioned over other recommended products section. This measure was used to reflect user interest in the recommendation section.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implicit Event Tracking via ECPM Browser Extension"
+        },
+        {
+            "text": "This section describes the procedure employed to compare visual aspects of the recommending interfaces for observations made with eye tracking and those based on DOM events. The size and resolution of the screen were mostly the same for both studies. The eye-tracking study was conducted in a university laboratory on the same equipment. The implicit tracking with ECPM was conducted in a university laboratory and at personal computers of volunteers taking part in the study from home. The resolution and size of the screen were recorded in the study and were the same or very similar for different participants.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Comparing Visual Aspects of Recommending Interfaces"
+        },
+        {
+            "text": "Data collected using the eye-tracking device were used to build a classification model with five different classification modeling methods. Gazepoint Analysis software was used to gather fixations made by participants and process them into lines of data. Overall, 15,922 fixations lines of records have been stored. Those records have been pre-processed to generate features appropriate for analysis and classification modeling. Every row of the resulting dataset contained features shown in Table 2 . Only behavior-related parameters were used, without any demographic data, compared to previous studies [24, 40] . action of adding the product to cart directly from RC add_to_cart_indirect action of adding the product to cart action from EC while product was looked at in RC add_to_cart_both adding the product to cart action from RC or EC while product was being observed in RC As a measure of recommendation efficiency add-to-cart actions were used, being the most appropriate due to the selection and purchase task given to participants. The preprocessed data from the eye-tracking study were used for building classification models using five different modeling methods-logistic regression, decision trees, random forests, neural networks, and support vector machines. Those methods were selected as being commonly used and well established [41, 42] . Our goal was to compare those methods in terms of classification quality in order to select the most suited one for the task of evaluating recommending interfaces.",
+            "cite_spans": [
+                {
+                    "start": 605,
+                    "end": 609,
+                    "text": "[24,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 610,
+                    "end": 613,
+                    "text": "40]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1347,
+                    "end": 1351,
+                    "text": "[41,",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 1352,
+                    "end": 1355,
+                    "text": "42]",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 492,
+                    "end": 499,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Comparing Visual Aspects of Recommending Interfaces"
+        },
+        {
+            "text": "The whole data set was split into training and testing sets with a proportion of 70% to 30% with stratified sampling, which resulted in roughly the same proportion of each class cases between both training and test sets. The testing set was used to evaluate models' metrics. The training was performed with selected values for the hyper-parameters presented in Table 3 . Detailed data collected with ECPM were used to extract parameters concerning user behavior in recommendation zones together with features of the recommending interface and product pages. Every row contained the following features presented in Table 4 . Table 4 . Features generated based on data gathered via the e-commerce customer preference monitor (ECPM) monitoring tool. Those parameters were used to compare the effectiveness between different recommendation layouts-horizontal and vertical. As a measure of effectiveness, the time of the mouse being positioned over the recommending interface was used as the most appropriate due to the goal that was given to participants of the study. This measure was related to different physical attributes of the page. Komputronik.pl store was omitted from the analysis, in opposition to previous studies, because it contained only vertical recommending interfaces.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 361,
+                    "end": 368,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                },
+                {
+                    "start": 614,
+                    "end": 621,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 624,
+                    "end": 631,
+                    "text": "Table 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Comparing Visual Aspects of Recommending Interfaces"
+        },
+        {
+            "text": "Finally, results from the experiments were compared in order to find similarities or dissimilarities in evaluations of recommending interfaces.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Comparing Visual Aspects of Recommending Interfaces"
+        },
+        {
+            "text": "Analysis of data collected with eye trackers shows that finishing the task averagely took 2.3 min. Overall, 312 products were chosen for purchase in the preliminary study. The time of fixation on the recommending interface was on average 16.3 s per participant, which constitutes 12% of the mean task finishing time. Subjects devoted an averagely of 8.2 s for observing vertical RC and 8.1 s for horizontal RC. This means that two presented layout variants of the recommending interface (horizontal and vertical) performed equally in fixation times.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Results of Recommending Interface Efficiency Evaluation"
+        },
+        {
+            "text": "The distribution of fixation times for all recommendation item positions is shown more exhaustively in Table 5 . The first three RCi positions were most favorable regardless of the layout type, whereas the fourth positions in the list were the least eye-catching ones. Surprisingly, the most popular of all was the RC3 location in a horizontal layout (3.9 s). This might have been affected by the fact that this recommendation item was located right above the main product list. Next in terms of popularity were sections RC2 and RC1, respectively, situated in the vertical layout. The clear popularity of RC2 in this layout was caused by the flickering (VI2) effect shown in one product category. The popularity of RC1 although always shown without any extra visual intensity effects (VI1) may be resulting from that many people tend to perceive the first/top location in a list being the best one. In the case of the vertical layout, the first location performed better than RC3 despite presenting it with very strong intensity VI3 for one product category. Both items RC3 in the vertical layout and RC2 in the horizontal layout performed equally despite that the latter was distinguished with flickering effect (VI2) for one product category. From the sales view, 12% of products were added to carts directly from the recommending interfaces, while around 13% of products were firstly seen by subjects in RC and added from the main EC. This constitutes roughly 25% of all products being added to the cart directly from RC or indirectly (influenced by RC). Around 75% of products were selected directly from the main EC without any influence from RC. Coincidentally, it is exactly the same proportion as the one of recommending interface fixation time to task completion time, which somehow shows the importance of focusing attention on recommended items. Vertical RC layout accounted for 60% of adding to cart actions, while the rest were thanks to horizontal RC layout-the vertical one turned out to be much more effective than the horizontal. This may connect with the so-called banner blindness phenomenon, where banners have often been located in the same site area as horizontal recommendations in the analyzed experiment.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 103,
+                    "end": 110,
+                    "text": "Table 5",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Eye-Tracking Results of Recommending Interface Efficiency Evaluation"
+        },
+        {
+            "text": "The vertical layout resulted in a much better rate of adding products to the cart despite a similar average time of gaze for both interfaces. It is presumed that this may be caused by the fact that the horizontal recommending interface was located at the top of the page directly under the main menu. This location of the menu required often forced unintentional gaze at recommending interface. Initial analysis of eye-tracking video recordings confirmed this hypothesis in many cases. After adding products from vertical RC or main EC, users were often stopped at horizontal RC before selecting the next category from the menu.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Eye-Tracking Results of Recommending Interface Efficiency Evaluation"
+        },
+        {
+            "text": "In the case of the vertical layout, for RC with all RCi at standard intensity level (VI1), the purchases directly or indirectly driven by recommendations (RDPs) were equally distributed between recommended products; for RC with RC2 at a flickering intensity level (VI2), the item attracted 7 out of 18 RDPs in the product category; for RC with RC3 in the red background (VI3), the item attracted surprisingly only 2 out of 15 RDPs in the product category. Overall, RC2 performed best, which means that the second recommendation in the vertical list generally resulted in the biggest sales (43% of RDPs for vertical RC, and 35% of all RDPs). The volumes of recommendation driven purchase per participant are presented more exhaustively in Table 6 . Table 6 . Recommendation-driven purchase and visual intensity for each recommendation location RCi and product category PCj. Additional side remark resulting from the visual analysis of fixations paths shows that the flickering effect (VI2) of a recommendation item appeared to have an extended effect on fixation after moving to the next product category, which means that despite the visual intensity reverted to standard this recommendation location continued to attract more attention of users.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 738,
+                    "end": 745,
+                    "text": "Table 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 748,
+                    "end": 755,
+                    "text": "Table 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Eye-Tracking Results of Recommending Interface Efficiency Evaluation"
+        },
+        {
+            "text": "After completing the task, a survey was conducted, and 33% of the participants responded that they felt their selections were affected by recommendation content (6% felt strongly about it). In contrast, the rest responded that they felt the opposite, including 52% who claimed definitely that they ignored recommendations. This last group showed strong resistance to recommendations-when presented the RC elements after the test, some were surprised to see they had probably neglected most of them, taking them for unwanted advertisements, which suggests the effect of habituation occurred.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recommendation"
+        },
+        {
+            "text": "Five different classification methods were used to model the recommending interface efficiency based on add to basket actions. Models were built separately for three different target variables, namely, add_to_cart_direct, add_to_cart_indirect, and add_to_cart_both. Model validation techniques and hyper-parameters used for training various classifiers have been presented in Table 3 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 376,
+                    "end": 383,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Modeling Recommending Interface Efficiency Based on the Eye-Tracking Experiment"
+        },
+        {
+            "text": "For target parameter add_to_cart_both, ranking of variables with Gain ratio and Gini is mostly similar showing that most valuable variables are fixation_time_location, share_time_location_category, rc_location_intensity, fixation_time_location_layout, and share_time _layout_category. On the opposite side, variables with the lowest ranks are fixation_time_ category, rc_location, and rc_layout.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Classification Accuracy for Target Parameter add_to_cart_both"
+        },
+        {
+            "text": "All models targeting the add_to_cart_both parameter have very good precision measures with accuracy classification score (CA) above 90% for all models and area under the curve (AUC) having high values for all models except Binary Tree (Table 7 ). All models obtained for the target parameter being add_to_cart_both with accuracy measured as average over classes have relatively high precision with Neural Network performing best (Table 8) . For the target class being 1, which denotes the action of direct or indirect addition to cart, all models have lower precision compared to models with accuracy measured as average over classes. However, precision and specificity are still very high (Table 9 ). For the target class being 0, which denotes that the product was not added to the cart directly or indirectly from the recommending interface but was added from editorial content without registering gaze at this product within the recommendation zone. These models have the highest classification precision of all three types of models meaning that models are performing best in predicting not adding product to basket recommending interface directly or indirectly (Table 10) . For the target parameter add_to_cart_direct, a ranking of variables with Gain ratio and Gini is mostly similar to where add_to_cart_both was denoted as the target variable. The only difference is the lower rank of rc_location_intensity. General precision metrics, both AUC and CA, for all models are very high showing their outstanding capabilities (Table 11 ). With accuracy measured as average over classes, all models have precision above 93% with the Binary Tree, also having the highest specificity (Table 12) . For the target class being 1, which denotes the action of direct addition to cart from the recommending interface, all models have much lower precision compared to models with accuracy measured as average over classes (Table 13) . Again, Binary Tree is the best with 69.2% precision. Precision for not adding product to cart directly or indirectly from recommending interface is again higher for all models (Table 14) . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 235,
+                    "end": 243,
+                    "text": "(Table 7",
+                    "ref_id": "TABREF5"
+                },
+                {
+                    "start": 429,
+                    "end": 438,
+                    "text": "(Table 8)",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 690,
+                    "end": 698,
+                    "text": "(Table 9",
+                    "ref_id": "TABREF7"
+                },
+                {
+                    "start": 1167,
+                    "end": 1177,
+                    "text": "(Table 10)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1529,
+                    "end": 1538,
+                    "text": "(Table 11",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1684,
+                    "end": 1694,
+                    "text": "(Table 12)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1915,
+                    "end": 1925,
+                    "text": "(Table 13)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 2104,
+                    "end": 2114,
+                    "text": "(Table 14)",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Classification Accuracy for Target Parameter add_to_cart_both"
+        },
+        {
+            "text": "For the target parameter add_to_cart_indirect, a ranking of variables with Gain ratio and Gini is mostly similar to other target variables. The only difference is the higher rank of rc_location_intensity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Classification Accuracy for Target Parameter add_to_cart_indirect"
+        },
+        {
+            "text": "Models for indirectly adding products to cart have different accuracy classification scores with Random Forests and Neural Network having the highest values (Table 15 ). With accuracy measured as average over classes, all models have precision above 86%, with Neural Network having the highest value (Table 16 ). For the target class being 0, which means that products have been seen only on the main EC and added to cart from that place, all models have relatively high precision (Table 17) . For the target class being 1, which means that the user gazed at a product before adding it to the cart from EC, all models have relatively low precision from 52% to 64.8% (Table 18 ). Classification accuracy metrics (AUC, CA) for all three target variables obtained for different models are presented for easier comparison in Figure 7 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 157,
+                    "end": 166,
+                    "text": "(Table 15",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 300,
+                    "end": 309,
+                    "text": "(Table 16",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 481,
+                    "end": 491,
+                    "text": "(Table 17)",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 666,
+                    "end": 675,
+                    "text": "(Table 18",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 821,
+                    "end": 829,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF24"
+                }
+            ],
+            "section": "Classification Accuracy for Target Parameter add_to_cart_indirect"
+        },
+        {
+            "text": "Comparing recommending interfaces efficiency based on data gathered during our ECPM-based experiment shows that average prod_recommend_time was significantly higher for vertical layout than horizontal layout in case of three of four shops (Table 19 ). ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 239,
+                    "end": 248,
+                    "text": "(Table 19",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Results of Recommending Interfaces Efficiency Evaluation Based on the Event Tracking Study"
+        },
+        {
+            "text": "Comparing recommending interfaces efficiency based on data gathered during our ECPM-based experiment shows that average prod_recommend_time was significantly higher for vertical layout than horizontal layout in case of three of four shops (Table 19 ). Only Morele.net was in the opposite, which may well be caused by a higher number of horizontal recommending zones than vertical (two versus one) in this shop. The parameter that shows the level of interest in recommendation rel_recommend_time_recommend_length compared to its length proves that vertical zones gained more attention than horizontal ones. Other relative parameters presented in Table 19 confirm this tendency.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 239,
+                    "end": 248,
+                    "text": "(Table 19",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 645,
+                    "end": 653,
+                    "text": "Table 19",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Results of Recommending Interfaces Efficiency Evaluation Based on the Event Tracking Study"
+        },
+        {
+            "text": "Recommender systems are commonly used to draw customers' attention to products being consistent with their preferences. They are expected to result in higher conversion rates, purchase volumes, and client retention. This study showed the influence of the recommending interface on user behavior in simply structured and real-world e-commerce stores. By combining evaluation based on two different methodologies-eye tracking and implicit behavior event tracking inside the browser, which is an original contribution of this paper-a large amount of data related to user activity and physical parameters of recommending interfaces were collected. Results were analyzed in order to compare the reliability and applicability of both methods, and the classification quality of popular modeling methods was verified with regard to recommending interfaces evaluation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "In the eye-tracking experiment, an average of 12% of task completion time was devoted to looking at the recommending interfaces, and the same percentage of goods were bought with direct use of recommendations. Comparing the vertical and horizontal recommending interface layouts, they performed equally in terms of fixation times. Still, from the perspective of purchase commitments, the vertical layout turned out to be almost twice as effective as the horizontal. In the better performing vertical layout, the most attractive were the first and second positions in the list. A slow flickering effect used in the second position influenced its attractiveness. On the other hand, the high visual attractiveness of the first position in the list, despite the lack of any visual highlight, may have resulted from the conception that the first one is always the best (similarly to search results). The worse effect of the horizontal layout may be connected with the so-called banner blindness. The event tracking experiment also showed the higher attractiveness of vertical zones compared to horizontal ones. To the best of our knowledge, this is the first study that verified this result using different methods and data sources.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Various classification models for predicting actions of adding product to cart directly from recommending interface or indirectly (influenced by displayed recommendationgaze tracked) or any of those actions show overall very good precision. The accuracy measured as average over classes for all models with target variable add_to_cart_both varied in precision from 90.1 to 92.9%, with Neural Network performing best. The accuracy of predicting adding product to cart exclusively directly or indirectly from recommending interface ranged from 55.6 to 92.6% for precision metric, again with Neural Network performing best. Generally, good quality was provided with models based on Neural Network, Logistic Regression, and Random Forests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The study showed that both approaches, gaze and event-tracking based, showed similar results in terms of recommendation interface presentation evaluation, and as such, they are similarly applicable for building automated mechanisms of recommending interface personalization and improving human-computer interaction. Both techniques confirmed the higher efficiency of vertical recommending interfaces compared to horizontal ones. Users spent relatively more time looking at vertical recommending interfaces, which resulted in more interactions related to adding products to the cart. The recommendation position inside the recommending interface proved to play an important role in a good performance for middle positions-second for vertical and third for horizontal layout. The visual intensity had a varied influence with the flickering effect attracting most users.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The study had some limitations, in particular, the subjects in the study were not randomly selected and were not a representative subset of the whole population. They, however, provided cognitive value in the context of the effectiveness of tracking techniques and machine learning methods for identifying user behavior indicative of purchase intent.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "In future research, we intend to extend the study to a larger and statistically significant scale by partnering with a growing number of e-commerce stores and leveraging the usage of implicit activity tracking to receive the ultimate benefit of recommendation optimization. We will use the most promising modeling methods. In our experiments, we have not dealt with eye fatigue and eye-hand coordination, which can affect the results' reliability [43] [44] [45] [46] , nor with the relation of gaze tracking to the cognitive realm, which is a significant part when deciding whether to purchase or not. Therefore, we plan to use more advanced eye tracking for gathering more data, considering the variable nature of gaze and detecting eye fatigue issues. We also intend to include the cognitive emotion information based on the fact that different types of eye motions can represent different emotions [47, 48] and integrate a facial expression recognition (FER) module to include data on human sentiment while surfing the e-commerce sites. We will also perform both eye tracking and implicit events tracking at the same time to cross-compare their results and possibly come up with an optimized hybrid approach. Moreover, we want to develop our eventsbased solutions to recognize users' activity, including time spent displaying particular AOIs in recommending interfaces on computers and mobile devices, focusing on visual aspects such as layout and intensity, in order to seek best-performing solutions for this multidimensional problem.",
+            "cite_spans": [
+                {
+                    "start": 447,
+                    "end": 451,
+                    "text": "[43]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 452,
+                    "end": 456,
+                    "text": "[44]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 457,
+                    "end": 461,
+                    "text": "[45]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 462,
+                    "end": 466,
+                    "text": "[46]",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 901,
+                    "end": 905,
+                    "text": "[47,",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 906,
+                    "end": 909,
+                    "text": "48]",
+                    "ref_id": "BIBREF53"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Author Contributions: Conceptualization, P.S.; methodology, P.S. and T.Z.; software, P.S. and T.Z.; supervision, P.S.; validation, P.S. and T.Z.; formal analysis, P.S. and T.Z.; investigation, P.S. and T.Z.; resources, P.S., T.Z., K.C., K.D., and K.S.-W.; data curation, P.S. and T.Z.; writing-original draft preparation, P.S. and T.Z.; writing-review and editing, P.S., K.C., K.D., K.K., and K.S.-W.; visualization, P.S. and T.Z.; project administration, P.S. All authors have read and agreed to the published version of the manuscript. Institutional Review Board Statement: The study was conducted according to the guidelines of the Declaration of Helsinki. Ethical review and approval were not required in accordance with the local legislation and institutional requirements.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "All participants were informed about the purpose and the procedure of the study and provided their informed consent prior to the experiment. The experiment did not involve any risk or discomfort for the participants.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Informed Consent Statement:"
+        },
+        {
+            "text": "Data Availability Statement: Some data presented in the study are available from the corresponding author, upon request, data sharing being limited due to personal information content, and the code used during the study being proprietary.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Informed Consent Statement:"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Implicit Feedback: Using Behavior to Infer Relevance",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kelly",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "New Directions in Cognitive Information Retrieval",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Human-website interaction monitoring in recommender systems",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sulikowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zdziebko",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Turzy\u0144ski",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ka\u0144toch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Procedia Comput. Sci",
+            "volume": "126",
+            "issn": "",
+            "pages": "1587--1596",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.procs.2018.08.132"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Modeling online user product interest for recommender systems and ergonomics studies",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sulikowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zdziebko",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Turzy\u0144ski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Concurr. Comput. Pract. Exp",
+            "volume": "31",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/cpe.4301"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Integration of Eye-Tracking Based Studies into e-Commerce Websites Evaluation Process with eQual and TOPSIS Methods",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "W\u0105tr\u00f3bski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jankowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Karczmarczyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ziemba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 10th SIGSAND/PLAIS EuroSymposium 2017",
+            "volume": "300",
+            "issn": "",
+            "pages": "56--80",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Towards the Tradeoff Between Online Marketing Resources Exploitation and the User Experience with the Use of Eye Tracking",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jankowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ziemba",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "W\u0105tr\u00f3bski",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Kazienko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 8th Asian Conference, ACIIDS 2016",
+            "volume": "9621",
+            "issn": "",
+            "pages": "330--343",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "An Improved Collaborative Filtering Algorithm Based on User Interest",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Teng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J. Softw",
+            "volume": "9",
+            "issn": "",
+            "pages": "999--1006",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A Framework for Configuring Collaborative Filtering-based Recommendations Derived from Purchase Data",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Geuens",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Coussement",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "De Bock",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Eur. J. Oper. Res",
+            "volume": "265",
+            "issn": "",
+            "pages": "208--218",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ejor.2017.07.005"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Deep Learning Based Recommender System",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tay",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Acm Comput. Surv",
+            "volume": "52",
+            "issn": "",
+            "pages": "1--38",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3285029"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Online Product Recommendation System by Using Eye Gaze Data",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shahriar",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Moon",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Mahmud",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hasan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the International Conference on Computing Advancements (ICCA 2020)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Eye-tracking study of user behavior in recommender interfaces",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "International Conference on User Modeling, Adaptation, and Personalization",
+            "volume": "",
+            "issn": "",
+            "pages": "375--380",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Recommender systems survey",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bobadilla",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ortega",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hernando",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gutierrez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Knowl. Based Syst",
+            "volume": "46",
+            "issn": "",
+            "pages": "109--132",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.knosys.2013.03.012"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Recommender system application developments: A survey",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Decis. Support Syst",
+            "volume": "74",
+            "issn": "",
+            "pages": "12--32",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.dss.2015.03.008"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "When I Look into Your Eyes: A Survey on Computer Vision Contributions for Human Gaze Estimation and Tracking",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cazzato",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Leo",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Distante",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Voos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Sensors",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/s20133739"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Evaluating Product Search and Recommender Systems for E-Commerce Environments",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Kumar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Electron. Commer. Res",
+            "volume": "8",
+            "issn": "",
+            "pages": "1--27",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10660-008-9015-z"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Multi-criteria Evaluation of Recommending Interfaces towards Habituation Reduction and Limited Negative Impact on User Experience",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Bortko",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bartk\u00f3w",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jankowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kuras",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sulikowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Procedia Comput. Sci",
+            "volume": "159",
+            "issn": "",
+            "pages": "2240--2248",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.procs.2019.09.399"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Modeling the effect of habituation on banner blindness as a function of repetition and search type: Gap analysis for future work",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Portnoy",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Marchionini",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "CHI'10 Extended Abstracts on Human Factors in Computing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "4297--4302",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "An integrated model of advertising clutter in offline and online media",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ha",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mccann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Int. J. Advert",
+            "volume": "27",
+            "issn": "",
+            "pages": "569--592",
+            "other_ids": {
+                "DOI": [
+                    "10.2501/S0265048708080153"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Task-oriented web user modeling for recommendation",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Mobasher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "International Conference on User Modeling",
+            "volume": "",
+            "issn": "",
+            "pages": "109--118",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A gradual approach for maximising user conversion without compromising experience with high visual intensity website elements",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jankowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hamari",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Watr\u00f3bski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Internet Res",
+            "volume": "29",
+            "issn": "",
+            "pages": "194--217",
+            "other_ids": {
+                "DOI": [
+                    "10.1108/IntR-09-2016-0271"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "The rise of intrusive online advertising and the response of user experience research at yahoo! In CHI'04 Extended Abstracts on Human Factors in Computing Systems",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rohrer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Boyd",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "1085--1086",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Modeling the Structure of Recommending Interfaces with Adjustable Influence on Users, Intelligent Information and Database Systems",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jankowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Lect. Notes Comput. Sci",
+            "volume": "7803",
+            "issn": "",
+            "pages": "429--438",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Experimental Study of Color Contrast Influence in Internet Advertisements with Eye Tracker Usage",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Sa\u0142abun",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Karczmarczyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mejsner",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Neuroeconomic and Behavioral Aspects of Decision Making. Springer Proceedings in Business and Economics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Recommendation of Workplaces in a Coworking Building: A Cyber-Physical Approach Supported by a Context-Aware Multi-Agent System",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gomes",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Almeida",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Vale",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Sensors",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/s20123597"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Evaluation of Varying Visual Intensity and Position of a Recommendation in a Recommending Interface Towards Reducing Habituation and Improving Sales",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sulikowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Advances in E-Business Engineering for Ubiquitous Computing, Proceedings of the 16th International Conference on E-Business Engineering",
+            "volume": "",
+            "issn": "",
+            "pages": "11--13",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Recommending based on implicit feedback",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jannach",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lerche",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zanker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Social Information Access",
+            "volume": "",
+            "issn": "",
+            "pages": "510--569",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Using Implicit Feedback for Recommender Systems: Characteristics, Applications, and Challenges",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lerche",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Explicit or implicit feedback? Engagement or satisfaction? A field experiment on machine-learning-based recommender systems",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Harper",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Adomavicius",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Konstan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 33rd Annual ACM Symposium on Applied Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "1331--1340",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Micro behaviors: A new perspective in e-commerce recommender systems",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the Eleventh ACM International Conference on Web Search and Data Mining",
+            "volume": "",
+            "issn": "",
+            "pages": "5--9",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Integrating implicit feedbacks for time-aware web service recommendations",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Inf. Syst. Front",
+            "volume": "19",
+            "issn": "",
+            "pages": "75--89",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10796-015-9590-1"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Universality in eye movements and reading: A trilingual investigation",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Liversedge",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Drieghe",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hy\u00f6n\u00e4",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Cognition",
+            "volume": "147",
+            "issn": "",
+            "pages": "1--20",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cognition.2015.10.013"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Attentive documents: Eye tracking as implicit feedback for information retrieval and beyond",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Buscher",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dengel",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Biedert",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Van Elst",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "ACM Trans. Interact. Intell. Syst",
+            "volume": "1",
+            "issn": "",
+            "pages": "1--30",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2070719.2070722"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Adaptive Information Visualization-Predicting user characteristics and task context from eye gaze",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Steichen",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Carenini",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Conati",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Proceedings of the International Conference on User Modeling",
+            "volume": "872",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Leveraging Neurodata to Support Web User Behavior Analysis. In Wisdom Web of Things",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Loyola",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Brunetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Martinez",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Vel\u00e1squez",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Maldonado",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Web Information Systems Engineering and Internet Technologies Book Series",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Eye-Tracking Metrics in Software Engineering",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Sharafi",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Shaffer",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Sharif",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-G",
+                    "middle": [],
+                    "last": "Gu\u00e9h\u00e9neuc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Asia-Pacific Software Engineering Conference",
+            "authors": [],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "96--103",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "The effect of repetition in internet banner ads and the moderating role of animation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-H",
+                    "middle": [],
+                    "last": "Ahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Comput. Hum. Behav",
+            "volume": "46",
+            "issn": "",
+            "pages": "202--209",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.chb.2015.01.008"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Comparative analysis of relevance feedback methods based on two user studies",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Akuma",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Iqbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jayne",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Doctor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Comput. Hum. Behav",
+            "volume": "60",
+            "issn": "",
+            "pages": "138--146",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.chb.2016.02.064"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Reconstructing User's Attention on the Web through Mouse Movements and Perception-Based Content Identification",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Boi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Fenu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Spano",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vargiu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Acm Trans. Appl. Percept",
+            "volume": "13",
+            "issn": "",
+            "pages": "1--21",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2912124"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Gaze Prediction for Recommender Systems",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Harper",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Konstan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 10th ACM Conference on Recommender Systems (RecSys '16)",
+            "volume": "",
+            "issn": "",
+            "pages": "131--138",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Horizontal vs. Vertical Recommendation Zones Evaluation Using Behavior Tracking",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sulikowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zdziebko",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Appl. Sci",
+            "volume": "2021",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/app11010056"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Deep Learning-Enhanced Framework for Performance Evaluation of a Recommending Interface with Varied Recommendation Position and Intensity Based on Eye-Tracking Equipment Data Processing",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sulikowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zdziebko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/electronics9020266"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Data Mining: Concepts, Models, Methods, and Algorithms",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kantardzic",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Survey on classification algorithms for data mining: (comparison and evaluation)",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "L A"
+                    ],
+                    "last": "Al-Nabiand",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Ahmed",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Comput. Eng. Intell. Syst",
+            "volume": "4",
+            "issn": "",
+            "pages": "18--24",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Modelling eye fatigue in gaze spelling task",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Vasiljevas",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gedminas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "\u0160ev\u010denko",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jan\u010diukas",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bla\u017eauskas",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dama\u0161evi\u010dius",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 2016 IEEE 12th International Conference on Intelligent Computer Communication and Processing (ICCP)",
+            "volume": "",
+            "issn": "",
+            "pages": "95--102",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Experimental Verification of Objective Visual Fatigue Measurement Based on Accurate Pupil Detection of Infrared Eye Image and Multi-Feature Analysis",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Sensors",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/s20174814"
+                ]
+            }
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Using Eye-Tracking to Examine Query Syntax and Method Syntax Comprehension in LINQ",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Katona",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kovari",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Heldal",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Costescu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rosan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Demeter",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Thill",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Stefanut",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the 2020 11th IEEE International Conference on Cognitive Infocommunications (CogInfoCom)",
+            "volume": "",
+            "issn": "",
+            "pages": "23--25",
+            "other_ids": {}
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Examination of the eye-hand coordination related to computer mouse movement",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ujbanyi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kovari",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Szil\u00e1di",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Katona",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Infocommun. J. 2020",
+            "volume": "12",
+            "issn": "",
+            "pages": "26--31",
+            "other_ids": {
+                "DOI": [
+                    "10.36244/ICJ.2020.1.4"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Are you ashamed? Can a gaze tracker tell?",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Maskeliunas",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Raudonis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "PeerJ Comput. Sci",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7717/peerj-cs.75"
+                ]
+            }
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Emotion recognition in typical and atypical development-a technology-based paradigm",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Costescu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rosan",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Brigitta",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hathazi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kovari",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Katona",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Heldal",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Helgesen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Thill",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Demeter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 10th IEEE International Conference on Infocommunications (CogInfoCom)",
+            "volume": "",
+            "issn": "",
+            "pages": "349--352",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Conceptual system architecture.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Conceptual system architecture.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Research experiment architecture.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Research experiment architecture.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Activity diagram depicting implicit data processing with the behavior monitoring tool.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Activity diagram depicting implicit data processing with the behavior monitoring tool.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Figures 4 and 5show two alternatives to the general location of the recommended content.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Vertical layout of the recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Horizontal layout of the recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "Vertical layout of the recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "Vertical layout of the recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "Horizontal layout of the recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "Horizontal layout of the recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "Example of visual intensity VI3 (red background) in the vertical recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF20": {
+            "text": "Example of visual intensity VI3 (red background) in the vertical recommending interface.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "fixation_time_category overall time spent by the participant on a product category page share_time_location_category fraction of time when fixation was registered inside RCi position with respect to the overall time spent on a category page share_time_layout_category fraction of time when fixation was registered inside RC layout to the overall time registered on a product category page share_time_location_layout proportion of time when fixation was observed inside RCi position to the overall time registered on RC layout add_to_cart_direct",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF22": {
+            "text": "layout (horizontal/vertical) recommend_length number of characters within all recommended products sections document_length number of characters within all texts on the page page_time time between page load and page unload tab_activ_time time while tab containing particular page is active user_activ_time time while user is actively interacting with page (generating keyboard or mouse events) rc_prod_recommend_time time while mouse pointer was positioned over recommended products rel_recommend_time_document_length relative time while mouse pointer was positioned over recommending interface in relation to the number of characters within all texts on the page rel_recommend_time_page_time relative time, while mouse pointer was positioned over recommending interface, in relation to time between page load and page unload rel_recommend_time_tab_activ relative time while mouse pointer was positioned over recommending interface in relation to time while tab containing particular page is active rel_recommend_time_user_activ relative time while mouse pointer was positioned over recommending interface in relation to time while user is actively interacting with page (generating keyboard or mouse events)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF24": {
+            "text": "Classification accuracy metrics for all target variables received for different models.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF25": {
+            "text": "Classification accuracy metrics for all target variables received for different models.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF26": {
+            "text": "This research project was supported by the National Science Centre of Poland, Grant No. 2017/27/B/HS4/01216, coordinated by Prof. Jaroslaw Jankowski (West Pomeranian University of Technology); and within the framework of the program of the Minister of Science and Higher Education under the name Regional Excellence Initiative in the years 2019-2022, Project No. 001/RID/2018/19, the amount of financing PLN 10,684,000.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Main recommendation techniques-advantages and disadvantages.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Sensors 2021, 21, x FOR PEER REVIEW 9 of 22",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Features generated based on eye-tracking device.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Values of classification model hyper-parameters.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Average fixation time (s) for each recommendation location.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Models accuracy metrics for add_to_cart_both as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Models accuracy metrics average over classes with add_to_cart_both as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Models accuracy metrics for add to cart action (class 1) with add_to_cart_both as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Models accuracy metrics for not adding a product from recommending interface (class 0) with add_to_cart_both as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "Models accuracy metrics for add_to_cart_direct as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF10": {
+            "text": "Models accuracy metrics average over classes with add_to_cart_direct as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF11": {
+            "text": "Models accuracy metrics for add to cart action (class 1) with add_to_cart_direct as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF12": {
+            "text": "Models accuracy metrics for not adding product from recommending interface (class 0) with add_to_cart_direct as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF13": {
+            "text": "Models accuracy metrics for add_to_cart_indirect as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF14": {
+            "text": "Models accuracy metrics average over classes with add_to_cart_indirect as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF15": {
+            "text": "Models accuracy metrics for add to cart action (class 1) with add_to_cart_indirect as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF16": {
+            "text": "Models accuracy metrics for not adding product from recommending interface (class 0) with add_to_cart_indirect as target parameter.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF17": {
+            "text": "Recommending interface quality parameters based on the ECPM study.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF18": {
+            "text": "Recommending interface quality parameters based on the ECPM study.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We would like to thank Chair of Information Systems Engineering Jaroslaw Jankowski (West Pomeranian University of Technology) for grant coordination, and student Lukasz Dobrowolski (West Pomeranian University of Technology) for support, initial gaze data being used in his master's thesis with the permission granted by the first author.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments:"
+        },
+        {
+            "text": "The authors declare no conflict of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest:"
+        }
+    ]
+}

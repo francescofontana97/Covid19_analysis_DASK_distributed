@@ -1,0 +1,1980 @@
+{
+    "paper_id": "3d0766641883a3778b54c4af699b3a65f686dc05",
+    "metadata": {
+        "title": "Revisiting Semantics of Interactions for Trace Validity Analysis",
+        "authors": [
+            {
+                "first": "Erwan",
+                "middle": [],
+                "last": "Mahe",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Laboratoire de Math\u00e9matiques et Informatique pour la Complexit\u00e9 et les Syst\u00e8mes CentraleSup\u00e9lec -Plateau de Moulon",
+                    "institution": "",
+                    "location": {
+                        "addrLine": "9 rue Joliot-Curie",
+                        "postCode": "F-91192",
+                        "settlement": "Gif-sur-Yvette Cedex"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Christophe",
+                "middle": [],
+                "last": "Gaston",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Laboratory of Systems Requirements and Conformity Engineering",
+                    "institution": "LIST",
+                    "location": {
+                        "postBox": "P.C. 174",
+                        "postCode": "91191",
+                        "settlement": "Gif-sur-Yvette",
+                        "country": "France"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Pascale",
+                "middle": [],
+                "last": "Le Gall",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Laboratoire de Math\u00e9matiques et Informatique pour la Complexit\u00e9 et les Syst\u00e8mes CentraleSup\u00e9lec -Plateau de Moulon",
+                    "institution": "",
+                    "location": {
+                        "addrLine": "9 rue Joliot-Curie",
+                        "postCode": "F-91192",
+                        "settlement": "Gif-sur-Yvette Cedex"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Interaction languages such as MSC are often associated with formal semantics by means of translations into distinct behavioral formalisms such as automatas or Petri nets. In contrast to translational approaches we propose an operational approach. Its principle is to identify which elementary communication actions can be immediately executed, and then to compute, for every such action, a new interaction representing the possible continuations to its execution. We also define an algorithm for checking the validity of execution traces (i.e. whether or not they belong to an interaction's semantics). Algorithms for semantic computation and trace validity are analyzed by means of experiments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Interaction Languages (IL) are powerful mechanisms to express behavioral requirements in the form of scenarios called interactions. ILs include several recognized standards such as MSC and LSC [6] , HMSC [25] , MSD [13] , UML-Sequence Diagrams [21] (UML-SD), etc. These graphical languages represent parts involved in a communication scheme as vertical lines, called lifelines. Each one highlights a succession of instants where actions (emissions or receptions of messages) may occur. These instants are conventionally ordered from top to bottom as illustrated (in the style of UML-SD) in Fig.1-a, where the emission of m 1 occurs before that of m 2 . However, this sequencing does not order actions occurring on different lifelines; in Fig.1 -b, even though the reception of m occurs graphically below the emission of m, no order is enforced. As such, this specificity is called 'weak sequencing'. In order to enforce a causality relation between such uncorrelated actions, we use a different 'strict sequencing' operator. In Fig.1 -c, it is used to express a message m passing between lifelines a and b. Here, m cannot be received before being emitted; the origin of the arrow denoting an instant preceding the one depicted by its target. Additional operators (e.g. UML-SD combined fragments) enable the expression of various concepts to order actions such as parallelisation, repetition, alternatives (illustrated in Fig.2 ), etc. They structure interactions and specify relative scheduling for subscenarii. When ILs are fitted with formal semantics, requirements can be processed using formal techniques, such as modelchecking [1] or model-based testing [19] . As pointed out earlier, the key semantic concept here is the causality relation between actions that the interaction's structure induce. Valid traces are those respecting the subsequent partial order [27, 19] . The authors of [17] define a simple IL as a set of terms built above basic actions and provide it with a denotational semantics which associates each interaction term with a set of traces. This kind of formal framework can serve as a reference for stating theorems about interactions (e.g. the 'satisfaction condition' proven in [17] ).",
+            "cite_spans": [
+                {
+                    "start": 193,
+                    "end": 196,
+                    "text": "[6]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 204,
+                    "end": 208,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 215,
+                    "end": 219,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 244,
+                    "end": 248,
+                    "text": "[21]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1632,
+                    "end": 1635,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 1659,
+                    "end": 1663,
+                    "text": "[19]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1866,
+                    "end": 1870,
+                    "text": "[27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1871,
+                    "end": 1874,
+                    "text": "19]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1892,
+                    "end": 1896,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 2206,
+                    "end": 2210,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 590,
+                    "end": 598,
+                    "text": "Fig.1-a,",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 738,
+                    "end": 743,
+                    "text": "Fig.1",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1028,
+                    "end": 1033,
+                    "text": "Fig.1",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1421,
+                    "end": 1426,
+                    "text": "Fig.2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this paper, we consider an IL which includes several distinct loop operators and provide it with a denotational semantics, directly comparable to that given by [17] . The semantics of an interaction with loops is defined by considering any finite number of loop unfolding combinations. Then, we introduce a second semantics, which can be qualified as operational, as we aim at presenting it in the style advocated in [24] . Here, accepted traces of an interaction i are defined by identifying its initial actions act, and for each of those the subsequent interaction i that will express the remainder of the trace. This operational semantics can therefore be thought of as a set of rules of the form i act \u2212 \u2212 \u2192 i . Doing so is however challenging as we need to keep track of possible conflicts between actions occurring on the same lifeline. While the operational semantics is particularly suitable to be adapted into concrete trace analysis algorithms, the denotational semantics serves as a mathematical foundation, revealing interesting algebraic properties. Both semantics have been implemented for semantic computation and conducted experiments indicate identical results. A trace analysis tool has also been adapted from the operational semantics and experimented on for correctness and performances.",
+            "cite_spans": [
+                {
+                    "start": 163,
+                    "end": 167,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 420,
+                    "end": 424,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The paper is organized as follows: Sec.2 introduces the IL and the denotational semantics. Sec.3 and Sec.5 resp. introduce the operational semantics and the subsequent trace analysis algorithm while Sec. 4 reports experimental results about the consistency of both semantics w.r.t. one another. Finally, Sec.6 and Sec.7 resp. discuss related works and provide concluding remarks.",
+            "cite_spans": [
+                {
+                    "start": 204,
+                    "end": 205,
+                    "text": "4",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "2 Interaction language and denotational semantics",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This section provides a textual denotation of our basic IL (i.e. without loops). Interactions are defined up to a given signature (L, M ) where L and M resp. are sets of lifelines and messages. Their base building blocks are a set of communication actions (actions) over L and M : Act(L, M ) = {l\u2206m|l \u2208 L, \u2206 \u2208 {!, ?}, m \u2208 M } where l!m (resp. l?m) designates the emission (resp. reception) of the message m from (resp. on) the lifeline l. For any action act in Act(L, M ) of the form l\u2206m, \u0398(act) denotes the lifeline l. Actions can be composed using different binary operators that introduce an order of execution between them (weak or strict sequentiality, parallelism, mutual exclusivity). The empty interaction \u2205 and actions of Act(L, M ) are elementary interactions. The strict and seq operators are sequential operators: in strict(i 1 , i 2 ), all the actions in i 1 must take place before any action in i 2 while in seq(i 1 , i 2 ) sequentiality is only enforced between actions that share the same lifeline. In Fig.1-b , b?m may precede 3 a!m (because a = b) while in Fig.1 -c b?m cannot precedes a!m. Hence we use strict to encode the emission and reception of the same message object e.g. strict(a!m, b?m) on Fig.1 -c 4 . In alt(i 1 , i 2 ), the behaviors specified by i 1 and i 2 are both acceptable albeit mutually exclusive 5 . In Fig.2 if a!m 1 happens then b?m 2 cannot happen and vice-versa. In par(i 1 , i 2 ), the executions of i 1 and i 2 are interleaved. For instance, in par(a!m 1 , a!m 2 ), actions a!m 1 and a!m 2 can happen in any order.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1018,
+                    "end": 1025,
+                    "text": "Fig.1-b",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1075,
+                    "end": 1080,
+                    "text": "Fig.1",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1218,
+                    "end": 1223,
+                    "text": "Fig.1",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1343,
+                    "end": 1348,
+                    "text": "Fig.2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Base syntax"
+        },
+        {
+            "text": "Interactions being defined as usual terms, we use positions expressed in Dewey decimal notation to refer to subinteractions [7] . A position p of i is a sequence of positive integers denoting a path leading from the root node of i to the subterm of i at position p. Interactions are defined with operations whose arity is at most 2. Hence, positions are words of {1, 2} * i.e. words built over the empty word , the words 1 and 2 and the concatenation law \".\". In the following, we will use simplified notations without dots, e.g. \"11\" for the position \"1.1\".",
+            "cite_spans": [
+                {
+                    "start": 124,
+                    "end": 127,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Base syntax"
+        },
+        {
+            "text": "In Def.2, the functions ST and pos resp. associate to any interaction the set of all its subinteractions and the set of its positions. Moreover, we use the usual notation i |p [7] to designate unambiguously the subinteraction of i at position p for p \u2208 pos(i) (cf. example in Fig.2 ). 3 Note that we omit depicting seq on diagrams as is classically done in UML-SD. 4 drawn by convention as a plain arrow between a and b 5 note that we handle the UML-SD opt operator as opt(i) = alt(i, \u2205) = alt(\u2205, i) ",
+            "cite_spans": [
+                {
+                    "start": 176,
+                    "end": 179,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 285,
+                    "end": 286,
+                    "text": "3",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 365,
+                    "end": 366,
+                    "text": "4",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 276,
+                    "end": 281,
+                    "text": "Fig.2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Base syntax"
+        },
+        {
+            "text": "\u2022 i | = i and for p = 1.p (resp. 2.p ) in pos(i), i |p = i 1|p (resp. i 2|p ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Base syntax"
+        },
+        {
+            "text": "As explained in Sec. either i 1 or i 2 is executed. Thus any ordering in ord(i) is simply an ordering from ord(i 1 ) or from ord(i 2 ) but correctly prefixed. Concretely, for any orderings (e 1 , o 1 ) \u2208 ord(i 1 ) and (e 2 , o 2 ) \u2208 ord(i 2 ), ord(i) contains both 1.(e 1 , o 1 ) and 2.(e 2 , o 2 ). For i = par(i 1 , i 2 ), both i 1 and i 2 have to be executed but no order is enforced between actions of either child branch. Thus, for any ordering (e 1 , o 1 ) \u2208 ord(i 1 ) and (e 2 , o 2 ) \u2208 ord(i 2 ), ord(i) contains (1.e 1 \u222a 2.e 2 , 1.o 1 \u222a 2.o 2 ). For i = strict(i 1 , i 2 ) both i 1 and i 2 have to be executed and all actions from i 1 must occur before actions from i 2 . Thus for any orderings (e 1 , o 1 ) \u2208 ord(i 1 ) and (e 2 , o 2 ) \u2208 ord(i 2 ), ord(i) contains an ordering (e, o) that concerns all actions from both children i.e. e = 1.e 1 \u222a 2.e 2 and such that o keeps track of all initial precedence relations while incorporating those induced by the strict operator i.e. o = 1.o 1 \u222a 2.o 2 \u222a {(p 1 , p 2 )|p 1 \u2208 1.e 1 , p 2 \u2208 2.e 2 }. For i = seq(i 1 , i 2 ) the same reasoning can be applied, with the exception that additional precedence relations only concern actions that share the same lifelines. Using the same notations, e = 1.e 1 \u222a 2.e 2 and o = 1. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Denotational semantics for basic interactions"
+        },
+        {
+            "text": "A given ordering (e, o) with e = {e 1 , ..., e n } characterizes a set of behaviors that expresses every action whose position belongs to e exactly once. Such a behavior is thus given under the form of an execution trace i |e \u03b1(1) ...i |e \u03b1(n) where \u03b1 is a permutation of [1, n] . Obviously, not all of those permutations are acceptable as they must not contradict the partial order specified by o. If we note p j = e \u03b1(j)",
+            "cite_spans": [
+                {
+                    "start": 272,
+                    "end": 278,
+                    "text": "[1, n]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Denotational semantics for basic interactions"
+        },
+        {
+            "text": "The semantics \u03c3(i) of an interaction i then comes naturally as the union of all sets sem(i, e, o) of execution traces of i compatible with (e, o) \u2208 ord(i). ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Denotational semantics for basic interactions"
+        },
+        {
+            "text": "A loop is a repetition operator. Its content can be instantiated any finite number of times i.e multiple copies of it are inserted into the interaction. For UML-SD, the norm [23] states that \"the loop construct represents a recursive application of the seq operator where the loop operand is sequenced after the result of earlier iterations\". The UML-SD loop is hence associated with the seq operator. When instantiated, the loop content is ordered using seq this means for example that loop(a!m) becomes seq(a!m, loop(a!m)) then seq(a!m, seq(a!m, loop(a!m))) and so on. In line with this explanation, let's consider the 4 types of loops that can be characterized according to the operator ordering the instantiated content (seq, strict, par or alt). We can discard alt as instantiating loop(i) would lead to alt(i, loop(i)) meaning that the content can be read at most once and is therefore equivalent to opt(i) (i.e. alt(i, \u2205)). We will here consider 3 operators denoted loop seq (the classical loop), loop strict and loop par . Similarly, in Fig.3 -b-i, i b|11 = a!m 1 is the only immediately executable action and its execution leads to i b = par(a!m 2 , i b ) drawn on Fig.3 -b-ii. Because of the par operator, i b|211 = a!m 1 is immediately executable. As a result t b = a!m 1 .a!m 1 .a!m 2 .a!m 2 is an accepted trace for i b . However, if there was a seq instead of the par, i b|211 would not be immediately executable and t b not an accepted trace.",
+            "cite_spans": [
+                {
+                    "start": 174,
+                    "end": 178,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1045,
+                    "end": 1050,
+                    "text": "Fig.3",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 1174,
+                    "end": 1179,
+                    "text": "Fig.3",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Extension of the language with loops"
+        },
+        {
+            "text": "Consequently, considering loop par and loop strict in addition to the classic loop seq improves expressiveness. In rough terms, loop par always allows new instantiations as each instance is executed in parallel w.r.t each others and the loop itself. loop strict on the contrary does not allow new instantiations as long as the previous instance has not been entirely executed. The behavior of loop seq is somewhat in the middle, instantiations being allowed depending on the current structure of actions preceding and within the loop.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Extension of the language with loops"
+        },
+        {
+            "text": "In the following, we'll extend our IL to loops and adapt previous definitions (from B(L, M ) to I(L, M )). As in Def.6, any time we do so, we will only define the missing cases concerning loop terms. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Extension of the language with loops"
+        },
+        {
+            "text": "In order to define the semantics of interactions, we use the notion of term replacement [7] : the notation t[s] p denotes the term t where its subterm at position p is replaced by the term s. For instance with i = seq(a!m, b?m), we have i[c?m] 2 = seq(a!m, c?m). This notation is convenient to represent terms obtained by loop unfolding. For example let us consider an interaction i \u2208 I(L, M ) with a loop seq at a position p \u2208 pos(i), that is, such that i |p = loop seq (i |p.1 ). The interaction is then obtained from i by unfolding once the loop at position p is i[seq(i |p.1 , i |p )] p . In Def.7, the set \u03a5 (i, n) of all n-unfoldings of an interaction i (i.e. the set of all interactions resulting from n instantiations of any loop from i) is defined recursively. On ",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 91,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fig. 4: Unfolding"
+        },
+        {
+            "text": "We define a function F : I(L, M ) \u2192 B(L, M ) that flattens interactions with loops i.e. that replaces all loop subterms with the empty interaction \u2205. For instance, in Fig.4 we have F (i) = \u2205 and F (i ) = seq(i |1 , \u2205). As F (I(L, M )) \u2282 B(L, M ), we can define an unfolding-based semantics 7 for i \u2208 I(L, M ) by simply considering the union of semantics obtained from flattened unfoldings of i.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 167,
+                    "end": 172,
+                    "text": "Fig.4",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Fig. 4: Unfolding"
+        },
+        {
+            "text": "We define \u03c3 u : I(L, M ) \u2192 P(Act(L, M ) * ) such that for all i in I(L, M ):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 8 (Denotational semantics for interactions)."
+        },
+        {
+            "text": "We aim to define algorithms that can determine whether or not a trace t is accepted by an interaction i. This amounts to ascertaining whether or not t \u2208 \u03c3 u (i). Naturally, being able to do so without having to compute \u03c3 u (i) is preferable. In the following we'll refer to this problem as 'trace analysis'. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": ". Even if feasible, this would be time and space consuming 8 . As for non acceptation, it equates to proving",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": "In this case, a termination in finite time would not even be guaranteed and would require defining some stopping criterion on the unfolding.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": "Consequently, we investigate another approach, in which traces are analyzed action by action. Here, instead of systematically unfolding loops, we do so on demand (when executing an act that is found within a loop). This approach is based on a different semantics (\u03c3 o ) whose description is the purpose of Sec.3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": "\u03c3 o is presented in the style of operational semantics, i.e. consisting in: (1) identifying from the structure of i which act can be immediately executed (coined 'frontier actions') and (2) deriving for each such act a new interaction i specifying all the possible continuations of act within the set of execution traces specified by i (noted as i act \u2212 \u2212 \u2192 i ). Intuitively, an action is in the frontier iff no structural operators (parent nodes) coerce it to be preceded by another action (sibling leaf). Accepted traces 7 coined \u03c3u, u standing for 'unfolding-based' 8 \u2022 If the last interaction i n can express the empty trace (i.e. \u2208 \u03c3 u (i n )) -which can be statically analysed -then t is accepted by i i.e. t \u2208 \u03c3 o (i).",
+            "cite_spans": [
+                {
+                    "start": 569,
+                    "end": 570,
+                    "text": "8",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": "\u2022 In any case, for all frontier actions act n+1 of i n , we have i n actn+1 \u2212\u2212\u2212\u2212\u2192 i n+1 , meaning that t can be extended by act n+1 and is a prefix of given trace(s) accepted by i.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": "To illustrate this, let's consider the example from Fig.5 . The initial interaction is i = seq(alt(a!m 1 , b?m 2 ), a!m 3 ). There are 3 frontier actions that may play the role of act: i |11 = a!m 1 , i |12 = b?m 2 and i |2 = a!m 3 . The interactions remaining after the execution of i |11 and i |12 (resp. referred to as i 1 and i 2 ), which happen to be the same, are depicted below on the left, while the one remaining after the execution of i |2 (noted i 3 ) is depicted on the right. The cases leading to i 1 and i 2 are self-evident. As for the one leading to i 3 , the execution of a!m 3 is contingent to the choice of the branch 12 of the alt hence the elimination of branch 11 in the remaining interaction. Indeed, if branch 11 were to be chosen, the execution of a!m 3 would not be possible as a!m 1 should have been executed before. This illustrates that a!m 3 is a frontier action up to the choice of the right branch of the alt operator. Let us remark that b?m 2 may indeed happen after a!m 3 as those two actions occur on different lifelines and the top seq operator structuring them does not constrain their order of execution. Finally, we conclude by defining the operational semantics as",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 52,
+                    "end": 57,
+                    "text": "Fig.5",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Operational Semantics"
+        },
+        {
+            "text": "In this section we explain how to identify frontier actions. Our notion of frontier differs slightly from that of [4] , where it refers to the set of positions p such that \u2200j \u2208 {1, 2} * , p.j \u2208 pos(i) (i.e. positions of leaf nodes). Indeed, our frontiers contain only leaves that are immediately executable actions.",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 117,
+                    "text": "[4]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Frontier actions"
+        },
+        {
+            "text": "Any ordering as defined in Def.4 provides a partial order relation for the set of (positions of) actions of a basic interaction. A frontier action act on position p is then simply a minimal element given such a relation (e, o), i.e. s.t. \u2200p \u2208 e we have (p , p) \u2208 o i.e. act does not have to be preceded by any other action. The frontier of an interaction i is then defined as the union of such p, considering all the orderings from ord(i). As Def.4 did not include loop operators, we extend it in the following definition, in which the empty ordering (\u2205, \u2205) corresponds to the case where the loop has not unfolded. According to this, the frontier of i from {p \u2208 e | \u2200p \u2208 e, (p , p) \u2208 o}",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Frontier actions"
+        },
+        {
+            "text": "The design of the rules i act \u2212 \u2212 \u2192 i hinted at earlier is made operational thanks to 2 mechanisms: pruning and execution. Given an action act \u2208 f ront(i), branches preventing its execution are detected and eliminated with pruning. However, this is not done on the whole interaction i but rather on specific neighboring (w.r.t. act) subinteractions. Execution orchestrates the calls to pruning, eliminates act and constructs the remaining interaction i . We first define the pruning mechanism which consists in removing from an interaction all the actions which occur on a given lifeline. For instance, on Fig.6 b, let us consider the interactions i 1 = i |1 = loop seq (strict(a!m 1 , b?m 1 )) and i 2 = i |21 = loop seq (alt(a!m 2 , b?m 3 )) highlighted in green. We want to remove actions occurring on the lifeline a (so as to allow the execution of i |22 = a!m 4 ). We find that i 1|11 = a!m 1 (resp. i 2|11 = a!m 2 ) needs to be removed from i 1 (resp. i 2 ). If we do not want to get an interaction which is inconsistent or outwardly contradicts the original semantics, we can only prune subinteractions at positions where branching choices are made i.e. in alt and loop nodes. Indeed, by definition, eliminating a subinteraction at one such node would lead to a semantics that is included in the original.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 606,
+                    "end": 611,
+                    "text": "Fig.6",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Pruning"
+        },
+        {
+            "text": "In i 2 , eliminating i 2|11 is easily done given that its parent node is an alt and that its brother node does not need to be eliminated. Indeed, it suffices to operate the replacement i 2 [i 2|12 ] 1 i.e. replacing the alt node with its right child b?m 3 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "In i 1 , eliminating i 1|11 is more delicate: its parent node is a strict and as such, behaviors from its left and right children must both happen (there is no branching choice). Thus, if we want to eliminate i 1|11 we must also eliminate the whole i 1|1 . The problem is hence forwarded upwards in the syntax. The parent i 1| is a loop operator, which characterizes a branching choice. We can eliminate the problematic branch by choosing not to instantiate the loop i.e. via the replacement i 1 [\u2205] .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "The pruning mechanism is given in Def.11 as the recursive prune function, which takes as arguments an interaction i and a lifeline l. prune eliminates from i branching choices hosting actions that occur on l.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "In a first descending phase, prune goes down the syntax of i through recursive calls (from root to leaves). When reaching a leaf, prune returns an interaction i and a boolean b. b = signifies that the current branch needs to be eliminated (pruned) while i is the interaction that will be used to reconstruct i in the ascending phase (only used if b = \u22a5). Leaves are either actions or empty interactions. For an action act, if \u0398(act) = l, the current branch must be pruned so prune(act, l) = (\u2205, ): the value of the returned interaction i has no importance here because a parent will be pruned anyway. If \u0398(act) = l we have prune(act, l) = (act, \u22a5) because there is nothing to prune here. Similarly, we have prune(\u2205, l) = (\u2205, \u22a5).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "In the second, ascending phase, the pruned interaction is reconstructed according to the values of i and b returned from child branches. If at any point b = , this value is forwarded upwards until an expendable branching choice is reached.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "prune(i, l) is recursively called on the child nodes of i. Depending on the operator in i, the return values of prune(i |1 , l) = (i 1 , b 1 ) (and also prune(i |2 , l) = (i 2 , b 2 ) for binary operators) will be used differently to determine i and b.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "For the operators f \u2208 {strict, seq, par}, if any one child must be pruned (b 1 \u2228 b 2 ) then the whole branch must also be pruned and otherwise a reconstructed f (i 1 , i 2 ) is returned. For the exclusive alternative alt, if no branch needs pruning, alt(i 1 , i 2 ) is returned; if any single branch needs pruning, prune returns the one that does not need to be pruned and if both branches need pruning, then the whole interaction is pruned. For the repetition operators, if the loop content needs pruning then the choice of 'never taking the loop' is made meaning that \u2205 is returned with b = \u22a5, signifying a successful pruning. If there is no needed pruning, it simply returns the loop with an already pruned loop content loop f (i 1 ). ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pruning"
+        },
+        {
+            "text": "Let us consider the example i from Fig.6 . We wish to execute the frontier action i |22 = a!m 4 (highlighted in red). To allow this execution we need at first to remove the actions occurring on the same lifeline (i.e. on a) from the neighbors highlighted in green. To do so, we use the prune function from Def.11. More generally, the nature of our syntax is such that, for the execution of a frontier action at position p, we only need to prune subinteractions at positions p 0 .1 s.t. \u2203p \u2208 {1, 2} * s.t. p = p 0 .2.p and s.t. i |p0 = seq(i |p0.1 , i |p0.2 ). Those are exactly the left cousins of i |p that are scheduled sequentially (i.e. with seq) w.r.t. i |p . We now define the execution function \u03c7 (Def.12), which takes as arguments an interaction i and a frontier position p and returns the remaining interaction i . As explained earlier, \u03c7 orchestrates the use of prune. In the example from When an alt node is reached, using the same notations, we would have:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 35,
+                    "end": 40,
+                    "text": "Fig.6",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Execute function and operational semantics"
+        },
+        {
+            "text": ". Indeed, we can 'skip' the alt node itself and replace it directly with the interaction resulting from the execution of the chosen branch.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Execute function and operational semantics"
+        },
+        {
+            "text": "When a loop is reached, i.e. i |d1...dj = loop f (i |d1...dj .1 ) (with a mandatory d j+1 = 1), we have :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Execute function and operational semantics"
+        },
+        {
+            "text": ". Indeed, the execution is done on a copy of the loop content that precedes (with f operator) the loop i |d1...dj itself, that is, on an unfolding of the loop.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Execute function and operational semantics"
+        },
+        {
+            "text": "For the sequential operators, pruning needs to be considered only if the executing action is situated on the right branch of the seq or strict node (if the action is on the left branch, we have the same transformation as in the par case). Given i |d1...dj = seq(i |d1...dj .1 , i |d1...dj .2 ) and d j+1 = 2, when constructing \u03c7(i |d1...dj , d j+1 ...d n ) we must prune in i |d1...dj .1 all the actions that could interfere with i |p i.e. those taking place on \u0398(i |p ). As such, given (i 1 , b 1 ) = prune(i |d1...dj .1 , \u0398(i |p )), we'll replace the left branch of the seq with i 1 and reconstruct:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Execute function and operational semantics"
+        },
+        {
+            "text": "Given that the strict operator won't allow any action from the left branch to occur after an action on the right has occurred, we can simply prune the whole left branch i.e. given i |d1...dj = strict(i |d1...dj .1 , i |d1...dj .2 ) and d j+1 = 2: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Execute function and operational semantics"
+        },
+        {
+            "text": "In Def.13 below, we now define the operational semantics. Note that interactions that can express the empty trace are identified with the predicate exp . This semantics expresses rules of the form i",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 12 (Execution"
+        },
+        {
+            "text": "We define \u03c3 o : I(L, M ) \u2192 P(Act(L, M ) * ) as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 13 (Operational semantics for interactions)."
+        },
+        {
+            "text": "with empty(i) = { } (resp.\u2205) if exp (i) = (resp. \u22a5) where exp : I(L, M ) \u2192 bool is defined as: Experiments. We implemented both semantics (\u03c3 u from Def.8 and \u03c3 o from Def.13) and compared the set of traces \u03c3 u (i) and \u03c3 o (i) they generate (with a stopping criterion on the maximum number of loop unfolding -4 in our experiments) on a significant set of interactions of depth 3 with n l = n m = 3. For all of the 234175 selected interactions i from our dataset, the tests systematically concluded on the equality \u03c3 u (i) = \u03c3 o (i). Although not a proof, our successful back-to-back comparison comforts our confidence in both semantics, all the more so because of the exhaustivity of the subject data set up to maximum numbers of lifelines, messages types, interaction depth (up to 3), number of loop unfolding (up to 4), allowing covering all 2 by 2 combinations of operators. We define an \u03c9 function (Def.14) which takes as arguments an interaction i and a trace t and checks whether or not t is a trace of i. Additional traceability information is provided using four distinct verdicts: \u2022 Covered is returned when t is a trace of i i.e. t \u2208 \u03c3 o (i); \u2022 T ooShort is returned when t \u2208 \u03c3 o (i) is a strict prefix of a trace of i i.e. \u2203t \u2208 Act(L, M ) * s.t. t.t \u2208 \u03c3 o (i); \u2022 T ooLong is returned when neither Covered nor T ooShort can be, and given t = act 1 ...act n \u2203k < n s.t. act 1 ...act k \u2208 \u03c3 o (i) i.e. t extends a trace of i; \u2022 Out is returned when none of the others can be.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 13 (Operational semantics for interactions)."
+        },
+        {
+            "text": "We define the enumerated type V erdict and provide it with a total order Out \u227a T ooLong \u227a T ooShort \u227a Covered.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Trace analysis"
+        },
+        {
+            "text": "\u2022 If t is empty then: either i accepts the empty trace in its semantics and in this case \u03c9(i, t) returns Covered, or it returns T ooShort. \u03c9(i, ) = Covered (resp. T ooShort) if exp (i) = (resp. \u22a5) if t is of the form act.t then: Each of those traces were tested as well as a random selection of their prefixes and of interesting mutants. Addition (resp. replacement) mutants consists in adding an action to a trace (resp. prefix). By construction we could classify all those traces according to the verdicts they are expected to obtain. Fig.9 details those results, showing a systematic concordance between the expected and obtained verdicts. Those results reinforce our confidence on \u03c9, the more so that they were done on a panel of traces and interactions which covers all 2 by 2 combinations of operators.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 537,
+                    "end": 542,
+                    "text": "Fig.9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Trace analysis"
+        },
+        {
+            "text": "To provide an evaluation of performances (plotting time vs. length), we needed a large model and long correct traces. Indeed, the time required by the analysis is not always correlated to trace length e.g. an arbitrarily long trace starting with an action act of position p \u2208 f ront(i) is analyzed immediately, whatever length it may be. There is however a correlation for correct traces and their prefixes. We defined a partial high-level model of the MQTT [22] telecommunication protocol (see Fig.10-a) . This model states that a communication session between a client and a broker starts (resp. ends) with a sequential connection (resp. disconnection) phase. In between, at any time, any number of instances of one of the 5 proposed subinteractions can be run concurrently. Hence, we used a multithreaded Python script to generate 100 traces, each of those corresponding to the concurrent activation and execution at random time intervals of 20 instances of the loop par from Fig.10 -a. All those traces (resp. prefixes) have the verdict Covered (resp. T ooShort); we evaluated computation times and plotted some of them on Fig.10 The linear regression shows curves with a great variability (some traces need 4 seconds while others only 0.06). In this precise model, it is explained by the presence of par (via loop par ) operators and by the fact that messages are not uniquely identified. For instance analyzing t = a!m.b?m on i = par(a!m, strict(a!m, b?m)) would give rise to 2 branches: i = strict(a!m, b?m) (resp. i = par(a!m, b?m)) with t = b?m which ends with Out (resp. Covered) because m is not uniquely identified. This number of branches can quickly explode when par operators are stacked which happens when the trace describes an execution where many loop content instances overlap. An applicable solution is to treat message data arguments, given that communication protocols provide unique ids e.g. m(id1) = m(id2). In Fig.10 -b, on the plot below, we magnified on traces 9, 34 & 61 which have a very short analysis time. We can surmise here that minimal (perhaps no) loop overlap occurred as the derivatives are almost constants (especially for trace 61). In conclusion, performance highly depends on the model and input trace, but treating data which specifies unique ids for messages would generalize the best case scenario. In this case, the algorithm could be applied to monitoring within the limits of an input frequency that is inferior to the time required to analyze a trace of length 1.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 495,
+                    "end": 504,
+                    "text": "Fig.10-a)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 979,
+                    "end": 985,
+                    "text": "Fig.10",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1127,
+                    "end": 1133,
+                    "text": "Fig.10",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1936,
+                    "end": 1942,
+                    "text": "Fig.10",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Trace analysis"
+        },
+        {
+            "text": "For classical IL such as UML-SD or HMSC, many authors have proposed their own takes on formal semantics (see the survey [21] for UML-SD). Denotational Semantics. Most existing semantics based on term interpretations are given in a denotational style [27, 14, 3, 17] and do not follow-up with algorithmic tools. In [27] , the authors propose a denotational semantics similar to ours (Def.5) as far as the strict, alt and par operators are concerned. [14] proposes a semantics that is a detailed version of the one from [27] . In [17] there is a distinction (snd(s, r, m)|snd(s, m)|rcv(s, r, m)|rcv(r, m)) between basic actions whether or not the intended receiver or original sender is the environment. Apart from that, and the absence of loops, the denotational semantics proposed by [17] is similar to ours. In [3] , an institutional approach, likened to that of [17] is proposed. However it includes loops and deals with modalities associated to the neg and assert operators [23] by separating the semantics in sets of accepted and refused traces. This issue of modality is also raised in [21] and [13] but it is out of the scope of this paper.",
+            "cite_spans": [
+                {
+                    "start": 120,
+                    "end": 124,
+                    "text": "[21]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 250,
+                    "end": 254,
+                    "text": "[27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 255,
+                    "end": 258,
+                    "text": "14,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 259,
+                    "end": 261,
+                    "text": "3,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 262,
+                    "end": 265,
+                    "text": "17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 314,
+                    "end": 318,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 449,
+                    "end": 453,
+                    "text": "[14]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 518,
+                    "end": 522,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 528,
+                    "end": 532,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 784,
+                    "end": 788,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 812,
+                    "end": 815,
+                    "text": "[3]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 864,
+                    "end": 868,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 977,
+                    "end": 981,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1091,
+                    "end": 1095,
+                    "text": "[21]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1100,
+                    "end": 1104,
+                    "text": "[13]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related work"
+        },
+        {
+            "text": "Translations based approaches. Most other approaches rely on translations that map concepts of the given IL into a target formal framework, most often based on automata [11, 2, 28, 19] or Petri nets [8, 5, 10] . Albeit those translations allow reusing advantageously the target framework's tools, relying on them to capture semantics leads to reasoning on foreign concepts. In [11] , UML-SDs are translated into timed automata, which are then verified with the UPPAAL tool [18] . The translation mechanisms only concern models with synchronous communications. An observer automaton has to be designed so as to intercept communications between automata, make them observable, and enter an error state if other events are observed. In [2] , each lifeline is translated into a timed input output symbolic transition system (TIOSTS) and message passing relies on some synchronous product. In order to cope with asynchronism, FIFO based communication schema have been introduced to ensure the consistency of executions on different lifelines. Also, dedicated variables have to be introduced to keep track of branching choices specified by alt or loop operators. In [28] , a symbolic automaton is built from UML-SD specifications in the goal of analyzing traces by means of valid, invalid or inconclusive verdicts. [19] focuses on how to test Message Sequence Charts when the system is only partially observed. A translation into a network of asynchronous concurrent automata allows to define semantics through a product automaton as in [2] . In [8] , UML-SD specifications are translated into multivalued nets (M-nets). The translation is compositional, entry and exit places of the M-nets corresponding to subinteractions being connected differently according to the parent combined fragment. However this process is complicated by the tracking of actions that are completely unordered w.r.t. one another. [8] also treats data in the form of variables, message parameters and guards. In [5] , the authors propose an approach to automatically translate UML-SDs designed with the Papyrus tool [12] to Coloured Petri Nets (CPNs) in a format compatible with CPNTools [16] . CPNs come with an execution semantics that is particularly adapted for the description and analysis of distributed and concurrent systems. In [5] , the translation revolves around a list of 11 rules with different priorities and which are applied to translate different concepts (lifelines, message occurrences, combined fragments, etc.) while iterating sequentially through the UML-SD's elements. In [10] a set of UML-SDs are translated into Extended Petri Nets. Input execution traces can then be checked against the EPNs.",
+            "cite_spans": [
+                {
+                    "start": 169,
+                    "end": 173,
+                    "text": "[11,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 174,
+                    "end": 176,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 177,
+                    "end": 180,
+                    "text": "28,",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 181,
+                    "end": 184,
+                    "text": "19]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 199,
+                    "end": 202,
+                    "text": "[8,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 203,
+                    "end": 205,
+                    "text": "5,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 206,
+                    "end": 209,
+                    "text": "10]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 377,
+                    "end": 381,
+                    "text": "[11]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 473,
+                    "end": 477,
+                    "text": "[18]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 733,
+                    "end": 736,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1160,
+                    "end": 1164,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1309,
+                    "end": 1313,
+                    "text": "[19]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1531,
+                    "end": 1534,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1540,
+                    "end": 1543,
+                    "text": "[8]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1902,
+                    "end": 1905,
+                    "text": "[8]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1983,
+                    "end": 1986,
+                    "text": "[5]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 2087,
+                    "end": 2091,
+                    "text": "[12]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 2159,
+                    "end": 2163,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 2308,
+                    "end": 2311,
+                    "text": "[5]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 2567,
+                    "end": 2571,
+                    "text": "[10]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related work"
+        },
+        {
+            "text": "Operational approach. The literature contains few attempts at defining operational semantics for ILs. In [26] , the authors build formal expressions over a process algebra signature. Starting from axioms such as \u2193 (the empty process terminates) and a a \u2212 \u2192 (a being an atomic action), an expression describing a MSC is build using rules such as (x a \u2212 \u2192 x ) \u2227 (y a \u2212 \u2192) \u21d2 (x \u2213 y a \u2212 \u2192 x ). Such an expression is then associated with a transition graph. The contribution in [26] does not however deal with loop operator and it is quite different from ours as the proposed transformations operate on process-algebraic expressions and not on syntactic terms. In contrast, the semantics proposed in [20] relies on syntactic term transformations. Still, it also requires a communication medium as it is defined as the output of a combination of two transitions systems: an execution system which keeps track of communications, and a projection system which selects the next action to execute and provide the resulting interaction. As explained in [9] , communication models keep track of emitted messages and messages pending receptions. They can for instance take the form of a set of dedicated buffers (e.g. FIFO). Our approach has the advantage of making such communication models implicit. Discussions. Despite interaction languages specifying no synchronisation mechanisms between lifelines, several approaches that aim to implement tools, impose synchronisation points when entering and exiting combined operators and at decision points (alt, opt, loop) [28, 2, 8, 21] (although more recent works such as [10, 20] do not). Although translation-based approaches have the benefit of allowing the use of the many existing analysis tools (UPPAAL [18] , DIVERSITY [15] , CPNTools [16] etc.) we postulate that direct operational approaches such as ours facilitate features such as animation and debugging, becoming for the most part free-of-charge by-products of the analysis process.",
+            "cite_spans": [
+                {
+                    "start": 105,
+                    "end": 109,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 473,
+                    "end": 477,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 695,
+                    "end": 699,
+                    "text": "[20]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1042,
+                    "end": 1045,
+                    "text": "[9]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1555,
+                    "end": 1559,
+                    "text": "[28,",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1560,
+                    "end": 1562,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1563,
+                    "end": 1565,
+                    "text": "8,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1566,
+                    "end": 1569,
+                    "text": "21]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1606,
+                    "end": 1610,
+                    "text": "[10,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1611,
+                    "end": 1614,
+                    "text": "20]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1743,
+                    "end": 1747,
+                    "text": "[18]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1760,
+                    "end": 1764,
+                    "text": "[15]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1776,
+                    "end": 1780,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related work"
+        },
+        {
+            "text": "In this paper we proposed an operational semantics for ILs, aimed at trace validity analysis. This semantic is built upon a formal syntax for interaction terms and validated back-to-back w.r.t. a reference denotational semantics. Our semantics is built on partial order relations induced on messages by the syntax. Those relations allow the identification of immediately executable actions. Pruning techniques then ensure a consistent semantics based on successive transformations of the form i act \u2212 \u2212 \u2192 i . On this principle, we have defined and implemented algorithms to compute semantics and to analyze the validity of traces. Experiments were successfully conducted in order to evaluate the correctness of each.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "We intend to enrich our formalism: (1) by expanding trace analysis to a distributed context, where a set of traces (multi-trace) may be analyzed concurrently on a subset of observed lifelines; (2) by investigating whether or not our algorithmic treatments are fast enough to deal with traces on-the-fly so as to adapt them to monitoring. (3) by extending our IL to include modality operators such as assert or negate. (4) by allowing the use of message arguments, variables, clocks and constraints within models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Additionally, it would be interesting to perform a comparison with translationbased approaches. This may consist in a comparison of formal semantics and/or in benchmarking implementations according to a certain performance metric.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Model checking of message sequence charts",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Alur",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Yannakakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "CON-CUR '99: Concurrency Theory",
+            "volume": "1664",
+            "issn": "",
+            "pages": "114--129",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Eliciting unitary constraints from timed sequence diagram with symbolic techniques: Application to testing",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Bannour",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gaston",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Servat",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Software Engineering Conference",
+            "authors": [
+                {
+                    "first": "Asia-Pacific",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "219--226",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "An institution for uml 2.0 interactions",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cengarle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Knapp",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Tree automata techniques and applications",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Comon",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dauchet",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gilleron",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "L\u00f6ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Jacquemard",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lugiez",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tison",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Tommasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Automatic model transformation from uml sequence diagrams to coloured petri nets",
+            "authors": [
+                {
+                    "first": "Cust\u00f3dio",
+                    "middle": [],
+                    "last": "Soares",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A A"
+                    ],
+                    "last": "Lima",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Faria",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 6th International Conference on Model-Driven Engineering and Software Development",
+            "volume": "",
+            "issn": "",
+            "pages": "668--679",
+            "other_ids": {
+                "DOI": [
+                    "10.5220/0006731806680679"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Lscs: Breathing life into message sequence charts",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Damm",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Harel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Formal Methods in System Design",
+            "volume": "19",
+            "issn": "1",
+            "pages": "45--80",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Handbook of theoretical computer science",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Dershowitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jouannaud",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "243--320",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Compositional semantics for uml 2.0 sequence diagrams using petri nets",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Eichner",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fleischhack",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Meyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Schrimpf",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Stehno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "SDL 2005: Model Driven",
+            "volume": "",
+            "issn": "",
+            "pages": "133--148",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A hierarchy of communication models for message sequence charts",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Engels",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mauw",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Reniers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Science of Computer Programming",
+            "volume": "44",
+            "issn": "3",
+            "pages": "22--31",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0167-6423(02)00022-9"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "A toolset for conformance testing against uml sequence diagrams based on event-driven colored petri nets",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Faria",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C R"
+                    ],
+                    "last": "Paiva",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "International Journal on Software Tools for Technology Transfer",
+            "volume": "18",
+            "issn": "3",
+            "pages": "285--304",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Timed sequence diagrams and tool-based analysis -A case study",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Firley",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Huhn",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Diethers",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gehrke",
+                    "suffix": ""
+                },
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Goltz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "UML'99: The Unified Modeling Language -Beyond the Standard",
+            "volume": "1723",
+            "issn": "",
+            "pages": "645--660",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Papyrus: A UML2 Tool for Domain-Specific Language Modeling",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "G\u00e9rard",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Dumoulin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Tessier",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Selic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "361--368",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-642-16277-0_19"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Assert and negate revisited: Modal semantics for UML sequence diagrams",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Harel",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Maoz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Software and Systems Modeling",
+            "volume": "7",
+            "issn": "",
+            "pages": "237--252",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "STAIRS towards formal design with sequence diagrams",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Haugen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Husa",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Runde",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "St\u00f8len",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Software and Systems Modeling",
+            "volume": "4",
+            "issn": "4",
+            "pages": "355--367",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "An end-to-end framework for safe software development. Microprocessors and Microsystems 62",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hussein",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nouacer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Radermacher",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Puccetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Gaston",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Rapin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "41--49",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.micpro.2018.07.004"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Coloured Petri Nets and CPN Tools for modelling and validation of concurrent systems",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kristensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wells",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "International Journal on Software Tools for Technology Transfer",
+            "volume": "9",
+            "issn": "3",
+            "pages": "213--254",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10009-007-0038-x"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "UML Interactions Meet State Machines -An Institutional Approach. In: 7th Conf. on Algebra and Coalgebra in Computer Science",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Knapp",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Mossakowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "72",
+            "issn": "",
+            "pages": "1--15",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Uppaal in a nutshell",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Larsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pettersson",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yi",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "International Journal on Software Tools for Technology Transfer",
+            "volume": "1",
+            "issn": "1",
+            "pages": "134--152",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s100090050010"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Global and local testing from message sequence charts",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Longuet",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Proceedings of the ACM Symposium on Applied Computing, SAC 2012",
+            "volume": "",
+            "issn": "",
+            "pages": "1332--1338",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A fully general operational semantics for uml 2.0 sequence diagrams with potential and mandatory choice",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lund",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "St\u00f8len",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "FM 2006: Formal Methods",
+            "volume": "",
+            "issn": "",
+            "pages": "380--395",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "The many meanings of uml 2 sequence diagrams: a survey",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Micskei",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Waeselynck",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Software & Systems Modeling",
+            "volume": "10",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "OMG: Unified Modeling Language v2",
+            "authors": [],
+            "year": 2017,
+            "venue": "",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "An operational semantics for CSP",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Plotkin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1983,
+            "venue": "Formal Description of Programming Concepts : Proceedings of the IFIP Working Conference on Formal Description of Programming Concepts-II",
+            "volume": "",
+            "issn": "",
+            "pages": "199--226",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "High-level message sequence charts",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "SDL '97 Time for Testing, SDL, MSC and Trends -8th International SDL Forum, Proceedings",
+            "volume": "",
+            "issn": "",
+            "pages": "291--306",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Operational semantics for msc",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Computer Networks",
+            "volume": "31",
+            "issn": "17",
+            "pages": "1785--1799",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Semantics of interactions in uml 2.0. In: IEEE Symposium on Human Centric Computing Languages and Environments",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Storrle",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "129--136",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/HCC.2003.1260216"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Termos: A formal language for scenarios in mobile computing systems",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Waeselynck",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Micskei",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Rivi\u00e8re",
+                    "suffix": ""
+                },
+                {
+                    "first": "\u00c1",
+                    "middle": [],
+                    "last": "Hamvas",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Nitu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Mobile and Ubiquitous Systems: Computing, Networking, and Services",
+            "volume": "",
+            "issn": "",
+            "pages": "285--296",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "), which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons license and indicate if changes were made. The images or other third party material in this chapter are included in the chapter's Creative Commons license, unless indicated otherwise in a credit line to the material. If material is not included in the chapter's Creative Commons license and your intended use is not permitted by statutory regulation or exceeds the permitted use",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "i = strict(a!m, b?m)Fig. 1: UML-SD style",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "i = i | subinteraction i |1 in blue",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Syntax and Positions",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Basic Interactions). The set B(L, M ) of basic interactions over L and M is inductively defined as follows: -\u2205 \u2208 B(L, M ) and Act(L, M ) \u2282 B(L, M ), -\u2200(i 1 , i 2 ) \u2208 B(L, M ) 2 and \u2200f \u2208 {strict, seq, alt, par}, f (i 1 , i 2 ) \u2208 B(L, M ).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "We define ST : B(L, M ) \u2192 P(B(L, M )), pos : B(L, M ) \u2192 P({1, 2} * ) and 6 _ |_ : B(L, M ) \u00d7 {1, 2} * \u2192 B(L, M ) such that \u2200i \u2208 B(L, M ):",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "2.1, operators occurring in an interaction induce relations of precedence between the actions of the interaction. In the example of Fig.2, if the left branch of the alt is chosen (i.e. a!m 1 at position 11) then the action a!m 3 at position 2 must occur after it. However if the other branch were chosen (i.e. b?m 2 at position 12), there would be no precedence order between actions b?m 2 and a!m 3 as their common ancestor is a seq operator which only orders actions sharing the same lifeline. As a result, several orderings can be defined, depending, among others, on the choice of alt branches. These possible orderings can be encoded as a set ord(i) (defined in Def.4) which contains elements of the form (e, o) where e is the set of positions of the involved actions and o reflects the precedence relations between those. In the example of Fig.2, we have ord(i) = {({11, 2}, {(11, 2)}), ({12, 2}, \u2205)}. Indeed, as explained earlier, if the 11 branch is chosen then the only two actions to be considered are a!m 1 and a!m 3 on resp. positions 11 and 2 (therefore e = {11, 2}) and they are ordered because of both the seq operator and their common lifeline, so that the associated precedence relation is modelled by o = {(11, 2)} meaning that a!m 1 at position 11 should occur before a!m 3 at position 2. The only other possible ordering occurs when branch 12 is chosen and likewise we would have e = {12, 2} with o = \u2205 because the seq does not constrain the order of actions b?m 2 and a!m 3 with different lifelines. Definition 3 (Ordering type). Given i in B(L, M ). The set O(i) of candidate orderings of i contains all couples (e, o) such that (1) e \u2286 pos(i), (2) for any p in e, i |p \u2208 Act(L, M ) and (3) o \u2286 e \u00d7 e. O is then the set i\u2208B(L,M ) O(i). In Def.4, for a given interaction i, ord(i) precisely defines which orderings are to be considered among the candidate orderings O(i). For an ordering (e, o) in O and p \u2208 {1, 2}, we use the notation p.e = {p.p |p \u2208 e}, p.o = {(p.p 1 , p.p 2 )|(p 1 , p 2 ) \u2208 o} and p.(e, o) = (p.e, p.o). The notation is canonically extended to any set O of orderings, by p.O = {p.(e, o)|(e, o) \u2208 O}. For the interaction \u2205, there is no associated action and therefore we have a single (e, o) = (\u2205, \u2205). For a \u2208 Act(L, M ), there is a single action a (at position ) and as a result, ord(a) contains a single (e, o) = ({ }, \u2205). For i = alt(i 1 , i 2 ),",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Orderings of a basic interaction). We define the function ord : B(L, M ) \u2192 P(O) as follows: ord(\u2205) = \u2205 and \u2200 act \u2208 Act(L, M ), ord(act) = {({ }, \u2205)} For any i 1 and i 2 in B(L, M ):",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "When considering the example from Fig.2, we have sem(i, {11, 2}, {(11, 2)}) = {a!m 1 .a!m 3 } and sem(i, {12, 2}, \u2205) = {b?m 2 .a!m 3 , a!m 3 .b?m 2 }.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Denotational semantics for basic interactions). For i \u2208 B(L, M ) and (e, o) \u2208 ord(i) with n \u2208 N being the cardinal of e, we note:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Examples showcasing the pertinence of loopstrict and looppar InFig.3-a-i, i a|11 = a!m is the only immediately executable action and its execution leads to the interaction i a = strict(b?m, i a ) drawn onFig.3-a-ii. Because of the strict operator, i a|211 = a!m is not immediately executable (preceded by i a|1 = b?m). As a result t a = a!m.a!m.b?m.b?m is not an accepted trace for i a . However, if there was a seq operator instead of the strict, i a|211 would be immediately executable and t a an accepted trace.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Interactions). The set I(L, M ) of interactions over L and M is inductively defined as follows: -\u2205 \u2208 I(L, M ) and Act(L, M ) \u2282 I(L, M ), -\u2200(i 1 , i 2 ) \u2208 I(L, M ) 2 and \u2200f \u2208 {strict, seq, alt, par}, f (i 1 , i 2 ) \u2208 I(L, M ), -\u2200i \u2208 I(L, M ) and \u2200f \u2208 {strict, seq, par}, loop f (i) \u2208 I(L, M ). The functions ST : I(L, M ) \u2192 P(I(L, M )), pos : I(L, M ) \u2192 P({1, 2} * ) and _ |_ : I(L, M ) \u00d7 {1, 2} * \u2192 I(L, M ) are defined by extending to loop terms the corresponding functions of Def.2: For all i in I(L, M ) of the form loop f (i ) with f \u2208 {strict, seq, par}:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Fig.4 loop unfolding is illustrated with \u03a5 (i, 0) = {i} and \u03a5 (i, 1) = {i }.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Definition 7 (n-unfoldings). We define \u03a5 : I(L, M ) \u00d7 N \u2192 P(I(L, M )) such that \u2200i \u2208 I(L, M ) \u03a5 (i, 0) = {i} and \u2200n \u2208 N + :",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "Operational SemanticsAs per Sec.2.3, asserting t \u2208 \u03c3 u (i) equates to finding a combination of loop unfoldings",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "and would not be adaptable if one considers an extension to monitoring as new combinations i may be needed every time a new action is observed are then built recursively through the successive consumption of actions. Let's consider a trace t = act 1 .(...).act n with \u2200k \u2208 [1,",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "is then f ront(i) = {11, 12, 2}. Definition 9 (Ordering). We define ord : I(L, M ) \u2192 P(O) as an extension to I(L, M ) of its counterpart from Def.4. For all f in {strict, seq, par}: \u2200i \u2208 I(L, M ), ord(loop f (i)) = 1.ord(i) \u222a {(\u2205, \u2205)} Definition 10 (Frontier). f ront : I(L, M ) \u2192 P({1, 2} * ) is the function s.t.: \u2200i \u2208 I(L, M ), f ront(i) = (e,o)\u2208ord(i)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "Example showcasing pruning",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "Pruning). prune : I(L, M )\u00d7L \u2192 I(L, M )\u00d7bool is the function such that for all i \u2208 I(L, M ) and l \u2208 L:prune(\u2205, l) = (\u2205, \u22a5) for act \u2208 Act(L, M ): if \u0398(i |p ) = l then prune(act, l) = (\u2205, ) (else (act, \u22a5)) if i = f (i 1 , i 2 ) with f \u2208 {strict, seq, par}, given prune(i 1 , l) = (i 1 , b 1 ) and prune(i 2 , l) = (i 2 , b 2 ): if b 1 \u2228 b 2 then prune(i, l) = (\u2205, ) (else (f (i 1 , i 2 ), \u22a5)) if i = alt(i 1 , i 2 ), given prune(i 1 , l) = (i 1 , b 1 ) and prune(i 2 , l) = (i 2 , b 2 ): \u2022 if b 1 \u2227 b 2 then prune(i, l) = (\u2205, ) \u2022 if b 1 \u2227 \u00acb 2 then prune(i, l) = (i 2 , \u22a5) \u2022 if \u00acb 1 \u2227 b 2 then prune(i, l) = (i 1 , \u22a5) \u2022 if \u00acb 1 \u2227 \u00acb 2 then prune(i, l) = (alt(i 1 , i 2 ), \u22a5) if i = loop f (i 1 ) with f \u2208 {strict,seq, par}, given prune(i 1 , l) = (i 1 , b 1 ): if b 1 then prune(i, l) = (\u2205, \u22a5) (else (loop f (i 1 ), \u22a5))",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF18": {
+            "text": "Fig.6 this first cleaning feature would result in the transformation of i from the diagram on Fig.6-a to the one on Fig.6-c. The only thing left to do is then to remove the executed action s.t. the result is the interaction from Fig.6-d. \u03c7 is defined inductively on both the structure of the interaction i and the position p = d 1 ...d n \u2208 {1, 2} n . The execution of \u03c7(i, p) traverses recursively the syntactic structure of i guided by the path defined by the position p, that is, from \u03c7(i | , d 1 ...d n ) (root node), ..., up to \u03c7(i |p , ) (target action leaf to execute). Here, \u03c7(i |p , ) = \u2205 constitutes the stopping criterion and i is then constructed when the algorithm goes back up through the syntactic structure of i. Assigning \u2205 to \u03c7(i |p , ) ensures that the action i |p is removed in the construction of i . When a par node is encountered during the upward traversal, i.e. for j \u2208 [1, n], i |d1...dj = par(i |d1...dj .1 , i |d1...dj .2 ) then \u03c7(i |d1...dj , d j+1 ...d n ) is simply: par(\u03c7(i |d1...dj .1 , d j+2 ...d n ), i |d1...dj .2 ) if d j+1 = 1 or, par(i |d1...dj .1 , \u03c7(i |d1...dj .2 , d j+2 ...d n )) if d j+1 = 2. Indeed, as par specifies parallel executions, there is no need for pruning.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "). The function \u03c7 : I(L, M ) \u00d7 {1, 2} * \u2192 I(L, M ) is defined for couples (i, p) with i \u2208 I(L, M ) and p \u2208 f ront(i) as follows:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF20": {
+            "text": "-to-back comparison of both semantics Dataset. The recursive definition of interactions as syntactic terms allows to characterize them by their depth. Interactions of depth 1 include the empty interaction \u2205 and all actions from Act(L, M ). Depending on the cardinals n l = Card(L) and n m = Card(M ), those interactions can all be enumerated and computed. Given a signature, interactions of depth 2 can be deduced from those of depth 1 and exhaustively computed via the application of the binary and unary operators (e.g. seq(\u2205, a!m)). Likewise, interactions of depth 3 can be computed from those of depths 1 and 2 and so on. To illustrate this, Fig.7 presents for each couple (n l , n m ) the numbers of interactions of depths 1, 2 and 3 in each cell. For instance, we have 3 interactions of depth 1 for n l = n m = 1.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "Numbers of interactions per n l , nm and d",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF22": {
+            "text": "Application of \u03c9 The definition of the execution function \u03c7 (Def.12) that comes with the operational nature of the \u03c3 o semantics (Def.13) allows us to solve the 'trace analysis' problem hinted at earlier. Indeed, analysing a trace t = act 1 ...act n w.r.t. an interaction i 0 equates to verifying whether or not there exists transformations i 0 act1 \u2212 \u2212\u2212 \u2192 \u03c7(i 0 , p 1 ) = i 1 , ..., i n\u22121 actn \u2212 \u2212\u2212 \u2192 \u03c7(i n\u22121 , p n ) = i n s.t. i n accepts the empty trace.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF23": {
+            "text": "If t is of the form act.t (i.e. not empty and starts with act) then, for all matching actions i |p in the frontier of i, recursive calls are performed on \u03c9(\u03c7(i, p), t ) and \u03c9(i, t) returns the strongest (max \u227a function) verdict among those and either T ooLong if i expresses the empty trace or Out if not. Definition 14 (Trace Analysis). We define \u03c9 : I(L, M ) \u00d7 Act(L, M ) * \u2192 V erdict such that \u2200i, t \u2208 I(L, M ) \u00d7 Act(L, M ) * :",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF24": {
+            "text": "is a graphical representation of the \u03c9 process when applied to the interaction from Fig.6-a and the trace a!m 4 .b?Correctness of \u03c9 experiments Fig.9 presents a synthesis of experiments conducted to assess the correctness of \u03c9 and of our implementation of it. We randomly sampled 1000 interactions from the set of 234175 interactions mentioned in Sec.4. Each of them were tested with the 18 single action traces from Act(L, M ) and we sampled 15 traces from their semantics (computed with 3 loop unfolds).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF25": {
+            "text": "-b.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF26": {
+            "text": "Fig. 10: Performances",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

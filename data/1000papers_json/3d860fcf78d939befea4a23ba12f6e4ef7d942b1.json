@@ -1,0 +1,1400 @@
+{
+    "paper_id": "3d860fcf78d939befea4a23ba12f6e4ef7d942b1",
+    "metadata": {
+        "title": "Artificial Intelligence Decision Support for Medical Triage",
+        "authors": [
+            {
+                "first": "Chiara",
+                "middle": [],
+                "last": "Marchiori",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Douglas",
+                "middle": [],
+                "last": "Dykeman",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ivan",
+                "middle": [],
+                "last": "Girardi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Adam",
+                "middle": [],
+                "last": "Ivankay",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Kevin",
+                "middle": [],
+                "last": "Thandiackal",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Mario",
+                "middle": [],
+                "last": "Zusag",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Andrea",
+                "middle": [],
+                "last": "Giovannini",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "IBM Research",
+                    "location": {
+                        "settlement": "Rueschlikon",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Daniel",
+                "middle": [],
+                "last": "Karpati",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medgate AG",
+                    "location": {
+                        "settlement": "Basel",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Henri",
+                "middle": [],
+                "last": "Saenz",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Medgate AG",
+                    "location": {
+                        "settlement": "Basel",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Applying state-of-the-art machine learning and natural language processing on approximately one million of teleconsultation records, we developed a triage system, now certified and in use at the largest European telemedicine provider. The system evaluates care alternatives through interactions with patients via a mobile application. Reasoning on an initial set of provided symptoms, the triage application generates AI-powered, personalized questions to better characterize the problem and recommends the most appropriate point of care and time frame for a consultation. The underlying technology was developed to meet the needs for performance, transparency, user acceptance and ease of use, central aspects to the adoption of AI-based decision support systems. Providing such remote guidance at the beginning of the chain of care has significant potential for improving cost efficiency, patient experience and outcomes. Being remote, always available and highly scalable, this service is fundamental in high demand situations, such as the current COVID-19 outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Shortage of physicians and increasing healthcare costs have created a need for digital solutions to better optimize medical resources. In addition, patient expectations for mobile, fast and easy 24/7 access to doctors and health services drive the development of patient-centered solutions. The need to be triaged, diagnosed and treated remotely or at home without having to wait in crowded rooms has never been more relevant than in outbreak periods as the COVID-19 one [1] [2] [3] . Symptom checkers and differential diagnosis generators (DDX) developed for the public in form of web and mobile apps are at the crossroad of these needs. Already several of these developed over the past few years are established on the market. Isabel Healthcare is mostly designed for medical doctors (MDs). It allows the user to enter some demographic information and symptoms and simply suggests a list of all potential diagnoses, ranking them by likelihood and red flagging the potentially dangerous ones. It also displays many literature and web resources for a further exploration of the potential diagnosis (from popular Wikipedia to specialized medical sources such as UptoDate). ADA is developed for the patient. It has a similar starting point, but then engages in a long dialog with the patient to collect additional information on the initially entered symptom and the presence of additional ones. At the end of the dialog, ADA provides a generic and high-level summary on the urgency of the condition and returns a list of the most probable diagnoses (such as \"n out of 10 people with the same symptoms had this condition\"). For each displayed diagnosis there is an associated recommendation, such as \"this condition can usually be managed at home\", \"seek medical advice\", \"seek emergency care\".",
+            "cite_spans": [
+                {
+                    "start": 471,
+                    "end": 474,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 475,
+                    "end": 478,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 479,
+                    "end": 482,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The telemedicine triage that we developed, the Artificial Intelligence Triage Engine (AITE), is an integral part of a rich ecosystem of telemedicine services and is fundamentally different from symptom checkers in several aspects. Starting with few input symptoms (see Figure 1 ), AITE engages in short and focused dialogues to finally provide clear and simple recommendations to patients. Patients receive suggestions on which medical service provider to go to depending on the characteristics of their condition. In critical cases, patients are recommended to call the telecare provider immediately for a teleconsultation. If the health condition of the patient is assessed as being less urgent, they can select an appointment of their choice via a phone or video consultation with a trained telecare specialist (see Figure 2 ). Should patients require physical intervention, they will be referred to an appropriate care provider for a faceto-face consultation. The advantages are clear. By using the mobile application, emergency cases can be treated faster than in standard call center settings. Moreover by automatically filtering out patient requiring physical intervention, telemedical resources can invest more time in treating telecare eligible patients. Furthermore, to recommend the most appropriate course of action, the app draws from the patient's personal medical history as well as from similar cases handled by the telecare provider in the past. Built on case records and guidelines using AI-based methods, the system consists of the following building blocks: 1) an engine for the automated ingestion of unstructured clinical notes, the extraction of relevant medical entities and their organization into a knowledge graph (KG); 2) a data-driven dialog system that allows a conversation with such medical knowledge base and drives the patient interactions; 3) an inference engine able to suggest the most appropriate recommendation in terms of point of care and time frame for treatment. All these components are depicted in Figure 2 and will be discussed in detail in the following sections. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 269,
+                    "end": 277,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 819,
+                    "end": 827,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 2043,
+                    "end": 2051,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "To build the triage application described here, we used more than 900k case records written in German and collected over more than 7 years. This is only a fraction of the available data, since only records generated by top-ranked doctors (based on years of experience and internal audits) were selected. The records are notes that call center agents and doctors took while talking to the patients over the phone. They are structured in sections that contain demographic data such as age and gender, previous illnesses, and free text descriptions of the patient's current medical condition. It should be noted that in this kind of records, the free text contains a shallow and subjective description of the patient's problem. Patient narrative can contain mention of recent surgery or treatments and whether the patient can perform or not a specific test/movement, but no physical exams nor lab tests. Potential diagnoses consistent with the symptom description are listed. The descriptions in the records are expressed in formal medical language as well as in layman's terminology. Typical for these settings, sentences are not always complete (e.g., subjects or verbs may be missing) and include misspellings, dialect vocabulary, non-standard medical abbreviations and inconsistent punctuation. This is a challenge for the linguistic processing of the case records.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data"
+        },
+        {
+            "text": "A natural language processing (NLP) pipeline extracted medically relevant concepts from each case record. The pipeline consisted of the following stages: (1) data preprocessing for misspelling correction and abbreviation expansion, (2) named entity recognition (NER) and (3) concept clustering for the dynamic creation of an ontology of medical concepts from the corpus. Acronyms and abbreviations used unambiguously were linked to the corresponding entities directly in the medical dictionaries. Ambiguous acronyms and abbreviations were resolved, when possible, using algorithms that include context for disambiguation. Although we were able to detect many entity types, i.e. from anatomy and physiology to medical procedures and medicines, the main focus was on the extraction of current, non-current and negative mentions of symptoms and diagnosis in simple and complex expressions. Special attention was devoted to symptom and disease characterization in terms of body part location (e.g. pain in the leg, abscess in the arm), intensity (strong, light), time duration (chronic, acute), activity by which the symptom manifests or changes in character (e.g. dyspnea at rest, exertional dyspnea). For medical entity extraction we used a system based on the combination of dictionary look-up, advanced rules and deep learning. The dictionaries used in the NER were built partly using existing German-language medical dictionaries and ontologies (UMLS mapped German terms, ICD10, MedDRA, etc.) and partly using the list of words contained in the case records. They therefore contain a mapping of technical and layman's terms, for a total of more than 140k unique words (including declination, capitalization). Negated mentions of medical entities are very frequent in this type of records and were detected using German language-specific negation particles or expressions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "For relations that associate a medical entity to a specific body part, advanced parsing rules were used to detect short distance relations with high precision, while a deep learning (DL) stage was used to detect distant relations, improving therefore the overall recall. We trained a DL binary classifier with positive and negative examples. The annotated data consisted of 10k triples (E1, R, E2) manually generated on the raw texts; where E1 is a symptom, disease, or operation, E2 is an anatomical location, and R is the positive or negative relation between the two entities. To obtain a good balance of training examples, 50% triplets had R = \"located in\" and 50% triplets had R = \"not located in\". This approach can also be used in case of multi-relation extraction by building a binary classifier for every relation, where the use of correctly balanced negated examples helps improve the training. The raw text data was processed by (a) removing stop words, (b) transforming to lower case, (c) normalizing to ASCII characters, (d) transforming delimiters (e.g. \";\", \",\", \".\") to word embeddings by adding white spaces, and (e) excluding any non-alphanumerical characters and characters not in the delimiter set. For each word, we concatenated word-, positional-and part-ofspeech-features (POS-features) creating the input feature vector. Word features were constructed using pre-trained word embeddings on the raw text data, using either word2vec 4 or ELMo2 5 embeddings. Positional features were defined as the combination of the relative distances of the current word from the entities E1 and E2 6 . We explored three different architectures Convolutional Neural Network 7 (CNN) and Bidirectional Gated Recurrent Unit Network (Bi-GRU), Bidirectional Long Short Term Memory Network (Bi-LSTM), combining the models proposed in [8] [9] [10] [11] .",
+            "cite_spans": [
+                {
+                    "start": 1834,
+                    "end": 1837,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1838,
+                    "end": 1841,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1842,
+                    "end": 1846,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1847,
+                    "end": 1851,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "In the CNN architecture, the input feature vector with dimension k was fed to convolutional layers. These layers encoded the word sequence into n-gram representations, to capture the contextual information. For a given sentence, a weight matrix w \u2208 R m\u00d7k was applied to generate the new features c i from the window of words x i:i+m\u22121 where: with m convolutional window. This filter was applied to each possible window of words in the sentence",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "to produce a feature map:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "with c \u2208 R n\u2212m+1 . By applying multiple filters (denoted f ) on x i:i+m\u22121 , we obtained a new representation of the sentence. By setting different values for m, we obtained different n-gram representations of the sentence which was input to a max pooling layer, similarly to 6, 7, 12 . The last layers of the CNN architecture comprised several fully connected layers with dropout and a softmax for the classification. The architecture schema of the CNN model is shown in the left panel of Figure 3 . The dimensions of the word embeddings w, the positional embeddings p, the number and size of the convolutional windows, the number of filters f , the number of fully connected layers and their dimensions, the number of epochs and the dropout rate were tuned during training. In the Bi-GRU and Bi-LSTM architectures, the input feature vector with dimension k was fed into Bi-GRU or Bi-LSTM layers, followed by an attention and a softmax layer for the classification. The architecture schema of the Bi-LSTM is given in the right panel Figure 3 .",
+            "cite_spans": [
+                {
+                    "start": 275,
+                    "end": 277,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 278,
+                    "end": 280,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 281,
+                    "end": 283,
+                    "text": "12",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 489,
+                    "end": 497,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1033,
+                    "end": 1041,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "For all architectures, we used grid search to find the optimal values of the model-specific hyperparameters. We used a randomly constructed cross-entropy loss function with mini-batch updating and Adam optimizer for five epochs. In our experiment, we found optimal values for w = 50 and p = 20. The annotated data was split in 60% training, 10% validation and 30% testing. Precision, recall and f-score on the test set on the different architectures are shown in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 463,
+                    "end": 470,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "Notably, the described NLP pipeline is able to ingest one million patient records at run time and extract the relevant medical entities and their relations in about two hours. Therefore, if needed, new, improved versions of the system could be produced almost on a daily basis, by ingesting new case records whenever available. A highly performant pipeline is also important for efficient debugging of the NLP algorithms.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "NLP pipeline"
+        },
+        {
+            "text": "Several approaches have been developed for ontology learning 13, 14 , which is defined as the extraction of terms, concepts, taxonomic relations and non-taxonomic relations from data. An ontology can be built from scratch for example Table 1 : Prediction results of the different architectures on relation extraction (i.e., predicting whether the relation is R 1 or R 2 ), where P(R k ), R(R k ), F(R k ) are precision, recall and f-score and R 1 = \"not located in\", R 2 = \"located in\". Similar values were obtained by conducting several experiments and averaging the results. using clustering algorithms or from an existing ontology performing classification tasks.",
+            "cite_spans": [
+                {
+                    "start": 61,
+                    "end": 64,
+                    "text": "13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 65,
+                    "end": 67,
+                    "text": "14",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 234,
+                    "end": 241,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Ontology and Knowledge Graph"
+        },
+        {
+            "text": "The first step in the creation of the ontology in our application was the grouping of the annotations gathered through the NLP pipeline that describe the same medical concept. For this process we used a hierarchical procedure, named concept clustering. This is important to improve performance of the inference engine to ensure high recall for systems based on patient similarity and reduce feature correlation for machine learning classifiers. It is especially laborious in German, due to the frequent use of complex compound names that can be also expressed by several permutations of the corresponding simple entities. The created medical concepts are then organized in an ontology, where the following relations among medical concepts were considered: 1) child of (Taxonomic Relations) and 2) located in, negation of, characterization of, specification of (Non-Taxonomic Relations). The relations child-of were automatically built using as a reference the relations contained in two manually curated elementary ontologies, \"Anatomy\" (e.g. Augenlid is child of Auge -eyelid is child of eye) and \"General Symptom\" (e.g. Druckschmerz is child of Schmerz), which were derived from standard medical resources(e.g., 15 ). To summarize, more than one million medical expressions were merged into 17k medical concepts specific to medical triage, related to a very broad range of problems (e.g. urinary, digestive, respiratory, locomotive, skin, eye). These medical concepts were organized in a large ontology containing 17k nodes (15k symptoms, 2k diseases) and 100k edges. In addition to a name and its synonyms, each medical concept was also characterized by metadata, used, for example, to assign the semantic type (symptoms, disease), distinguish between red flags and common symptoms, female or male specific conditions, psychological or other types of symptoms. Metadata are consumed by the system which drives the dialogue with the end users (Q&A system).",
+            "cite_spans": [
+                {
+                    "start": 1214,
+                    "end": 1216,
+                    "text": "15",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ontology and Knowledge Graph"
+        },
+        {
+            "text": "The diagram of the stages used to construct the ontology is summarized in Figure 4 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 74,
+                    "end": 82,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Ontology and Knowledge Graph"
+        },
+        {
+            "text": "It should be noted, that this solution allowed for the creation of an ontology of medical concepts directly and automatically from the ingested data, whereby layman's and technical terminology as well as many synonym expressions are mapped to the same concept. In addition, this solution is useful for languages that are not yet well covered by standard ontologies such as UMLS/SNOMED.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ontology and Knowledge Graph"
+        },
+        {
+            "text": "After ontology creation, the input case records together with the extracted medical concepts and metadata were automatically ingested and organized in a language agnostic knowledge graph (KG). KGs are structured knowledge bases (KBs) that store information in form of relationships (edges) between entities (nodes or vertices) [16] [17] [18] . The graph is represented by its sparse adjacency matrices, indicating which vertices are connected with a given relation. The created KG consisted in more than 1M of nodes of the type case record, age, gender, symptom, disease, red flags, historical recommendation and 23M edges linking these entities, such as, for example symptom-to-patient, diseaseto-patient, patient-to-point-of-care, age-group-to-patient. The language agnostic KG was built for multilingual triage applications by first using data in one specific language (German) as a reference and then mapping the medical en- tities (KG nodes) to numerical codes. To obtain language interoperability, these numerical codes should correspond to international standards, such as the UMLS concept unique identifier, or ICD and SNOMED codes. However, the coverage of these coding systems for the specific languages can vary considerably and therefore a complete mapping was not possible.",
+            "cite_spans": [
+                {
+                    "start": 327,
+                    "end": 331,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 332,
+                    "end": 336,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 337,
+                    "end": 341,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ontology and Knowledge Graph"
+        },
+        {
+            "text": "An essential part of the triage process is the Q&A session, during which additional, carefully chosen symptoms are asked to the patient. As the patients do not have the necessary knowledge for proper triage, this process ensures that they enter all relevant symptoms, even the ones that they might consider irrelevant or unnecessary to input. Users might not know correlations between symptoms that are important. The question generation algorithm drives the interaction with the patient. Its goal is to identify which medical concepts need to be asked as the most relevant to the initial input provided by the patient, emulating the human expert decision process. In our system, the question generation algorithm is fully learnt from the data: the questions are determined dynamically based on the patient's input and the system's knowledge on the training data. We explored two different approaches. One based on information retrieval algorithms, i.e., pseudo-relevance feedback based query expansion techniques (such as entropy, mutual information) and the second one on neural network techniques. In the first approach question generation and patient risk assessment are jointly optimised so that the collection of additional relevant information from the patient aims to improve the classification task. While in the second approach the two tasks are optimised (i.e., trained) separately.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient Interaction"
+        },
+        {
+            "text": "For the neural network based model we constructed a training corpus masking one or multiple medical concepts from each patient case and optimised the network to predict the obscured features. We split the data in 70% for training, 10% for validation and 20% for testing. Due to the high number of word features that may be obscured, the prediction task becomes very hard. A random classifier would only achieve an accuracy of 5.6 \u00d7 10 \u22125 (inverse of the number of word features) for the top one (i.e., highest probability) prediction. In Table 2 we compared the performance of a neural network based query expansion model 19 with the following rankers: i) frequency-based (f), ii) binary independence model (BIM 20 ), iii) \u03c7 2 value (CHI 21 ), iv) Robertson selection value (RSV 22 ), v) Kullback-Leibler divergence (KLD 23 , relative entropy). For a comprehensive review of those methods see also 24 . The frequency-based ranking of the terms (f) ranks the most often occurring symptoms the highest, while low-occurrent ones lower as in the formula F (s, R) = r\u2208R I s\u2208r , where R is the set of relevant cases retrieved, s is the token to be ranked and I the identity if the token s belongs to the set r, zero otherwise. A drawback of this method is that it ranks potentially irrelevant symptoms high, that are only common because they are frequent in the data, hence also in the relevant subset of cases. The binary independence model (BIM) ranks symptoms based on the equation below:",
+            "cite_spans": [
+                {
+                    "start": 622,
+                    "end": 624,
+                    "text": "19",
+                    "ref_id": null
+                },
+                {
+                    "start": 898,
+                    "end": 900,
+                    "text": "24",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 538,
+                    "end": 545,
+                    "text": "Table 2",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "Patient Interaction"
+        },
+        {
+            "text": "where s denotes the symptom to be ranked, R is the set of relevant retrieved cases and N is the case base. p(s|R) and p(s|N ) stand for the probabilities of the symptom occurring in the relevant set of cases and the whole case base respectively. The exact probabilities are unknown but can be approximated with the counts. The \u03c7 2 value is used to determine whether there is significant difference in expected values of two events. In our case, these two events are the query occurrence in the relevant set of cases and the occurrence in the whole set of training data. The definition is given in the equation below:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient Interaction"
+        },
+        {
+            "text": "The Kullback-Leibler divergence (KLD, relative entropy) of the aforementioned probabilities is also used as a term ranking metric. It is defined as written in the equation below:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient Interaction"
+        },
+        {
+            "text": "KLD is a measure of how two probability distributions differ from each other. The Robertson selection value (RSV) ranks the symptoms based on the product of their differences in occurrence probabilities and their term weight for each document in the relevant records. This is intuitively promising as certain tokens might be low-occurrent compared to others, yet of major importance for the downstream classification task, which is captured by a higher term weight. RSV is described in the equation below:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient Interaction"
+        },
+        {
+            "text": "where w(s, r) denotes the weight of term s in the given relevant record r. NN based question generation systems show very promising results in order to generate questions that are medically relevant and consistent with the initially provided symptoms, hence fundamental for the construction of a Q&A system. The described experiment has been used to benchmark different algorithms. In real settings, the question generation system is only one component of the dialogue system and only a subset of medical conditions is used. A key aspects in the dialogue is the usage of the medical ontology. Central to the development and digitization of AI-based decision support system are user acceptance and user friendliness. In AITE, for example, patients can state their symptoms in a natural way since many different forms of expressing the same symptom have been learned from the training data provided by the telemedicine provider. An elastic search engine provides the mapping from the user input to the medical concepts using all variety of symptom expressions extracted from the data and stored in the ontology. The Q&A part plays an important role in defining the overall user experience, hence speed and usability are crucial. In order to achieve the best user experience, the Q&A was customized according to patient age, gender, and medical status, and special attention was paid to a simple and understandable formulation of the questions. Questions should be relevant to the input symptoms and conversations should be short. This required that a final recommendation could be reached in only few interactions, with a short waiting time between these, i.e., less than one second. Especially difficult was to design a system to avoid asking \"similar questions\" that are interpreted by a human as repetitive and redundant. This was partially solved by using the hierarchical structure of the medical ontology, by excluding all the children of a medical concept as possible question candidates, if the patient has denied having their parent. For instance, the system will not ask any symptoms related to a specific part of the abdomen (upper, lower, right, left, center) if the patient denies having an abdomen problem. These Key Performance Indicators (KPIs) were explicitly evaluated during several testing campaigns in different settings which led to continuous refinement of the Q&A model and logic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient Interaction"
+        },
+        {
+            "text": "The inference engine is the part of the system that will reason on the collected information and give a final recommendation. The are several approaches to build a recommendation engine for patient risk assessment. In one type of approach, patient similarity is calculated on the KG using node and edge weights, to identify the sub-graph region containing the patient data most similar to the user. This region might also be used to retrieve the possible key missing medical conditions, in systems where question generation and recommendation inference are coupled. Node and edge weights in the KG are learned from the data and medical guidelines with cross entropy cost minimisation. In a second type of approach, the KG is used as a knowledge base to extract feature vectors, (e.g. by learning embeddings from the graph [25] [26] [27] [28] , combining embeddings learned from the original text with graph features) to build a machine learning classification engine. While it is not possible to report final accuracy levels due to confidentiality, we tested an implementation of this second approach which achieved f-scores as high as 87.5%, 74.0% and 90.4% on high-, medium-and low-risk classes respectively, with a confidence threshold of 0.6. Based on CNN methods 7 , it is extensively described in 29 . Finally, patient risk assessment can be performed with high classification performance also with advanced DL techniques. In this latter case, however, the methods are perceived as a 'black box\" in terms of how they generate the predictions from the input data and the addition of an explanation method is needed for user acceptance 29 . In implementing the first approach, we modeled the retrieval of similar patients on the KG with a sequence of graph operations. The technology was developed on proprietary libraries on sparse linear algebra 16, 17 . The final implementation was extremely efficient and allowed for very fast graph operations. The computation of graph traversals with arbitrary depth for sparse adjacency matrices was of the order of milliseconds (O(ms)) for single graph traversal. High performance was obtained by keeping the KG in memory. The response time for any single query was measured to be well below the four seconds requirement with a single worker, as the system architecture enables scaling, and thus efficient large-scale patient support. The KG was also used for traceability and transparency in the recommendation rationale. The retrieval of similar patients to the users allows to understand why a certain recommendation was given from historical cases. A key requirement for usability and user-friendliness was speed and scalability. Patient requests can be spread over the available servers, and speedup from concurrency is linear with the available hardware resources as shown in Figure 5 . All patient interactions can be handled on average in less than one second with enough computational resources.",
+            "cite_spans": [
+                {
+                    "start": 822,
+                    "end": 826,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 827,
+                    "end": 831,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 832,
+                    "end": 836,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 837,
+                    "end": 841,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1303,
+                    "end": 1305,
+                    "text": "29",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1640,
+                    "end": 1642,
+                    "text": "29",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1852,
+                    "end": 1855,
+                    "text": "16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1856,
+                    "end": 1858,
+                    "text": "17",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 2828,
+                    "end": 2836,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Recommendation engine"
+        },
+        {
+            "text": "Clinical testing and validation were fundamental for the certification of the solution. In such a complex system, testing and validation were performed at different levels, encompassing: 1) semi-automated validation of single building blocks (e.g. NLP, Ontology, Q&A); 2) automated validation of the end-to-end output on a set of clinically validated ground truth cases (automated recommendation testing); (3) validation of the system in real-life and production settings. Whenever possible automated testing procedures were streamlined to the execution of the pipeline for the creation of the system, so that they could be run at any update or modification of training corpus or pipeline components. Physicians support was fundamental in all testing steps as depicted in the right column of Figure 2 . Automated recommendation testing was performed by first creating a ground truth set in which patient demographic, symptoms and the corresponding recommendations were known and validated by clinicians. Recall, sensitivity, precision and fscore were then calculated by comparing those recommendations with the ones given by the system on the same input.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 792,
+                    "end": 800,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Subject matter expertise in clinical validation and testing"
+        },
+        {
+            "text": "Although metric values can not be disclosed, it has to be noted that all had to be above required thresholds (with a special attention to emergency recall) for system release . Validation of the system in real life was performed by physicians and other subject matter experts, by evaluating defined KPIs on a statistically significant sample during the usage of the tool in different settings. To reduce the time and effort requested to the physicians in these activities, special methods and tools were developed to enable a continuous loop between clinician review and quick implementation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Subject matter expertise in clinical validation and testing"
+        },
+        {
+            "text": "We have presented results, solutions and approaches used to build an interactive, AI-based system for automated medical triage from a large corpus of case records. We have considered various aspects in developing such an endto-end system, from precision on the recommendation, transparency for trust, adoption and end-user friendliness, to the system scalability in terms of number of users served. A key aspect of our research work was the development of a pipeline capable of automatically generating a very rich ontology of medical concepts and a knowledge base, directly from a large corpus of ingested records. This included a highly efficient DL-augmented NLP stage with high precision and recall for the extraction of medical entities and their relations, and a language agnostic implementation of a medical knowledge graph for multilingual applications. A second key aspect was the implementation of reasoning methods on such a knowledge base, comprising a user-friendly, fully data-driven question generation technology and an inference engine for the final recommendation. A third key aspect was that several testing procedures were automated and streamlined to the development activities, for a continuous and consistent feedback implementation. The abstraction and modularity of the underlined solutions are crucial for the reusability of the components in general settings such as automated knowledge ingestion and organisation, development of dialogue systems and decision support applications. Providing such automated triage services will help healthcare providers satisfy a larger number of patients and focus their valuable medical resources on telecare eligible patients at the same time. The optimisation of the medical resources will improve patient experience overall.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Kok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Early transmission dynamics in Wuhan, China, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A novel coronavirus from patients with pneumonia in China",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "N Engl J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Distributed representations of words and phrases and their compositionality",
+            "authors": [
+                {
+                    "first": "Tomas",
+                    "middle": [],
+                    "last": "Mikolov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ilya",
+                    "middle": [],
+                    "last": "Sutskever",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kai",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Greg",
+                    "middle": [],
+                    "last": "Corrado",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [],
+                    "last": "Dean",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "3111--3119",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Relation classification via convolutional deep neural network",
+            "authors": [
+                {
+                    "first": "Daojian",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kang",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Siwei",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guangyou",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jun",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of COLING 2014",
+            "volume": "",
+            "issn": "",
+            "pages": "2335--2344",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Convolutional neural networks for sentence classification",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+            "volume": "",
+            "issn": "",
+            "pages": "1746--1751",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Bidirectional recurrent neural networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schuster",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Paliwal",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "IEEE Transactions on",
+            "volume": "45",
+            "issn": "11",
+            "pages": "2673--2681",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Long short-term memory",
+            "authors": [
+                {
+                    "first": "Sepp",
+                    "middle": [],
+                    "last": "Hochreiter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J\u00fcrgen",
+                    "middle": [],
+                    "last": "Schmidhuber",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Neural Computation",
+            "volume": "9",
+            "issn": "8",
+            "pages": "1735--1780",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Finding Structure in Time",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Elman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Cognitive Science",
+            "volume": "14",
+            "issn": "",
+            "pages": "179--211",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation",
+            "authors": [
+                {
+                    "first": "Kyunghyun",
+                    "middle": [],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "Caglar",
+                    "middle": [],
+                    "last": "Bart Van Merrienboer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gulcehre",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+            "volume": "",
+            "issn": "",
+            "pages": "1724--1734",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Natural language processing (almost) from scratch",
+            "authors": [
+                {
+                    "first": "Ronan",
+                    "middle": [],
+                    "last": "Collobert",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jason",
+                    "middle": [],
+                    "last": "Weston",
+                    "suffix": ""
+                },
+                {
+                    "first": "L\u00e9on",
+                    "middle": [],
+                    "last": "Bottou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Karlen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Koray",
+                    "middle": [],
+                    "last": "Kavukcuoglu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pavel",
+                    "middle": [],
+                    "last": "Kuksa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of Machine Learning Research",
+            "volume": "12",
+            "issn": "",
+            "pages": "2493--2537",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Ontology learning from text: a survey of methods",
+            "authors": [
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Biemann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "LDV Forum",
+            "volume": "20",
+            "issn": "2",
+            "pages": "75--93",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Ontology learning from text: a look back and into the future",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bennamoun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "ACM Computing Surveys (CSUR)",
+            "volume": "44",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "A reference ontology for biomedical informatics: the foundational model of anatomy",
+            "authors": [
+                {
+                    "first": "Cornelius",
+                    "middle": [],
+                    "last": "Rosse",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Jos\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mejino",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of Biomedical Informatics",
+            "volume": "36",
+            "issn": "6",
+            "pages": "478--500",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Semiempirical molecular dynamics (SEMD) I: midpoint-based parallel sparse matrix-matrix multiplication algorithm for matrices with decay",
+            "authors": [
+                {
+                    "first": "Val\u00e9ry",
+                    "middle": [],
+                    "last": "Weber",
+                    "suffix": ""
+                },
+                {
+                    "first": "Teodoro",
+                    "middle": [],
+                    "last": "Laino",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexander",
+                    "middle": [],
+                    "last": "Pozdneev",
+                    "suffix": ""
+                },
+                {
+                    "first": "Irina",
+                    "middle": [],
+                    "last": "Fedulova",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Curioni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Journal of Chemical Theory and Computation",
+            "volume": "11",
+            "issn": "",
+            "pages": "3145--3152",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Method for performing sparse matrix-matrix multiplication. US 20170147530 A1, United States Patent and Trademark Office",
+            "authors": [
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Curioni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Teodoro",
+                    "middle": [],
+                    "last": "Laino",
+                    "suffix": ""
+                },
+                {
+                    "first": "Valery",
+                    "middle": [],
+                    "last": "Weber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "A review of relational machine learning for knowledge graphs",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nickel",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Murphy",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Tresp",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Gabrilovich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE",
+            "volume": "104",
+            "issn": "",
+            "pages": "11--33",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Relevance weighting of search terms",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Robertson",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Jones",
+                    "suffix": ""
+                }
+            ],
+            "year": 1976,
+            "venue": "Journal of the American Society for Information science",
+            "volume": "27",
+            "issn": "3",
+            "pages": "129--146",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Aid, an associative interactive dictionary for online searching",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Doszkocs",
+                    "suffix": ""
+                }
+            ],
+            "year": 1978,
+            "venue": "Online Review",
+            "volume": "2",
+            "issn": "2",
+            "pages": "163--173",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "On term selection for query expansion",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robertson",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Journal of documentation",
+            "volume": "46",
+            "issn": "4",
+            "pages": "359--364",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "An information-theoretic approach to automatic query expansion",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Carpineto",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "De Mori",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Romano",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Bigi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "ACM Transactions on Information Systems (TOIS)",
+            "volume": "19",
+            "issn": "1",
+            "pages": "1--27",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Query expansion techniques for information retrieval: a survey. Information Processing & Management",
+            "authors": [
+                {
+                    "first": "Akshay",
+                    "middle": [],
+                    "last": "Hiteshwar Kumar Azad",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Deepak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "56",
+            "issn": "",
+            "pages": "1698--1735",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Deepwalk: Online learning of social repreentations",
+            "authors": [
+                {
+                    "first": "Bryan",
+                    "middle": [],
+                    "last": "Perozzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rami",
+                    "middle": [],
+                    "last": "Al-Rfou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Steven",
+                    "middle": [],
+                    "last": "Skiena",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining",
+            "volume": "",
+            "issn": "",
+            "pages": "701--710",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Line: Large-scale information network embedding",
+            "authors": [
+                {
+                    "first": "Jian",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Meng",
+                    "middle": [],
+                    "last": "Qu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mingzhe",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jun",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiaozhu",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the 24th International Conference on World Wide Web",
+            "volume": "",
+            "issn": "",
+            "pages": "1067--1077",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "node2vec: Scalable feature learning for networks",
+            "authors": [
+                {
+                    "first": "Aditya",
+                    "middle": [],
+                    "last": "Grover",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jure",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Revisiting semi-supervised learning with graph embeddings",
+            "authors": [
+                {
+                    "first": "Zhilin",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "William",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruslan",
+                    "middle": [],
+                    "last": "Salakhutdinov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "International Conference on Machine Learning (ICML)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Patient risk assessment and warning symptom detection using deep attention-based neural networks",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Girardi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Screenshoots of the medical application currently in use.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Overview of the solution building blocks. Right column: improvement, testing and validation tasks performed with physicians help.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Architecture of the CNN model (left panel) and Bi-LSTM model (right panel) for relation extraction. In the figure w, p, d are the dimensions of word-, positional and POS-features, l = 45 is the maximum sentence length.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Diagram of the stages used for ontology learning and their outputs. The stages are connected to the outputs with dashed arrows.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Average application response time in seconds for increasing computational resources (number of workers) with 30 concurrent user requests.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Pat. XY complains about persistent pain in stomach .",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "This multi-stage approach can be used to tailor the level of granularity of the medical concepts to the different applications and end users, in our case to medical triage and patients. For example, if such a level of detail is not required, all explicit mentions of finger phalanxes can be merged into the concept finger at a customized annotation level.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Testing results of a neural network based (NN) query expansion module compared to information retrieval techniques. In the table we show the top-k accuracy (Acc@k), using inverse probability masking.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,546 @@
+{
+    "paper_id": "3dd30d6d9df455180f58955e74961f6189c15ae2",
+    "metadata": {
+        "title": "To appear in: Public Health",
+        "authors": [
+            {
+                "first": "Gountas",
+                "middle": [],
+                "last": "Ilias",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Peloponnese",
+                    "location": {
+                        "settlement": "Corinth",
+                        "country": "Greece"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hillas",
+                "middle": [],
+                "last": "Georgios Phd",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Sotiria Chest Diseases Hospital",
+                    "location": {
+                        "settlement": "Athens",
+                        "country": "Greece"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Souliotis",
+                "middle": [],
+                "last": "Kyriakos Associate Professor",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Peloponnese",
+                    "location": {
+                        "settlement": "Corinth",
+                        "country": "Greece"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ilias",
+                "middle": [],
+                "last": "Gountas",
+                "suffix": "",
+                "affiliation": {},
+                "email": "hgkoyntas@med.uoa.grphone:306970828327"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Objectives: To assess the impact of social distancing interventions in Greece and to examine what would have happen if those interventions had not been implemented. Study Design: A dynamic, discrete-time, stochastic individual-based model was developed to simulate coronavirus disease 2019 (COVID-19) transmission. Methods: The model was fitted to the observed trends in COVID-19 deaths and intensive care unit (ICU) bed use in Greece. Results: If Greece had not implemented social distancing interventions, the healthcare system would have been overwhelmed between 30 March and 4 April. The combined social distancing interventions and increase in ICU beds averted 4360 (95% credibility interval: 3050, 5700) deaths and prevented the healthcare system from becoming overwhelmed. Conclusions: The quick and accurate interventions of the Greek government limited the burden of the COVID-19 outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The coronavirus disease 2019 (COVID-19) pandemic presents a global public health emergency, with over 2.4 million reported cases 1 . The absence of a vaccine or targeted antiviral treatment has led public health responses to be concentrated on nonpharmaceutical interventions, like social distancing (SD) measures, to reduce the impact of the outbreak. The goal is to slow the spread of the virus in order to keep the number of people infected at a manageable level and ensure that hospitals are not overwhelmed.",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 130,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Greece is a country with a vulnerable public healthcare system as a result of the financial recession of the previous decade. Health spending in Greece accounts for 7.8% of the Gross Domestic Product and the number of intensive care unit (ICU) beds was about 6 per 100,000 individuals (47.8% less than the Organisation for Economic Co-operation and Development",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "[OECD] average) 2, 3 . Additionally, on 18 March, the Ministry of Health announced in the",
+            "cite_spans": [
+                {
+                    "start": 19,
+                    "end": 20,
+                    "text": "3",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Greek parliament that only 120 ICU beds were available for COVID-19 patients 4 . Given these J o u r n a l P r e -p r o o f complexities, Greece was at risk of facing a significant COVID-19 epidemic, which would strain the healthcare system.",
+            "cite_spans": [
+                {
+                    "start": 77,
+                    "end": 78,
+                    "text": "4",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The first laboratory-confirmed case and the first death were reported on 26 February and 12",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "March 2020, respectively. It is important to note that the initial SD interventions were launched prior to the first death. More specifically, on 9, 16 and 19 March, schools and universities closed, SD was encouraged and public events banned, respectively. Four days later, significant restrictions on public movements and gatherings were imposed. Thanks to the quick implementation of SD interventions, deaths and the use of ICU beds were kept to manageable levels 5 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Public health decision-makers need evidence-based information to evaluate and update strategic interventions to minimise the COVID-19 outbreak. Mathematical models can provide important insights by examining the effectiveness of interventions that have already been implemented 6 . The aim of this study was to investigate the impact of the SD interventions implemented in Greece and to examine what would have happened, in terms of deaths and healthcare system use, if the interventions had not been implemented.",
+            "cite_spans": [
+                {
+                    "start": 278,
+                    "end": 279,
+                    "text": "6",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In infectious disease epidemiology, mathematical models are a common way to explain the spread of diseases and to predict or assess the impact of potential intervention policies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Study Design"
+        },
+        {
+            "text": "Those models stratify individuals into compartments representing different states of the infection process (e.g. susceptible, infected, recovered individuals). In these models, individuals move between states according to transition rates. The impact of an intervention can be simulated by modifying these rates; for example, the effect of the SD measures can be simulated by reducing the probability of an individual becoming infected.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Study Design"
+        },
+        {
+            "text": "In order to model COVID-19 transmission, a discrete-time, stochastic, individual-based model, which categorises the population into susceptible, exposed, infectious or removed (SEIR) individuals, was developed in C++ (see Figure S1 in the supplementary material).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 222,
+                    "end": 231,
+                    "text": "Figure S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Description of the mathematical model"
+        },
+        {
+            "text": "In short, every day a susceptible individual might acquire the infection and enter the exposed disease state before they become infectious. According to the clinical experience in Greece, about 80-90% of infected individuals would have no or mild symports and would not need hospitalisation; these individuals would recover from the disease after 5-7 days 7 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "J o u r n a l P r e -p r o o f"
+        },
+        {
+            "text": "The rest of the infected population would need to enter the healthcare system; the majority would need hospitalisation, while a smaller group would also need to move to an ICU bed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "J o u r n a l P r e -p r o o f"
+        },
+        {
+            "text": "The average duration that a patient would be in hospital, provided they didn't need to be transferred to an ICU bed, is 15 days. If a patient required intensive care, they would stay there for 14 days and an additional 14 days in the hospital for recovery. The probability of death for patients during hospitalisation or in an ICU bed is 15% and 50%, respectively 8 .",
+            "cite_spans": [
+                {
+                    "start": 364,
+                    "end": 365,
+                    "text": "8",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "J o u r n a l P r e -p r o o f"
+        },
+        {
+            "text": "Further details about the description of the model and the calibration procedure are available in the supplementary material.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "J o u r n a l P r e -p r o o f"
+        },
+        {
+            "text": "The model was calibrated using COVID-19 epidemiological and clinical data from the Greek epidemic. More specifically, we varied the transmission rate, the proportion of patients who would need to be hospitalised and the effect of SD interventions to optimise the fit on the observed trends in deaths and ICU bed use. The end date was set to be 27 April, since this day is expected to be the last day of the existing SD measures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model parameterisation and examined scenarios"
+        },
+        {
+            "text": "A 'status quo' scenario was used to generate predictions regarding the observed course of the outbreak and a 'counterfactual' scenario, where no SD interventions were implemented, was used to estimate how the outbreak would have unfolded if no interventions had taken place. For each scenario, 1000 runs were performed and results were summarised. In order to include the appropriate uncertainty (stochastic variability), the 2.5 and 97.5 percentiles of simulations were also calculated.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model parameterisation and examined scenarios"
+        },
+        {
+            "text": "After the reconstruction of the observed data on mortality and ICU bed use in Greece, the best estimate for the basic reproduction number (R 0 ) was 2.6. Furthermore, the model estimates that 8.5% and 4.5% of the population would need hospitalisation and to be treated in ICU beds, respectively, if infected. The strain on the healthcare system would be significantly higher without the SD interventions. More specifically, if Greece had not implemented the SD interventions, the healthcare system would have been overwhelmed between 30 March and 4 of April ( Figure   1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 560,
+                    "end": 570,
+                    "text": "Figure   1",
+                    "ref_id": null
+                }
+            ],
+            "section": "J o u r n a l P r e -p r o o f"
+        },
+        {
+            "text": "Under the status quo scenario, the number of COVID-19-related deaths is anticipated to be 140 (95% credible intervals [CrI]: 120, 190) by 27 April. On the contrary, under the counterfactual scenario, that is without any SD intervention, the projected COVID-19 related number of deaths would be 860 (95% CrI: 720, 1020) by 27 April (Figure 1b) . Furthermore, considering the potential additional deaths that could occur due to the non-availability of an ICU bed when the healthcare system reaches its limits, the disease-related mortality would be significantly higher (assuming that ICU bed availability would be the same as the preoutbreak levels). Specifically, following a healthcare system collapse, if we assume that 90% of those in need of an ICU bed would die, the additional deaths by 27 April would be 3500 (95% CrI: 2500, 4400). Thus, the expected deaths without the implementation of any interventions (neither SD measures nor increase in ICU bed capacity) would be 4360 (95% CrI: 3050, 5700) by 27 April.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 331,
+                    "end": 342,
+                    "text": "(Figure 1b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model projections under status quo and counterfactual scenarios"
+        },
+        {
+            "text": "Concerning the total number of cases under the status quo scenario, the model predicted that about 10,000 (95% CrI: 8300, 11,500) cases would exist in Greece by 27 April. In the absence of SD measures, the number of infected individuals would have been 230,000 (95% CrI: 208,000, 247,000) (Figure 1c) . At the end of the study prediction dates (April 27th), it is estimated that there would be 35 new infections per day (95% CrI: 26, 58) (see Figure S2 in the supplementary material).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 289,
+                    "end": 300,
+                    "text": "(Figure 1c)",
+                    "ref_id": null
+                },
+                {
+                    "start": 443,
+                    "end": 452,
+                    "text": "Figure S2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model projections under status quo and counterfactual scenarios"
+        },
+        {
+            "text": "Regarding the course of the outbreak, the model estimated that the number of infected individuals peaked in Greece on 23 March ( Figure S3 in the supplementary material) . Finally, the R 0 on 27 April was estimated to be 0.52 (an 80% reduction compared to the R 0 in the pre-lockdown period).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 129,
+                    "end": 169,
+                    "text": "Figure S3 in the supplementary material)",
+                    "ref_id": null
+                }
+            ],
+            "section": "J o u r n a l P r e -p r o o f"
+        },
+        {
+            "text": "In the current study, the COVID-19 epidemic in Greece has been reproduced using a mathematical transmission model. To evaluate the impact of interventions, a counterfactual model, without the SD measures, has been used and this has been compared to the actual model. The analysis highlights that the SD interventions took place sufficiently early in the outbreak and were highly successful as they managed to keep the number of deaths and need for ICU beds at low levels and within the capacity of the national healthcare system. It is estimated that the SD measures averted 4360 (95% CrI: 3050, 5700) deaths. Additionally, the model highlights that any interventions to boost ICU capacity, without the simultaneous implementation of SD interventions, would not have been an effective healthcare policy, as the demand for the ICU beds would be have been very high without the SD interventions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "It should be noted that the estimates regarding the effectiveness of the SD interventions are conservative, as in the counterfactual scenario we only removed the SD interventions while assuming that everything else remained exactly the same as in the status quo scenario. This assumption ignores additional potential complications, such as healthcare system overload or system collapse. When a healthcare system becomes overwhelmed, several different scenarios could have occurred; for example, if the prevalence of COVID-19 inside the healthcare settings had increased, a larger number of doctors and nurses could have been infected with the virus, and thus the capacity of the healthcare system would be reduced.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "It is important to note that the outputs of the model have also been computed elsewhere.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The estimates regarding the basic reproduction number and the total infected population are in line with estimates from the Imperial College Covid19 Response Team 9 . Furthermore, it has been shown that elderly individuals are the most at risk of experiencing COVID-19 complications 6 . In Greece, the proportion of the population aged >70 years is 14.8% 10 , which is close to the estimates of the current model that found 13.0% of the population would need to enter the healthcare system if they became infected.",
+            "cite_spans": [
+                {
+                    "start": 283,
+                    "end": 284,
+                    "text": "6",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The decision of the Greek government to launch early SD measures resulted in limiting the burden of the COVID-19 outbreak and prevention of the healthcare system becoming overwhelmed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The manuscript describes and analyses a theoretical model and therefore there is no need for ethical approval. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ethical approval"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "An interactive web-based dashboard to track COVID-19 in real time. The Lancet Infectious diseases 2020. 2. Organisation for Economic Co-operation and Development (OECD). Health spending",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The variability of critical care bed numbers in Europe",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rhodes",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ferdinande",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Flaatten",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Guidet",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Metnitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Moreno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Intensive care medicine",
+            "volume": "38",
+            "issn": "10",
+            "pages": "1647--53",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "120 ICUs beds are available for coronavirus patients (in Greek)",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in Wuhan, China: a modelling study. The Lancet Public",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Clinical presentation and virological assessment of hospitalized cases of coronavirus disease 2019 in a travel-associated transmission cluster",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Roman",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wolfgang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Estimates of the severity of coronavirus disease 2019: a model-based analysis",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Verity",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Okell",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Lancet Infectious",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Institute for Disease and Emergency Analytics ICL. COVID-19 model Greece",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Population-Housing Census",
+            "authors": [],
+            "year": 2011,
+            "venue": "Hellenic Statistical Authority",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "and 1b show that the status quo scenario accurately captures the overall trends in deaths and the use of ICU beds between 27 February and 15 April.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "This research is co-financed by Greece and the European Union (European Social Fund-ESF) through the Operational Programme 'Human Resources Development, Education and Lifelong Learning' in the context of the project \"Reinforcement of Postdoctoral Researchers -2nd Cycle\" (MIS-5033021), implemented by the State Scholarships Foundation (\u0399\u039a\u03a5).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Projections of future coronavirus disease 2019 (COVID-19) cases and complications under the status quo and counterfactual scenarios. For comparison, x indicates the observed trends under the status quo scenario. (A) COVID-19 related intensive care unit (ICU) beds use; (B) COVID-19 related deaths; and (C) total number",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "None",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Competing interests"
+        }
+    ]
+}

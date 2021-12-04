@@ -1,0 +1,3137 @@
+{
+    "paper_id": "03dbf2500399767678916e5425ce7719f35b4b75",
+    "metadata": {
+        "title": "Anticipatory Detection of Compulsive Body-focused Repetitive Behaviors with Wearables",
+        "authors": [
+            {
+                "first": "Dimitris",
+                "middle": [],
+                "last": "Acm Reference Format ; Benjamin Lucas Searle",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Marios",
+                "middle": [],
+                "last": "Spathis",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Daniele",
+                "middle": [],
+                "last": "Constantinides",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Cecilia",
+                "middle": [],
+                "last": "Quercia",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Mascolo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Body-focused repetitive behaviors (BFRBs), like face-touching or skin-picking, are hand-driven behaviors which can damage one's appearance, if not identified early and treated. Technology for automatic detection is still under-explored, with few previous works being limited to wearables with single modalities (e.g., motion). Here, we propose a multi-sensory approach combining motion, orientation, and heart rate sensors to detect BFRBs. We conducted a feasibility study in which participants (N=10) were exposed to BFRBs-inducing tasks, and analyzed 380 mins of signals 1 under an extensive evaluation of sensing modalities, cross-validation methods, and observation windows. Our models achieved an AUC > 0.90 in distinguishing BFRBs, which were more evident in observation windows 5 mins prior to the behavior as opposed to 1-min ones. In a follow-up qualitative survey, we found that not only the timing of detection matters but also models need to be context-aware, when designing just-in-time interventions to prevent BFRBs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The World Health Organization (WHO) defines mental health as our ability to function at a psychological level, characterized by autonomy, competence, independence, and actualization of emotional potential [47] . As WHO suggests, mental hygiene (the process of achieving mental health) could be compromised or put at risk, if certain symptoms or behaviors [25] are not diagnosed early and treated, both at an individual and collective level. For example, compulsive behaviors exhibit certain characteristics which may signal poor mental health. In literature, two terms that are interchangeably used to characterize these persistent behaviors are the Body-focused Compulsive Behaviors (BFCB) and the Body-focused Repetitive Behaviors (BFRB); for brevity, we use BFRB throughout the manuscript. These behaviors are repetitive in nature, primarily characterized by the use of hands, and exhibit distinctive behavioral signatures; face-touching, skin-picking, hair-pulling, to name a few, make up the BFRB list. These behaviors, if not identified early and corrected, may lead individuals to damage their physical appearance or, in extreme cases, to cause non-reversible physical damage to themselves [4, 45] . But, more worryingly, they have been linked to the development of severe mental health problems [8] .",
+            "cite_spans": [
+                {
+                    "start": 205,
+                    "end": 209,
+                    "text": "[47]",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 355,
+                    "end": 359,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1197,
+                    "end": 1200,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1201,
+                    "end": 1204,
+                    "text": "45]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 1303,
+                    "end": 1306,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Behavioral studies leverage our digital traces [13] , or our daily interactions with technology such as the use of smartphones or wearable devices [29, 39, 44] . For example, Cherian et al. [10] analyzed wrist-mounted accelerometer data to identify tooth brushing. In this work, by exploiting sensing capabilities of modern smartphones and wearables, we set out to understand behaviors related to our mental hygiene, not only a posteriori but also in anticipation 2 ; for example, in Competing Response Training [1] , which is a prevalent treatment method, the prediction of these behaviors is crucial for a successful therapy outcome. By using Machine Learning (ML), we show how we can predict BFRBs early on from data preceding the behavior, so that successful interventions could be developed to prevent them. In so doing, we made three contributions:",
+            "cite_spans": [
+                {
+                    "start": 47,
+                    "end": 51,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 147,
+                    "end": 151,
+                    "text": "[29,",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 152,
+                    "end": 155,
+                    "text": "39,",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 156,
+                    "end": 159,
+                    "text": "44]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 190,
+                    "end": 194,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 512,
+                    "end": 515,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "\u2022 We conducted, for the first time, a semi-controlled free-living experiment to study BFRBs, grounded on previous stress literature and taking into account the social context ( \u00a74). Using consumer-grade wearables (i.e., Samsung Galaxy watches), we obtained 380 minutes of raw signals (i.e., accelerometer, gyroscope, and heart rate) from 10 users who underwent a series of BFRB-inducing tasks. We make our data set and pre-processing code publicly 3 available to the community ( \u00a75) in an anonymized manner. \u2022 Using the collected data, we performed an in-depth analysis to investigate the feasibility of predicting compulsive behavior using a multisensory approach ( \u00a76). Consistently across all models, we found that the combination of all sensor modalities yielded the best performance ( \u00a77). In particular, we found that generic compulsive behavior (vs. normal) can be predicted with satisfactory discrimination of 0.89 AUC. In specific behaviors such as face touching and skin picking, our models achieved an AUC of 0.94. In addition, compulsive behaviors were more evident in an observation window of 5 minutes prior to the episode as opposed to 1-min window. The short observation windows allow for immediate interventions, while longer ones are more robust in terms of prediction accuracy due to leveraging the multi-sensory approach.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Notably, the heart rate sensor was a stronger predictor in the longer window (taking into account that longer windows allow us to calculate richer heart rate variability metrics). On the other hand, the motion sensors dominated in 1-minute windows. \u2022 In the light of these findings, we discuss the broader theoretical and practical implications of our work, given the recent re-emergence of face-touching as a public health risk for infectious diseases. Our system paves the way to just-in-time interventions for real-time compulsive behavior monitoring ( \u00a78).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "The term body-focused repetitive behavior (BFRBs), coined by Bohne [5] , refers to a set of impulsive behavioral disorders affecting a wide demographic. In this work, we focus on a subset of these behaviors, namely nail-biting, skin-picking, skin-biting, nail-picking, fidgeting, face-touching, and hair-pulling. This subset of behaviors is strongly correlated with clinically recognized body-dysmorphic conditions [14] , and exhibit certain characteristics that can be uniquely identified from single source motion data. Previous research suggests that the most common BFRBs are nail-biting with a prevalence of 34-64%; skinpicking with a prevalence of 25%; and hair pulling with a prevalence of 10.5% [5] . This research was conducted on students from different cultures with comparable results on the prevalence of body dysmorphic disorder. These values suggest a sizeable demographic, further supporting the relevance of the current study. Understanding precise causes and triggers for these behaviors are essential for effective invocation in experiments. Relevant literature also suggests that real-time triggers are correlated to change in environment and, more importantly, stress [5] . Studies concluded, that the behaviors play an emotional regulation role, supported by findings showing these behaviors are triggered by and relieve impatience, boredom, and frustration [30, 32, 46] . In an extended study, clinical approaches to handling emotion regulation are suggested as a method of treatment for BFRBs [31] , with one study showing the pervasive treatment of depression to result in a decrease of body dysmorphic behavior [8] . This correlation between stress and BFRBs inspired the multisensory approach of our study: to combine stress monitoring through the proxy of heart-rate data, as well as motion data for a more accurate preemptive signal for BFRB occurrences.",
+            "cite_spans": [
+                {
+                    "start": 67,
+                    "end": 70,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 415,
+                    "end": 419,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 703,
+                    "end": 706,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1189,
+                    "end": 1192,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1380,
+                    "end": 1384,
+                    "text": "[30,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 1385,
+                    "end": 1388,
+                    "text": "32,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 1389,
+                    "end": 1392,
+                    "text": "46]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1517,
+                    "end": 1521,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 1637,
+                    "end": 1640,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND AND RELATED WORK 2.1 Body-focused repetitive behaviors"
+        },
+        {
+            "text": "Current literature suggests treatment of these conditions includes competing response training (CRT) [1] , habit-reversal, and cognitive therapy [20, 45] . An example of CRT for nail biting or other habits involving the hands, pertains to holding the hands down at the side and making a fist or grasping objects [24] . CRT consists of two sequential phases: the first concerns the identification of behavioral occurrences, while the second relies on countering the behavior with a competing response in which the behavior cannot be carried out. Our work helps in the first stage of CRT, by assisting the user in the recognition of when compulsive behaviors may occur, incorporating methods from the area of human activity recognition (HAR).",
+            "cite_spans": [
+                {
+                    "start": 101,
+                    "end": 104,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 145,
+                    "end": 149,
+                    "text": "[20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 150,
+                    "end": 153,
+                    "text": "45]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 312,
+                    "end": 316,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND AND RELATED WORK 2.1 Body-focused repetitive behaviors"
+        },
+        {
+            "text": "Most HAR approaches follow a common ML pipeline Lara [18] : data gathering, data processing, feature extraction, and model training. The most common data sources are motion data, environmental data, physiological data, and location data [7, 19] . We consider our task a specific case of gesture recognition [9] . Wrist-worn devices have been shown to help accurate inference of multiple conditions and states using ML methods [3, 17, 26, 29, 43] . Previous attempts have been made to detect BFRBs with wearables, however, there is no existing research on the prediction of these behaviors. Azaria [2] developed Thumbs-Up, a wrist-worn device, which is used to infer hand-to-mouth behavior with a 92% accuracy. Lu [22] produced a device for habit detection using a wrist-worn device and machine learning algorithms. Several commercial wearables have also been devised to combat these conditions including the Tingle [38] , Keen 4 , and Pavlok 5 devices. However, among this list, only the Tingle device has published peer-reviewed documentation of their results and proven applicability to BFRB monitoring. This device uses the same sensors (such as in our method) in addition to thermal sensors to detect proximity and position using a long short-term memory (LSTM) neural network. However, all the above devices provide in-time notifications to the wearer when a BFRB-esque motion is detected, in contrast to our approach focusing on the prediction.",
+            "cite_spans": [
+                {
+                    "start": 53,
+                    "end": 57,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 237,
+                    "end": 240,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 241,
+                    "end": 244,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 307,
+                    "end": 310,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 426,
+                    "end": 429,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 430,
+                    "end": 433,
+                    "text": "17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 434,
+                    "end": 437,
+                    "text": "26,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 438,
+                    "end": 441,
+                    "text": "29,",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 442,
+                    "end": 445,
+                    "text": "43]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 597,
+                    "end": 600,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 713,
+                    "end": 717,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 915,
+                    "end": 919,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Human Activity Recognition for compulsive behaviors"
+        },
+        {
+            "text": "As stated in the previous section, most prior work in BFRB monitoring relied on subjects seeking medical professional advice, as well as systematic surveys. Additionally, due to their repetitive nature, these behaviors may differ in free-living conditions as opposed to controlled laboratory settings. Therefore, we set out to understand whether these behaviours could be predicted using wearable-sensing data and, if so, how much in advance this could be achieved. To address that, we subsequently formulated three research questions as follows: RQ 1 : Which features among gyroscope, accelerometer, and heart rate are good predictors of BFRBs? RQ 2 : What window sizes prior to BFRBs occurrences allow for reliable anticipation? RQ 3 : To what extent does a multisensory approach (motion and heart rate) improves BFRB prediction?",
+            "cite_spans": [
+                {
+                    "start": 734,
+                    "end": 735,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RESEARCH GOALS"
+        },
+        {
+            "text": "We study them in two phases. In phase I, we conducted a semi-controlled free-living experiment in which 10 subjects underwent a series of BFRB-inducing tasks, while we collected motion and heart rate data from a wearable device. In phase II, we extensively modeled the collected data using cross-validation methods, observation windows, and machine learning classifiers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESEARCH GOALS"
+        },
+        {
+            "text": "In phase I, we conducted a semi-controlled free-living experiment to collect BFRB behavioral traces that we used in phase II to model these behaviors. Here, we describe the experimental procedure and, subsequently ( \u00a75), present the collected data which we made publicly available in an anonymized manner 6 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "USER STUDY"
+        },
+        {
+            "text": "We recruited 10 participants (4 female, 6 male), aged between 18 and 40 (M = 23.6, SD = 5.4), equally split between undergraduate students and early-career researchers, and with no prior history of any cardiovascular disease. Additionally, all participants were instructed not to consume coffee on the day of the experiment. The study was approved from the Ethics Committee of University of Cambridge. During the recruitment process, we informed them in writing that the experiment aimed at studying participants' behavior in a series of tasks. Note that, BFRBs were not mentioned to participants until after the experiment, during the last stage of debriefing and behavior emulation. This deliberate decision allowed us to eliminate any potential biases introduced before and during the experiment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Participants"
+        },
+        {
+            "text": "To carry out the experiment, we used the following apparatus and materials (Figure 1 a): sheet of paper for task 1, pen,~9 sheets of paper for task 2, a room with few distractions (ideally large empty space), a device for recording audio and video, and a Samsung Galaxy smartwatch application that we developed for collecting accelerometer, gyroscope, and heart-rate data. We acknowledge that other sensors that measure different body characteristics such as galvanic skin response-electrodermal activity (GSR/EDA), skin temperature, or breathing rate could complement our study [41] . However, we opted for HR/HRV and motion for two reasons: (i) skin sensors are linked to physiological arousal contrary to HRV which is deemed a better proxy to the autonomic nervous system",
+            "cite_spans": [
+                {
+                    "start": 579,
+                    "end": 583,
+                    "text": "[41]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 75,
+                    "end": 84,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Materials and Apparatus"
+        },
+        {
+            "text": "Motion accX The X-axis of the accelerometer data (horizontal movement) accY",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "The Y-axis of the accelerometer data (vertical movement) accZ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "The Z-axis of the accelerometer data (depth movement) gyrX",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "The X-axis of the gyroscope data (roll angle) gyrY",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "The Y-axis of the gyroscope data (yaw angle) gyrZ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "The Z-axis of the gyroscope data (pitch angle) Heart HR The instantaneous heart rate in BPM RMSSD Proxy for heart rate variability defined as the root mean square of successive differences of interbeat intervals (and in turn to stress) [36] , and, (ii) commercial consumer-grade wearables offer greater support for HR/HRV over GSR/EDA (e.g., most smartwatches have a PPG sensor compared to the expensive Empatica E4 for GSR).",
+            "cite_spans": [
+                {
+                    "start": 236,
+                    "end": 240,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "To induce BFRBs, we used the Trier Social Stress test [15] for invoking moderate social stress, founded on the correlations between BFRBs and stress [5] . While there are numerous protocols aiming at eliciting stress in studies involving human subjects [36] , we opted for a well-studied and frequently employed stress elicitation protocol, that is, the Trier Social Stress test. The protocol suggests a 10-minute anticipation period, followed by a 10-minute presentation period and, finally, by a 5-minute arithmetic task. To obtain participants' behavior traces, we used an application for Samsung watches [27] . The application continuously records motion and physiological readings through the device's sensors at 10Hz sampling rate.",
+            "cite_spans": [
+                {
+                    "start": 54,
+                    "end": 58,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 149,
+                    "end": 152,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 253,
+                    "end": 257,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 608,
+                    "end": 612,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modalities Definition"
+        },
+        {
+            "text": "Modifications were made to the original Trier's test protocol to accommodate the opportunity to perform compulsive behaviors in the form of additional baseline periods of inactivity before and after the tasks, where participants were asked to remain silent and otherwise inactive. Consequently, one of these periods separated the two tasks instead of having a single test interval. The arithmetic task (i.e., Task 2) was also modified to avoid speaking, to combat possible confounding with heart rate increase due to, for example, vocal tension. We posit that real-world stress induced by the presentation and arithmetic tasks could generalize to other social situations and we consider them as a suitable set up for out study.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Study Protocol and Procedure"
+        },
+        {
+            "text": "The experiment included two tasks which induced BFRBs and three resting periods in between. These tasks were selected due to their potency to induce social stress and, thus BFRBs. Other tasks with similar properties could necessarily be used in future work. There was a briefing at the beginning of the experiment, and a debriefing followed by behavior emulation at the end of the experiment (Figure 1b) . The experiment lasted around 35 minutes and audiovisual recording was used throughout the experiment. This allowed us to obtain ground truth data for modeling purposes ( \u00a76).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 392,
+                    "end": 403,
+                    "text": "(Figure 1b)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Study Protocol and Procedure"
+        },
+        {
+            "text": "At the beginning of the study, participants were instructed to wear the watch on their non-dominant hand, as it is the most common position and would not introduce motion artefacts during the writing task. There was no further instruction in what to do with their non-dominant hand. After equipping the apparatus, the experiment started with a 5-minute baseline period, followed by the first task. The first task was to prepare and present a 5-minute presentation of the participant's curriculum vitae (resume) with pen and paper provided for notes. Stages of data formatting to prepare the data sets for model training. Data was labeled according to the recorded footage of the experiments. Data was normalized to the first Baseline period as described in \u00a74. In the segmentation phase, the y windows mark the labeled behaviors, before which the x windows are generated depending on the window size. For the feature extraction, only the x window is taken into account.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Study Protocol and Procedure"
+        },
+        {
+            "text": "After the preparation period (stage 2. in Figure 1b) , the notes and pen were confiscated and the participant was asked to give the presentation (stage 3. in Figure 1b ). If the participant had run out of material they were asked to continue talking until the time limit was up. The task aimed to invoke anticipatory stress in the first phase and performance stress in the second phase. This was followed by another baseline period of 5-minutes, after which the second task was concluded. The second task involved an arithmetic task and required participants to write down as many powers of 3 as possible starting from 3 0 up to 3 15 . Every 30 seconds, the participant was asked to discard their work and restart on a new piece of paper. This task attempted to invoke frustrative stress. There was a final baseline period following this, after which the participant was debriefed and asked to emulate any compulsive behavior they were aware of exhibiting in their day-to-day life. This simulated data was not utilized later in the study and only served as initial exploration of the data. Timestamps describing the experiment structure were recorded by the investigator throughout the study, and used as a reference during the data preparation phase ( \u00a75). An example timeline of the data collected can be seen in Figure 2 .",
+            "cite_spans": [
+                {
+                    "start": 631,
+                    "end": 633,
+                    "text": "15",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 42,
+                    "end": 52,
+                    "text": "Figure 1b)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 158,
+                    "end": 167,
+                    "text": "Figure 1b",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1315,
+                    "end": 1323,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Study Protocol and Procedure"
+        },
+        {
+            "text": "Having obtained a data set of a total of 380 minutes of raw motion and heart rate signals, we developed a 5-stage pipeline to process it. The data processing pipeline is comprised of: data labeling, data segmentation, feature extraction, and data normalization (Figure 3 ), which we describe next. The entire pipeline is modular with flags for normalization technique, unique or aggregate analysis of participants, specific or aggregate analysis of different compulsive behaviors, and custom segment sizes. All data manipulation was performed using the Pandas and NumPy libraries for Python.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 261,
+                    "end": 270,
+                    "text": "(Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "Labeling. To derive the ground truth labels, we made use of the audiovisual recordings. We labeled the time delta from the start of the recording when a compulsive behavior was observed. Additionally, we marked which hand was involved in the compulsive behaviors to allow for different combinations for analysis of motion data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "Segmentation. This set of procedures ensured that the output is in the correct format for machine learning. The first segments of the data are cut into fixed-length chunks of time series from each sensor (referred to as windows). Each window has two components, namely 'x', the series of data points before the start of the observed compulsive behavior (referred to as x-windows), and 'y', the series of data points starting from the time of behavior observations (referred to as y-windows). The input for the module is the desired length of the x-window and the y-window ( Figure 3 ). We note that this process differs from a canonical rolling window approach because our label of interest is not distributed uniformly in the data. Instead, we first isolate the compulsive behavior 'y', and then use a window just before it occurred 'x'. In inference (prediction) time, the models would just require the input window 'x', which is a process that can be executed continuously on-device. We further differentiated between two types of windows:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 574,
+                    "end": 582,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "\u2022 Positive windows: These windows include observed compulsive behaviors in the y-window. Positive windows were tagged with the type of behavior they mark, and whether they are 'clean' or 'dirty'. Clean positive windows refer to those with no recorded compulsive data in the x-window, whereas the 'dirty' descriptor refers to windows with compulsive behavior observed in the x-window. \u2022 Negative windows: These windows were selected randomly from the data set where no recorded compulsive behaviors were observed in the y-window. The number of negative windows generated was equal to the number of positive windows per data set; this ensures the feature set is balanced. It is worth noting that the overlap between windows is essentially guaranteed, as visible in Figure 2 , due to the limitations of the duration of the study and the low average distance between observed behaviors. We will be using the notation of / for the discussion of different size segments with 'A' denoting the size of the x-window in seconds, and 'B' denoting the size of the y-windows in seconds (e.g., 300 /1 would correspond to segment sizes of 300 seconds prior and 1 seconds post the start of the behavior).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 763,
+                    "end": 771,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "In our study, two different segment sizes were examined, namely 60 /1 , and 300 /1 . Prevalence of intraparticipant correlations were significant, suggesting personalized training may yield better results. Segments with 3 second y-windows were also examined to exclude 1 and 2 second long behaviors in the data set where the behavior may not be prominent enough, however, this exposed no difference to the 1-second y-windows. Various different lengths of x-windows were also tested (2 to 4 min), which as we shall see in ( \u00a77), results in significantly lower performance compared to 1-or 5-min windows. As stated in Laborde's work [16] , the gold standard in conducting HRV analysis is a 5-min window (we did not include HRV in windows < 5 min). As these windows (< 5 min) do not include HRV, we expect them to rely more on motion than heart data, as with the 1-min windows. However, the motion data was noisier in these windows resulting in lower performance, thus confirming our initial hypothesis.",
+            "cite_spans": [
+                {
+                    "start": 631,
+                    "end": 635,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "Feature extraction. Basic descriptive features were extracted from each x-window using the Pandas library. The descriptive data recorded includes the means, standard deviations, minimums, and maximums of each dimension of each sensor, namely the accelerometer, gyroscope, and heart-rate sensor. Additionally, using WellBeat's data processing pipeline [27] , we extracted Heart Rate Variability (HRV) parameters in 5-minute window data sets. In particular, we made use of a widely used HRV parameter, the RMSSD (i.e., the root mean square differences of successive RR intervals). Among the long list of HRV parameters [16] , we chose RMSSD as it has been found to be a good proxy for detecting stress. It is defined as the root mean square of the successive differences of R-R intervals, and it is computed as \u221a\ufe03",
+            "cite_spans": [
+                {
+                    "start": 351,
+                    "end": 355,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 617,
+                    "end": 621,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "where n is the total number of RR intervals. We refer the reader to [27] for additional reading in conducting HRV analysis. Normalization.We normalized all features using a z-score transformation as ( \u2212 1 1 ), where is the value of each data point (Table 1) . This technique benefited from handling outliers better than min-max normalization, however, the output scale does not accurately represent the original data set. In our approach, the 1 and 1 values were extracted from the first baseline period of each experiment (Figure 1b) as the physical and cognitive intensity of the study is not uniform. By using the overall scores, the output would be biased towards increases in each sensor.",
+            "cite_spans": [
+                {
+                    "start": 68,
+                    "end": 72,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 248,
+                    "end": 257,
+                    "text": "(Table 1)",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 523,
+                    "end": 534,
+                    "text": "(Figure 1b)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "DATA SET 5.1 Data processing pipeline"
+        },
+        {
+            "text": "Whilst our findings in the prevalence of different behaviors do not align perfectly with previous research on the most common BFRBs (suggested to be nail-biting with a prevalence of 34-64%; skin-picking with a prevalence of 25%; and hair pulling with a prevalence of 10.5% [5] ), we saw the most prevalent behaviors to be skin-picking and face-touching. As we shall see in ( \u00a77.3), 60% of our participants admit to nail-biting in a follow-up survey; this corroborates the representativeness of our sample size.",
+            "cite_spans": [
+                {
+                    "start": 273,
+                    "end": 276,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Descriptive statistics"
+        },
+        {
+            "text": "Before moving into phase 2 of our study, we examined the hypothesis of whether stress would invoke compulsive behaviors. To do so, we compared the average heart rates during Task 1 and Task 2 to the baseline stages 4a. We then gathered the number of observed behaviors in each stage (Figure 4b) , and found that the average heart rate and the number of behaviors are indeed higher during Task 1 (presentation stage), concluding that there is a correlation between BFRBs and stress-as expected. Figure 5b and Figure 5a depict the distributions of behavior duration and the number of times compulsive behavior was observed, per participant. Note that only the 2 participants with the fewest BFRB observations (P4, P5) were observed displaying only one type of behavior. In total, skin-picking was the most prevalent behavior (41.2%), followed by face touching (34.3%), fidgeting (8.8%), skin biting (6.5%), hand scratching (6%), nail-biting (1.4%), leg scratching (1.4%), and hair-pulling (0.4%).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 283,
+                    "end": 294,
+                    "text": "(Figure 4b)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 494,
+                    "end": 503,
+                    "text": "Figure 5b",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 508,
+                    "end": 517,
+                    "text": "Figure 5a",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Descriptive statistics"
+        },
+        {
+            "text": "Using the collected data ( \u00a75), in phase II, we set out to investigate whether these behaviors could be predicted and, the extent to which, they could be anticipated in advance. To address that, we conducted a series of experiments with various cross-validation methods, observation windows, and machine learning classifiers, which we describe next.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "METHODOLOGY"
+        },
+        {
+            "text": "We explored six experimental combinations along two dimensions:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "\u2022 Anticipatory window size: Duration of activity included before observed behaviors. Analyzed window sizes are: (a) 1-minute and (b) 5-minute. \u2022 Label sets: The type(s) of compulsive behavior included in the combination. Analyzed label sets are: (a) all-compulsive behaviors, (b) face touching, and (c) skin picking. The latter two were selected due to their prevalence in the collected data ( \u00a75).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "Each combination relies on binary classification, with positive labels corresponding to data points describing the included labels of compulsive behaviors, and negative labels corresponding to periods of normal behavior.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "We implemented and tested three classifiers: logistic regression (LR), random forest (RF), and gradient boosting trees (GBT). We included LR classifier as its low relative complexity makes it viable for mobile and offline training in addition to the interpretability of results. RF has been widely used in HAR tasks, while GBT is another state-of-the-art shallow learning algorithm, very well optimized with lower complexity than RF.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Classification and cross-validation methods"
+        },
+        {
+            "text": "To assess the performance of our classifier, we used standard classification performance metrics. These include the recall, the receiver operating characteristic (ROC), and the F1 score. We favored recall over precision due to the nature of our task as it deemed appropriate to predict the potential of compulsive behavior than to miss one. Put it differently, false positives cost less than false negatives in terms of diagnosis and prevention of these compulsive behaviors. The ROC plot shows the true positive rate against the false-positive one, and it is used to analyze and distinguish optimal models to sub-optimal ones. In our context, this allows gaining insights into which participants can be considered outliers in the data set, and to examine the contributions of different sensor modalities to the prediction. Finally, the F1 score shows a weighted average of precision and recall, and allows us to distinguish between the cost of false positives to false negatives.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Classification and cross-validation methods"
+        },
+        {
+            "text": "In our experiments, we adopted two cross-validation strategies to model BFRBs similar to [11] . First, we explored a Leave-one-user-out (generic) in which we excluded a participant from the test set and trained on the remaining users. Second, we explored a Participant-stratified (personalized) in which we sampled 20% from each participant's data set for the test set, and trained on the remaining data points. The personalized results should suggest the extent to which the models can be trained for individual users, whilst the generic method offers insight on the scalability to a greater demographic based on the smaller data set.",
+            "cite_spans": [
+                {
+                    "start": 89,
+                    "end": 93,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Classification and cross-validation methods"
+        },
+        {
+            "text": "Tables 2 and 3 report the results of the generic cross-validation and the personalized one, respectively. The results reflect high variance across cross-validation methods, label set, and anticipatory window size, with a significant increase in overall results using personalized cross-validation. All-compulsive results reflect the most consistent results across window sizes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RESULTS"
+        },
+        {
+            "text": "For brevity, we discuss our best performing model RF using the personalized cross-validation method. To identify the performance gain in the different modalities and, in turn, answer our RQ 1 , we analyzed the results and performed ablation tests (i.e., testing each modality in isolation). Figure 6 represents the entire analysis of the model. Figure 6a shows that including all modalities increases overall reliability with a steady curve. The gyroscope data alone produces the best individual results, but suffers from having only a few strong predictors (Figure 6c ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 291,
+                    "end": 299,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 345,
+                    "end": 354,
+                    "text": "Figure 6a",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 558,
+                    "end": 568,
+                    "text": "(Figure 6c",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Best performing models"
+        },
+        {
+            "text": "Heart rate ranks high in feature importance with standard deviation being the strongest performer from its features ( Table 1 ). The model produced using gradient boosting performed best after this in the same task. Whilst the results are somewhat lower, the feature importance is largely the same, with the top 3 categories being accelerometer Z, accelerometer X, and heart-rate ( Table 1 ). The disruption from the X-axis of the accelerometer can be noticed, however, the individual feature importances have the same strongest top 2, namely the accXmax and accZmin. The logistic regression model does not fare well in this comparison with the highest impact coefficients being those of the gyroscope, closely followed by heart-rate. The reliance of this model on linear interactions may be the cause of the lower performance.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 118,
+                    "end": 125,
+                    "text": "Table 1",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 382,
+                    "end": 389,
+                    "text": "Table 1",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Best performing models"
+        },
+        {
+            "text": "The results of the personalized cross-validation consistently outperform the generic one. We also observed lower standard deviations in the personalized results, with generic cross-validation resulting in significant imbalances between participants. Generic models relied heavily on heart-rate and HRV, whilst the personalized ones reflect the performance gain from resolving varying motion signatures between participants. Overall, the findings from evaluating each cross-validation do not suggest that accurate prediction can be generalized but, by training a classifier to uniquely identify a single user's signature, the accuracy of prediction is increased significantly to the point of relevance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Impact of cross-validation methods"
+        },
+        {
+            "text": "Impact of anticipatory window sizes. We observed an overall performance increase in the 5-minute anticipatory window versus the 1-minute window in the isolated behaviors. In the gradient boosting and random forest models, this can be attributed to the additional RMSSD feature, providing better representation of heart-rate data when compared to instantaneous heart-rate. However, the best generic model is consistently logistic regression. Here, the model relies heavily on heart-rate and the gyroscope (Figure 7a) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 504,
+                    "end": 515,
+                    "text": "(Figure 7a)",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Impact of cross-validation methods"
+        },
+        {
+            "text": "The personalized models tend to rely more heavily on motion data in the 1-minute windows, with heart-rate ranking in the middle consistently in terms of feature importance; this is expected as the motion signature of these behaviors should be relatively similar. Generic classification shows a different activity, with 1-minute windows performing best on heart-rate alone when comparing ROC curves between the individual modalities seen in Figure 7b , with 5-minute windows following a similar pattern with heart-rate being replaced with Table 2 . Means of generic cross-validation results. Standard deviations are calculated over participant scores. *Around 60% of participants' face touching data points were discriminated and excluded based on the missingness score of their HRV values. As stated in [27] , to ensure reliable HRV estimates we filtered out scores <0.5, which led to a dropout of 11 labeled BFRB events belonging to a single participant. RMSSD. These results shed light on our RQ 3 , allowing us to conclude that the signature of heart activity is indeed indicative of compulsive behaviors, with richer features allowing for an increase in accuracy (Figure 6a) , and corroborating our multisensory approach. Furthermore, better prediction of a smaller subset of prevalent compulsive behaviors can be achieved using cheaper sensors, such as the accelerometer and gyroscope. With respect to RQ 2 , we conclude that both 1-minute and 5-minute anticipatory window sizes are sufficiently accurate for BFRBs prediction. However, these behaviors were more predictable consistently across most experiments when using 5-minute windows.",
+            "cite_spans": [
+                {
+                    "start": 803,
+                    "end": 807,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 440,
+                    "end": 449,
+                    "text": "Figure 7b",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 538,
+                    "end": 545,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 1167,
+                    "end": 1178,
+                    "text": "(Figure 6a)",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Impact of cross-validation methods"
+        },
+        {
+            "text": "Effect of the granularity of behavior types. By analyzing behaviors separately, we did not find any significant increase in the performance compared to all-compulsive predictions (Tables 2 and 3 ). Whilst the performance of 5-minute windows equipped with HRV were sufficient, the motion data signature of behaviors could not be generalized over the population. Personalized validation did show an increase in all configurations of face touching and skin picking results over their generic counterparts, supporting the benefits of personalized models for BFRBs inference using motion data. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 179,
+                    "end": 194,
+                    "text": "(Tables 2 and 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "1-minute 5-minute"
+        },
+        {
+            "text": "In the quantitative analysis, it was evident that BFRBs prediction can be achieved on both 1-min and 5-min windows; but, the window size prior to the episode matters to the prediction accuracy. To contextualize these findings and understand the role of BFRBs in people's lives, we conducted a follow-up survey with our participants. The survey included two parts. The first part consisted of three questions from the Habit Questionnaire [42] that probed BFRBs' presence, severity, and perseverance (Figure 8 A-C) . The second part consisted of three close-ended questions that probed our participant's stress levels in relation to BFRBs, the willingness to receive notifications via a wearable application, and the preferred timing of receiving such notifications (Figure 8 D-F) . Additionally, the second part consisted of two open-ended questions: i) Have any of BFRBs behaviours interfered with your day-to-day activities, and ii) Have any of BFRBs behaviours caused injuries or permanent damage?, which we analyzed through a thematic analysis.",
+            "cite_spans": [
+                {
+                    "start": 437,
+                    "end": 441,
+                    "text": "[42]",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 498,
+                    "end": 512,
+                    "text": "(Figure 8 A-C)",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 764,
+                    "end": 778,
+                    "text": "(Figure 8 D-F)",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Follow-up survey"
+        },
+        {
+            "text": "We observed that the severity of these behaviors ranged from 'not severe' to 'somewhat severe' (Figure 8 .A); an expected finding as none of our participants had been diagnosed with these conditions. However, considering that BFRBs are significantly underdiagnosed in the general population [48] , our participants might not be fully aware of the severity of such behaviors, mainly owing to self-reporting bias. We also observed that almost all behaviors had been prevalent for over 2 years (Figure 8.B) , suggesting the prolonged severity of these behaviors. Interestingly, all but one participant reported willingness to receive notifications about these behaviors (Figure 8 .F), suggesting a desire to treat them (or, as a first step, create awareness of these behaviors). This also sheds light onto the scenarios in which participants are willing to receive notifications, with 'At home' and 'Alone' being the dominant of options. We also found that only 20% of participants were in favor of the anticipatory notifications, whilst the remaining 80% would opt for just-in-time results (Figure 8 .E). The latter two results offer insights into the desirability of such applications of wearables for consumers, however, it remains unclear whether the results in less-favored scenarios and anticipatory notifications reflect opposition to potentially intrusive notifications, or to social stigmas surrounding BFRBs [21, 40] . Finally, we found that stress was perceived to be a significant cause for BFRB severity and prevalence by our participants (Figure 8 .D), with 80% of results opting for a score of 4 or 5.",
+            "cite_spans": [
+                {
+                    "start": 291,
+                    "end": 295,
+                    "text": "[48]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 1415,
+                    "end": 1419,
+                    "text": "[21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1420,
+                    "end": 1423,
+                    "text": "40]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 95,
+                    "end": 104,
+                    "text": "(Figure 8",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 491,
+                    "end": 503,
+                    "text": "(Figure 8.B)",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 667,
+                    "end": 676,
+                    "text": "(Figure 8",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 1088,
+                    "end": 1097,
+                    "text": "(Figure 8",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 1549,
+                    "end": 1558,
+                    "text": "(Figure 8",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Follow-up survey"
+        },
+        {
+            "text": "In conclusion, whilst the severity of behaviors were mostly 'not severe', the results reflect a resounding support for personalized applications aiming to reduce the occurrences of these behaviors, even when perceived to be of low severity. To contextualize our quantitative findings and understand the role of BFRBs in people's lives, we conducted a thematic analysis on the open-ended questions using a combination of open coding and axial coding [6] . First, we labeled relevant statements in the two open-ended questions of our survey. Second, axial coding was used to identify relationships between concepts and categories that emerged during open coding. Additional emphasis was given on the role of BFRBs in day-to-day activities, the motivations of doing them, and potential harms/injuries that might have caused. We reviewed themes in a recursive manner than linear, and moved between phases as needed, by repeating and re-evaluating themes and coded text as necessary [6] . We found three high-level themes related to: Context of BFRBs, Triggers for BFRBs, and Negative Consequences. Context of BFRBs. The first most prominent theme concerned the context in which BFRBs occur. Many participants stated workplace-related stressors to be the primary context in which these behaviors are performed. P7 stated that \"During a stressful meeting, I start rubbing/touching face\", while P3 linked it to a stressful period during exams (\" I bite my nails in exams and when revising. Face touching is usually done out of boredom but I do rub my forehead in exams. \".",
+            "cite_spans": [
+                {
+                    "start": 449,
+                    "end": 452,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 978,
+                    "end": 981,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Follow-up survey"
+        },
+        {
+            "text": "Triggers for BFRBs. Building upon the theme of context, the second theme concerned triggers that motivate these behaviors. Interestingly, some participants expressed the habitual nature of these behaviors, and not necessarily linking them with stress (or workplace stress). For example, P8 mentioned that \"I touch my face (and beard) on a regular basis and I don't think it's because of stress or anything. It is the one thing that I constantly do\". The same participant saw certain behaviors as a way of motivation or distraction from an ongoing task (\"Skin picking and fighting [sic] I don't do constantly, there are some periods when I do them and some periods where I don't. It might not be stress-related, but mostly motivation related, as I do them when I feel distracted and (in a sense) don't want to return back to work. Also I do them while I am more lazy/not-working in other settings (e.g. I am waiting for my turn to get in the shower)\"). Negative consequences. The third theme concerned potential harms and injuries that these behaviors cause. While most of our participants did not suffer from very severe self-damage or injuries due to these behaviors, some expressed mild negative consequences. P9 stated that \"sometimes he had calluses, but nothing too damaging\", while P7 had no injuries at all, other than mild \"exacerbating skin issues\". However, two of our participants stated more severe negative consequences. P2 stated that \"sometimes the based of my fingernails bleeds\", whereas P4 experienced \"a little inflammation after nail biting\".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Follow-up survey"
+        },
+        {
+            "text": "While prior research demonstrated the efficacy of detecting compulsive behaviors such as hand-to-mouth and smoking [2, 22] , there is a dearth of literature in building predictive models to anticipate repetitive behaviors. We conducted a semi-controlled living experiment, and collected a data set comprised of a total of 380 minutes of BFRBs from 10 subjects. By analyzing the collected data, we found that the medical hypotheses (i.e., linked to changes in environment, or stress [5] ) surrounding these behaviors can be exploited to enhance the accuracy of predictive systems. Higher performances were reported in personalized models, with recalls above 0.8 in certain setups. 1-minute anticipatory window sizes performed best on predicting all-compulsive behaviors, whilst 5-minute models performed consistently throughout each setup when implemented using logistic regression.",
+            "cite_spans": [
+                {
+                    "start": 115,
+                    "end": 118,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 119,
+                    "end": 122,
+                    "text": "22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 482,
+                    "end": 485,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION 8.1 Main results"
+        },
+        {
+            "text": "Furthermore, in the 1-minute personalized model, we found that motion sensors perform better when isolated versus heart-rate, while 5-minute models relied more heavily on heart-rate for classification. Similarly, generic models showed strong tendencies to rely on heart-rate, with personalized models gaining performance from motion sensors. Answering our research's overarching goal, we conclude that the prediction of BFRBs can be achieved using limited wearable-sensing data using both 1-minute and 5-minute anticipatory windows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION 8.1 Main results"
+        },
+        {
+            "text": "In a follow-up survey, our participants reported mostly non-severe BFRBs. However, almost all behaviors had been prevalent, to some extent, for over 2 years, which suggests their prolonged nature. Interestingly, almost all our participants expressed positive attitude towards receiving notifications regarding these behaviors, and some preferred to be notified when they are at home, or alone. This means that a prediction model needs to be \"context-aware\", and offers useful insights into the design of wearable-based interventions (e.g., nudges). However, it remains unclear whether the results in less-favored scenarios and anticipatory notifications reflect opposition to potentially intrusive notifications, or to social stigmas surrounding BFRBs [12] .",
+            "cite_spans": [
+                {
+                    "start": 752,
+                    "end": 756,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION 8.1 Main results"
+        },
+        {
+            "text": "Our work has both theoretical and practical implications. From a theoretical standpoint, our findings concern medical implications. Physiology is a foundational area of medical training and practice, and our work contributes towards the goal of harnessing physiological data to advance clinical machine learning with consumer devices [34] . For instance, our work can provide insights into diagnosis and disease progression. Whilst reviewing the audiovisual footage, we found there was increased activity (captured from the motion and heart rate sensors) leading up to the compulsive behaviors, confirmed by our results. Based on this, we hypothesize, that compulsive behaviors may differ in intensity and their role in emotion regulation. We foresee that our work would provide an additional dimension to compulsive behavior analysis and diagnosis, by defining the path to clinical diagnosis of BFRBs as progressive in terms of development.",
+            "cite_spans": [
+                {
+                    "start": 334,
+                    "end": 338,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Implications"
+        },
+        {
+            "text": "From a practical perspective, there have been some examples of works dealing with real-time detection of compulsive behaviors relying on motion data and heart-rate data for inference [2, 22] . However, predicting the occurrence of compulsive behaviors ahead of time is a novel area of pervasive health. Our multisensory approach is feasible to be deployed in a real-world application as our models are explainable and lightweight to be ported to wearable devices for continuous monitoring in free-living conditions. The short 1-minute observation windows allow for immediate interventions, while longer windows of 5-minute are more robust in terms of prediction accuracy. Specifically, we found that, heart rate data in conjunction with motion can be used to anticipate compulsive behavior. Motion being a predictive modality was expected due to the nature of behaviors being linked to stressful situations, however, heart rate data shows more promise when leading up to the occurrences of BFRBs. More importantly, the follow-up survey results suggest our participants' willingness to get notified when such behavior(s) occur. Interestingly, the timing of receiving such notifications varied among our participants' responses, suggesting that it plays an important role into how well the notification could be perceived.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 186,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 187,
+                    "end": 190,
+                    "text": "22]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Implications"
+        },
+        {
+            "text": "In general, our BFRBs models could be utilized to support BFRB treatment methods (e.g., CRT [1] ), create awareness of such behaviors but, more specifically, enforce them into adopting good personal hygiene practices. Given the recent re-emergence of face-touching as a public health risk for infectious diseases, our face-touching model could be of immediate use. For example, recent preliminary studies found that the use of masks reduced face-touching [37] . In a similar vein, our approach may have a role in COVID-19 transmission slowdown by creating awareness of one's face-touching behavior [28] . As discussed earlier, our models could also complement other modalities such as electrodermal sensors or ultrasound signals emitted by earphones [33] , towards more comprehensive monitoring of face touching; a prominent use case in light of COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 92,
+                    "end": 95,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 455,
+                    "end": 459,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 598,
+                    "end": 602,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 750,
+                    "end": 754,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Implications"
+        },
+        {
+            "text": "Our work has four main limitations that speak for future work. First, to determine whether our methods could differentiate between the two most prominent behaviors (i.e., skin picking and face touching) an additional experiment was conducted. However, due to the differences in behavior patterns in our data set (Figure 5b) , neither cross-validation method provided satisfactory results. Secondly, the missing RMSSD feature from 1-minute windows, due to heart-rate variability measurement traditionally using 5-minute windows [23] , also inhibits the analysis when comparing different window sizes. However, more recent research suggests some features may be accurately extracted from smaller windows with promising results [35] . We also analyzed different window sizes (2-, 3-, 4-minute), however, the results expectedly decreased as the motion data became noisier whilst still lacking RMSSD data. The third limitation concerns the format of the experiment, resulting in overlapping segments of data from which features were extracted. Finally, the fourth limitation concerns the simulation of real-world use cases. While the user study appropriated real-world scenarios through stress-inducing tasks, our findings should be interpreted under the study's experimental conditions. We acknowledge that presentation and arithmetic tasks might constitute a small fraction of real-world tasks but we think that it fits our set up and study goals. For instance, our study does not account for users on-the-go (e.g., people walking or running), thus is limited to the current experimental setup (i.e., sitting position). Whilst the results indicate our expectations were accurate, future studies would be required to acquire further evidence for the prediction of these compulsive behaviors.",
+            "cite_spans": [
+                {
+                    "start": 527,
+                    "end": 531,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 725,
+                    "end": 729,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 312,
+                    "end": 323,
+                    "text": "(Figure 5b)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Limitations"
+        },
+        {
+            "text": "To sum up, these limitations primarily arise from the size and labeling of the data set. The length of each behavior is not uniform and is not accounted for in the analysis. The intensity of behaviors is also excluded, but could be used to add additional labels. Further studies would include more participants, potentially even filtering for certain behaviors allowing for more fine-grained tuning. Future work would also extend data gathering to include a free-living study to comprise a larger data set, with greater focus on the potential of personalized models. Scaling the study to support tailored models of participants would be straightforward as calibration only requires a 5-minute baseline reading from the user to begin with. Labeling would be conducted through a combination of both inference and participant feedback to ensure the validity of data gathered from unobserved environments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Limitations"
+        },
+        {
+            "text": "Body-focused repetitive behaviors like face-touching or skin-picking are characterized primarily by the use of hands. While there is an abundance of medical evidence on the importance and severity of these behaviors (particularly if not early identified and corrected), there is yet dearth of empirical exploration of these behaviors using consumer-grade wearables. We conducted a feasibility study in which participants were exposed to a series of tasks that induced BFRBs. By analyzing a total of 380 minutes of raw signals under an extensive evaluation of sensor modalities, cross-validation methods, observation windows, and machine learning classifiers, we found that BFRBs can be predicted with sufficient accuracy. In particular, generic compulsive behavior (vs. normal) achieves 89.2 AUC, face touching 94.4 AUC, and skin picking 94 AUC. Across most models, using an observation window of 5 minutes prior to the episode outperformed the 1 minute one and, notably, the heart sensors were stronger predictors in the former while the motion sensors dominated in the latter. These findings are a fundamental step towards creating awareness of one's BFRBs (given the recent re-emergence of face touching as a public health risk for infectious diseases), and designing just-in-time interventions to prevent them.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Competing response training",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Thumbs-Up",
+            "authors": [
+                {
+                    "first": "Asaph",
+                    "middle": [],
+                    "last": "Azaria",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [],
+                    "last": "Mayton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joseph",
+                    "middle": [],
+                    "last": "Paradiso",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the International Joint Conference on Biomedical Engineering Systems and Technologies",
+            "volume": "",
+            "issn": "",
+            "pages": "54--65",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "DeepHeart: semi-supervised sequence learning for cardiovascular risk prediction",
+            "authors": [
+                {
+                    "first": "Brandon",
+                    "middle": [],
+                    "last": "Ballinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Johnson",
+                    "middle": [],
+                    "last": "Hsieh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Avesh",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nimit",
+                    "middle": [],
+                    "last": "Sohoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jack",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Geoffrey",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Tison",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gregory",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jose",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Marcus",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carol",
+                    "middle": [],
+                    "last": "Sanchez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Maguire",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Olgin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Thirty-Second AAAI Conference on Artificial Intelligence",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Pathologic hairpulling, skin picking, and nail biting",
+            "authors": [
+                {
+                    "first": "Antje",
+                    "middle": [],
+                    "last": "Bohne",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nancy",
+                    "middle": [],
+                    "last": "Keuthen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sabine",
+                    "middle": [],
+                    "last": "Wilhelm",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Annals of Clinical Psychiatry",
+            "volume": "17",
+            "issn": "",
+            "pages": "227--232",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Skin picking in German students: Prevalence, phenomenology, and associated characteristics",
+            "authors": [
+                {
+                    "first": "Antje",
+                    "middle": [],
+                    "last": "Bohne",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sabine",
+                    "middle": [],
+                    "last": "Wilhelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nancy",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keuthen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lee",
+                    "middle": [],
+                    "last": "Baer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jenike",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Behavior modification",
+            "volume": "26",
+            "issn": "",
+            "pages": "320--339",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Using Thematic Analysis in Psychology",
+            "authors": [
+                {
+                    "first": "Virginia",
+                    "middle": [],
+                    "last": "Braun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Victoria",
+                    "middle": [],
+                    "last": "Clarke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Qualitative Research in Psychology",
+            "volume": "3",
+            "issn": "2",
+            "pages": "77--101",
+            "other_ids": {
+                "DOI": [
+                    "10.1191/1478088706qp063oa"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A tutorial on human activity recognition using body-worn inertial sensors",
+            "authors": [
+                {
+                    "first": "Andreas",
+                    "middle": [],
+                    "last": "Bulling",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ulf",
+                    "middle": [],
+                    "last": "Blanke",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bernt",
+                    "middle": [],
+                    "last": "Schiele",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "ACM Computing Surveys (CSUR)",
+            "volume": "46",
+            "issn": "",
+            "pages": "1--33",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Harnessing Context Sensing to Develop a Mobile Intervention for Depression",
+            "authors": [
+                {
+                    "first": "Michelle",
+                    "middle": [
+                        "Nicole"
+                    ],
+                    "last": "Burns",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Begale",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jennifer",
+                    "middle": [],
+                    "last": "Duffecy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Darren",
+                    "middle": [],
+                    "last": "Gergle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Karr",
+                    "suffix": ""
+                },
+                {
+                    "first": "Emily",
+                    "middle": [],
+                    "last": "Giangrande",
+                    "suffix": ""
+                },
+                {
+                    "first": "David C",
+                    "middle": [],
+                    "last": "Mohr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J Med Internet Res",
+            "volume": "13",
+            "issn": "12",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2196/jmir.1838"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Adaptive gesture recognition with variation estimation for interactive systems",
+            "authors": [
+                {
+                    "first": "Nicola",
+                    "middle": [],
+                    "last": "Baptiste Caramiaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "Atau",
+                    "middle": [],
+                    "last": "Montecchio",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fr\u00e9d\u00e9ric",
+                    "middle": [],
+                    "last": "Tanaka",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bevilacqua",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "ACM Transactions on Interactive Intelligent Systems (TiiS)",
+            "volume": "4",
+            "issn": "",
+            "pages": "1--34",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Did you remember to brush? a noninvasive wearable approach to recognizing brushing teeth for elderly care",
+            "authors": [
+                {
+                    "first": "Josh",
+                    "middle": [],
+                    "last": "Cherian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vijay",
+                    "middle": [],
+                    "last": "Rajanna",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Goldberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tracy",
+                    "middle": [],
+                    "last": "Hammond",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 11th EAI International Conference on Pervasive Computing Technologies for Healthcare",
+            "volume": "",
+            "issn": "",
+            "pages": "48--57",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Personalized versus generic mood prediction models in bipolar disorder",
+            "authors": [
+                {
+                    "first": "Marios",
+                    "middle": [],
+                    "last": "Constantinides",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonas",
+                    "middle": [],
+                    "last": "Busk",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aleksandar",
+                    "middle": [],
+                    "last": "Matic",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maria",
+                    "middle": [],
+                    "last": "Faurholt-Jepsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lars",
+                    "middle": [
+                        "Vedel"
+                    ],
+                    "last": "Kessing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jakob",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Bardram",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 2018 ACM International Joint Conference and 2018 International Symposium on Pervasive and Ubiquitous Computing and Wearable Computers",
+            "volume": "",
+            "issn": "",
+            "pages": "1700--1707",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Public stigma of obsessive compulsive disorder and schizophrenic disorder: Is there really any difference?",
+            "authors": [
+                {
+                    "first": "G\u00fcl\u015fah",
+                    "middle": [],
+                    "last": "Durna",
+                    "suffix": ""
+                },
+                {
+                    "first": "Or\u00e7un",
+                    "middle": [],
+                    "last": "Yorulmaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ay\u00e7a",
+                    "middle": [],
+                    "last": "Akta\u00e7",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Psychiatry research",
+            "volume": "271",
+            "issn": "",
+            "pages": "559--564",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Target-dependent twitter sentiment classification",
+            "authors": [
+                {
+                    "first": "Long",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mo",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaohua",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tiejun",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Human Language Technologies",
+            "volume": "1",
+            "issn": "",
+            "pages": "151--160",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The Skin Picking Impact Scale (SPIS): scale development and psychometric analyses",
+            "authors": [
+                {
+                    "first": "Thilo",
+                    "middle": [],
+                    "last": "Nancy J Keuthen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sabine",
+                    "middle": [],
+                    "last": "Deckersbach",
+                    "suffix": ""
+                },
+                {
+                    "first": "Iris",
+                    "middle": [],
+                    "last": "Wilhelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amy",
+                    "middle": [],
+                    "last": "Engelhard",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Forker",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Richard",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "O&apos;sullivan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lee",
+                    "middle": [],
+                    "last": "Jenike",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Baer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Psychosomatics",
+            "volume": "42",
+            "issn": "",
+            "pages": "397--403",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The 'Trier Social Stress Test'-a tool for investigating psychobiological stress responses in a laboratory setting",
+            "authors": [
+                {
+                    "first": "Clemens",
+                    "middle": [],
+                    "last": "Kirschbaum",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karl-Martin",
+                    "middle": [],
+                    "last": "Pirke",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dirk",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Hellhammer",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Neuropsychobiology",
+            "volume": "28",
+            "issn": "",
+            "pages": "76--81",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Heart rate variability and cardiac vagal tone in psychophysiological research-recommendations for experiment planning, data analysis, and data reporting",
+            "authors": [
+                {
+                    "first": "Emma",
+                    "middle": [],
+                    "last": "Sylvain Laborde",
+                    "suffix": ""
+                },
+                {
+                    "first": "Julian F",
+                    "middle": [],
+                    "last": "Mosley",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Thayer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Frontiers in psychology",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Sensing fine-grained hand activity with smartwatches",
+            "authors": [
+                {
+                    "first": "Gierad",
+                    "middle": [],
+                    "last": "Laput",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Harrison",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "1--13",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "A Survey on Human Activity Recognition using Wearable Sensors",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Lara",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Labrador",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "IEEE Communications Surveys Tutorials",
+            "volume": "15",
+            "issn": "",
+            "pages": "1192--1209",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "uWave: Accelerometer-based personalized gesture recognition and its applications",
+            "authors": [
+                {
+                    "first": "Jiayang",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lin",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jehan",
+                    "middle": [],
+                    "last": "Wickramasuriya",
+                    "suffix": ""
+                },
+                {
+                    "first": "Venu",
+                    "middle": [],
+                    "last": "Vasudevan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Pervasive and Mobile Computing",
+            "volume": "5",
+            "issn": "",
+            "pages": "657--675",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Excoriation (skin-picking) disorder: a systematic review of treatment options",
+            "authors": [
+                {
+                    "first": "Christine",
+                    "middle": [],
+                    "last": "Lochner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Annerine",
+                    "middle": [],
+                    "last": "Roos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dan",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Stein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Neuropsychiatric disease and treatment",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Consumer advocacy meetings: An innovative therapeutic tool",
+            "authors": [
+                {
+                    "first": "Christine",
+                    "middle": [],
+                    "last": "Lochner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dan",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Stein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jennifer",
+                    "middle": [],
+                    "last": "Raikes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christina",
+                    "middle": [],
+                    "last": "Pearson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "25",
+            "issn": "",
+            "pages": "91--96",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Detection of smoking events from confounding activities of daily living",
+            "authors": [
+                {
+                    "first": "Jianchao",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiaxing",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xi",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chandan",
+                    "middle": [],
+                    "last": "Karmakar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sutharshan",
+                    "middle": [],
+                    "last": "Rajasegarar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the Australasian Computer Science Week Multiconference",
+            "volume": "",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Heart rate variability: Standards of measurement, physiological interpretation, and clinical use: Task force of the European Society of Cardiology and the North American Society for Pacing and Electrophysiology",
+            "authors": [
+                {
+                    "first": "Marek",
+                    "middle": [],
+                    "last": "Malik",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Annals of Noninvasive Electrocardiology",
+            "volume": "1",
+            "issn": "",
+            "pages": "151--181",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Habit Reversal",
+            "authors": [
+                {
+                    "first": "Raymond",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Miltenberger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Encyclopedia of Psychotherapy",
+            "volume": "",
+            "issn": "",
+            "pages": "911--917",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/B0-12-343010-0/00111-2"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Mental health symptoms in relation to socio-economic conditions and lifestyle factors-a population-based study in Sweden",
+            "authors": [
+                {
+                    "first": "Anu",
+                    "middle": [],
+                    "last": "Molarius",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kenneth",
+                    "middle": [],
+                    "last": "Berglund",
+                    "suffix": ""
+                },
+                {
+                    "first": "Charli",
+                    "middle": [],
+                    "last": "Eriksson",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hans",
+                    "suffix": ""
+                },
+                {
+                    "first": "Margareta",
+                    "middle": [],
+                    "last": "Eriksson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eva",
+                    "middle": [],
+                    "last": "Lind\u00e9n-Bostr\u00f6m",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carina",
+                    "middle": [],
+                    "last": "Nordstr\u00f6m",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lotta",
+                    "middle": [],
+                    "last": "Persson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bengt",
+                    "middle": [],
+                    "last": "Sahlqvist",
+                    "suffix": ""
+                },
+                {
+                    "first": "Berit",
+                    "middle": [],
+                    "last": "Starrin",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ydreborg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "BMC public health",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Risq: Recognizing smoking gestures with inertial sensors on a wristband",
+            "authors": [
+                {
+                    "first": "Abhinav",
+                    "middle": [],
+                    "last": "Parate",
+                    "suffix": ""
+                },
+                {
+                    "first": "Meng-Chieh",
+                    "middle": [],
+                    "last": "Chiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chaniel",
+                    "middle": [],
+                    "last": "Chadowitz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Deepak",
+                    "middle": [],
+                    "last": "Ganesan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Evangelos",
+                    "middle": [],
+                    "last": "Kalogerakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 12th annual international conference on Mobile systems, applications, and services",
+            "volume": "",
+            "issn": "",
+            "pages": "149--161",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "WellBeat: A Framework for Tracking Daily Well-being Using Smartwatches",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Constantinides",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Aiello",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Quercia",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Van Gent",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Internet Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "1--1",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Frequency of facial touching in patients with suspected COVID-19 during their time in the waiting room",
+            "authors": [
+                {
+                    "first": "Eduardo",
+                    "middle": [],
+                    "last": "Perez-Alba",
+                    "suffix": ""
+                },
+                {
+                    "first": "Laura",
+                    "middle": [],
+                    "last": "Nuzzolo-Shihadeh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alejandro",
+                    "middle": [],
+                    "last": "Fonseca-Ruiz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gloria",
+                    "middle": [
+                        "Mayela"
+                    ],
+                    "last": "Aguirre-Garc\u00eda",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marco",
+                    "middle": [
+                        "Antonio"
+                    ],
+                    "last": "Hern\u00e1ndez-Guedea",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edelmiro",
+                    "middle": [],
+                    "last": "Perez-Rodriguez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adri\u00e1n",
+                    "middle": [],
+                    "last": "Camacho-Ortiz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infection Control & Hospital Epidemiology",
+            "volume": "",
+            "issn": "",
+            "pages": "1--2",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "EmotionSense: a mobile phones based adaptive platform for experimental social psychology research",
+            "authors": [
+                {
+                    "first": "Mirco",
+                    "middle": [],
+                    "last": "Kiran K Rachuri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cecilia",
+                    "middle": [],
+                    "last": "Musolesi",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mascolo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Rentfrow",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrius",
+                    "middle": [],
+                    "last": "Longworth",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Aucinas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proceedings of the 12th ACM international conference on Ubiquitous computing",
+            "volume": "",
+            "issn": "",
+            "pages": "281--290",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "The impact of emotions on body-Focused repetitive behaviors: Evidence from a non-treatment-seeking sample",
+            "authors": [
+                {
+                    "first": "Sarah",
+                    "middle": [],
+                    "last": "Roberts",
+                    "suffix": ""
+                },
+                {
+                    "first": "O&apos;",
+                    "middle": [],
+                    "last": "Kieron",
+                    "suffix": ""
+                },
+                {
+                    "first": "Frederick",
+                    "middle": [],
+                    "last": "Connor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Claude",
+                    "middle": [],
+                    "last": "Aardema",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "B\u00e9langer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Journal of behavior therapy and experimental psychiatry",
+            "volume": "46",
+            "issn": "",
+            "pages": "189--197",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "The role of emotion regulation in body-focused repetitive behaviours",
+            "authors": [
+                {
+                    "first": "Sarah",
+                    "middle": [],
+                    "last": "Roberts",
+                    "suffix": ""
+                },
+                {
+                    "first": "O&apos;",
+                    "middle": [],
+                    "last": "Kieron",
+                    "suffix": ""
+                },
+                {
+                    "first": "Frederick",
+                    "middle": [],
+                    "last": "Connor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Claude",
+                    "middle": [],
+                    "last": "Aardema",
+                    "suffix": ""
+                },
+                {
+                    "first": "Catherine",
+                    "middle": [],
+                    "last": "B\u00e9langer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Courchesne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "The Cognitive Behaviour Therapist",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Emotion regulation and other psychological models for body-focused repetitive behaviors",
+            "authors": [
+                {
+                    "first": "Sarah",
+                    "middle": [],
+                    "last": "Roberts",
+                    "suffix": ""
+                },
+                {
+                    "first": "O&apos;",
+                    "middle": [],
+                    "last": "Kieron",
+                    "suffix": ""
+                },
+                {
+                    "first": "Claude",
+                    "middle": [],
+                    "last": "Connor",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "B\u00e9langer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Clinical Psychology Review",
+            "volume": "33",
+            "issn": "",
+            "pages": "745--762",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Kevin Esvelt, and Fadel Adib. 2021. A Scalable Solution for Signaling Face Touches to Reduce the Spread of Surface-based Pathogens",
+            "authors": [
+                {
+                    "first": "Camilo",
+                    "middle": [],
+                    "last": "Rojas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Niels",
+                    "middle": [],
+                    "last": "Poulsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mileva",
+                    "middle": [],
+                    "last": "Van Tuyl",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Vargas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zipporah",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joe",
+                    "middle": [],
+                    "last": "Paradiso",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pattie",
+                    "middle": [],
+                    "last": "Maes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Proceedings of the ACM on Interactive, Mobile, Wearable and Ubiquitous Technologies",
+            "volume": "5",
+            "issn": "",
+            "pages": "1--22",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Physiology as a Lingua Franca for",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Gopal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Erik",
+                    "middle": [],
+                    "last": "Sarma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aaron",
+                    "middle": [],
+                    "last": "Reinertsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Aguirre",
+                    "suffix": ""
+                },
+                {
+                    "first": "Puneet",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Batra",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Seung-Hoan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paolo",
+                    "middle": [
+                        "Di"
+                    ],
+                    "last": "Choi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nathaniel",
+                    "middle": [],
+                    "last": "Achille",
+                    "suffix": ""
+                },
+                {
+                    "first": "Patrick",
+                    "middle": [],
+                    "last": "Diamant",
+                    "suffix": ""
+                },
+                {
+                    "first": "Connor",
+                    "middle": [],
+                    "last": "Ellinor",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Emdin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clinical Machine Learning. Patterns",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Measuring emotional arousal for online applications: Evaluation of ultra-short term heart rate variability measures",
+            "authors": [
+                {
+                    "first": "Kristina",
+                    "middle": [],
+                    "last": "Schaaff",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Marc",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Adam",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Humaine Association Conference on Affective Computing and Intelligent Interaction",
+            "volume": "",
+            "issn": "",
+            "pages": "362--368",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Wearable-based affect recognition-A review",
+            "authors": [
+                {
+                    "first": "Philip",
+                    "middle": [],
+                    "last": "Schmidt",
+                    "suffix": ""
+                },
+                {
+                    "first": "Attila",
+                    "middle": [],
+                    "last": "Reiss",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "D\u00fcrichen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kristof",
+                    "middle": [],
+                    "last": "Van Laerhoven",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Sensors",
+            "volume": "19",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Face touching in the time of COVID-19 in",
+            "authors": [
+                {
+                    "first": "Ramin",
+                    "middle": [],
+                    "last": "Shiraly",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zahra",
+                    "middle": [],
+                    "last": "Shayan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mary-Louise",
+                    "middle": [],
+                    "last": "Mclaws",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "American journal of infection control",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Thermal sensors improve wrist-worn position tracking",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Jake",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jon",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Son",
+                    "suffix": ""
+                },
+                {
+                    "first": "Curt",
+                    "middle": [],
+                    "last": "Clucas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Anirudh",
+                    "middle": [],
+                    "last": "White",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joshua",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Krishnakumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Vogelstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "Arno",
+                    "middle": [],
+                    "last": "Milham",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "NPJ digital medicine",
+            "volume": "2",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Passive Mobile Sensing and Psychological Traits for Large Scale Mood Prediction",
+            "authors": [
+                {
+                    "first": "Dimitris",
+                    "middle": [],
+                    "last": "Spathis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sandra",
+                    "middle": [],
+                    "last": "Servia-Rodriguez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katayoun",
+                    "middle": [],
+                    "last": "Farrahi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cecilia",
+                    "middle": [],
+                    "last": "Mascolo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jason",
+                    "middle": [],
+                    "last": "Rentfrow",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 13th EAI International Conference on Pervasive Computing Technologies for Healthcare",
+            "volume": "",
+            "issn": "",
+            "pages": "272--281",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3329189.3329213"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "An investigation of attitudes and attentional biases in trichotillomania",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Judith",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Stevenson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Personalized multitask learning for predicting tomorrow's mood, stress, and health",
+            "authors": [
+                {
+                    "first": "Sara",
+                    "middle": [],
+                    "last": "Taylor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natasha",
+                    "middle": [],
+                    "last": "Jaques",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ehimwenma",
+                    "middle": [],
+                    "last": "Nosakhare",
+                    "suffix": ""
+                },
+                {
+                    "first": "Akane",
+                    "middle": [],
+                    "last": "Sano",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rosalind",
+                    "middle": [],
+                    "last": "Picard",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "IEEE Transactions on Affective Computing",
+            "volume": "11",
+            "issn": "",
+            "pages": "200--213",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Body-focused repetitive behavior problems: Prevalence in a nonreferred population and differences in perceived somatic activity",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ellen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Teng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Douglas",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Woods",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brook",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Twohig",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Marcks",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Behavior Modification",
+            "volume": "26",
+            "issn": "",
+            "pages": "340--360",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Passive detection of atrial fibrillation using a commercially available smartwatch",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Geoffrey H Tison",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jos\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brandon",
+                    "middle": [],
+                    "last": "Sanchez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Avesh",
+                    "middle": [],
+                    "last": "Ballinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Olgin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mark",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eric",
+                    "middle": [],
+                    "last": "Pletcher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Emily",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Vittinghoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rachel",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Shannon M Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gladstone",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "JAMA cardiology",
+            "volume": "3",
+            "issn": "",
+            "pages": "409--416",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Modeling the engagement-disengagement cycle of compulsive phone use",
+            "authors": [
+                {
+                    "first": "Katie",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Jonathan A Tran",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katie",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexis",
+                    "middle": [],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Hiniker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "1--14",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Nail-biting: Description, etiological models, and treatment",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wilhelm",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Margraf",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "",
+            "volume": "3",
+            "issn": "",
+            "pages": "176--196",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "What is the function of nail biting: an analog assessment study",
+            "authors": [
+                {
+                    "first": "Tim",
+                    "middle": [
+                        "Ivor"
+                    ],
+                    "last": "Williams",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rebecca",
+                    "middle": [],
+                    "last": "Rose",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sarah",
+                    "middle": [],
+                    "last": "Chisholm",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Behaviour research and therapy",
+            "volume": "45",
+            "issn": "",
+            "pages": "989--995",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Mental health: a state of well-being. World Health Organisation",
+            "authors": [],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Improving skin picking diagnosis among Brazilians: validation of the Skin Picking Impact Scale and development of a photographic instrument",
+            "authors": [
+                {
+                    "first": "Alice Castro Menezes",
+                    "middle": [],
+                    "last": "Xavier",
+                    "suffix": ""
+                },
+                {
+                    "first": "Camila",
+                    "middle": [
+                        "Maria"
+                    ],
+                    "last": "Barbieri De Souza",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lu\u00eds Henrique Fernandes",
+                    "middle": [],
+                    "last": "Flores",
+                    "suffix": ""
+                },
+                {
+                    "first": "Clarissa",
+                    "middle": [],
+                    "last": "Prati",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cecilia",
+                    "middle": [],
+                    "last": "Cassal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carolina",
+                    "middle": [
+                        "Blaya"
+                    ],
+                    "last": "Dreher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Anais brasileiros de dermatologia",
+            "volume": "94",
+            "issn": "",
+            "pages": "553--560",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "User study setup. Experiment timeline (a): Baseline resting periods (sitting idle) and tasks (Task 1: presentation and Task 2: arithmetic test) that induced stress and, eventually, triggered compulsive behaviors. Experimental setup (b): Subjects wore a smartwatch throughout the trial and completed stress-inducing tasks.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Example of raw signals along with labels and experiment stages. The orange-yellow highlights mark observed compulsive behaviors. The alternating white and light-gray segments mark the stages of the experiment. Data from Participant #3.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Data Preparation Pipeline.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Descriptive statistics per stage. Physiological and behavioral changes in the data per experiment stage. Normalized heart rates (a): Normalized using z-score with and from Baseline I. BFRB observation count (b): Occurrences were reported with respect to the audiovisual recordings of experiments.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Descriptive statistics per participant. Observed behavior durations and count per participant. Distribution of BFRB durations (a): Start and end timestamps were reported from the audiovisual recordings of the experiments. BFRB observation count (b): Behaviors were labeled by an investigator based on the recordings.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Results of participant-stratified 1-minute all-compulsive data using Random Forest. (a) ROC-per-modality. (b) Confusion matrix. (c) All feature importances. (d) Features are grouped per modality. The notations refer to Figure 1.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Important predictors for generic cross-validation (a) Coefficients per modality and axis in logistic regression model on the generic all-compulsive 5-minute window. (b) ROC curves of each modality in random forest model on generic all-compulsive 1-minute windows.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Self-reported BFRBs along with perceptions towards stress and potential interventions. Analysis of a postexperiment follow-up survey in which the participants reported the severity, timeframe and BFRBs' relationship to stress. Attitudes towards the space and time of potential contextual notifications were also recorded.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF2": {
+            "text": "Feature categories included in the data set.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Means of personalized cross-validation results. Standard deviations are calculated over 10 iterations with random seeds.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This work is partially supported by Nokia Bell Labs through their donation to the Centre of Mobile, Wearable Systems and Augmented Intelligence at the University of Cambridge. D.S is additionally supported by the Embiricos Trust Scholarship of Jesus College Cambridge, and the EPSRC through Grant DTP (EP/N509620/1). The authors declare that there is no conflict of interest regarding the publication of this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS"
+        }
+    ]
+}

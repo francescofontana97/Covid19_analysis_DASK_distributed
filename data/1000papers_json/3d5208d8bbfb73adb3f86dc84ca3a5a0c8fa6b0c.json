@@ -1,0 +1,166 @@
+{
+    "paper_id": "3d5208d8bbfb73adb3f86dc84ca3a5a0c8fa6b0c",
+    "metadata": {
+        "title": "Supplemental material for epidemiological analysis of asymptomatic SARS-CoV-2 transmission in the community: an individual-based model",
+        "authors": [
+            {
+                "first": "Zuiyuan",
+                "middle": [],
+                "last": "Guo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Dan",
+                "middle": [],
+                "last": "Xiao",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "When the initial value is 1,000 asymptomatic coronavirus disease 2019-infected individuals (AIIs), we used MATLAB R2019a to calculate the time distribution of undetected AIIs and patients in the community. clear all %%%%%%%%Setting initial values nhome=3300; nsick=1000; times=500; day=200; % \"Times\" represent the number of simulations. p=0.2; % Probability of onset CR0=[0.8,1.2,1.6]; % Three different values of R0 q=0.5; % Probability of detection of close contacts or infectious sources paicha=1+rand(1,nhome); % Duration of the investigation R1=rand(1,nhome)+4; % R1 confirms the uniform distribution from 4 to 5. infect0=rand(1,nhome)*5+15; % The infection period of AIIs %%%%%%%Assigning the number of individuals in every family qfq=random('Poisson',3,1,nhome); % The vector \"qfq\" is used to record the number of individuals in every family. f=find(qfq>7 | qfq==0); while length(f)~=0 qf=random('Poisson',4,1,length(f)); qfq(f)=qf; f=find(qfq>7 | qfq==0); end %%%%%%% Incubation period 2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "HA=zeros(1,sum(qfq)); % Record the times of isolation %%% Initializing the matrix \"A\" that records the spread of the epidemic. A(:,7)=incubation(unidrnd(nhome,1,nsick));",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "A(:,6)=-rand(nsick,1).*infect0(unidrnd(nhome,nsick,1))'-incubation(unidrnd(nhome,nsick,1))';",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "A (2) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "for jk=1:day sumw=0",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "for jk=1:day sump=0",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": ") set(gca,'tickdir",
+            "authors": [
+                {
+                    "first": "L2",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "&apos;",
+                    "middle": [],
+                    "last": "-R",
+                    "suffix": ""
+                },
+                {
+                    "first": "&apos;",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "&apos;",
+                    "middle": [],
+                    "last": "Linewidth",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": ") set(gca",
+            "authors": [
+                {
+                    "first": "L2",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "&apos;",
+                    "middle": [],
+                    "last": "-R",
+                    "suffix": ""
+                },
+                {
+                    "first": "&apos;",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "&apos;",
+                    "middle": [],
+                    "last": "Linewidth",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "rand(nsick,1).*Home(Ra1,2)+0.5); % Randomly selecting infected family membersfor i=1:nsick Home(Ra1(i),(randsel(i)+5))=10;% Locations of the AIIs in the family Home(Ra1(i),5)=randsel(i); % The current infected individuals were located in column 5",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "(:,8)=A(:,6)+A(:,7);A(:,9)=infect0(unidrnd(nhome,nsick,1)); A(:,10)=A(:,8)+A(:,9); When the period of initial infection is longer than the period of treatment AE<=A(:,10));% When the period of initial infection is shorter than the period of treatment As long as the infection exists before the \"day\" indicated in matrix \"A,\" the circulation will continue.F=find(A(:,11)==min(A(:,11))); % Detecting the first infected individual in \"A\" %%%% First, determining whether the infection \"F\" occurred during the isolation period If the infection source is in isolation, it cannot continue to infect others. Exp=exprnd(A(F,9)/A(F,5)); if A(F,(A(F,12)+12))+Exp<=A(F,10) % Updating the data when the next infection time of % the infectious source is earlier than the discovery time A(F,12)=A(F,12)+1; A(F,(A(F,12)+12))=A(F,(A(F,12)+12-1))+Exp; Determining whether the infection occurred at daytime or nighttime.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "lengthA+1),9)=binop*med(unidrnd(nhome))+(1-binop)*infect0(unidrnd(nhome)); A((lengthA+1),10)=A((lengthA+1),8)+A((lengthA+1),9); binoq=binornd(1,q); % Whether the infection source or close contacts can be detected pai=paicha(unidrnd(nhome)); if A(F,4)==1 % If the infected person is sick if binoq==1 pj=(A(F,10)+pai)<A((lengthA+1),10) & A(F,10)+pai)>A((lengthA+1),8); A((lengthA+1),10)=pj*(A(F,10)+pai)+(1-pj)*A((lengthA+1),10); Adjusting the isolation period of the family (Lc)>0 % \"sum(Lc)>0\" indicates that the detection time is during the isolation period. A((lengthA+1),10)> HB(A((lengthA+1),3),(2*HB(A((lengthA+1),3),1)+1)Whether the infection source can be traced back pai=paicha(unidrnd(nhome)A((lengthA+1),10)+pai)<A(F,10) & (A((lengthA+1),10)+pai)>A(F,8); A(F,10)=pj*(A((lengthA+1),10)+pai)+(1-pj)*A(F,10); A(F,3),1)=HB(A(F,3),1)+1; HB(A(F,3),2*HB(A(F,3),1))=A(F,10); HB(A(F,3),(2*HB(A(F,3),1)+1))=A(F,10)+14; Calculating the patients a18=A(find(A(:,4)==1),8); a19=A(find(A(:,4)==1),10); A1=[a18,a19];",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

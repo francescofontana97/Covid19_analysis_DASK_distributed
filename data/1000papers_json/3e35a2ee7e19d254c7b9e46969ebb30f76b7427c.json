@@ -1,0 +1,2683 @@
+{
+    "paper_id": "3e35a2ee7e19d254c7b9e46969ebb30f76b7427c",
+    "metadata": {
+        "title": "Significant Relaxation of SARS-CoV-2-Targeted Non-Pharmaceutical Interventions Will Result in Profound Mortality: A New York State Modelling Study",
+        "authors": [
+            {
+                "first": "Benjamin",
+                "middle": [
+                    "U"
+                ],
+                "last": "Hoffman",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Columbia University",
+                    "location": {
+                        "addrLine": "104 Haven Avenue",
+                        "postCode": "1103, 10032",
+                        "settlement": "New York, Room, New York",
+                        "region": "NY, NY"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Severe acute respiratory syndrome-coronavirus 2 (SARS-CoV-2) is the most significant global health crisis of the 21 st century. The aim of this study was to develop a model to estimate the effect of undocumented infections, seasonal infectivity, immunity, and non-pharmaceutical interventions (NPIs), such as social distancing, on the transmission, morbidity, and mortality of SARS-CoV-2 in New York State (NYS). Simulations revealed dramatic infectivity driven by undocumented infections, and a peak basic reproductive number in NYS of 5.7. NPIs have been effective, and relaxation >50% will result in tens-of-thousands more deaths. Endemic infection is likely to occur in the absence of profound sustained immunity. As a result, until an effective vaccine or other effective pharmaceutical intervention is developed, it will be critical to not reduce NPIs >50% below current levels. This study establishes fundamental characteristics of SARS-CoV-2 transmission, which can help policymakers navigate combating this virus in the coming years.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The global pandemic of severe acute respiratory syndrome-coronavirus 2 (SARS-CoV-2) has emerged as the most significant global health crisis of the 21 st century. Since SARS-CoV-2 surfaced in the city of Wuhan, Hubei, China in December of 2019, the virus has caused significant global morbidity and mortality with over 3 million cases and 235,000 deaths worldwide [1] [2] [3] . By late April 2020, the United States had accumulated the most cases of SARS-CoV-2 globally, with New York State (NYS) emerging as the epicenter [3] . Local and federal governments have attempted to restrict the spread of SARS-CoV-2 through mandating social distancing, suspending non-essential services, and increasing the testing capacity of health systems [4] . Key unanswered questions are: How effective are these measures at diminishing the active pandemic, and how long might they need to last?",
+            "cite_spans": [
+                {
+                    "start": 364,
+                    "end": 367,
+                    "text": "[1]",
+                    "ref_id": null
+                },
+                {
+                    "start": 368,
+                    "end": 371,
+                    "text": "[2]",
+                    "ref_id": null
+                },
+                {
+                    "start": 372,
+                    "end": 375,
+                    "text": "[3]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 523,
+                    "end": 526,
+                    "text": "[3]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 737,
+                    "end": 740,
+                    "text": "[4]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To answer these key questions, the transmission dynamics of SARS-CoV-2 were modelled with a multi-compartment transmission network. This model is capable of simulating the implementation of non-pharmaceutical interventions (NPIs) such as social distancing, contact tracing, and isolation, as well as essential host-pathogen characteristics such as undocumented infection, immunity, and temperature-and humidity-dependent infectivity. For simplicity, NPIs were grouped into a single variable henceforth referred to as \"social distancing.\" Undocumented infections were defined as individuals infected with SARS-CoV-2, but either due to failure of testing or having been asymptomatic, never undergo quarantine and continue to infect others.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The implementation of these factors in a dynamic model of SARS-CoV-2 is essential to not only understanding the fundamental epidemiological dynamics of the current SARS-CoV-2 outbreak, but also to reveal what might drive endemic infection [5, 6] .",
+            "cite_spans": [
+                {
+                    "start": 239,
+                    "end": 242,
+                    "text": "[5,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 243,
+                    "end": 245,
+                    "text": "6]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This study confirms that SARS-CoV-2 is a highly infectious pathogen, whose transmission dynamics are driven by large numbers of undetected undocumented infections. Simulations of relaxed social distancing measures during the summer of 2020 in NYS indicate that modest relaxation is acceptable, but reveal that reduction >50% will dramatically increase transmission and mortality. Projection through 2021 predicts a second outbreak of SARS-CoV-2 in NYS during the winter months, with tens-of-thousands additional deaths if social distancing is not resumed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Lastly, only durable sustained immunity to SARS-CoV-2 will prevent establishment of this virus as an endemic pathogen. Together, these results reveal key characteristics of SARS-CoV-2 transmission dynamics, which are essential to mitigating future morbidity and mortality.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Undocumented infections represent an increasingly important factor in the spread of SARS-CoV-2. The number of undocumented, but infectious, individuals is a critical variable in modulating the infectivity of respiratory viruses [6, 7] . Recent studies suggest that between 40-95% of all SARS-CoV-2 cases may be undocumented [8, 9] . Serological data from NYS indicate that ~10-20% of the affected population have detectable antibodies to SARS-CoV-2, even though only ~2% have tested positive thus far [10] . Based on these studies, an undocumented infection rate of 75% was selected for this modelling work. An 11-compartment model was developed to comprehensively model SARS-CoV-2 transmission dynamics (see Methods and Supplementary Methods, Fig S1) . The model was optimized to SARS-CoV-2 case data from New York State with the particle swarm algorithm, and confidence intervals were estimated by introducing lognormal gaussian noise to the source data and randomly sampling initial parameter estimates (see Methods; Tables S1-2) [11, 12] . Sensitivity analysis revealed the model was most sensitive to variations of b, which represents the average number of contacts per individual per day (see Methods; Figures S2-3) . Comparison of the model to NYS case-data revealed a good fit (see Methods; Figure S4 ).",
+            "cite_spans": [
+                {
+                    "start": 228,
+                    "end": 231,
+                    "text": "[6,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 232,
+                    "end": 234,
+                    "text": "7]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 324,
+                    "end": 327,
+                    "text": "[8,",
+                    "ref_id": null
+                },
+                {
+                    "start": 328,
+                    "end": 330,
+                    "text": "9]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 501,
+                    "end": 505,
+                    "text": "[10]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1033,
+                    "end": 1037,
+                    "text": "[11,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1038,
+                    "end": 1041,
+                    "text": "12]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 744,
+                    "end": 751,
+                    "text": "Fig S1)",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1208,
+                    "end": 1221,
+                    "text": "Figures S2-3)",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 1299,
+                    "end": 1308,
+                    "text": "Figure S4",
+                    "ref_id": "FIGREF11"
+                }
+            ],
+            "section": "Undocumented infections drive SARS-CoV-2 transmission"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Undocumented infections drive SARS-CoV-2 transmission"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. This model represents an important advancement over recent studies as it incorporates the effect   of undocumented infections, seasonal variability, and sustained immunity on SARS-CoV-2 transmission dynamics in NYS (Figs. 1A-C, S5) [5, [13] [14] [15] [16] [17] . Projecting through September 1 st , 2020, if the social distancing measures implemented on March 22 nd , 2020 are not relaxed, the SARS-CoV-2 outbreak will plateau by mid-July 2020: ~1.53 million people in NYS will be infected (undocumented infected+ confirmed symptomatic infected), with ~95,000 total hospitalizations, and ~28,000 deaths ( Fig. 1D-F) [18] . The maximum basic reproductive number (R0), which describes the infectivity of a pathogen, over this period was 5.7, significantly greater than the R0 reported by other published models of SARS-CoV-2 (R0 = 1.6-3.0) [13, 14, 19] . To account for the rapid growth in testing availability and implementation over the initial period of the outbreak, the maximum basic reproductive number was estimated after the daily rate of change in the ratio of positive tests to confirmed tests was negative for 7 consecutive days (see Supplementary   Methods ). These data demonstrate that the infectious potential of SARS-CoV-2 has thus far been dramatically underestimated, and reveal transmission dynamics that are driven by vast numbers of undocumented infections.",
+            "cite_spans": [
+                {
+                    "start": 305,
+                    "end": 308,
+                    "text": "[5,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 309,
+                    "end": 313,
+                    "text": "[13]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 314,
+                    "end": 318,
+                    "text": "[14]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 319,
+                    "end": 323,
+                    "text": "[15]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 324,
+                    "end": 328,
+                    "text": "[16]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[17]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 689,
+                    "end": 693,
+                    "text": "[18]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 911,
+                    "end": 915,
+                    "text": "[13,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 916,
+                    "end": 919,
+                    "text": "14,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 920,
+                    "end": 923,
+                    "text": "19]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 73,
+                    "end": 258,
+                    "text": "This model represents an important advancement over recent studies as it incorporates the effect   of undocumented infections, seasonal variability, and sustained immunity on SARS-CoV-2",
+                    "ref_id": null
+                },
+                {
+                    "start": 678,
+                    "end": 688,
+                    "text": "Fig. 1D-F)",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1216,
+                    "end": 1239,
+                    "text": "Supplementary   Methods",
+                    "ref_id": null
+                }
+            ],
+            "section": "Undocumented infections drive SARS-CoV-2 transmission"
+        },
+        {
+            "text": "Next, the short-term effects of relaxed social distancing measures in NYS were examined. To do so, a rapid decline in social distancing to a steady-state level over time was simulated until September 1 st , 2020 ( Fig. 2A-C, S6) . Moderate reduction of social distancing (\u226450%), independent of the time at which the relaxation was initiated, resulted in minimal differences in total deaths by September 1 st , 2020 (total deaths: 30%, ~30,000; 50%, ~32,000; Fig. 2D ). Next, the instantaneous effective reproductive number (R(t)) was analyzed to quantify the magnitude of social distancing reduction required to initiate a second outbreak of SARS-CoV-2. R(t) differs from R0 as it describes the fraction of the population that is susceptible to infection as a function of time [20] . Analysis of R(t) enables temporal estimation of the potential for an outbreak in a population . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [
+                {
+                    "start": 777,
+                    "end": 781,
+                    "text": "[20]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 214,
+                    "end": 228,
+                    "text": "Fig. 2A-C, S6)",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 458,
+                    "end": 465,
+                    "text": "Fig. 2D",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Reduction of social distancing by >50% will result in dramatic mortality"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. where not all individuals are susceptible: where R(t) < 1 results in decreasing infections, and R(t) > 1 results in increasing infections. Only simulations where social distancing was relaxed >50% resulted in R(t) > 1 at any time before September 1 st , 2020 ( Fig. 2E-F) [21] . Simulation of reductions > 50% resulted in the rapid development of a second wave of SARS-CoV-2 cases, with a dramatic increase in deaths by September 1 st , 2020 (25% vs 75% reduction: ~30,000 vs. ~71,000 deaths; Fig. 2G-H) . Together, these data indicate that it may be safe to immediately reduce social distancing measures moderately (by up to 50%) in NYS until September 1 st , 2020.",
+            "cite_spans": [
+                {
+                    "start": 345,
+                    "end": 349,
+                    "text": "[21]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 334,
+                    "end": 344,
+                    "text": "Fig. 2E-F)",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 566,
+                    "end": 576,
+                    "text": "Fig. 2G-H)",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Reduction of social distancing by >50% will result in dramatic mortality"
+        },
+        {
+            "text": "However, without effective pharmaceutical interventions policy makers must practice extreme caution in not pursuing increased or continued relaxation, which are predicted to have dangerous outcomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reduction of social distancing by >50% will result in dramatic mortality"
+        },
+        {
+            "text": "Multiple organizations, including the White House, the Centers for Disease Control and Prevention (CDC), and the NYS Department of Health (NYSDOH) have proposed a phased model for relaxing social distancing [22, 23] . These models employ a \"wait-and-see\" approach to lessening restrictions in order to prevent increased transmission of SARS-CoV-2. To test if a phased approach was superior to a one-time relaxation of social distancing, serial social distancing relaxations, each with a duration of 14 days, were simulated at various time points (Fig. S7) . For the majority of relaxation magnitudes, one-time relaxation was comparable to phased relaxation; however, phased relaxation was superior for large magnitude reductions in social distancing (one-time 75% vs. phased 75%: ~71,000 vs ~40,000 deaths by September 1 st , 2020). Together, these simulations demonstrate that phased relaxation should be employed if aggressive social distancing reductions are pursued in NYS.",
+            "cite_spans": [
+                {
+                    "start": 207,
+                    "end": 211,
+                    "text": "[22,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 212,
+                    "end": 215,
+                    "text": "23]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 546,
+                    "end": 555,
+                    "text": "(Fig. S7)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Reduction of social distancing by >50% will result in dramatic mortality"
+        },
+        {
+            "text": "Given the social and economic toll and magnitude of the current SARS-CoV-2 pandemic, a key question is: will there be a recurrent outbreak in the next 1.5 years? To answer this question, the . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Recurrent outbreak of SARS-CoV-2 in NYS in early 2021"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint course of SARS-CoV-2 was simulated through September 1 st , 2021 ( Fig. 3A-C; Fig. S8 ). Indeed, a severe SARS-CoV-2 outbreak is predicted to occur through the winter months of 2020/21. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 208,
+                    "end": 226,
+                    "text": "Fig. 3A-C; Fig. S8",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Recurrent outbreak of SARS-CoV-2 in NYS in early 2021"
+        },
+        {
+            "text": "Respiratory viruses, including non-SARS-CoV-2 HCoVs and influenza are endemic across the world, in part due to the seasonal variability of their infectivity and incomplete sustained immunity [24, 25] Next, the effects of differential immune parameters (% infected individuals that become immune, and duration of immunity) on cumulative deaths and endemic potential were analyzed (Figs. 4C-D). Only parameters conferring large proportions of infected individuals (>70%) with long-term sustained immunity (>15 years) resulted in eventual elimination of annual SARS-CoV-2 infection over 5 years. These data demonstrate that the potential for SARS-CoV-2 to become an . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 191,
+                    "end": 195,
+                    "text": "[24,",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 196,
+                    "end": 199,
+                    "text": "25]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The endemic potential of SARS-CoV-2 depends on immunity"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint endemic pathogen in NYS directly depends on the quality of immunity that individuals develop.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "As a result, the development of an efficacious vaccine will be essential to prevent endemic SARS-CoV-2 infection in NYS.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "As the global health community continues to grapple with issues caused by the growing spread of SARS-CoV-2, it is essential to develop insights into the complex transmission dynamics of this pathogen. Mathematical models can be extremely useful to reveal epidemiological characteristics of infections [26] . Here, an epidemiological model was developed to predict the spread, morbidity, and mortality of SARS-CoV-2 in NYS. This model is designed to describe key features of the virus, such as the effect of undocumented infections on transmission, the development of sustained immunity to the virus, change in infectivity with weather, and the effect of nonpharmaceutical interventions to mitigate the outbreak. This study reveals that dynamic social distancing measures are essential and critical to controlling the spread of SARS-CoV-2, and that in the absence of development of profound immunity caused by infection or the development of an efficacious vaccine, the virus is very likely to become endemic.",
+            "cite_spans": [
+                {
+                    "start": 301,
+                    "end": 305,
+                    "text": "[26]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "One important finding of this study is that vast undocumented infections fueled the rapid spread of SARS-CoV-2 in NYS. During the recent NYS outbreak, the model estimated a peak R0 of 5.7, reaching a baseline of 4.4 by July 2020, far higher than reported in other publications ( Figure   S5 ): which estimated 2.2 in the United States, and 2.2-2.6 in Wuhan and other regions of China [5, 13, 14, 27] . The magnitude of the model's estimated R0 reflects the vast number of predicted undocumented infections in NYS at the start of the outbreak. Based on serological studies, a 75% undocumented infection rate was implemented in this study (see Methods) [8] [9] [10] . As a result, the model projects ~688,000 undocumented infections by April 28 th , 2020, despite the NYSDOH reporting only ~295,000 confirmed infections. Together, these undocumented infections explain . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 384,
+                    "end": 387,
+                    "text": "[5,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 388,
+                    "end": 391,
+                    "text": "13,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 392,
+                    "end": 395,
+                    "text": "14,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 396,
+                    "end": 399,
+                    "text": "27]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 651,
+                    "end": 654,
+                    "text": "[8]",
+                    "ref_id": null
+                },
+                {
+                    "start": 655,
+                    "end": 658,
+                    "text": "[9]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 659,
+                    "end": 663,
+                    "text": "[10]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 279,
+                    "end": 290,
+                    "text": "Figure   S5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint the exponential growth of the outbreak in NYS: undocumented infected individuals were unaware of having contracted infection with SARS-CoV-2, and rather than entering quarantine, continued to expose contacts with the virus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The effect of social distancing on the course of SARS-CoV-2 in NYS reveals that NPIs are effective in reducing the spread of the virus; however, to prevent the development of large magnitude outbreaks capable of overwhelming health-care systems, they will likely have to persist for multiple years. These measures can be reduced modestly to about 30% of current levels without having a significant impact on SARS-CoV-2-related morbidity and mortality. However, if they are reduced more than 50%, R(t) will become >1, and morbidity and mortality will dramatically increase. NPIs will need to rely not only on social distancing, but also on improved testing, isolation, and contact tracing. Indeed, intensive testing and case-based interventions have become essential to control efforts in countries across the globe [28] [29] [30] . To simulate this longterm steady state of improved NPIs, the social distancing variable was never allowed to reach 0% in long-term simulations (Figs. 3, 4, S8, S9 ).",
+            "cite_spans": [
+                {
+                    "start": 815,
+                    "end": 819,
+                    "text": "[28]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 820,
+                    "end": 824,
+                    "text": "[29]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 825,
+                    "end": 829,
+                    "text": "[30]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 975,
+                    "end": 994,
+                    "text": "(Figs. 3, 4, S8, S9",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Although this model employs data obtained from the SARS-CoV-2 outbreak in NYS, the conclusions made herein can be extrapolated to cities globally. To facilitate this extrapolation, the infectivity within the model is proportional to population density (r ; Table S1 ; see Methods), as rapid spread of SARS-CoV-2 likely depends on high population densities [31] . Thus, the model can be applied to any city, region, or country by modifying the population density variable. For example, while NYS experienced rapid SARS-CoV-2 transmission, the outbreak in the San Francisco Bay Area was significantly smaller. This was in part due to the earlier shelter in place order (March 16 th , 2020 vs. March 22 nd , 2020 in NYS), but may also reflect a less dense population [18, 32] . The San Francisco Bay area counties (San Francisco, San Mateo, Santa Clara, Alameda, and Marin) together have a population density of 1.809 (thousands per sq. mile), compared to the 2.726 of the New York counties in this study [33] . As a result, the San Francisco . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 356,
+                    "end": 360,
+                    "text": "[31]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 764,
+                    "end": 768,
+                    "text": "[18,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 769,
+                    "end": 772,
+                    "text": "32]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 1002,
+                    "end": 1006,
+                    "text": "[33]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 255,
+                    "end": 265,
+                    "text": "; Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint Bay Area would be predicted to have lower SARS-CoV-2 infectivity. Future implementations of this model will be important to understand the differential transmission dynamics of SARS-CoV-2 in cities across the United States, and the world.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The conclusions of this study build upon the growing body SARS-CoV-2 modelling work by incorporating the effects of NPIs, undocumented infection, seasonal infectivity, and sustained immunity into a single model of NYS transmission. Other studies have modelled these variables in part, and/or in other regions across the word. For example, a number of studies have concluded that NPIs are essential to mitigating SARS-CoV-2 transmission [13] [14] [15] [16] [17] 19] . Additionally, a recent study revealed that substantial undocumented infections were essential to the rapid dissemination of SARS-CoV-2 in China [5] . Seasonal infectivity has been analyzed by other models, which together also predict seasonal establishment of endemic SARS-CoV-2 transmission [14, 34] .",
+            "cite_spans": [
+                {
+                    "start": 436,
+                    "end": 440,
+                    "text": "[13]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 441,
+                    "end": 445,
+                    "text": "[14]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 446,
+                    "end": 450,
+                    "text": "[15]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 451,
+                    "end": 455,
+                    "text": "[16]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 456,
+                    "end": 460,
+                    "text": "[17]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 461,
+                    "end": 464,
+                    "text": "19]",
+                    "ref_id": null
+                },
+                {
+                    "start": 611,
+                    "end": 614,
+                    "text": "[5]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 759,
+                    "end": 763,
+                    "text": "[14,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 764,
+                    "end": 767,
+                    "text": "34]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Here, the effects of these variables were all incorporated into a single model; thereby enabling dynamic analysis of their effects on short-and long-term transmission of SARS-CoV-2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "This model has a number of limitations. First, the model relies on data obtained from the NYSDOH, including public reports and press conferences. These data likely have errors in their estimations; thus, the model projections may overestimate or underestimate true epidemiological characteristics. Additionally, these data do not account for the relative lack in testing that occurred during the initial period of the NYS outbreak. As a result, the reported confirmed cases likely are under representative, which may influence the model towards higher infectivity. Second, a fixed parameter approach was chosen for a number of variables including average incubation period (g -1 ), average time to hospitalization (d -1 ), latency to non-hospitalized quarantine (q -1 ), and the effective rate of undocumented infections (n; see Supplementary Methods; Table S1 ). The values of these parameters were chosen based on literature; however, in reality they likely change over time. Third, the seasonal variability SARS-CoV-2 transmission was modelled after non-SARS-CoV-2 HCoV seasonal variability. This assumption was conservatively weighted because the . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 852,
+                    "end": 860,
+                    "text": "Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint sensitivity of SARS-CoV-2 transmission to temperature and humidity is not yet known (see Methods); therefore, the true seasonal variability of SARS-CoV-2 may differ from the model's predictions. Lastly, pharmaceutical interventions, such as vaccines and therapeutic and prophylactic medications were not included in this model. It is unknown when these pharmaceutical interventions will be available, thus, there could be no confidence in any estimation of their emergence. However, these will likely represent the most critical long-term interventions in the global health arsenal to combat endemic SARS-CoV-2. The development of these pharmaceutical interventions will be essential to reduce the ultimate toll of this significant pandemic. SARS-CoV-2 represents the most significant global health crisis of the 21 st century. This modelling study reveals fundamental characteristics of this pathogen, which will inform policymakers combating recurrent SARS-CoV-2 infection in the coming months to years.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Simulations reveal that NPIs, such a social distancing, are highly effective in reducing short-term morbidity and mortality, but only sustained immunity can prevent SARS-CoV-2 from emerging as an endemic pathogen. As a result, pharmaceutical interventions, such as highly effective drugs, antibodies, or vaccines will ultimately be necessary to combat SARS-CoV-2 in the future.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. [14, 40] . All data were compiled in Matlab (Mathworks) and prepared with custom-built software.",
+            "cite_spans": [
+                {
+                    "start": 73,
+                    "end": 77,
+                    "text": "[14,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 78,
+                    "end": 81,
+                    "text": "40]",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The transmission dynamics of SARS-CoV-2 were modelled with a system of ordinary differential equations (ODEs) describing an eleven-compartment susceptible-exposed-infected-recoveredsusceptible (SEIRS) model (see Supplementary Methods) [41] . The schematic of the model is shown in Figure S1 . \"Confirmed active infections\" were calculated as the sum of Q and H. The . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 235,
+                    "end": 239,
+                    "text": "[41]",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 212,
+                    "end": 234,
+                    "text": "Supplementary Methods)",
+                    "ref_id": null
+                },
+                {
+                    "start": 281,
+                    "end": 290,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF7"
+                }
+            ],
+            "section": "Transmission model of SARS-CoV-2"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint compartment P represents individuals protected by NPIs, such as social distancing measures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The following coefficients were implemented as functions of time: a(t), z(t), l(t), k(t), and c(t). To model the implementation of social distancing measures, a=0 before social distancing measures were in place, and became a fitted constant after (social distancing initiated in NYS on March 22 nd , 2020) [18] . The \"leak\" of individuals from the protection of social distancing was modelled with z(t), where the magnitude of z was manipulated in simulations to represent the lessening of social distancing measures. The recovery and death rate of hospitalized patients were modelled with l(t) and k(t) respectively, which were composed of the follow one-phase exponential association and decay equations:",
+            "cite_spans": [
+                {
+                    "start": 306,
+                    "end": 310,
+                    "text": "[18]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Seasonal variability of SARS-CoV-2 infectiveness was modelled with c(t). To do so, the weekly incidence of HCoVs from 2014-2020 were averaged to create a generalized annual model of [8] [9] [10] . To calculate n, the following formula was used:",
+            "cite_spans": [
+                {
+                    "start": 182,
+                    "end": 185,
+                    "text": "[8]",
+                    "ref_id": null
+                },
+                {
+                    "start": 186,
+                    "end": 189,
+                    "text": "[9]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 190,
+                    "end": 194,
+                    "text": "[10]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. The duration and annual recurrence of SARS-CoV-2 infections depends on the fraction of people who develop protective immunity to SARS-CoV-2, and the duration of immunity. It is currently unclear how individuals will respond to SARS-CoV-2 infection; however, data from similar HCoVs may provide an estimated range. Studies suggest that HCoV-OC43 and HCoV-HKU1 confer protective immunity that lasts less than a year, whereas immunity to SARS-CoV-2 may last much longer [24, 25] . To model immunity, the transition rate from \"Recovered\" compartments (RA, RQ, and RH) to the \"Susceptible\" compartment depended on the following relationship:",
+            "cite_spans": [
+                {
+                    "start": 540,
+                    "end": 544,
+                    "text": "[24,",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 545,
+                    "end": 548,
+                    "text": "25]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Where p represented the inverse of the duration of immunity, and t represented the fraction of individuals who do not develop immunity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Parameter estimation, sensitivity analysis, goodness of fit analysis, and reproductive number proofs are described in Supplementary Methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Simulations and output figures were generated in Matlab (Mathworks), with custom-built software.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulations and data analysis"
+        },
+        {
+            "text": "The custom-built software used generate this model, along will scripts to create the analyses and data within this manuscript, is freely available at https://github.com/buh2003/BUHoffman_COVID. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data and software availability"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "National Academies of Sciences E, Medicine. Rapid Expert Consultation on SARS-CoV-2 Survival in Relation to Temperature and Humidity and Potential for Seasonality for the COVID-19 Pandemic (April 7, 2020) . Washington, DC: The National Academies Press; 2020. 8 p.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 189,
+                    "end": 204,
+                    "text": "(April 7, 2020)",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "48."
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "48."
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095505 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "A Novel Coronavirus from Patients with Pneumonia in China",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "8",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2001017"
+                ],
+                "PMID": [
+                    "31978945"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "of Novel Coronavirus-Infected Pneumonia",
+            "authors": [
+                {
+                    "first": "China",
+                    "middle": [],
+                    "last": "Wuhan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "13",
+            "pages": "1199--207",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2001316"
+                ],
+                "PMID": [
+                    "31995857"
+                ],
+                "PMCID": [
+                    "PMC7121484"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "An interactive web-based dashboard to track COVID-19 in real time",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "20",
+            "issn": "5",
+            "pages": "533--537",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30120-"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Thinking Globally, Acting Locally -The U.S. Response to Covid",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Haffajee",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mello",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV-2)",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pei",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "368",
+            "issn": "6490",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb3221"
+                ],
+                "PMID": [
+                    "32179701"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "A Novel Coronavirus Emerging in China -Key Questions for Impact Assessment",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Munster",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Koopmans",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Van Doremalen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Van Riel",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "De Wit",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "8",
+            "pages": "692--696",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMp2000929"
+                ],
+                "PMID": [
+                    "31978293"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Real-time tentative assessment of the epidemiological characteristics of novel coronavirus infections in Wuhan, China, as at 22",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ehy",
+                    "middle": [],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ksm",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Euro Surveill",
+            "volume": "25",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2807/1560-7917.ES.2020.25.3.2000044"
+                ],
+                "PMID": [
+                    "31992388"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Universal Screening for SARS-CoV-2 in Women Admitted for Delivery",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Sutton",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Fuchs",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "&apos;alton",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goffman",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "N Engl J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2009316"
+                ],
+                "PMID": [
+                    "32283004"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Amid Ongoing COVID-19 Pandemic, Governor Cuomo Announces State Health Department Will Partner with Attorney General James to Investigate Nursing Home Violations: Pressroom, NYS Governor's Press Office",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cuomo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Video",
+                    "suffix": ""
+                },
+                {
+                    "first": "Photos &amp; Rush",
+                    "middle": [],
+                    "last": "Audio",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Transcript",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "On the convergence of interior-reflective Newton methods for nonlinear minimization subject to bounds",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Coleman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Mathematical Programming",
+            "volume": "67",
+            "issn": "1-3",
+            "pages": "189--224",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/bf01582221"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Particle Swarm Optimization",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kennedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eberhart",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Proceedings of the IEEE International Conference on Neural Networks",
+            "volume": "",
+            "issn": "",
+            "pages": "1942--1947",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Public Health",
+            "volume": "5",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S2468-2667(20)30073-6"
+                ],
+                "PMID": [
+                    "32220655"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Projecting the transmission dynamics of SARS-CoV-2 through the postpandemic period",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kissler",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tedijanto",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Goldstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Grad",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb5793"
+                ],
+                "PMID": [
+                    "32291278"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Mathematical assessment of the impact of non-pharmaceutical interventions on curtailing the 2019 novel Coronavirus",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Ngonghala",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Iboi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Eikenberry",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Scotch",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Macintyre",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Bonds",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Math Biosci",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.mbs.2020.108364"
+                ],
+                "PMID": [
+                    "32360770"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "The effectiveness of quarantine and isolation determine the trend of the COVID-19 epidemics in the final phase of the current outbreak in China",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijid.2020.03.018"
+                ],
+                "PMID": [
+                    "32171948"
+                ],
+                "PMCID": [
+                    "PMC7162790"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Interventions to mitigate early spread of SARS-CoV-2 in Singapore: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Koo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cook",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30162-6"
+                ],
+                "PMID": [
+                    "32213332"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Governor Cuomo Signs the 'New York State on PAUSE' Executive Order: Pressroom, NYS Governor's Press Office",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cuomo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "20",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30144-4"
+                ],
+                "PMID": [
+                    "32171059"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Infectious Diseases of Humans",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Tillett",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Dynamics and Control. Epidemiology and Infection",
+            "volume": "108",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {
+                "PMCID": [
+                    "PMC2272191"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Opening Up America Again Washington, DC2020",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "White-House",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Amid Ongoing COVID-19 Pandemic, Governor Cuomo Outlines Additional Guidelines for Phased Plan to Re-open New York New York: Pressroom, NYS Governor's Press Office",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cuomo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "The time course of the immune response to experimental coronavirus infection of man",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Callow",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Parry",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sergeant",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Tyrrell",
+                    "suffix": ""
+                }
+            ],
+            "year": 1990,
+            "venue": "Epidemiol Infect",
+            "volume": "105",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1017/s0950268800048019"
+                ],
+                "PMID": [
+                    "2170159"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Cross-reactive antibodies in convalescent SARS patients' sera against the emerging novel human coronavirus EMC (2012) by both immunofluorescent and neutralizing antibody tests",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Tse",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Cai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J Infect",
+            "volume": "67",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jinf.2013.03.015"
+                ],
+                "PMID": [
+                    "23583636"
+                ],
+                "PMCID": [
+                    "PMC7112694"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Planning for smallpox outbreaks",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gani",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Grenfell",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Nature",
+            "volume": "425",
+            "issn": "6959",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nature02007"
+                ],
+                "PMID": [
+                    "14562094"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30260-9"
+                ],
+                "PMID": [
+                    "32014114"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "How will country-based mitigation measures influence the course of the COVID-19 epidemic?",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Klinkenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Hollingsworth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30567-5"
+                ],
+                "PMID": [
+                    "32164834"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Quantifying SARS-CoV-2 transmission suggests epidemic control with digital contact tracing",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ferretti",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wymant",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kendall",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Nurtay",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Abeler-Dorner",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb6936"
+                ],
+                "PMID": [
+                    "32234805"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "The effect of human mobility and control measures on the COVID-19 epidemic in China",
+            "authors": [
+                {
+                    "first": "Mug",
+                    "middle": [],
+                    "last": "Kraemer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gutierrez",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pigott",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "368",
+            "issn": "6490",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb4218"
+                ],
+                "PMID": [
+                    "32213647"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "High population densities catalyze the spread of COVID-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rocklov",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sjodin",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J Travel Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/jtm/taaa038"
+                ],
+                "PMID": [
+                    "32227186"
+                ],
+                "PMCID": [
+                    "PMC7184409"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "C19-07 San Francsico: City and County of San Francisco Department of Public Health",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Health Cacosfdop",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Order",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Health Officer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "No",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Potential impact of seasonal forcing on a SARS-CoV-2 pandemic",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Neher",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dyrdak",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Druelle",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Hodcroft",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Albert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Swiss Med Wkly",
+            "volume": "150",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.4414/smw.2020.20224"
+                ],
+                "PMID": [
+                    "32176808"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "The Covid Tracking Project",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "The National Respiratory and Enteric Virus Surveillance System (NREVSS)",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Human coronavirus circulation in the United States",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Killerby",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Biggs",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Haynes",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Dahl",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Mustaquim",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Gerber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J Clin Virol",
+            "volume": "101",
+            "issn": "",
+            "pages": "52--58",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jcv.2018.01.019"
+                ],
+                "PMID": [
+                    "29427907"
+                ],
+                "PMCID": [
+                    "PMC7106380"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Predicting the epidemic sizes of influenza A/H1N1, A/H3N2, and B: a statistical method",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Goldstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Cobey",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Takahashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Miller",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lipsitch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "PLoS Med",
+            "volume": "8",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pmed.1001051"
+                ],
+                "PMID": [
+                    "21750666"
+                ],
+                "PMCID": [
+                    "PMC3130020"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Stability of SARS-CoV-2 in different environmental conditions. The Lancet Microbe",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Radcliffe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ntj ;",
+                    "middle": [],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "Awh",
+                    "middle": [],
+                    "last": "Chin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jts",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mra",
+                    "middle": [],
+                    "last": "Perera",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kpy",
+                    "middle": [],
+                    "last": "Hui",
+                    "suffix": ""
+                },
+                {
+                    "first": "H-L",
+                    "middle": [],
+                    "last": "Yen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mcw",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                }
+            ],
+            "year": 1977,
+            "venue": "The Mathematical Theory of Infectious Diseases and its Applications",
+            "volume": "26",
+            "issn": "",
+            "pages": "30003--30006",
+            "other_ids": {
+                "DOI": [
+                    "10.2307/2346882.42"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "COVID-19 transmission in Mainland China is associated with temperature and humidity: A time-series analysis",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Qi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Ward",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Tu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Sci Total Environ",
+            "volume": "728",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.scitotenv.2020.138778"
+                ],
+                "PMID": [
+                    "32335405"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "High Temperature and High Humidity Reduce the Transmission of COVID-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "SSRN Electronic Journal. 2020. Epub March 9",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2139/ssrn.3551767"
+                ]
+            }
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Temperature, humidity, and wind speed are associated with lower Covid-19 incidence",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Islam",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Shabnam",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Erzurumluoglu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.27.20045658"
+                ]
+            }
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Climate affects global patterns of COVID-19 early outbreak dynamics",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Ficetola",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Rubolini",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.23.20040501.100%"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "These results reveal the significant effect of temperature-and humidity-dependent infectivity of SARS-CoV-2, which were modelled based on the transmission dynamics of other non-SARS-CoV-2 human coronaviruses (HCoVs; see Methods). The magnitude of the outbreak depends on the resumption of social distancing measures, where stronger measures implemented early result in significantly reduced morbidity and mortality through September 1 st , 2021 (% social distancing, cumulative deaths: 100%, ~58,000; 75%, ~92,000; 50%, ~154,000; Fig. 3D). However, analysis of the R(t) indicates that the potential for a second outbreak is extremely high, where no combinations of social distancing strength and implementation date were successful in preventing R(t) > 1(Figs. 3E, F). Together, these data predict a significant second outbreak in early 2021 that can be mitigated, but not avoided entirely, through the resumption of strong social distancing measures.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": ". Thus, it is essential to understand what factors might drive endemic infection of SARS-CoV-2 in NYS. To do so, the transmission dynamics of SARS-CoV-2 were simulated through September 1 st , 2025 (Figs.4A-B; Fig. S9). Indeed, SARS-CoV-2 emerged as an endemic pathogen in NYS despite resumption of social distancing for 3 months in the winter of 2020/21.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "data for NYS were extracted from publicly reported clinical statistics by the New York State Department of Health, aggregated by the COVID Tracking Project [35, 36]. The data extracted were the total number of confirmed cases, total number of hospitalizations, active hospitalizations, and total number of deaths. Since the overwhelming majority of SARS-CoV-2 cases are concentrated in a limited number of NYS regions, only counties reporting greater than 1000 confirmed cases on (4/20/2020) were included (Queens, Kings, Nassau, Bronx, Suffolk, Westchester, Manhattan, Rockland, Richmond, Orange, Dutchess, Erie, and Monroe). To estimate population density of the affected NYS counties, population and land area estimates were obtained from the United States Census Bureau [33]. Non-SARS-CoV-2 human coronavirus (HCoV) viral testing data was obtained from the CDC National Respiratory and Enteric Virus Surveillance System (NRVESS) [37]. Data were extracted from two databases: viral testing data from 2014-2017 and 2018-2020 [38, 39]. To estimate the incidence of the HCoVs, the weekly percentage of positive tests were multiplied by the weekly population-weighted proportion of physician visits due to influenza-like illness (ILI) reported by the US Outpatient Influenza-like Illness Surveillance Network (ILINet) [38]. This method was based on methods published elsewhere",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "HCoVs seasonal variation. It is yet unknown how the infectiveness COVID may vary with weather. Recent studies including retrospective analyses, in vitro experiments, and epidemiological models suggest there may be a component of weather-based variability; however, this may be significantly less other respiratory viruses [42-48]. Based on these studies, the seasonal variability of SARS-CoV-2 (c(t)) was generated by conservatively weighting the generalized annual model of HCoV seasonal variability by a factor of 0.2. Undocumented infections represent an increasingly important factor in the spread of SARS-CoV-2. From serological studies, an undocumented rate of 75% was estimated by dividing the total number of confirmed cases by the product of the percent of serologically positive individuals and the population of the most affected NYS counties (see Methods, Data), subtracted from one",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "to Dr. Stephen L. Hoffman, Dr. Kim Lee Sim, and Dr. Seth A. Hoffman for helpful discussions and comments on the manuscript; Dr. Steven Shea for essential feedback on preliminary studies; and Mr. Abulhair Saparov for input on the methods and analysis. The author was funded by a NIH MSTP training grant (NIGMS T32GM007367).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "JA, Metz JA. On the definition and the computation of the basic reproduction ratio R0 in models for infectious diseases in heterogeneous populations. J Math Biol. 1990;28(4):365-82. Epub 1990/01/01. doi: 10.1007/BF00178324. PubMed PMID: 2117040.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Undocumented infections drive SARS-CoV-2 transmission. (A-F). Simulation of SARS-CoV-2 transmission dynamics through September 1, 2020. Social distancing signified as in (A) top: pink, social distancing initiated on March 22 nd , 2020. Orange circles, NYS SARS-CoV-2 data (see Methods). Blue line, simulated projection. Light blue box, 95% confidence interval. A. Cumulative total infections (undocumented infections + confirmed symptomatic infections). B. Cumulative undocumented infections. C. Cumulative confirmed symptomatic infections. D. Active confirmed infections. E. Cumulative hospitalizations. F. Cumulative deaths. See also, Figures S2-5.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Reduction of social distancing by >50% will result in dramatic mortality. (A-F). Simulation of SARS-CoV-2 transmission dynamics in the presence of social distancing measures through September 1, 2020. Periods of social distancing signified as in (A) top: pink, increased social distancing; green, relaxed social distancing. Orange circles, NYS SARS-CoV-2 data. Lines, simulated projection of reduced social distancing starting June 1, 2020 (yellow, 50% reduction; red, 30% reduction; blue, 15% reduction). A. Active confirmed infections. B. Active hospitalizations. C. Cumulative deaths. D. Heatmap displaying the effect of social distancing magnitude and date of reduction on the number of cumulative deaths. E. R(t). F. Categorical heatmap displaying the effect of social distancing magnitude and date of reduction on R(t) > 1 (yellow, R(t) > 1; blue R(t) < 1). (G-H). Simulation of extreme reduction of social distancing on June 1, 2020 (yellow, 75%; blue, 25%). G. Active hospitalizations. H. Cumulative deaths. See also, Figures S6-7.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Recurrent outbreak of SARS-CoV-2 in NYS in early 2021. (A-F). Simulation of SARS-CoV-2 transmission dynamics in the presence of social distancing measures through September 1, 2021. Simulation assumes 50% social distancing reduction on June 1, 2020.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "2020. A. Active confirmed infections. B. Active hospitalizations. C. Cumulative deaths. D. Heatmap displaying the effect of social distancing magnitude and date of resumption on the number of cumulative deaths. E. R(t). F. Categorical heatmap displaying the effect of social distancing magnitude and date of resumption on R(t) > 1 (yellow, R(t) > 1; blue R(t) < 1). See also,Figure S8.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "The endemic potential of SARS-CoV-2 depends on immunity. (A-D). Simulation of SARS-CoV-2 transmission dynamics in the presence of social distancing measures through September 1, 2030. The following social distancing parameters were assumed: 50% from June 1 to October 31, 2020; 75% from November 1, 2020 to March 1, 2021; 50% after March 1, 2021. Periods of social distancing signified as in (A) top: pink, increased social distancing; green, relaxed social distancing. (A-B). Simulation varying the % of individuals who develop immunity and the average duration of immunity. A. Active confirmed infections. B. Cumulative deaths. C. Heatmap displaying the effect of immunity parameters on cumulative deaths through September 1, 2025. D. Heatmap displaying the effect of immunity parameters on endemic potential. Endemic potential defined as the presence annual recurrence (average total annual infections > 20,000) from September 1, 2023-2025. See also,Figure S9.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Figure 2",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "Figure 3",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "Figure 4",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF2": {
+            "text": "Temperature and Latitude Analysis to Predict Potential Spread and Seasonality for COVID-19. SSRN Electronic Journal. 2020. doi: 10.2139/ssrn.3550308.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

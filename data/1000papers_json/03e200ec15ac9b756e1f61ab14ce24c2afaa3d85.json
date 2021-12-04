@@ -1,0 +1,2786 @@
+{
+    "paper_id": "03e200ec15ac9b756e1f61ab14ce24c2afaa3d85",
+    "metadata": {
+        "title": "Journal Pre-proof Deep Learning for Diagnosis of COVID-19 using 3D CT Scans Deep Learning for Diagnosis of COVID-19 using 3D CT Scans",
+        "authors": [
+            {
+                "first": "Sertan",
+                "middle": [],
+                "last": "Serte",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Hasan",
+                "middle": [],
+                "last": "Demirel",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "A new pneumonia-type coronavirus, COVID-19, recently emerged in Wuhan, China. COVID-19 has subsequently infected many people and caused many deaths worldwide. Isolating infected people is one of the methods of preventing the spread of this virus. CT scans provide detailed imaging of the lungs and assist radiologists in diagnosing COVID-19 in hospitals. However, a person's CT scan contains hundreds of slides, and the diagnosis of COVID-19 using such scans can lead to delays in hospitals. Artificial intelligence techniques could assist radiologists with rapidly and accurately detecting COVID-19 infection from these scans. This paper proposes an artificial intelligence (AI) approach to classify COVID-19 and normal CT volumes. The proposed AI method uses the ResNet-50 deep learning model to predict COVID-19 on each CT image of a 3D CT scan. Then, this AI method fuses image-level predictions to diagnose COVID-19 on a 3D CT volume. We show that the proposed deep learning model provides 96% AUC value for detecting COVID-19 on CT scans.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "J o u r n a l P r e -p r o o f Highlights \u2022 We propose a new AI system to estimate COVID-19 on the images of a person's 3D CT volume. The proposed AI system employs ResNet-50 to obtain predictions on the CT images of a 3D CT volume.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "\u2022 The proposed AI system also employs ResNet-18 model in conjunction with the majority voting to provide COVID-19 prediction on a person's 3D CT volume.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "J o u r n a l P r e -p r o o f",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Coronavirus, first emerged in Wuhan, China in 2019, [1] . Coronavirus [2] is known as viral pneumonia, and this viral pneumonia can be grouped into COVID-19, SARS, and MERS.",
+            "cite_spans": [
+                {
+                    "start": 52,
+                    "end": 55,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 70,
+                    "end": 73,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Currently, coronavirus is being spread via humanto-human transmission, and there is few and limitted vaccine for COVID- 19 . Reports claim that the best ways of preventing coronavirus spread is by performing rapid diagnosis to large populations and subsequently keep the infected individuals in isolation. Therefore, regular COVID-19 tests are necessary for the identification of infection in people so they can be isolated. Transcription-polymerase chain reaction (RT-PCR) tests mainly to allow the classification of individuals with COVID-19 in hospitals.",
+            "cite_spans": [
+                {
+                    "start": 120,
+                    "end": 122,
+                    "text": "19",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Recently, Rubin et al. [3] described the role of chest imaging in patient management during the COVID- 19 Pandemic. Authors mentioned that chest imaging usage as a diagnostic tool to detect infected people might be problematic. The application of imaging technique requires a long time and cause risk to personnel. Therefore, the study emphasises the usages of a real-time reverse-transcriptase polymerase chain reaction (RT-PCR) together with chest imaging. Three clinical scenarios show the selection of diagnostic tools according to patients situations. Our proposed deep learning method focuses on a fast and accurate diagnosis of COVID-19 on 3D CT scans. A person's CT scan might contain many CT images, and radiologist might not be capable of examing large numbers of patients during an outbreak. Our proposed technique assists radiologists with rapidly and accurately detecting COVID-19 infection from these scans.",
+            "cite_spans": [
+                {
+                    "start": 23,
+                    "end": 26,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 103,
+                    "end": 105,
+                    "text": "19",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Computed tomography scans (CT scan) and X-ray images are alternative diagnostic tools for detecting COVID-19. Doctors image lungs and look for signs of COVID-19 deformations on the CT or X-Ray images. This process requires a certain amount of time for correct pneumonia type classification.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, convolutional neural networks (CNNs) could be used instead of or in conjunction with the doctors for faster and better diagnosis of COVID-19 on CT scans. CNNs include AlexNet [4] , GoogleNet [5] , VGG [6] , Mo-bileNetV2 [7] , ResNet [8] and DenseNet [9] . These models have provided the classification of 1,000 objects in the ImageNet dataset [10, 11] . The performance results show that these models can achieve close to human-level object-level accuracy.",
+            "cite_spans": [
+                {
+                    "start": 184,
+                    "end": 187,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 200,
+                    "end": 203,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 210,
+                    "end": 213,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 229,
+                    "end": 232,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 242,
+                    "end": 245,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 259,
+                    "end": 262,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 352,
+                    "end": 356,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 357,
+                    "end": 360,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "These models also result in high classification performance in medical image classification. Recently, authors [12, 13] utilized CNNs for detecting COVID-19 on X-Ray images. The studies [14, 15] also employed CNNs to recognize COVID-19 on CT-scans. Other studies [16] [17] [18] show that these models can also be used for the classification of skin lesions. Furthermore, authors [19] [20] [21] [22] [23] have shown that CNN models provide accurate results for eye disease. Therefore, CNN models can be used on different medical images for the diagnosis of disease types. A recent medical review paper [24] summarized the application of these models.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 115,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 116,
+                    "end": 119,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 186,
+                    "end": 190,
+                    "text": "[14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 191,
+                    "end": 194,
+                    "text": "15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 263,
+                    "end": 267,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 268,
+                    "end": 272,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 273,
+                    "end": 277,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 379,
+                    "end": 383,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 384,
+                    "end": 388,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 389,
+                    "end": 393,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 394,
+                    "end": 398,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 399,
+                    "end": 403,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 601,
+                    "end": 605,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Recent works have also utilized 3D convolutional neural networks for classifying COVID-19 on CT volumes. These 3D CNNs provide spatiotemporal modelling of the CT volumes for COVID-19 classification. Tran et al. developed a 3D convolutional neural network, which they named C3D. Moreover, Zheng et al. [25] proposed DeCoVNet for 3D volume modelling. Hara et al. [26] proposed 3D ResNet models named ResNet-18, ResNet-50, and ResNet-101. Authors [27] have also introduced 3D-SqueezNet,3D-SuffleNet, 3D-MobileNet-V1, and 3D-MobileNetV2.",
+            "cite_spans": [
+                {
+                    "start": 301,
+                    "end": 305,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 361,
+                    "end": 365,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 444,
+                    "end": 448,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Authors [28, 29] utilized 3D CNN deep learning models for detecting COVID-19 on 3D CT scans. The method [28] segments CT images and a group of CT images as inputs to the 3D CNN model. The model applies 3D convolution to the images, and then the output of the 3D convolution is used as the input to the AlexNet and ResNet models for the final COVID-19 classification. Similarly, Han et al. [29] learned COVID-19 on 3D CT scans using 3D CNN models. The method convolves CT volumes using 3D filters, then the outputs of 3D convolution are combined using the bag technique. The final COVID-19 predictions are then obtained through fully connected layers. Zhang et al. [25] employed 3D ResNet-18 [26] to detect COVID-19 on 3D CT scans. This study explained how the 3D-ResNet-18 model can be used for differentiating COVID-19 from common pneumonia.",
+            "cite_spans": [
+                {
+                    "start": 8,
+                    "end": 12,
+                    "text": "[28,",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 13,
+                    "end": 16,
+                    "text": "29]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 104,
+                    "end": 108,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 389,
+                    "end": 393,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 664,
+                    "end": 668,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 691,
+                    "end": 695,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The proposed method, (Figure 1 and Figure 2 ), is different than other recent works, [28, 29] . We propose a new and novel artificial intelligence (AI) system for the classification of COVID-19 using a person's 3D CT volume. The technique separates each of the 3D CT scans into images, and then each image is used as inputs for a ResNet-50 convolutional neural network (CNN) model. The ResNet-50 model provides estimates for each of the CT images. Then, these predictions are fused to classify COVID-19 images. The main novelty of the paper is using the data fusion on decisions of parallel 2D CNNs. The results indicate that the fusion of the decisions of multiple 2D CNNs outperforms single 3D CNN approach. The unique aspects of this work are:",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 89,
+                    "text": "[28,",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 90,
+                    "end": 93,
+                    "text": "29]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 21,
+                    "end": 30,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 35,
+                    "end": 43,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "1. We propose a new AI system to estimate COVID- 19 from the images of a person's 3D CT volume. The proposed AI system employs ResNet-50 to obtain predictions on the CT images of a 3D CT volume. 2. The proposed AI system also employs the ResNet-18 model in conjunction with majority voting to provide a COVID-19 prediction on a person's 3D CT volume.",
+            "cite_spans": [
+                {
+                    "start": 49,
+                    "end": 51,
+                    "text": "19",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This paper is organized as follows. First, we summarize the related work on COVID-19 classification using 2D and 3D CT scans. We describe the proposed artificial intelligence system for recognizing COVID-19 on a 3D CT volume. Finally, the performance of the proposed method is evaluated and discussed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The majority of previous works have proposed the detection of COVID-19 on 2D CT scans. Recent results have also reported the classification of COVID-19 in individuals using a captured 3D CT volume. A recent review [30] , summarized all artificial intelligence techniques related to COVID-19 classification using both 2D and 3D CT scans. Hu et al. [32] introduced a weakly supervised convolutional neural network for COVID-19 classification on CT Scans. The authors classified COVID-19, communityacquired pneumonia, and non-pneumonia. The proposed CNN model builds on five sets of convolutional on the input CT scans. They utilized weak classifiers on convolutional layers for class predictions. Then, they concatenated output prediction using softmax for the final output.",
+            "cite_spans": [
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "[30]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 347,
+                    "end": 351,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Mei et al. [33] proposed using a Resnet-18 convolutional neural network in conjunction with support vector machines for COVID-19 classification. In this work, the CNN model allows prediction on the CT image, while SVM provides COVID-19 prediction on non-image data. The authors combined the outputs of ResNet-18 and SVM for the classification of COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 11,
+                    "end": 15,
+                    "text": "[33]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Harmon et al. [34] utilized DensNet-121 deep learning architecture for the classification of COVID-19 and pneumonia. The proposed method was trained and tested on a multi dataset for performance evaluation.",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 18,
+                    "text": "[34]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Bhandary et al. [35] used AlexNet in conjunction with support vector machines to classify COVID-19 and cancer on X-Ray and CT Scans. The authors also compared the SVM-based Alexnet with AlexNet, VGG16, VGG19, and ResNet50.",
+            "cite_spans": [
+                {
+                    "start": 16,
+                    "end": 20,
+                    "text": "[35]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Butt et al. [36] used a ResNet-18 deep learning model for the classification of COVID-19, viral pneumonia, and normal CT scans. This method creates 3D volumes of the CT scans and then extracts paths from these regions. Then, these images are used as inputs to the ResNet-18 model for differentiating COVID-19, viral pneumonia, and normal CT scans.",
+            "cite_spans": [
+                {
+                    "start": 12,
+                    "end": 16,
+                    "text": "[36]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Yan et al. [37] proposed a multi-scale convolutional neural network for the classification of COVID-19 and common pneumonia. The method employs the Gaussian pyramid to generate three scans of CT images. Then, the three convolutional neural networks are trained on each scale of the CT images. The estimates of the models are fused for COVID-19 classification. This method works on both CT images and 3D CT scans. The proposed method allows higher COVID-19 classification on 2D scans compared to 3D scans.",
+            "cite_spans": [
+                {
+                    "start": 11,
+                    "end": 15,
+                    "text": "[37]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Classifing COVID-19 using CT Scans"
+        },
+        {
+            "text": "Wang et al. [28] developed 3D convolutional neural networks for detecting COVID-19 infections on 3D CT scans. The authors utilized a U-Net model to segment lungs on CT images, and then a group of CT images was used as inputs to the proposed 3D convolutional neural network. The proposed 3D model architecture builds on 3D convolution filters, AlexNet, and ResNet models.",
+            "cite_spans": [
+                {
+                    "start": 12,
+                    "end": 16,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Classifing COVID-19 using CT Scans"
+        },
+        {
+            "text": "Han et al. [29] proposed attention-based 3D multiple instance models for the classification of COVID-19, common pneumonia, and non-pneumonia cases. This method involves the generation of 3D features using 3D convolution on the 3D CT scans. The developed 3D features are combined with a bag model, and then these combinations are used to classify infections. Figure 1 describes our proposed artificial intelligence approach. The method uses a 3D CT scan as input, and then it outputs the COVID-19 and normal class predictions. We use 3D CT scans which are acquired using computed tomography CT scanner. The CT scan is a medical imaging technique, and the method provides a 3D CT volume of the patients' lungs. We can view these 3D CT volumes as axial, coronal, sagittal planes. Our proposed method employs axial views (slices) of the CT scans of the patients'. Figure 1 shows these axial slices of the 3D CT. These slices show the human lungs from the upper body towards the lower body. The proposed approach groups these axial slices into three categories. These groups are upper lung slices, middle lung slices and lower lung slices. Figure 1 clearly shows that upper and lower lung slides show bone structures and a small lung region area. In contrast, Figure 1 also indicates that the middle lung slices show a patient's lung's central regions. We developed our method based on this information, which utilizes middle lung sices of the 3D CT scans.",
+            "cite_spans": [
+                {
+                    "start": 11,
+                    "end": 15,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 358,
+                    "end": 366,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 860,
+                    "end": 868,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1135,
+                    "end": 1143,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1255,
+                    "end": 1263,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Classifing COVID-19 using CT Scans"
+        },
+        {
+            "text": "The proposed method builds on the Mosmed-1110 dataset (Section 4). This dataset contains 3D CT scans of the patients, and each CT scan comprises about 40 axial slices. These slices start from the upper lung and end in the lower lung. Our approach to determining middle axial lung slices is as follows. We denote the first slice of the CT scan by 1, and we also denote the last slice by T. As a result, axial slices of 3D CT volume can be represented from 1 to T. T also shows the number of CT images in a 3D CT volume. Then, we divided the T value by two to determine the single middle CT image. Furthermore, we select previous and preceding images of the central scan to determine intermediate axial lung images. For example, we define three mid images by choosing the centre image and one previous and preceding mid scan images. As a result, our approach allows us to determine CT images in the middle lung region of the 3D volume.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Determining Middle Axial Lung Slices"
+        },
+        {
+            "text": "First, the method selects middle axial lung slices (Section 3.1), and then each of these middle axial slices goes through ResNet-50 convolutional neural network (CNN) model. When the proposed approach applies a single ResNet-50 model to a single axial slice to provide COVID-19 and normal class estimates, these two classes can be denoted by i = 1, . . . , n. A class is represented by i, and the number of classes is denoted by n. Since there are two classes, the value of n is 2 (n=2). Furthermore, the ResNet-50 model is denoted by j = 1, ..., m. Since a single model is used, the m value becomes m=1. The proposed method also applies m ResNet models to m axial slices. In this case, the m ResNet-50 model uses m axial slice to provide m COVID-19 and normal class predictions. We train a single ResNet-50 model and we applied it m times to m slices. These predictions can be denoted by p ij , where i = 1, .., n, j = 1, .., m.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Proposed Deep Learning Method"
+        },
+        {
+            "text": "Then, these predictions are fused to classify COVID-19 and normal images. The main novelty of the paper is using the data fusion on decisions of parallel 2D CNNs. The results indicate that the fusion of the decisions of multiple 2D CNNs outperforms single 3D CNN approach.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Proposed Deep Learning Method"
+        },
+        {
+            "text": "In creating a fusion of CNNs, we use the output probability values of the classification layers of each single CNN model to determine the confidence values, p i , that each image belongs to two classes. Here, p i \u2208 [0, 1] for i = 1, . . . , n and n i=1 p i = 1. The proposed method employs the majority voting technique to provide COVID-19 estimates [38] . This technique is formulated as follows.",
+            "cite_spans": [
+                {
+                    "start": 350,
+                    "end": 354,
+                    "text": "[38]",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Proposed Deep Learning Method"
+        },
+        {
+            "text": "where ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Proposed Deep Learning Method"
+        },
+        {
+            "text": "In the training part, the fine-tuned ResNet-50 model utilizes 3D CT scans to learn COVID-19 infection. First, 3D scans are expanded to 2D CT images of COVID-19 and non-COVID-19 images. Then, these 2D images are used to train the fine-tuned ResNet-50 model. All CT scans are resized to 256x256 RGB images, and then these images are used as inputs to the CNN models. The 224x224 random crops are extracted, and these crops are modelled using the models. These models are trained on the ImageNet dataset, and then they are used to adapt the parameters to CT images. The parameters of the convolutional layers are frozen, and only fully connected layers are estimated. The CT4 category includes two 3D CT scans of 75% COVID-19 infected lungs. Furthermore, mild (CT1) and moderate (CT2) levels demonstrate that the patient does not require any intensive care in a hospital and can therefore remain at home. In contrast, the patients must stay in the hospital under intensive care in severe (CT3) and critical stages (CT4). The proposed AI technique is generated and evaluated on two sets of MosMed datasets. Table 1 and 2 describle the system evaluation sets. We use CT0 and CT2 categories for classifying COVID-19 and non-COVID-19. Table 1 reports the number of training and test sets of CT scans in the datasets. The proposed AI system is trained on 80 COVID-19 scans and 164 normal scans. Then, the AI system is tested on 50 normal and 25 COVID-19 infected CT scans. Table 2 reports the number of training and test sets of CT scans in the datasets. The proposed AI system is trained on 45 COVID-19 scans and 45 normal scans. Then, the AI system is tested on 45 normal and 5 COVID-19 infected CT scans.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1103,
+                    "end": 1110,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 1228,
+                    "end": 1235,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 1465,
+                    "end": 1472,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Generating the Fine-tuned Deep Models"
+        },
+        {
+            "text": "The CCAP dataset [37] includes healthy, COVID-19, bacterial, viral, mycoplasma, and pneumonia. The proposed AI technique is also evaluated on the CCAP dataset. We used CT volumes of patients who were normal and those with COVID-19. Table 3 reports the number of training and test sets of CT scans in the datasets. The proposed AI system is trained on 65 normal CT scans and 46 COVID-19 CT scans. Then, the AI system is tested on 25 normal and 3 COVID-19 infected CT scans. ",
+            "cite_spans": [
+                {
+                    "start": 17,
+                    "end": 21,
+                    "text": "[37]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 232,
+                    "end": 239,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "CCAP Dataset"
+        },
+        {
+            "text": "The performance evaluation of the proposed deep learning method is evaluated using the Mosmed dataset. Performance evaluation is performed using metrics described as follows. The area under the receiver operating characteristic (ROC) curve (AUC), accuracy (ACC), sensitivity (SE), and specificity (SP) performance metrics are used to test the accuracy of the methods. We can describe accuracy, sensitivity, and specificity as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance Evaluation"
+        },
+        {
+            "text": "where true positive, positive, true negative, false positive, and false negative are denoted as TP, TN, FP, and FN, respectively. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance Evaluation"
+        },
+        {
+            "text": "The performance of the proposed AI method is evaluated for image-level COVID-19 classification. We utilized the proposed technique to obtain the average AUC values of each CT image of a person's 3D scan. These average AUC values are reported in Figure 3 (a). The classification performance is low for the first 15 images. Then, the performance increases after the fifth image. Finally, the performance of COVID-19 classification decreases after 25 slices. The best COVID-19 prediction performance is achieved when middle scans are utilized for classification. In particular, the AI system provides the highest AUC values for scan numbers between 15 and 25. The results show that COVID-19 classification can be achieved using a middle scan. The classification performance increases towards the middle scan. Simi- Table 5 and Figure 3 (b) report the performance of the proposed system using training and testing ratio of 2:1. Table 5 reports the proposed AI system's performance for scan level COVID-19 classification. The AI system utilizes the ResNet-50 deep network in conjunc- Figure 3 (b) also shows average AUC values for corresponding middle scan numbers. The performance results show that the AUC values increase when the number of images is higher than fifteen. As a result, the system performance depends on the number of images. The system performance increases as the number of images increases. The proposed system's performance is also reported on Mosmed and CCAP datasets using a training and testing ratio of 9:1. Table 6 shows the performance of the maximal probabilitybased CNN model and Table 7 reports the performance of the majority voting based proposed model on the Mosmed dataset. Table 8 shows the performance of the majority votingbased CNN model and Table 9 reports the performance of the majority voting based proposed model on the CCAP dataset.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 245,
+                    "end": 253,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 812,
+                    "end": 819,
+                    "text": "Table 5",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 824,
+                    "end": 832,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 924,
+                    "end": 931,
+                    "text": "Table 5",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 1079,
+                    "end": 1087,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 1528,
+                    "end": 1535,
+                    "text": "Table 6",
+                    "ref_id": "TABREF7"
+                },
+                {
+                    "start": 1604,
+                    "end": 1611,
+                    "text": "Table 7",
+                    "ref_id": "TABREF8"
+                },
+                {
+                    "start": 1703,
+                    "end": 1710,
+                    "text": "Table 8",
+                    "ref_id": "TABREF9"
+                },
+                {
+                    "start": 1775,
+                    "end": 1782,
+                    "text": "Table 9",
+                    "ref_id": "TABREF10"
+                }
+            ],
+            "section": "Image Level COVID-19 Classification"
+        },
+        {
+            "text": "J o u r n a l P r e -p r o o f ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Image Level COVID-19 Classification"
+        },
+        {
+            "text": "The proposed method enables COVID-19 classification for both image-level and scan level. First, the system performance was evaluated for image-level COVID-19 classification. The proposed AI system provides the best COVID-19 classification accuracy when middle images of the CT scan are utilized. The results can be seen in Figure 3 (a) . Second, the proposed system performance was evaluated for scan level for COVID-19 classification. The performance results showed that the system performance increases as the total number of scans increases. Table 10 reports the performance comparison of the proposed AI system and other methods. The proposed ResNet50 and majority voting provide 0.90 AUC value while 3D-ResNet50 model provides 0.67 AUC value.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 323,
+                    "end": 335,
+                    "text": "Figure 3 (a)",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 545,
+                    "end": 553,
+                    "text": "Table 10",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "The main strength of the proposed method is finetuning. The proposed ResNet18 and ResNet50 deep networks were fined-tuned on imagenet models [10, 11] . Imagenet models built on more than one million images. As a result, the fine-tuned proposed ResNet18 and ResNet50 models on imagenet allow accurate modelling for COVID-19 on CT scans. In contrast, we finedtuned 3D-ResNet18 and 3D-ResNet50 models on [40] Kinetics action video dataset. Kinetics dataset is the biggest publicly available dataset for fine-tuning the 3D-ResNet18 and 3D-ResNet50 models. This dataset includes 300K action videos. However, imagenet dataset is much bigger than Kinetics dataset, and this dataset provides more accurate modelling of proposed ResNet018 and ResNet-50 models.",
+            "cite_spans": [
+                {
+                    "start": 141,
+                    "end": 145,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 146,
+                    "end": 149,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 401,
+                    "end": 405,
+                    "text": "[40]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Another strength of the proposed method is that the modelling is based on majority voting. The majority voting receives estimates of the COVID-19 from CNN models and uses these predictions for COVID-19 classification. The proposed majority voting considers good estimates while it puts less emphasis on poor estimates of the CNN models. On the other hand, 3D-ResNet18 and 3D-ResNet50 deep networks model all CT scan images for COVID-19 classification. In other words, these models put equal emphasis on all the images of the CT scans to classify COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In conclusion, the proposed method's performance results show that the proposed approach is more robust and accurate than the 3D-ResNet18 and 3D-ResNet50 models. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The proposed method requires that several ResNet-50 architectures are run; however, the number of parallel usage of the models depends on the available hardware memory capacity. A high memory requirement might not be very problematic for a modern desktop computer or a laptop, but the performance on a tablet, a mobile phone, or a web server would be significantly impacted. This limitation would prevent the use of this model in applications such as mobile telemedicine networks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Limitations"
+        },
+        {
+            "text": "A new and novel AI system is proposed for detecting COVID-19 infection on CT images and CT scans. This AI system builds on ResNet-50 and majority voting. The proposed method has been compared with other deep learning models and fusing techniques. The reported results show that the proposed Resnet-50 model, in conjunction with majority voting, outperforms all other models and fusing techniques.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Covidgan: Data augmentation using auxiliary classifier gan for improved covid-19 detection",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Waheed",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goyal",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Khanna",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Al-Turjman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Pinheiro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Access",
+            "volume": "8",
+            "issn": "",
+            "pages": "91916--91923",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Covid-19 identification in chest x-ray images on flat and hierarchical classification scenarios",
+            "authors": [
+                {
+                    "first": "Rodolfo",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pereira",
+                    "suffix": ""
+                },
+                {
+                    "first": "Diego",
+                    "middle": [],
+                    "last": "Bertolini",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lucas",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Teixeira",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carlos",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Silla",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yandre",
+                    "middle": [
+                        "M G"
+                    ],
+                    "last": "Costa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Computer Methods and Programs in Biomedicine",
+            "volume": "194",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The role of chest imaging in patient management during the covid-19 pandemic: A multinational consensus statement from the fleischner society",
+            "authors": [
+                {
+                    "first": "Geoffrey",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Rubin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christopher",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ryerson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Linda",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Haramati",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nicola",
+                    "middle": [],
+                    "last": "Sverzellati",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Kanne",
+                    "suffix": ""
+                },
+                {
+                    "first": "Suhail",
+                    "middle": [],
+                    "last": "Raoof",
+                    "suffix": ""
+                },
+                {
+                    "first": "Neil",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Schluger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Annalisa",
+                    "middle": [],
+                    "last": "Volpi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jae-Joon",
+                    "middle": [],
+                    "last": "Yim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ian",
+                    "middle": [
+                        "B K"
+                    ],
+                    "last": "Martin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Deverick",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christina",
+                    "middle": [],
+                    "last": "Kong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Talissa",
+                    "middle": [],
+                    "last": "Altes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [],
+                    "last": "Bush",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sujal",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Desai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jin",
+                    "middle": [
+                        "Mo"
+                    ],
+                    "last": "Onathan Goldin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marc",
+                    "middle": [],
+                    "last": "Goo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yoshikazu",
+                    "middle": [],
+                    "last": "Humbert",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hans-Ulrich",
+                    "middle": [],
+                    "last": "Inoue",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fengming",
+                    "middle": [],
+                    "last": "Kauczor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mathias",
+                    "middle": [],
+                    "last": "Mazzone",
+                    "suffix": ""
+                },
+                {
+                    "first": "Martine",
+                    "middle": [],
+                    "last": "Prokop",
+                    "suffix": ""
+                },
+                {
+                    "first": "Luca",
+                    "middle": [],
+                    "last": "Remy-Jardin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cornelia",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Richeldi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Noriyuki",
+                    "middle": [],
+                    "last": "Schaefer-Prokop",
+                    "suffix": ""
+                },
+                {
+                    "first": "Athol",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Tomiyama",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ann",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Wells",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Radiology",
+            "volume": "296",
+            "issn": "1",
+            "pages": "172--180",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Imagenet classification with deep convolutional neural networks",
+            "authors": [
+                {
+                    "first": "Alex",
+                    "middle": [],
+                    "last": "Krizhevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ilya",
+                    "middle": [],
+                    "last": "Sutskever",
+                    "suffix": ""
+                },
+                {
+                    "first": "Geoffrey",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hinton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "25",
+            "issn": "",
+            "pages": "1097--1105",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Going deeper with convolutions",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Szegedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yangqing",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sermanet",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Reed",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Anguelov",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Erhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vanhoucke",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rabinovich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "2015 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Very deep convolutional networks for large-scale image recognition",
+            "authors": [
+                {
+                    "first": "Karen",
+                    "middle": [],
+                    "last": "Simonyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [],
+                    "last": "Zisserman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Mobilenetv2: Inverted residuals and linear bottlenecks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sandler",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Howard",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhmoginov",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE/CVF Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "4510--4520",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "2016 IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Laurens van der Maaten, and Kilian Q. Weinberger. Densely connected convolutional networks",
+            "authors": [
+                {
+                    "first": "Gao",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhuang",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "ImageNet Large Scale Visual Recognition Challenge",
+            "authors": [
+                {
+                    "first": "Olga",
+                    "middle": [],
+                    "last": "Russakovsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jia",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hao",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Krause",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sanjeev",
+                    "middle": [],
+                    "last": "Satheesh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sean",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhiheng",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrej",
+                    "middle": [],
+                    "last": "Karpathy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aditya",
+                    "middle": [],
+                    "last": "Khosla",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Bernstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexander",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Berg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li",
+                    "middle": [],
+                    "last": "Fei-Fei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "International Journal of Computer Vision (IJCV)",
+            "volume": "115",
+            "issn": "3",
+            "pages": "211--252",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "ImageNet: A Large-Scale Hierarchical Image Database",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Socher",
+                    "suffix": ""
+                },
+                {
+                    "first": "L.-J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fei-Fei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "CVPR09",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Early pleural effusion detection from respiratory diseases including covid-19 via deep learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Medical Technologies Congress (TIPTE-KNO)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Deep learning to distinguish covid-19 from other lung infections, pleural diseases, and lung tumors",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Medical Technologies Congress (TIPTE-KNO)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Discerning covid-19 from mycoplasma and viral pneumonia on ct images via deep learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "2020 4th International Symposium on Multidisciplinary Studies and Innovative Technologies (ISM-SIT)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Deep learning for mycoplasma pneumonia discrimination from pneumonias like covid-19",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "2020 4th International Symposium on Multidisciplinary Studies and Innovative Technologies (ISMSIT)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Gabor wavelet-based deep learning for skin lesion classification",
+            "authors": [
+                {
+                    "first": "Sertan",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hasan",
+                    "middle": [],
+                    "last": "Demirel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Computers in Biology and Medicine",
+            "volume": "113",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Wavelet-based deep learning for skin lesion classification",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Demirel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IET Image Processing",
+            "volume": "14",
+            "issn": "4",
+            "pages": "720--726",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Keratinocyte carcinoma detection via convolutional neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "International Symposium on Multidisciplinary Studies and Innovative Technologies (ISMSIT)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Geographic variation and ethnicity in diabetic retinopathy detection via deeplearning",
+            "authors": [
+                {
+                    "first": "Ali",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sertan",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Turkish Journal of Electrical Engineering and Computer Sciences",
+            "volume": "28",
+            "issn": "",
+            "pages": "664--678",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Transfer learning for early and advanced glaucoma detection with convolutional neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 Medical Technologies Congress (TIPTEKNO)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A generalized deep learning model for glaucoma detection",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 3rd International Symposium on Multidisciplinary Studies and Innovative Technologies (ISMSIT)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Dry and wet age-related macular degeneration classification using oct images and deep learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "In Scientific Meeting on Electrical-Electronics Biomedical Engineering and Computer Science (EBBT)",
+            "volume": "",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Graph-based saliency and ensembles of convolutional neural networks for glaucoma detection",
+            "authors": [
+                {
+                    "first": "Sertan",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ali",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "IET Image Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Deep learning in medical imaging: A brief review",
+            "authors": [
+                {
+                    "first": "Sertan",
+                    "middle": [],
+                    "last": "Serte",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ali",
+                    "middle": [],
+                    "last": "Serener",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fadi",
+                    "middle": [],
+                    "last": "Al-Turjman",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Transactions on Emerging Telecommunications Technologies",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Deep learning-based detection for covid-19 from chest ct using weak label. medRxiv",
+            "authors": [
+                {
+                    "first": "Chuansheng",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xianbo",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiang",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiang",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiapei",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hui",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenyu",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xinggang",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Can spatiotemporal 3d cnns retrace the history of 2d cnns and imagenet?",
+            "authors": [
+                {
+                    "first": "Kensho",
+                    "middle": [],
+                    "last": "Hara",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hirokatsu",
+                    "middle": [],
+                    "last": "Kataoka",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yutaka",
+                    "middle": [],
+                    "last": "Satoh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+            "volume": "",
+            "issn": "",
+            "pages": "6546--6555",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Resource efficient 3d convolutional neural networks",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "K\u00f6p\u00fckl\u00fc",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kose",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gunduz",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Rigoll",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "IEEE/CVF International Conference on Computer Vision Workshop (ICCVW)",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "1910--1919",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "A weakly-supervised framework for covid-19 classification and lesion localization from chest ct",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2615--2625",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Accurate screening of covid-19 using attention-based deep 3d multiple instance learning",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cong",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2584--2594",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Review of artificial intelligence techniques in imaging data acquisition, segmentation and diagnosis for covid-19",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Reviews in Biomedical Engineering",
+            "volume": "",
+            "issn": "",
+            "pages": "1--1",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Sampleefficient deep learning for covid-19 diagnosis based on ct scans. medrxiv",
+            "authors": [
+                {
+                    "first": "Xuehai",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xingyi",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shanghang",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jinyu",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yichen",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eric",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pengtao",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Weakly supervised deep learning for covid-19 infection detection and classification from ct images",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Niu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Menpes-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Access",
+            "volume": "8",
+            "issn": "",
+            "pages": "118869--118883",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Artificial intelligence-enabled rapid diagnosis of patients with covid-19",
+            "authors": [
+                {
+                    "first": "Xueyan",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hao-Chih",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kai-Yue",
+                    "middle": [],
+                    "last": "Diao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mingqian",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bin",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chenyu",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zongyu",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yixuan",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Philip",
+                    "middle": [],
+                    "last": "Robson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Chung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adam",
+                    "middle": [],
+                    "last": "Bernheim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Venkatesh",
+                    "middle": [],
+                    "last": "Mani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Claudia",
+                    "middle": [],
+                    "last": "Calcagno",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kunwei",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shaolin",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hong",
+                    "middle": [],
+                    "last": "Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jian",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tongtong",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junli",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yang",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nature Medicine",
+            "volume": "26",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Artificial intelligence for the detection of covid-19 pneumonia on chest ct using multinational datasets",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Harmon",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Sanford",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Turkbey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Communications",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Deeplearning framework to detect lung abnormality -a study with chest x-ray and lung ct scan images",
+            "authors": [
+                {
+                    "first": "Abhir",
+                    "middle": [],
+                    "last": "Bhandary",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Prabhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Rajinikanth",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Palani"
+                    ],
+                    "last": "Thanaraj",
+                    "suffix": ""
+                },
+                {
+                    "first": "Suresh",
+                    "middle": [
+                        "Chandra"
+                    ],
+                    "last": "Satapathy",
+                    "suffix": ""
+                },
+                {
+                    "first": "David",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Robbins",
+                    "suffix": ""
+                },
+                {
+                    "first": "Charles",
+                    "middle": [],
+                    "last": "Shasky",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu-Dong",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jo\u00e3o",
+                    "middle": [],
+                    "last": "Manuel",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Tavares",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Sri Madhava Raja",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Pattern Recognition Letters",
+            "volume": "129",
+            "issn": "",
+            "pages": "271--278",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Deep learning system to screen coronavirus disease 2019 pneumonia",
+            "authors": [
+                {
+                    "first": "Charmaine",
+                    "middle": [],
+                    "last": "Butt",
+                    "suffix": ""
+                },
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Gill",
+                    "suffix": ""
+                },
+                {
+                    "first": "Benson",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Chun",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Babu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Appl Intell",
+            "volume": "",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Ccap: A chest ct dataset",
+            "authors": [
+                {
+                    "first": "Tao",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Skin lesion classification with ensembles of deep convolutional neural networks",
+            "authors": [
+                {
+                    "first": "Balazs",
+                    "middle": [],
+                    "last": "Harangi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Biomedical Informatics",
+            "volume": "86",
+            "issn": "",
+            "pages": "25--32",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Mosmeddata: Chest ct scans with covid-19 related findings dataset",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Morozov",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Andreychenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Pavlov",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Vladzymyrskyy",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Ledikhova",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gombolevskiy",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Blokhin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gelezhe",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Gonchar",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chernina",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "The kinetics human action video dataset",
+            "authors": [
+                {
+                    "first": "Will",
+                    "middle": [],
+                    "last": "Kay",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jo\u00e3o",
+                    "middle": [],
+                    "last": "Carreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karen",
+                    "middle": [],
+                    "last": "Simonyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chloe",
+                    "middle": [],
+                    "last": "Hillier",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sudheendra",
+                    "middle": [],
+                    "last": "Vijayanarasimhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fabio",
+                    "middle": [],
+                    "last": "Viola",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tim",
+                    "middle": [],
+                    "last": "Green",
+                    "suffix": ""
+                },
+                {
+                    "first": "Trevor",
+                    "middle": [],
+                    "last": "Back",
+                    "suffix": ""
+                },
+                {
+                    "first": "Paul",
+                    "middle": [],
+                    "last": "Natsev",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mustafa",
+                    "middle": [],
+                    "last": "Suleyman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [],
+                    "last": "Zisserman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Proposed deep learning method for classifying COVID-19 using CT scans.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Proposed deep learning method for classifying COVID-19 using CT scans.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "CT scans of patients that were taken while they were in hospitals in Moscow, Russia. The Mosmed-1110 dataset includes five categories of 3D CT volumes. These groups are named as CT0, CT1, CT2, CT3, and CT4. The CT0 includes 254 3D CT volumes, and these volumes are normal scans. The normal level indicates that the person's CT scan does not show any signs of pneumonia or COVID-19. CT2 consists of 684 3D CT scans, and these scans show 25% COVID-19 infection on the lungs. Moreover, CT3 includes 45 3D CT scans and these scans indicate 50% COVID-19 infection on the lungs.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "The performance of the proposed AI system for (a) image level and (b) scan level.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Mosmed Dataset (Test Ratio 2:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Mosmed Dataset (Test Ratio 9:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "CCAP Dataset (Test Ratio 9:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "defines all the abbreviations used in the tables.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Abbreviations and Definitions",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "The proposed AI method employs CNN and Majority Voting on the Modmed Dataset (Test Ratio 2:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "The proposed AI method employs CNN and Sum of the Maximal Probabilities on the Modmed Dataset (Test Ratio 9:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "The proposed AI method employs CNN and Majority Voting on the Modmed Dataset (Test Ratio 9:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "The proposed AI method employs CNN and Sum of the Maximal Probabilities on the CCAP Dataset (Test Ratio 9:1).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF10": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF11": {
+            "text": "compares the performances of the proposed methods with 3D-ResNet18 and 3D-ResNet50 models[26]. The proposed sum of maximal probability-based CNN model is denoted by Resnet18 + SMP and Resnet50 + SMP. Further, the proposed majority voting-based CNN model is denoted by Resnet18 + MV and Resnet50 + MV.The proposed majority voting-based Resnet50 model provides the best performance among the other proposed methods. This model achieves a 0.90 AUC value for the classification of COVID-19 and normal 3D scans. The proposed majority voting-based Resnet18 model provides 0.87 AUC value for COVID-19 and normal 3D scan classification. The reported results show that the proposed majority voting-based ResNet-18 and ResNet-50 results in close performance for COVID-19 classification.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF12": {
+            "text": "A comparison of the proposed methods and other methods on the Modmed Dataset (Test Ratio 9:1). The proposed AI method employs CNN and the Sum of the Maximal Probabilities (SMP). The proposed AI method employs CNN and Majority Voting (MV).",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

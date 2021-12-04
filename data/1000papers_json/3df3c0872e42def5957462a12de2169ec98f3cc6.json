@@ -1,0 +1,1843 @@
+{
+    "paper_id": "3df3c0872e42def5957462a12de2169ec98f3cc6",
+    "metadata": {
+        "title": "CoViD-19 in Italy: a mathematical model to analyze the epidemic containment strategy and the economic impacts",
+        "authors": [
+            {
+                "first": "Fabio",
+                "middle": [],
+                "last": "Verachi",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Luca",
+                "middle": [],
+                "last": "Trussoni",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Luciano",
+                "middle": [],
+                "last": "Lanzi",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The objective of this paper is to evaluate the potential costs deriving from the adoption of the CoViD-19 epidemic management strategy. For this purpose, we developed a specific methodology that combines an epidemiological model, known in the literature as \"SIR\" (Susceptible -Infected -Recovered), and a probabilistic state model, also known as \"multi-state\". The model thus conceived was then parameterized using the dataset published by the Italian Government through the Civil Protection and the Istituto Superiore di Sanit\u00e0. We therefore estimated the duration of the disease and the related costs, with reference to the strategy currently under discussion between government institutions and social organizations involved. Given the flexibility of the adopted approach, the tool will also be able to provide useful indications in relation to any alternative strategies that the Government could adopt in the near future, as well as being the starting point of an analysis of the epidemic indirect costs such as losses of GDP fractions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "SIR and SEIR models",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": "The methodology proposed in this paper for the epidemiological component is a variant of the SIR (Susceptible, Infected, Recovered) model. The use of an epidemiological model is of fundamental importance to quantitatively define the infection dynamics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": "It is also necessary to determine the possible strategies for identifying, preventing and managing the disease as well as, as will be seen, to estimate the direct and indirect economic impacts.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": "The SIR model was first proposed in the 1920s by Kermack and McKendrick to explain the rapid growth and subsequent decrease in the number of infected people observed in some epidemics such as the London plague in 1665-1666, Bombay in 1906 or London cholera in 1865.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": "The logic behind the methodology is to distinguish, among the population, the susceptible individuals (the uninfected but susceptible to infection) and the infected individuals (infected people who are able to transmit the disease).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": "The underlying mathematical model is a system of three differential equations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Country Confirmed Cases Deaths Recovered"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. where represents the population susceptible to the disease, the infected population and the \"removed\" population that is no longer able to spread the disease (composed by the healed and immunized people and the deceased people). The constants and identify the evolution of the disease (respectively an infectivity parameter and the reciprocal of the average time of evolution of the disease).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Many variations have been introduced over time, such as the SEIR models, which explicitly consider the class of \"exposed\" people: this model is particularly valid for diseases with a significant incubation time, during which the infected are not yet contagious:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "where the parameter represents the reciprocal of the incubation time. Further variants arise from the explicit consideration of time delays. For the CoViD-19 epidemic, researchers have proposed both the direct application of the SIR model (Nesteruk [22] ) and the SEIR model (Zhou et al. [16] ), variants of the SEIR with additional components (Tang et al. [11] ), the explicit modeling of external factors (such as injection or subtraction of population due to travel Wu et al. [3] ) or in which those exposed contribute to the spread of the disease ( [16] ).",
+            "cite_spans": [
+                {
+                    "start": 249,
+                    "end": 253,
+                    "text": "[22]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 288,
+                    "end": 292,
+                    "text": "[16]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 357,
+                    "end": 361,
+                    "text": "[11]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 479,
+                    "end": 482,
+                    "text": "[3]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 553,
+                    "end": 557,
+                    "text": "[16]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "For the sake of completeness, alternative modeling approaches not based on differential equations should be mentioned, among them the stochastic models, typically based on discrete-time agent models (the differential models are continuous-time): these approaches will not be used in this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "A proposal for an integrated model",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The model we propose consists of two sub-models that can be independently defined: an epidemiological model (of the SIR type, briefly described above), and a state model that describes the management of the infected people. The SIR model estimates the speed of spread and the size of the epidemic (in line with Batista, [15] and [21] ), while the state model is a proposal from the authors, analogous to models used in the credit risk assessment, through which we will arrive at an estimate of the epidemic management needs (in terms of hospitalization costs).",
+            "cite_spans": [
+                {
+                    "start": 320,
+                    "end": 324,
+                    "text": "[15]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[21]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The choice of a SIR-type model is motivated both by the literature findings and by the fact that there is a broad consensus that even during the incubation period, people exposed to SARS-Cov2 virus should be considered infectious.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The model is characterized by the following dynamics:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "with the following meaning of the variables:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "\u2022 represents the consistency of the population in which the epidemic develops; \u2022 represents, in every moment of time, the \"susceptible\" population, which has not been infected by the disease;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "\u2022 represents the population that has been infected with the disease and that is active in the spreading phenomenon;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "\u2022 \u210e represents the probability that a case will be caught by the disease management system; \u2022 1 and 2 respectively represent the reciprocals of the average times during which the infected spread the disease. In the model, it will be assumed 1/ 1 = 5.2 days and 1/ 2 = 15 days (in line with the indications in Li et al. [2] ); \u2022 1 and 2 represent the population of the \"removed\", or those who are no longer affected by the epidemic (because they are isolated, healed or deceased), respectively if they have been intercepted or not by the disease management system; \u2022 represents the speed of free spread of the epidemic; \u2022 represents the effectiveness of the lockdown in limiting the spread of the epidemic, starting from the time * corresponding to March 8 th , 2020. The function is the classic Heaviside function ( ( ) = 1 se \u2265 0, ( ) = 0 se < 0).",
+            "cite_spans": [
+                {
+                    "start": 319,
+                    "end": 322,
+                    "text": "[2]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "A classic parameter of epidemiological models is the \"basic reproduction number\" that represents the average number of susceptible individuals converted into infected for each individual infected, usually indicated with the acronym 0 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "The proposed model is characterized by three 0 parameters, one for the \"catched\" population 0, \u210e = / 1 , one for the \"non-catched\" population 0, \u210e = / 2 , and an overall estimation 0 = /( \u210e 1 + (1 \u2212 \u210e ) 2 ) .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "The method followed to adapt the model to the observed data is described in the Appendix, and leads to identification of the following values: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Structure of the SIR model"
+        },
+        {
+            "text": "In the values above we can implicitly infer the \"basic reproductive numbers\", equal to 0 = 4.01; 0, \u210e = 1.44; 0, \u210e = 4.16 before the lockdown and 0 = 2.41; 0, \u210e = 0.86; 0, \u210e = 2.50 after it. The values, although high, do not disagree with the literature which in particular reports, for the prelockdown values, different ranges referring to different geographical areas 6 : 6 For example, in the Diamond Princess the 0 of the epidemic spread is estimated at 14.8 [7] . The authors wish to cite the Gabriel Goh epidemic simulator, https://gabgoh.github.io/COVID/index.html, in whose documentation can be found the values that have been used for the reported graph.",
+            "cite_spans": [
+                {
+                    "start": 374,
+                    "end": 375,
+                    "text": "6",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 463,
+                    "end": 466,
+                    "text": "[7]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint Below we report some charts to compare the results of the model with observations:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": "We point out that the model seems to support the conclusion that the lockdown, however effective in reducing the 0 , was not enough to reduce it below value one in not-catched cases. This phenomenon can be explained by the fact that the main consequence of the lockdown is to have locked the value of at two million people, instead of allowing it to rise up to the entire Italian population of 60 million people.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": "It follows that the circulation of the disease remains high within the \"confined\" but not isolated population. This conclusion seems plausible to the authors and in line with other studies: an extreme case was the Diamond Princess cruise ship, where the illness circulation exhibited an 0 equal to about 15 (Rocklov et al. [7] ). The authors consider a high level of 0 reasonable for the spread of the disease within the confined population, also in light of the preliminary study of the Istituto Superiore di Sanit\u00e0 which highlights how the contagions in the period 1 st -23 rd April 2020 in Italy are for 2/3 occurred in rest homes and in the family environment (ISS [26] ).",
+            "cite_spans": [
+                {
+                    "start": 323,
+                    "end": 326,
+                    "text": "[7]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 669,
+                    "end": 673,
+                    "text": "[26]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": "This population must be considered as the \"circle\" of the infected, within which the lockdown was only partially effective (think of the case of those people infected in home isolation who certainly no longer infect their work colleagues but expose their family members to a significant risk of contagion).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": "The value of \u210e is also remarkable, the interpretation of which is that the model implies the presence of about 18.6 not symptomatic/not recognized infection cases for each case intercepted by the national health service. Different estimates have been proposed for asymptomatic to symptomatic infection rate ratio: for example, a 5:1 ratio for the Wuhan province has been proposed by Day [24] , while Li et al. [25] propose a . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 387,
+                    "end": 391,
+                    "text": "[24]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 410,
+                    "end": 414,
+                    "text": "[25]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "5.38%"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint range between 5:1 and 10:1. On the other hand, Wu et al. [27] find a 94% asymptomatic cases for the Chinese outbreak, in line with our result.",
+            "cite_spans": [
+                {
+                    "start": 198,
+                    "end": 202,
+                    "text": "[27]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Finally, the value * implies that the model estimates the beginning of the circulation of the disease in Italy on January 17 th (initiation level at 10 infected).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The patient management model focuses on the evolution of the 1 ( ) aggregate of the SIR model. The basic idea stems from the observation that during the accumulation phase, visually stable relationships were observed between the deaths and the number of patients in intensive care on the previous day.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "Such empirical observations suggested that patient management could be modeled using approaches known in the literature as \"multi-state\". A multi-state model describes how a single individual moves between a series of states in discrete time. Movements in a space of discrete states is governed by the transition intensity matrix which represents the instantaneous risk of moving from one state to another state.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "In our application this means that the transition of the health status of the subjects takes place through successive states of illness depending on its duration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "The following model was therefore formulated:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "\u2022 for each head that enters in the aggregate 1 at time three periods are identified 1 = [ , + 1 ], 2 = [ + 1 , + 2 ], 3 = [ + 2 , +\u221e];",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "\u2022 at any instant of simulated time the head can be in one of five states ( 1 , 1 , 1 , 1 , 1 ), which respectively represent the patients recovered, deceased, in home isolation, hospitalized or in intensive care; \u2022 for each period of illness we define the probabilities , , that the head (not healed or deceased) is in one of the three states on any day of the period;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "\u2022 for each of the periods is defined a differentiated probability of daily death , ; the heads pass to the deceased state according to the length of the period (in particular, in each period the deaths are calculated by applying a first in first out logic); \u2022 for the periods 2 and 3 two daily probabilities of recovery , are specifically defined; the heads pass to the healed state according to the length of the period (again utilizing the same first in first out logic).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "The model is therefore identified by a total of 13 parameters (in the appendix the structure of the model and the technique used for parameter fitting are detailed).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": "With regard to the parameters, the following values are obtained:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": ", 1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient management model"
+        },
+        {
+            "text": ", 3 ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3.06%"
+        },
+        {
+            "text": "From parameters, complementing to 1, we can easily deduce the probabilities of being treated in intensive care in the three periods , respectively 11.8%, 4.4% and 0.8%.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "days"
+        },
+        {
+            "text": "The model exhibits a good fit with the observed values, as highlighted by the following charts (we called Hospital ratio the fraction of hospitalized infected compared to the intercepted infected, and ICU ratio the fraction of hospitalized patients treated in intensive care):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "days"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "days"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint With regard to the parameters, we point out that the following relationships should hold:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "All these relations are consistent with the reasonable hypothesis that patients who survive for a greater number of days have a progressively more favorable prognosis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The satisfactory agreement with the observed data and further tests carried out by the authors on trends at regional level, using models with the same structure, depose in favor of the reliability of the proposed approach: however, all the usual limitations and cautions in using mathematical models remain applicable in representing reality.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "A substantial improvement in the analysis of the model's performance would occur using the comparison with the data relating to the actually observed clinical evolution of the patients: these data are not available while writing this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "For the purpose of fitting, the patient management model is fed with the observed increments: to integrate the models it is sufficient to feed the model with the simulated increases of the 1 population taken from the SIR model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Integration of models and simulations"
+        },
+        {
+            "text": "In the following sections, all the simulations are carried out on a total of 430 simulated days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Integration of models and simulations"
+        },
+        {
+            "text": "First of all, we note that the simulated evolution of the epidemic takes place essentially in the first 200 simulated days:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Integration of models and simulations"
+        },
+        {
+            "text": "By applying the patient management model, the peaks in the number of patients in ICU, hospital and home isolation happen at day 116, 102 and 123 respectively (with a timespan, from the first to the last peak, of 21 days). As of the writing date of this article, the maximum of the classes of hospitalized patients have already been observed (Aprl 3 th and 4 th ), while the maximum of the infected in home isolation has been observed on May 2 nd with and observed delay of 29 days from the first peak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Integration of models and simulations"
+        },
+        {
+            "text": "It is also possible to calculate some relevant quantities, such as the number of deaths, the number of days in the various management classes, as well as the duration of the epidemic until reaching predetermined levels of the infected population (remember that infected people spread the disease).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Integration of models and simulations"
+        },
+        {
+            "text": "The following values are obtained: . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Integration of models and simulations"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. The previous table also shows the progress compared to May 4 th (which would be the 108th simulated day). Assuming a standard cost of 500 euros for a day of normal hospitalization and 1,500 euros for a day of hospitalization in intensive care, the direct costs of the epidemic should be around 2 billion euros.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "A useful exercise is then to apply the model to different sets of initialization parameters, varying the \"size\" of the population and the delay in activating the restrictive measures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The following values are obtained:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The underlying idea of the exercise is to simulate the reopening of an epidemic event in our country (Italy), due to the emergence of an outbreak during a hypothetical phase of release of the restrictive measures. Assuming as the duration of the lockdown the time from the delayed detection of the outbreak to the return to the threshold of 1,000 infected people, the following relationship could be empirically found:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "with = 30.64 and = \u2212208.82. It is reasonable to assume the existence of an exponential relationship between the infected population size and the lockdown delay 7 : observing that of the adopted model is equal to about 2 million people reached with a detection delay of 38 days, we can find the following relation:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "where = 0.38. By replacing this formula in the expression for the duration of the lockdown, we are able to find that each day of delay in the detection costs about 11 days of lengthening the lockdown and that, neglecting the effects of saturation, a detection delay of 47 days would be sufficient to expand the infected people until the total national population amount. 7 The dynamic is consistent with the hypothesis that each simulated person has a constant number of contacts with new people for each simulated day. This hypothesis is reasonable in estimating a population only as long as saturation effects are not achieved. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 371,
+                    "end": 372,
+                    "text": "7",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "This paper focused on defining and applying a model for the management of the CoViD-19 epidemic. The phenomenon has been studied based on the Italian experience, with the purpose of identifying a preliminary estimate for the economic impacts of the disease. As previously described, the methodology we propose consists of two different independent models to be used jointly: the epidemic dynamics model (SIR) and a multi-state model for patient management.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The first model (SIR) seems to intercept pretty well the dynamics that characterize the contagion, especially in terms of basic reproduction number ( 0 ) and the number of people in whom the epidemic develops ( ). As highlighted from the empirical evidence, captured by the model, it appears that the basic reproductive number of the epidemic 0 for uncatched cases remains above 1 even during the lockdown. The authors believe that this phenomenon is essentially linked to the interaction between the fitting procedure and the nature of the lockdown: on one side the model is free to identify the dimension of the population within the disease spreads, and obviously concentrates on the fraction of population within active diffusion is detected, on the other the lockdown limited the size of the potentially exposed population through which the disease spread but was not effective in slowing down the diffusion within the confined population clusters (best known cases are the outbreaks in retirement homes RSA throughout Italy). It should also be noted that, in the model considered, asymptomatic infected patients, whose number seems to be high compared to symptomatic cases, took a relevant role in the spread dynamics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The second model (multi-state) focused instead on the relationships that take into account the transition of patients through the possible duration of the different stages of the disease, represented respectively by patients recovered, deceased, in home isolation, hospitalized or in intensive care. By considering this information together with the estimates of the SIR model, it is possible to obtain a forecast of the duration in terms of days of lockdown to reach a residual threshold (e.g. 100 infected patients).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "We also proposed a scenario analysis related to the spread of the disease in smaller confined populations, and a preliminary cost measure of the \"delay\" of activation of the lockdown measures in terms of the duration of the lockdown itself: these analyzes, resulting from an extrapolation of the calibrated model (and therefore subject to the limits of precision and reliability of the same), could constitute a basis for the modeling of future outbreaks that may reoccur during the subsequent phase of relaxation of the current lockdown constraints.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "However, an estimate of the direct costs of the epidemic is a partial, and in some ways secondary, aspect of the total economic impact: the loss of Italy's GDP fractions caused by the lockdown, to be assessed with the necessary sector specificities, is to be considered the main effect of the epidemic. The authors believe that the proposed model, allowing to obtain indications on the duration of the lockdown, could also be useful for estimating indirect impacts, to which we will eventually dedicate future analyzes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Fitting of the epidemiological model",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix -Technical details on the models"
+        },
+        {
+            "text": "The fitting of the epidemiological model is obtained starting from the data made available by the Civil Protection through the GitHub repository [23] that covers, as of the writing date of this article, the period from February 24 th to May 4 th 2020 8 . A first consideration is that the SIR model considered has a diffusion parameter for the pre-lockdown period and a different parameter for the post-lockdown period: the post-lockdown period, however, being made up of dates after March 8 th 2020 included, has a data intensity much higher than the previous one (40 points versus 13), and therefore the estimates made for this second period are to be considered more stable. The SIR parameter estimation process is made of the following steps:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix -Technical details on the models"
+        },
+        {
+            "text": "I. we define an auxiliary SIR model based on the equations / = \u2212 * / ; / = + * / \u2212 \u210e 1 \u2212 (1 \u2212 \u210e ) 2 ; 1 / = \u210e 1 ; modeling of component 2 at this level is ignored; the analysis compares the model with historical data for the lockdown period, or for data subsequent to the instant * assumed equal to March 8 th . Furthermore, the parameters 1 and 2 are locked at 5.2 days and 15 days (in line with the literature indications for the time to onset of symptoms and for the evolution of the disease in shorter cases; time to onset of symptoms is used in the first case since the fraction of the population routed to the first class of the removed is intercepted and isolated at the onset of symptoms, while in the second case the infected remain infectious and asymptomatic for the entire duration of the disease), the initial state is: (0) = 0 ; (0) = 0 ; 1 (0) = 7,535, where 0 * and 0 * are both identified by the model;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix -Technical details on the models"
+        },
+        {
+            "text": "II. we fit the SIR model based on equations / = \u2212 (1 \u2212 ( \u2212 * ))( / ) ; / = + (1 \u2212 ( \u2212 * )) / \u2212 \u210e 1 \u2212 (1 \u2212 \u210e ) 2 ; 1 / = \u210e 1 ; 2 / = (1 \u2212 \u210e ) 1 . Both the parameters 1 and 2 are locked as in the previous step, and the further constraint = * is introduced in order to benefit from the greater amount of information of the second period. The parameter * is also left free so as to allow the model to infer the initial instant of evolution of the disease, conventionally placed at (0) = \u2212 10, (0) = 10, 1 (0) = 2 (0) = 0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix -Technical details on the models"
+        },
+        {
+            "text": "In both cases the dynamic used is a gradient descent. The fitting parameters of step I are used as the starting point for step II.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix -Technical details on the models"
+        },
+        {
+            "text": "The fitting of both steps is performed through the minimization of the 1 norm, calculated on the total number of cases detected versus the time series of the simulated population 1 ( ). Defined \u03021 ( ) the time series of the cases observed by the Civil Protection, the fitting procedure seeks the minimum value of the norm \u2211 | 1 ( ) \u2212 1 ( )|. A commonly used approach is the maximization of the log-likelihood of the increases: it is assumed that the quantities \u0394 1 ( ) = 1 ( +1 ) \u2212 1 ( ) represent the expected values of a random Poisson variable whose corresponding observation is \u0394\u03021( ) =\u03021( +1 ) \u2212\u03021( ) = and then the fitting procedure look for the minimum of the norm \u2211 [ \u2212 log(\u03bb i ) + log ( !)]. In principle, different combinations of the two approaches are possible by performing steps I and II for one norm or the other:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix -Technical details on the models"
+        },
+        {
+            "text": "Norm . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The authors opted for the strategy Norm 1 + Norm 1 both for consistency between the two steps and for the reasonability on the dimension of the population in which the disease spread, that, looking at the death toll, should not be in the tens of millions range.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Fitting the multi-state model For the state model, the strategy is to minimize the norm 1 :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "where \u0394 and \u0394D respectively represent the expected and observed daily deaths, the values \u0394 and \u0394\u011c the expected and observed daily healings, the values \u0394\u210e and \u0394hr the hospital ratio expected and observed, \u0394 and \u0394icr the planned and observed intensive care ratio, and a weight that has the purpose of connecting the scales of the variables (assumed equal to 500). The hospital ratio is defined as the ratio between the patients hospitalized against the total number of infected people (for each moment of time) and the intensive care ratio is defined as the ratio between the patients admitted to intensive care against the patients hospitalized (both at internal and outside of intensive care). The model is powered by the observed inputs \u0302= 1 ( +1 ) \u2212 1 ( ) \u2212 (\u0302( +1 ) \u2212\u0302( )) \u2212 (\u0302( +1 ) \u2212\u0302( )) and initialized by dividing the 229 cases detected at February 24 th into 5 classes (4 of 46 cases and one of 45 cases) distributed over the first 5 days of population development.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The norm is calculated on the 71 increments observed from February 24 th to May 4 th , 2020.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "This section shows the pseudocode that implements the multi-state model: the objective is an operational description of the model, which allows its possible replication. If Aux>0 throw exception(\"Too many events!\")",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-state model implementation code"
+        },
+        {
+            "text": "The execution of the previous code segment defines the vectors DeathEvents and HealEvents, representing deaths and daily healings respectively. To obtain the daily consistency of the populations in home isolation, hospitalized or in intensive care, the following pseudocode is performed:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-state model implementation code"
+        },
+        {
+            "text": "for any t in 1\u2026length(ActiveCatched) . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-state model implementation code"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 30, 2020. . https://doi.org/10.1101/2020.05.28.20115790 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-state model implementation code"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Early Transmission Dynamics in Wuhan, China, of Novel Coronavirus-Infected Pneumonia",
+            "authors": [
+                {
+                    "first": "Qun",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuhua",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peng",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoye",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lei",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yeqing",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruiqi",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kathy",
+                    "middle": [
+                        "S M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eric",
+                    "middle": [
+                        "H Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jessica",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuesen",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nijuan",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study, The Lancet",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Joseph",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kathy",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gabriel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Emergency Committee regarding the outbreak of novel coronavirus",
+            "authors": [],
+            "year": 2005,
+            "venue": "Statement on the meeting of the International Health Regulations",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "World Health Organization",
+            "authors": [],
+            "year": 2020,
+            "venue": "Report of the WHO-China Joint Mission on Coronavirus Disease 2019 (COVID-19)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Tie Song, Jianfeng He, Wenjun Ma, Time-varying transmission dynamics of Novel Coronavirus Pneumonia in China, bioXriv",
+            "authors": [
+                {
+                    "first": "Tao",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jianxiong",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jianpeng",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guanhao",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Min",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zuhua",
+                    "middle": [],
+                    "last": "Rong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lifeng",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Haojie",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiong",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aiping",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weilin",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaohua",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Siqing",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhihua",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiansen",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dexin",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Donghua",
+                    "middle": [],
+                    "last": "Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shaowei",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lingchuan",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Limei",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenjia",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.25.919787"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "COVID-19 outbreak on the Diamond Princess cruise ship: estimating the epidemic potential and effectiveness of public health countermeasures",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sj\u00f6din",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Travel Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Incubation period of 2019 novel coronavirus (2019-nCoV) infections among travellers from Wuhan",
+            "authors": [
+                {
+                    "first": "Don",
+                    "middle": [],
+                    "last": "Jantien A Backer1",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jacco",
+                    "middle": [],
+                    "last": "Klinkenberg1",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wallinga",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Novel coronavirus 2019-nCoV: early estimation of epidemiological parameters and epidemic predictions",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jonathan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jessica",
+                    "middle": [
+                        "Re"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bridgen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Derek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Antonia",
+                    "middle": [],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jewell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.01.23.20018549"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Teijian Feng, Epidemiology and Transmission of COVID-19 in Shenzhen China: Analysis of 391 cases and 1,286 of their close contacts",
+            "authors": [
+                {
+                    "first": "Qifang",
+                    "middle": [],
+                    "last": "Bi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yongsheng",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shujiang",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chenfei",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuan",
+                    "middle": [],
+                    "last": "Zou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhen",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaojian",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lan",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shaun",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Truelove",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tong",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cong",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiujuan",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoliang",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Binbin",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Suli",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Juncen",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Justin",
+                    "middle": [],
+                    "last": "Lessler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.03.03.20028423"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Estimation of the Transmission Risk of the 2019-nCoV and Its Implication for Public Health Interventions",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bragazzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "J. Clin. Med",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Mathematical Tools for Understanding Infectious Disease Dynamics. Princeton Series in Theoretical and Computational Biology",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Diekmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Heesterbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Britton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "The mathematics of infectious diseases",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hethcote",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "SIAM Review",
+            "volume": "42",
+            "issn": "",
+            "pages": "599--653",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Modeling Infectious Diseases in Humans and Animals",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Rohani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Estimation of the final size of the coronavirus epidemic by the logistic model",
+            "authors": [
+                {
+                    "first": "Milan",
+                    "middle": [],
+                    "last": "Batista",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.02.16.20023606"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Preliminary prediction of the basic reproduction umber of the Wuhan novel coronavirus 2019-nCov",
+            "authors": [
+                {
+                    "first": "Tao",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Quanhui",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zimo",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jingyi",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kexin",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Bar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xin",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Evid Based Med",
+            "volume": "13",
+            "issn": "1",
+            "pages": "3--7",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/jebm.12376"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCov) in China, from 2019 to 2020: a data driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "Shi",
+                    "middle": [],
+                    "last": "Zhao E Altri",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "International Journal of Infectious Disease",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "A Poisson autoregressive model to understand COVID-19 contagion dynamics",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Agosto",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Giudici",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Optimal control of epidemics with limited resources",
+            "authors": [
+                {
+                    "first": "Elsa",
+                    "middle": [],
+                    "last": "Hansen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Troy",
+                    "middle": [],
+                    "last": "Day",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J. Math. Biol",
+            "volume": "62",
+            "issn": "",
+            "pages": "423--451",
+            "other_ids": {
+                "DOI": [
+                    "DOI10.1007/s00285-010-0341-0"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Jianxing He, Modified SEIR and AI prediction of the epidemics trend of COVID-19 in China under public health interventions",
+            "authors": [
+                {
+                    "first": "Zifeng",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhiqi",
+                    "middle": [],
+                    "last": "Zeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ke",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sook-San",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenhua",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Zanin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peng",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xudong",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhongqiang",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhitong",
+                    "middle": [],
+                    "last": "Mai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jingyi",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoqing",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shiyue",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yimin",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Feng",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weijie",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yifan",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fei",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shengmei",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuqi",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bin",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhoulang",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shaobo",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yaonan",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nanshan",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of thoracic disease",
+            "volume": "12",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Estimation of the final size of the coronavirus by the SIR model",
+            "authors": [
+                {
+                    "first": "Milan",
+                    "middle": [],
+                    "last": "Batista",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Statistics-Based Predictions of Coronavirus Epidemic Spreading in Mainland China",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nesteruk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Innov Biosyst Bioeng",
+            "volume": "4",
+            "issn": "1",
+            "pages": "13--18",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Covid-19: four fifths of cases are asymptomatic, China figures indicate",
+            "authors": [
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Day",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMJ",
+            "volume": "369",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1136/bmj.m1375"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Substantial undocumented infection facilitates the rapid dissemination of novel coronavirus (SARS-CoV2) Science",
+            "authors": [
+                {
+                    "first": "Sen",
+                    "middle": [],
+                    "last": "By Ruiyun Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bin",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yimeng",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tao",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wan",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Shaman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb3221"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Characteristics of and Important Lessons From the Coronavirus Disease 2019 (COVID-19) Outbreak in China: Summary of a Report of 72314 Cases From the Chinese Center for Disease Control and Prevention",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Mcgoogan",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF2": {
+            "text": "feb 2-mar 9-mar 16-mar 23-mar 30-mar 6-apr 13-apr 20-apr 27-apr",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF7": {
+            "text": "It is assumed that the outputs of the SIR epidemiological model are accumulated in the vectors R1[t], R2[t]. The population state at every moment of time is accumulated in the array of vectors ActiveCatched[t][i], where the vectors ActiveCatched[t] are supposed to be of variable length.The FIFO out function eliminates people from the active case vector by subtracting them from those of older age:FIFOOut(vector,events,index)",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Base1=sum(ActiveCatched(1\u2026T1))HomeIsolated[t]=PopulationVector\u2022Home_VHospital[t]=PopulationVector\u2022Hosp_VICU[t]=PopulationVector\u2022ICU_V",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "HomeIsolated, Hospital and ICU are vectors that contain, at any time, the population subjected to home isolation, hospitalization and intensive care treatment respectively.Bibliography [1] Adam J Kucharski, Timothy W Russell, Charlie Diamond, Yang Liu, John Edmunds, Sebastian Funk, et al., Early dynamics of transmission and control of COVID-19: a mathematical modelling study, The Lancet, Mar 2020.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,2534 @@
+{
+    "paper_id": "3e6ac443c4a0ea947f86d4341096d650211f19c3",
+    "metadata": {
+        "title": "Spatially resolved simulations of the spread of COVID-19 in European countries",
+        "authors": [
+            {
+                "first": "Andrea",
+                "middle": [],
+                "last": "Parisi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Samuel",
+                "middle": [
+                    "P C"
+                ],
+                "last": "Brand",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Joe",
+                "middle": [],
+                "last": "Hilton",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Rabia",
+                "middle": [],
+                "last": "Aziza",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Matt",
+                "middle": [],
+                "last": "Keeling",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "D",
+                "middle": [
+                    "James"
+                ],
+                "last": "Nokes",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Warwick",
+                    "location": {
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We explore the spatial and temporal spread of the novel SARS-CoV-2 virus under containment measures in three European countries based on fits to data of the early outbreak. Using data from Spain and Italy, we estimate an age dependent infection fatality ratio for SARS-CoV-2, as well as risks of hospitalization and intensive care admission. We use them in a model that simulates the dynamics of the virus using an age structured, spatially detailed agent based approach, that explicitly incorporates governamental interventions, changes in mobility and contact patterns occurred during the COVID-19 outbreak in each country. Our simulations reproduce several of the features of its spatio-temporal spread in the three countries studied. They show that containment measures combined with high density are responsible for the containment of cases within densely populated areas, and that spread to less densely populated areas occurred during the late stages of the first wave. The capability to reproduce observed features of the spatio-temporal dynamics of SARS-CoV-2 makes this model a potential candidate for forecasting the dynamics of SARS-CoV-2 in other settings, and we recommend its application in low and lower-middle countries which remain understudied.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The first cases of COVID-19, caused by the novel severe acute respiratory syndrome coronavirus (SARS-CoV-2), were reported in Wuhan, China in December 2019. Rapidly causing a local epidemic, it spread around the world within a few months causing a major pandemic which by the start of May 2020 had resulted in over 1,000,000 cases and over 300,000 deaths worldwide. Early data from China suggested levels of transmissibility and virulence comparable to those observed in the Spanish flu epidemic of 1918-19, which caused an estimated 20-50 million deaths worldwide [1] . Despite causing mild in-fections in the majority of cases, a small but considerable fraction of infected individuals requires hospitalization and, in the most severe cases, intensive care with mechanical ventilation. Estimates of the case fatality ratio (CFR) show a dramatic variation across populations [2] , likely reflecting the diverse approaches to case detection adopted by different countries. In the absence of an effective vaccine able to fend off the infection, many countries have adopted stringent non-pharmaceutical control measures designed to reduce transmission rates by limiting the frequency of person-toperson contact. These measures are designed to limit the total mortality due to COVID-19 and to confine the epidemic to a level that does not 1 overwhelm national health systems.",
+            "cite_spans": [
+                {
+                    "start": 565,
+                    "end": 568,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 876,
+                    "end": 879,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As a novel infectious agent, many characteristics of SARS-CoV-2 are still poorly understood and are the object of close scrutiny by the research community worldwide. Early estimates of the basic reproductive number in Hubei province, China, varied between 2.2 [3] and 3.11 [4] , with estimates in European countries ranging between 2.5 and 3.0 [5, 6, 7] . Measurements of the doubling time ranged between 2.9 and 7.4 days [5, 3] . The majority of infections are asymptomatic, but there is uncertainty over the proportion of asymptomatic infections, with reports ranging between 4.5% and 64% [8, 9, 10, 11] . A study conducted in the municipality of Vo' Euganeo, at the centre of the Italian outbreak, in which the whole population was tested irrespective of symptoms across two consecutive surveys found the mean proportion of asymptomatics to be between 40-45% [10] . An outbreak onboard the cruise ship Diamond Princess led to most passengers and staff tested for COVID-19, with 51% of laboratory confirmed cases being asymptomatic [12] and a subsequent modelling study estimating the asymptomatic proportion 74% (95% C.I. 70-78%) [13] . The proportion of cases which are asymptomatic is of interest because of their role in the transmission of the virus within the population. However, so far age stratified fractions of asymptomatic cases remain difficult to obtain. Evidence from several studies [10, 14] suggest that children are less likely to be affected by coronavirus, and data from most countries show that the rate of severe cases in young children is low compared to the mature population, although it is still unclear whether this reflects lower susceptibility or higher rates of asymptomatic infection among children. A detailed survey conducted by the Spanish Government [15] showed that only 1% of children below 1 year of age were infected by the SARS-CoV-2 virus in Spain; this percentage increased with age to 2.2% for 1-4 years old children, and to higher percentages for older individuals, up to almost 7% for individuals aged 70-74. While this could reflect a lower susceptibility to the virus among young individuals, decoupling this variation from agestructured mixing effects requires a detailed mathematical analysis. Additionally, the Spanish survey showed that the number of infected individuals is substantially larger than the number of detected cases, suggesting that large numbers of undetected asymptomatic or mildly symptomatic cases may have driven the outbreak.",
+            "cite_spans": [
+                {
+                    "start": 260,
+                    "end": 263,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 273,
+                    "end": 276,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 344,
+                    "end": 347,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 348,
+                    "end": 350,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 351,
+                    "end": 353,
+                    "text": "7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 422,
+                    "end": 425,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 426,
+                    "end": 428,
+                    "text": "3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 591,
+                    "end": 594,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 595,
+                    "end": 597,
+                    "text": "9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 598,
+                    "end": 601,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 602,
+                    "end": 605,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 862,
+                    "end": 866,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1034,
+                    "end": 1038,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1133,
+                    "end": 1137,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1401,
+                    "end": 1405,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1406,
+                    "end": 1409,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1787,
+                    "end": 1791,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "An age dependent fraction of infected individuals suffers from severe symptoms that require hospitalization, and a fraction of these require mechanical ventilation in intensive care units. Estimates of hospitalization rates based on Chinese data as well as the infection fatality ratios were estimated in Verity et al. [16] . Based on these, a set of estimates for hospitalization and admissions in intensive care were used by Ferguson et al. [17] . Recent data coming from the first highly infected European countries (Italy and Spain) provide space for further estimates. By combining recent information on cases, hospitalizations, intensive care admissions, deaths with results from the Spanish survey, we are able to build updated age stratified estimates of the ascertainment rate, rate of hospital admissions, intensive care admissions and corrisponding death rates.",
+            "cite_spans": [
+                {
+                    "start": 319,
+                    "end": 323,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 443,
+                    "end": 447,
+                    "text": "[17]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "A number of intervention were progressively implemented by most countries worldwide to counter the wide spread of the virus. These included stay-at-home measures, shielding of most-at-risk population, closure of schools and higher level educational institutions, teleworking, cancellation of mass gatherings, closure of shops, including recreational and food establishments [18] . The underlying idea of these interventions is to break the chain of transmission of the virus by reducing contact between individuals. In most countries, the interventions adopted resulted in a substantial reduction of the disease morbidity and mortality. The adoption of these intervention has typically been driven by intense modelling work carried out by national teams as well as the wider international research community. Analysis of big data provided by some large companies [19, 20] has been an important component of the modelling effort.",
+            "cite_spans": [
+                {
+                    "start": 374,
+                    "end": 378,
+                    "text": "[18]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 863,
+                    "end": 867,
+                    "text": "[19,",
+                    "ref_id": null
+                },
+                {
+                    "start": 868,
+                    "end": 871,
+                    "text": "20]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this work, we present a detailed model of the spatial spread of SARS-CoV-2 virus under non-pharmaceutical interventions that explicitly incorporates governamental interventions, changes in mobility and contact patterns as implied by measurements by big data operators [19] as well as demographic, internal human mobility and age mixing information. Our aim is to have a model that could be readily used on a range of different countries, including middle and low income countries: we thus apply the model to three European countries, Italy, Spain and the United Kingdom, to assess its capability of properly reproducing observed data, and to obtain estimates of key parameters that are, as much as possible, country independent. We use data from the first serological survey performed in Spain [15] as well as data on Intensive Care Units (ICU) admissions and deaths in Italy [33] to infer rates of detection of cases, severe and critical admissions to hospital, as well as death rates due to SARS-CoV-2. We then use the model to estimate, for each country, an unrestricted R 0 , which is the value that the basic reproductive number would achieve in the absence of interventions. We project R 0 to a reference country, China, thus removing the influence of country specific contact matrices. We also estimate a set of age-dependent susceptibilities independently for each country, resulting in a overall set of age stratified susceptibilities which agrees in all the countries under study. Output from our simulations is capable of reproducing the spatio-temporal spread of the disease in the studied countries, with some disagreement on the spatial aspect for Spain due to specific features of human mobility in that country.",
+            "cite_spans": [
+                {
+                    "start": 271,
+                    "end": 275,
+                    "text": "[19]",
+                    "ref_id": null
+                },
+                {
+                    "start": 797,
+                    "end": 801,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 879,
+                    "end": 883,
+                    "text": "[33]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The simulation program uses a gridded spatial description with a resolution of 5km. In each grid elements, age stratified estimates of the resident populations were obtained from the WorldPop database [21] . Maps available with a 100m resolution were coarsened to 5km: this choice was mainly due to computational ef-ficiency. Each grid cell is treated as a well mixed population, whereas transmission between distinct grid elements is driven by human mobility. The model uses an agent-based description in which individuals have a set of preferred locations and an associated frequency of visit which are assigned at the start of the simulation. Each day individuals move to one of their preferred locations and participate to the local transmission dynamics. The list of preferred locations and their frequency of visit and duration of stay are built in accordance to the fluxes between grid elements predicted by an appropriate model for human mobility.",
+            "cite_spans": [
+                {
+                    "start": 201,
+                    "end": 205,
+                    "text": "[21]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "In each location, the dynamics follows a modified age stratified SEIR model that includes further classes for hospitalization (severe cases) and cases in intensive care (critical cases), for a total of 9 age groups and 11 distinct epidemiological classes: a schematic description of the model is shown in Fig. 1 , while the full model is detailed in the Supplementary Material SM-1. The model distinguishes between two kind of infectives: detected cases I j and undetected U j . Detected cases may evolve into severe or critical cases, but otherwise both categories have same infectiousness. All rates we derive may be expressed as rates per infected individual, regardless of its symptomaticity. We do distinguish between detected and undetected cases to provide corresponding estimates of prevalence.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 305,
+                    "end": 311,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "Transitions between compartments are driven by stochastic events: a direct Gillespie algorithm is used to integrate the stochastic dynamics, with the exception of transmission within households which are handled separately. Infections are driven by contacts between susceptibles and infectives, either detected or undetected. We use age-mixing patterns estimated by Prem et al. [22] : these consist of distinct estimated age-mixing matrices for home contacts, work, school and other kind of contacts. We take advantage of this subdivision to implement different control 3 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 378,
+                    "end": 382,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ; https://doi.org/10.1101/2020.11.25.20238600 doi: medRxiv preprint Figure 1 : Schematic and simplified description of the epidemiological model. The full model is age-structured, and includes special handling of transmission in households as well as separating the transmission of work environments from other kind of transmission. S: susceptible; E: exposed; I: infective case; U: undetected case; H: hospitalized; C: critical; W: delay for hospitalised or critical; Q: quarantined at home; D: death; R: recovered; Z: removed asymptomatic.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 137,
+                    "end": 145,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "strategies. Given a susceptible in class S i , the force of infection is given by:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "where R 0 is the basic reproductive number for pre-lockdown China and \u03bb KCH is the maximum eigenvalue of the Chinese contact matrix. This approach allows exporting estimates of the basic reproductive number obtained from Chinese data to other countries and was used previously in Brand et al. [23] . The age dependent susceptibilities \u03c3 i are estimated from simulations. We consider work and non-work transmission separately, thus the type superscript may indicate one of the following two contact matrices: K work ij and K non-work",
+            "cite_spans": [
+                {
+                    "start": 293,
+                    "end": 297,
+                    "text": "[23]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "Due to this separation, we can implement stay-at-home interventions that affect one kind of transmission but not the other. The contribution from any of these matrices may be reduced or increased during the simulation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Epidemiological model"
+        },
+        {
+            "text": "Home transmission is not included in the above, and is handled differently. Using contact matrices for home contacts in the context of an age stratified well mixed model, while reasonable during unconstrained transmission, risks to overestimate widespread transmission in presence of home confinement due to the absence of household structure. To overcome this issue, we include a description of households based on the dynamic generation of synthetic households. When an individual is infected, the simulation program will dynamically generate a household by linking together unrelated individuals. Suppose an individual in age group j not previously included in any household is infected, a host household is generated on-the-fly. First, a household size is chosen from a Poisson distribution with mean equal to the country mean household size. Then, susceptible individuals from age groups i are added to this household, randomly chosen according to the discrete probability distribution g(i) = K home",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Households"
+        },
+        {
+            "text": "The choice of choosing susceptibles is driven by the fact that individuals from other classes would have already been involved in the process of forming synthetic households. Once a household is built, transmission from infectious to susceptible household members is attempted on a daily basis with a probability corresponding to 1 \u2212 exp(\u2212\u03b2f hh \u2206t), where \u2206t is set to 1 day, \u03b2 = R 0 \u03b3/\u03bb KCH , and f hh is an enhancing factor that takes into account increased transmission due to school closures and home working. Household members who quarantine or are hospitalized are removed from the transmission chain to free up computational resources, while the rest of the household structure is 4 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Households"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Households"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ;  maintained for future infection events. If during the course of the simulation the search for members of new families runs out of susceptibles, the simulation program retries searching for new members up to a limited number of attempts. Beyond that value, we assume that remaining household members must be recovered individuals and the effective household size is reduced. The maximum number of attempts is limited to 20 for efficiency.",
+            "cite_spans": [
+                {
+                    "start": 50,
+                    "end": 70,
+                    "text": "November 29, 2020. ;",
+                    "ref_id": null
+                },
+                {
+                    "start": 71,
+                    "end": 71,
+                    "text": "",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Households"
+        },
+        {
+            "text": "The use of a household structure alters the force of infection: a household will tend to contain the wider spread of the disease, especially if a quarantine or stay-at-home policy is enabled. Since we are breaking the local full mixing of the population, the epidemic curve will follow a less steep growth rate. Thus to make sure that the model reproduces the correct growth rate given the parameters estimated using well-mixed models, a multiplicative term to the force of infection is introduced that bridges between the two descriptions. The term, calculated using a semi-analitical approach and checked with simulations, is discussed in detail in the Supplementary Material SM-1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Households"
+        },
+        {
+            "text": "We estimate the movement of individuals within each country using the Radiation Model [24, 25] fitted on commuting data. Individual have a set of preferred locations, with an associated frequency of visit, which is assigned at the start of the simulation based on the fluxes between grid elements estimated by the radiation model [26, 27] . Each day a destination is chosen for each individual among his set of preferred locations according to their frequency of visit, and the individual is moved to that preferred location where it participates to the dynamics of that cell for a duration corresponding to the average work day. The individual is then moved back to his original location.",
+            "cite_spans": [
+                {
+                    "start": 86,
+                    "end": 90,
+                    "text": "[24,",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 91,
+                    "end": 94,
+                    "text": "25]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 330,
+                    "end": 334,
+                    "text": "[26,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 335,
+                    "end": 338,
+                    "text": "27]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Human mobility"
+        },
+        {
+            "text": "Data on human mobility is available for all countries investigated, through their respective National Statistical Institutions, in the form of commuting matrices between national political subdivisions. This is typically in form of esti-mates of the number of individiduals who reside in one subdivision and work in another subdivision. For Italy, information on place of study (for 16+ years old) is also available. This information is thus work oriented, however it is worth noting that even in this case it is still an approximation to the true fluxes, since it misses mobility of individuals outside of the typical work shift. Despite these caveats these dataset may be used effectively for the description of the spatial spread of infectious diseases at large scales [28] .",
+            "cite_spans": [
+                {
+                    "start": 772,
+                    "end": 776,
+                    "text": "[28]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Human mobility"
+        },
+        {
+            "text": "Our simulation model uses grid elements as basic areal units, thus we identified the grid cells corresponding to the different national subdivisions specified by the commuting matrices, and calculated the corresponding aggregated fluxes. These fluxes depend on the fraction of the population participating in the global commuting between regions which is a model parameter [26, 27] : the optimal value was identified by maximizing the common part of commuters -a measure of similarity of flow estimates based on the S\u00f8rensen index [29, 30, 31] . Further details are available in the Supplementary Material SM-1.",
+            "cite_spans": [
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[26,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 378,
+                    "end": 381,
+                    "text": "27]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 531,
+                    "end": 535,
+                    "text": "[29,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 536,
+                    "end": 539,
+                    "text": "30,",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 540,
+                    "end": 543,
+                    "text": "31]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Human mobility"
+        },
+        {
+            "text": "We derive the risk for a detected case to be hospitalized as a severe or critical case from age stratified data of Spanish surveillance [32] . We further derive age stratified death risks for severe and critical cases based on both Spanish and Italian data [32, 33] . Finally, we use the Spanish serological survey to estimate ascertainment rates (the percentage of detected cases). By appropriately combining risk percentages with the ascertainment rate, we derive the risk of death for an infected individual, or Infection Fatality Ratio (IFR). Table 1 shows the resulting rates, while all calculations required are detailed in the Supplementary Material SM-2.",
+            "cite_spans": [
+                {
+                    "start": 136,
+                    "end": 140,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 257,
+                    "end": 261,
+                    "text": "[32,",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 262,
+                    "end": 265,
+                    "text": "33]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 547,
+                    "end": 554,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Ascertainment rate and risks of hospitalization and death"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ; https://doi.org/10.1101/2020.11.25.20238600 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5"
+        },
+        {
+            "text": "A number of interventions are implemented following approaches used by various governments to control the disease as well as information available from Google COVID-19 Community Mobility Reports [19] : here we detail the interventions available (contact tracing, social distancing, school closures, stay-at-home including work from home, travel restrictions), while details of the interventions implemented for each country are discussed in the Supplementary Material SM-1. All interventions may be implemented immediately at the time the interventions are activated, or with a linear increase from the time of activation during a specified number of days.",
+            "cite_spans": [
+                {
+                    "start": 195,
+                    "end": 199,
+                    "text": "[19]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Interventions"
+        },
+        {
+            "text": "A rudimentary contact tracing is implemented by recording contacts of each individual being infected and entering the latent class. As the individual progresses to removal, a fraction of his contacts are isolated and quarantined. We assume a delay of about 3 days from the time of case detection (removal) to quarantine of his contacts. Contact tracing is used mostly to simulate the controlled epidemic during the initial phase of the outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Contact tracing"
+        },
+        {
+            "text": "Social distancing consists in reducing physical contact between people with the aim of reducing transmission. We implement it as a generalized contact reduction of K other . Closure of schools is implemented by reducing the transmission in schools, typically to zero. In this model schools are not explicitly described, thus reduction of transmission is implemented by multiplying the school contact matrix K school by a reduction factor.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Social distancing and school closures"
+        },
+        {
+            "text": "We consider home confinement for both working and non-working population (the stay-at-home idea). Working individuals may be asked to stay at home and limit their main interaction with member of their household. Similarly, non-working individuals may be asked to remain home. Both confinement measures are implemented mechanistically: we assume that a fraction f w of working individuals will stay at home and not commute or interact for work, having work transmission reduced to zero. Similarly, individuals who are staying at home due to social distancing, will cease to interact socially and will only have contacts within their household.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Home working and stay-at-home"
+        },
+        {
+            "text": "The model uses synthetic households as discussed previously. We assume that due to school closures, home working and stay-athome, household transmission may increase: this is implemented by tuning the multiplicative factor f hh introduced earlier.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Household transmission"
+        },
+        {
+            "text": "Travel restriction may be implemented by reducing the probabilities p ij underlying the radiation model (Ref. [24] and Supplementary Material SM-1). Note also that individuals who do not go to work or are quarantined do not move. The application of certain restrictions (for instance home working and stay-at-home) will indirectly contribute to travel reduction. Travel restriction may also be implemented by preventing individuals from moving between certain areas of the country, typically between administrative subdivisions. Travel restrictions are country specific and typically require specific implementations.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 114,
+                    "text": "[24]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Travel restrictions"
+        },
+        {
+            "text": "We use an approach based on recent work on Gaussian optimization detailed in Refs. [34] and [35] , and adapted to our specific needs. The method is particularly advantageous as it reduces the computational time required for 7 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 87,
+                    "text": "[34]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 92,
+                    "end": 96,
+                    "text": "[35]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fitting methods and epidemiological data"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint the fitting of a factor between 20 and 50, making highly detailed modelling available to fast forecasting. We also use a Sequential Monte Carlo [36] algorithm for verification of the goodness of the fits. Both methods are detailed in the Supplementary Material SM-1. We fit the basic reproductive number R 0 , the recovery rate \u03b3, and the initial condition by setting an importation rate modulated by province (for Spain and Italy) and Local Authority (for the United Kingdom) and the time span during which importations occur (see Supplementary Material SM-1). Since rates of case confirmation in Italy, Spain and UK may differ, we fit on daily national death counts. We fit age-dependent susceptibilities using an approximated approach based on the eigenvector corresponding to the maximum eigenvalue of the contact matrix. Specifically, we build a pseudo contact matrix which reproduces the age distribution of cases obtained from a simulations with unitary susceptibilities, and then we fit a set of susceptibilities that alters the age distribution to reproduce the one from data. The method is detailed in the Supplementary Material SM-1.",
+            "cite_spans": [
+                {
+                    "start": 277,
+                    "end": 281,
+                    "text": "[36]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fitting methods and epidemiological data"
+        },
+        {
+            "text": "The analysis of the data from Spain and Italy allows to estimate ascertainment rate of cases, rates of severe and critical cases and rates of death, to finally determine the underlying infection fatality ratio ( Table 1 ). The latter is the rate of fatality per infected individual, regardless of it being detected or not. A corresponding infection-fatality rate for reported cases can be estimated by dividing the IFR by the ascertainment rate. In the Supplementary material SM-2 we show that the IFR obtained can reproduce observed age distribution of deaths in European countries within reasonable accuracy. In addition to these rates, we also estimated age-dependent susceptibilities for each of the countries discussed: the results are consistent among countries, and allow us to derive average susceptibilities to the SARS-CoV-2 virus usable as reference in future works (Table 2). The results show that susceptibility to the SARS-CoV-2 virus is low for individuals up to 50 years of age, and then climbs rapidly with age.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 212,
+                    "end": 219,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "We estimted, for each country, the unrestricted R 0 appearing in the force of infection (1) , which would be the R 0 of the disease measured in China in the absence of any containment measure. This represents a reference estimate that is independent of the specific contact pattern of the country under study. We find that the three countries lead to similar estimates of R 0 (Italy is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [
+                {
+                    "start": 88,
+                    "end": 91,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ; https://doi.org/10.1101/2020.11.25.20238600 doi: medRxiv preprint able similarity with data, provided the description of human mobility is adequate. In Italy, the density of cases remains high in the Northern part of the country, especially in the Lumbardy, Veneto and Emilia-Romagna regions which were the areas of Italy that registered the highest number of cases during the peak of the epidemic. In simulations, clusters of cases are also observed in Rome, Naples and other densely populated areas of the south, however the fraction of infected population of these areas remains low. The difference may reflect a fundamental difference in the geographic distribution of the population between the highest infected areas and the rest of the country: the affected areas in the north of Italy form a continuous densely inhabited hinterland, with population densities among the highest in Europe 9 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ; https://doi.org/10.1101/2020.11.25.20238600 doi: medRxiv preprint (Bottom) Frames from an average of 10 simulation for the UK, corresponding to cases at the end of week 3, 7 and 12: on the left is the average incidence, on the right the incidence as a fraction of the population. (Lumbardy alone counts one sixth of the population of Italy). This extended area of interconnected highly population densities, coupled with measures that curbed mobility within the country, may have favoured the local spread of the disease whilst containing it within the affected regions. Results for the United Kingdom also show a remarkable resemblance to the observed spatial cumulative incidence (Fig. 5) . The initial stages of the epidemic are dominant in the highly populated areas of England, and spread towards lower populated areas during the declining phase following restrictions. The United Kingdom was subject to several importations from abroad (evidence of this is also suggested by a recent report on genomic studies [37] ) that led to a widespread distribution of is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [
+                {
+                    "start": 1087,
+                    "end": 1091,
+                    "text": "[37]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 753,
+                    "end": 761,
+                    "text": "(Fig. 5)",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ; https://doi.org/10.1101/2020.11.25.20238600 doi: medRxiv preprint (Bottom) Frames from an average of 10 simulations for Spain, corresponding to cases at the end of week 2, 4 and 7: on the left is the average incidence, on the right the incidence as a fraction of the population.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "cases. The United Kingdom presents a high population density in and around large centres in England, with lower population densities in Wales and Scotland; restriction in the United Kingdom were less severe than those imposed in Spain and Italy, and mobility level were higher than those observed in the other two countries, especially towards the end of the lockdown period: in simulations, this is re- Simulation for Spain fail to reproduce the correct spatial spread of the SARS-COV-2: this is likely a direct consequence of the inadequacy of the radiation model to correctly describe mobility within the country. Direct inspection of commuting data for Spain reveals that most commuting occurs between a few specific provinces (for instance between Madrid and a few of its neighbouring provinces), whilst the rest of the country is subjected to a substantially lower level of transmission. This makes it hard to any model based purely on distance and population size, like the gravity model, the radiation model and their descendants, to provide a correct description of 11 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted November 29, 2020. ;  mobility that is valid countrywide. In our simulations, the highest populated area of Madrid has the highest count of cases, however rural and less densely inhabited areas of the country are subject to diffused local transmission. Similarly to the United Kingdom, importation of initial cases was more widespread in the country with respect to Italy, with cases occurring in provinces with low density population. Mobility of individual greatly diminished in the middle of March but increased again during the following weeks: spatial spread on short scales can be observed during the declining phase of the epidemic.",
+            "cite_spans": [
+                {
+                    "start": 50,
+                    "end": 70,
+                    "text": "November 29, 2020. ;",
+                    "ref_id": null
+                },
+                {
+                    "start": 71,
+                    "end": 71,
+                    "text": "",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Our estimates of the IFR obtained from Spanish and Italian data differ from the early estimates of Verity et al. [16] : the rates found suggest a lower IFR for middle aged individuals (30-60) and a higher IFR for 80+ individual with respect to the Verity estimates. Our estimates take advantage of the Spanish serological survey, and thus do not require to estimate the fraction of asymptomatic infections that occur within a population -a fraction that still today is not well quantified. Nevertheless, our IFR reproduce reasonably well the age distribution of deaths registered in several countries. We estimated also an age-dependent susceptibility that shows a marked dependence on age. The estimated susceptibilities confirm that young individuls are less susceptible than older individuals to the virus, and they further suggest that this low susceptibility is shared by middle aged individuals (30-60 years old) that instead account for a large fraction of cases. The reason of this apparent contradiction is acutally due to the fact that in our modelling approach we distinguish between working and non-working individuals, with the first subject to more mixing due to differential measures imposed by government.",
+            "cite_spans": [
+                {
+                    "start": 113,
+                    "end": 117,
+                    "text": "[16]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Previous studies have reported a range of susceptibilities as discussed in the review by Russell et al. [38] . The authors of the review report an odd of being an infected contact in young individuals less than 19 year old compared to adults of age greater than 20 years old of 0.56 (95 % CI 0.37 -0.85), pooled from all reported studies. Based on our susceptibilities, one can build the average susceptibility \u0398 Y of age set Y . which is simply an average over the population sizes \u0398 Y = j\u2208Y N j \u03c3 j / j\u2208Y N j , where N j is the size of age group j. The ratio \u0398 \u226419 y.o. /\u0398 \u226520 y.o. is the relative odds ratio of being an infected contact between children and adults: focussing for simplicity on Spain, one gets a value of \u2248 0.43 which is not far from the value found by Russell et al. [38] .",
+            "cite_spans": [
+                {
+                    "start": 104,
+                    "end": 108,
+                    "text": "[38]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 211,
+                    "end": 213,
+                    "text": "19",
+                    "ref_id": null
+                },
+                {
+                    "start": 787,
+                    "end": 791,
+                    "text": "[38]",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The model uses an agent based description of the country population that incorporates households, as well as interventions adopted by the various government, or changes in contact patterns measured by social data. Some of the parameters we use are based on previous estimates: for instance the age-mixing matrices are based on the work of Prem et al. [22] which are projections from socio-economical data. Reduction in contact patterns are based on estimates from social data which we interpret as a direct measure of such reduction. The simulation model includes importations from other countries and takes into account, to some extent, the reduction of air travel between countries: the spatial distribution of imported cases reflects the distribution of the initial cases observed in each country. Super spreading events are not explicitly included in this approach, but their effects are implicitly incorporated by the modulated importations in the initial stages of the simulation.",
+            "cite_spans": [
+                {
+                    "start": 351,
+                    "end": 355,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "We adapt modern methods for Bayesian optimization that provide fast estimates of model parameters, permitting to simulate and estimate parameters for a country of roughly 60 million individuals using detailed agent based simulations in a relative short simulation time. Despite the simulations being parallelized, the version of the main fitting algorithm implemented, based on Gaussian processes, is currently not parallelized: methods for parallelizing Gaussian processes do exist. The simplest option would be to draw multiple points from the current posterior variance and pro-gressively update it as the evaluation of each point completes. This would allow even faster results despite the model complexity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our simulation model is capable of reproducing several features of the spread of COVID-19 in three distinct European countries: the spatial spread, the temporal dynamics of the epidemic, the age distribution of cases. We estimated an unrestricted and country independent basic reproductive number R 0 (referenced to China) which is higher than previous estimates in China as well as other European countries. This might be linked to the fact that the model simulates the dynamics of both detected cases and undected cases, whilst estimates have mostly used the available data on reported cases. According to the IFR that we obtained from the Spanish and Italian data, this under-represents the spread of the virus in an age-depentent fashion, which might lead to a different R 0 . It is worth noting that recent research has led to estimates of R 0 higher than the early reported ones [39, 40] .",
+            "cite_spans": [
+                {
+                    "start": 885,
+                    "end": 889,
+                    "text": "[39,",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 890,
+                    "end": 893,
+                    "text": "40]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The spatial spread of the disease is correctly described as long as mobility can be described by an underlying model for human mobility. The latter was modelled using the radiation model, preferred to the gravity model due to the need of aggregating fluxes between grid elements up to the level of counties. For Italy and the United Kingdom, the radiation model achieves a CPC of about 0.45 which, considering the use of an aggregation process from base areal units, is in line with the performance of both the radiation and gravity model. However, the limitations of the radiation model are evident in the description of mobility in Spain that only scores a CPC of 0.21. Possibly, the use of more recent models for human mobility might mitigate such discrepancies [30] .",
+            "cite_spans": [
+                {
+                    "start": 765,
+                    "end": 769,
+                    "text": "[30]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The agreement of the R 0 obtained from the independent fits performed in each country as well as the capability of the model of reproducing the observed data suggest its possible use in other contexts. One possibility could be to estimate the impact of future interventions in the countries studied in this work or other European countries, provided age-stratified information on cases and deaths from COVID-19 as well as information on the mobility of individuals are available for such countries. Another possibility could be its use in Low and Middle income countries: the key ingredients that would permit this are the availability of contact matrices from the work of Prem et al. [22] for almost all countries worldwide, the assumption that age-dependent susceptibility does not depend on anything other than age, and similarly the assumption that the IFR of COVID-19 derived from the Spanish data could be exported to other countries. Under these conditions the model could be used to explore the spread of COVID-19 in African and South American countries. Data on human mobility should also be available to permit studies of spatial spread, but since this is often not readily available in these contexts, with a bit of effort one could use spatially detailed time series of detected cases to infer the level of human travel by fitting an appropriate model for mobility.",
+            "cite_spans": [
+                {
+                    "start": 685,
+                    "end": 689,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The geography and mortality of the 1918 influenza pandemic",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Patterson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gerald",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pyle",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "Bulletin of the History of Medicine",
+            "volume": "65",
+            "issn": "1",
+            "pages": "4--21",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "An interactive web-based dashboard to track COVID-19 in real time",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet Infectious Diseases 20",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Early Transmission Dynamics in Wuhan, China, of Novel CoronavirusInfected Pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "H Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Novel coronavirus 2019-nCoV: early estimation of epidemiological parameters and epidemic predictions",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Bridgen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jewell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Epidemiological characteristics of COVID-19 cases in Italy and estimates of the reproductive numbers one month into the epidemic",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Riccardo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ajelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Andrianou",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bella",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Manso",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fabiani",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bellino",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Boros",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Urdiales",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Marziano",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The Covid-19 outbreak in Spain. A simple dynamics model, some lessons, and a theoretical framework for control response",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Guirao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infectious Disease Modelling",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Estimating the burden of SARS-CoV-2 in France",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Salje",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Kiem",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Lefrancq",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Courtejoie",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bosetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Paireau",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Andronico",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hoz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Richet",
+                    "suffix": ""
+                },
+                {
+                    "first": "C.-L",
+                    "middle": [],
+                    "last": "Dubost",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "369",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Similarity in case fatality rates (CFR) of COVID-19/SARS-COV-2 in Italy and China",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Porcheddu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Serra",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kelvin",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kelvin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Rubino",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Journal of Infection in Developing Countries",
+            "volume": "14",
+            "issn": "02",
+            "pages": "125--128",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Cluster of COVID-19 in northern France: A retrospective closed cohort study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Fontanet",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tondeur",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Madec",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Grant",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Besombes",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Jolly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Pellerin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-N",
+                    "middle": [],
+                    "last": "Ungeheuer",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Cailleau",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kuhmel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Suppression of COVID-19 outbreak in the municipality of",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Lavezzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Franchin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ciavarella",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Barzon",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Vecchio",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Rossi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Manganelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Loregian",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Navarin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Estimating the asymptomatic proportion of coronavirus disease 2019 (COVID-19) cases on board the Diamond Princess cruise ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Euro Surveill",
+            "volume": "25",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Rapid risk assessment. Novel coronavirus disease 2019 (COVID-19) pandemic: increased transmission in the EU/EEA and the UK -sixth update",
+            "authors": [],
+            "year": 2020,
+            "venue": "ECDC: Stockholm",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The contribution of asymptomatic SARS-CoV-2 infections to transmission -a model-based analysis of the Diamond Princess outbreak",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Emery",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hellewell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Pearson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Group",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ing",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Knight",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eggo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Changes in contact patterns shape the dynamics of the COVID-19 outbreak in China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Litvinova",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Merler",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Viboud",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Estudio ENE-COVID19: Primera Ronda del Estudio Nacional de Sero-Epidemiologa de la infecci\u00f3n por Sars-CoV-2 en Espa\u00f1a",
+            "authors": [
+                {
+                    "first": "Sanidad",
+                    "middle": [],
+                    "last": "Ministerio De",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Estimates of the severity of coronavirus disease 2019: a model-based analysis. The Lancet Infectious Diseases",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Verity",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Okell",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Winskill",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Whittaker",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G T"
+                    ],
+                    "last": "Walker",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Press",
+            "volume": "",
+            "issn": "",
+            "pages": "30243--30250",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Impact of non-pharmaceutical interventions (NPIs) to reduce COVID19 mortality and healthcare demand",
+            "authors": [
+                {
+                    "first": "Neil",
+                    "middle": [],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gemma",
+                    "middle": [
+                        "Nedjati"
+                    ],
+                    "last": "Gilani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natsuko",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kylie",
+                    "middle": [],
+                    "last": "Ainslie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marc",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sangeeta",
+                    "middle": [],
+                    "last": "Bhatia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Report",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Coronavirus disease 2019 (COVID-19) in the EU/EEA and the UK tenth update",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Global High Resolution Population Denominators Project -Funded by The Bill and Melinda Gates Foundation (OPP1134076)",
+            "authors": [],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.5258/SOTON/WP00646"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Projecting social contact matrices in 152 countries using contact surveys and demographic data",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cook",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jit",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "PLOS Computational Biology",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Forecasting the scale of the COVID-19 epidemic in Kenya",
+            "authors": [
+                {
+                    "first": "P C",
+                    "middle": [],
+                    "last": "Samuel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rabia",
+                    "middle": [],
+                    "last": "Brand",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Aziza",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ivy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Charles",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Kombe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joe",
+                    "middle": [],
+                    "last": "Agoti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kat",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hilton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrea",
+                    "middle": [],
+                    "last": "Rock",
+                    "suffix": ""
+                },
+                {
+                    "first": "James",
+                    "middle": [],
+                    "last": "Parisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matt",
+                    "middle": [],
+                    "last": "Nokes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edwine",
+                    "middle": [],
+                    "last": "Keeling",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Barasa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.09.20059865"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A universal model for mobility and migration patterns",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Simini",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Gonzlez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Maritan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A.-L",
+                    "middle": [],
+                    "last": "Barabsi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nature",
+            "volume": "484",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Gravity versus radiation models: On the importance of scale and heterogeneity in commuting flows",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Masucci",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Serras",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Johansson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Batty",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Phys. Rev. E",
+            "volume": "88",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Impact of human mobility on the periodicities and mechanisms underlying measles dynamics",
+            "authors": [
+                {
+                    "first": "Ramona",
+                    "middle": [],
+                    "last": "Marguta",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrea",
+                    "middle": [],
+                    "last": "Parisi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Journal of The Royal Society Interface",
+            "volume": "12",
+            "issn": "104",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Periodicity, synchronization and persistence in pre-vaccination measles",
+            "authors": [
+                {
+                    "first": "Ramona",
+                    "middle": [],
+                    "last": "Marguta",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrea",
+                    "middle": [],
+                    "last": "Parisi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of The Royal Society Interface",
+            "volume": "13",
+            "issn": "119",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "A method of establishing groups of equal amplitude in plant sociology based on similarity of species and its application to analyses of the vegetation on Danish commons",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "S\u00f8rensen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1948,
+            "venue": "Biol. Skr",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "A Universal Model of Commuting Networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lenormand",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Huet",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gargiulo",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Deffuant",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "PLOS ONE",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Limits of Predictability in Commuting Flows in the Absence of Data for Calibration",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Herrera",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Eagle",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Gonzlez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Actualizacin n 108",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Secreteria General De Sanidad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Baseline Characteristics and Outcomes of 1591 Patients Infected With SARS-CoV-2 Admitted to ICUs of the Lombardy Region",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Grasselli",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zangrillo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zanella",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Antonelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Cabrini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Castelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cereda",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Coluccello",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Foti",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Fumagalli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "323",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Bayesian Optimization for Likelihood-Free Inference of Simulator-Based Statistical Models",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Gutmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Corander",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of Machine Learning Research",
+            "volume": "17",
+            "issn": "",
+            "pages": "1--47",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Efficient Acquisition Rules for Model-Based Approximate Bayesian Computation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "J\u00e4rvenp\u00e4\u00e4",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Bayesian Anal",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Approximate Bayesian computation scheme for parameter inference and model selection in dynamical systems",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Toni",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Welch",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Strelkowa",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ipsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P H"
+                    ],
+                    "last": "Stumpf",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Journal of The Royal Society Interface",
+            "volume": "6",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Preliminary analysis of SARS-CoV-2 importation & establishment of UK transmission lineages",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Pybus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Susceptibility to SARS-CoV-2 infection among children and adolescents compared with adults: a systematic review and meta-analysis",
+            "authors": [
+                {
+                    "first": "Russell",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Viner",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Oliver",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Mytton",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Bonell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joseph",
+                    "middle": [],
+                    "last": "Melendez-Torres",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lee",
+                    "middle": [],
+                    "last": "Ward",
+                    "suffix": ""
+                },
+                {
+                    "first": "Claire",
+                    "middle": [],
+                    "last": "Hudson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Waddington",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA pediatrics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Estimating the reproductive number R0 of SARS-CoV-2 in the United States and eight European countries and implications for vaccination",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ke",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Romero-Severson",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sanche",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hengartner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Estimation of reproduction numbers of COVID-19 in typical countries and epidemic trends under different prevention and control scenarios",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tsamlag",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Long",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "), while the number of predicted cases is in line with what observed in data. The results for the spatial distribution of cases show a",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "(Top) Country level dynamics of SARS-COV-2 inferred by death incidence data for Italy. Fitted parameters are R 0 = 4.1 (95% CI [2.6 -5.6]), t 0 = 6 (95% CI [0 -12]) days, \u03c4 \u03b3 = 5.7 (95% CI [1.7-7.9]), and log \u03c9 = \u22127.5 (95% CI [-10 --4.6]) days \u22121 . (Bottom) Frames from an average of 10 simulation for Italy, corresponding to cases at the end of week 2, 4 and 7: is the average incidence, on the right the incidence as a fraction of the population. (Top) Age distribution of cases predicted by the model and comparison with data from Italy. The model overestimates cases in the middle age groups, and underestimates cases in the elderly. (Bottom) Comparison between predicted spatial spread of COVID-19 cases and observed distribution.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "(Top) Country level dynamics of SARS-COV-2 inferred by death incidence data for the UK. Fitted parameters are R 0 = 3.9 (95% CI [3.1 -4.9]), t 0 = 14 (95% CI[2 - 24]) days, \u03c4 \u03b3 = 3.9 (95% CI [1.3-7.5]), and log \u03c9 = \u22125.2 (95% CI [-7.6 --2.8]) days \u22121 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "(Top) Age distribution of cases predicted by the model and comparison with data from the United Kingdom. The model overestimates cases in the middle age groups, and underestimates cases in the elderly. (Bottom) Comparison between predicted spatial spread of COVID-19 cases and observed distribution.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "(Top) Country level dynamics of SARS-COV-2 inferred by death incidence data for Spain. Fitted parameters are R 0 = 4.3 (95% CI [3.1 -5.5]), t 0 = 13 (95% CI [1 -17]) days, \u03c4 \u03b3 = 3.9 (95% CI [0.4-7.6]), and log \u03c9 = \u22127.4 (95% CI [-9.3 --5.7]) days \u22121 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "(Top) Age distribution of cases predicted by the model and comparison with data from Spain. The model overestimates cases in the middle age groups, and underestimates cases in the elderly. (Bottom) Comparison between predicted spatial spread of COVID-19 cases and observed distribution. flected in the spread towards low populated areas during the later stages of the declining phase.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors wish to thank Erin Gorsich, Trystan Leng, Hector McKimm, Bridget Penman and Emma Southall for sharing their reviews on recent literature of COVID-19. The work was funded by the National Institute for Health Research (NIHR) (project reference 17/63/82) using UK aid from the UK Government to support global health research. The views expressed in this publication are those of the authors and not necessarily those of any of the funders.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

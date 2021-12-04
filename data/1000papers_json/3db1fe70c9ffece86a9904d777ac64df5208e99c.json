@@ -1,0 +1,1638 @@
+{
+    "paper_id": "3db1fe70c9ffece86a9904d777ac64df5208e99c",
+    "metadata": {
+        "title": "In silico dynamics of COVID-19 phenotypes for optimizing clinical management",
+        "authors": [
+            {
+                "first": "Chrysovalantis",
+                "middle": [],
+                "last": "Voutouri",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Mohammad",
+                "middle": [
+                    "Reza"
+                ],
+                "last": "Nikmaneshi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Ankit",
+                "middle": [
+                    "B Patel"
+                ],
+                "last": "Brigham",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Ashish",
+                "middle": [
+                    "Verma"
+                ],
+                "last": "Women&apos;s Hospital",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Brigham",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Melin",
+                "middle": [
+                    "J"
+                ],
+                "last": "Women&apos;s Hospital",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "",
+                "middle": [],
+                "last": "Khandekar",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Lance",
+                "middle": [
+                    "L"
+                ],
+                "last": "Munn",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Rakesh",
+                "middle": [
+                    "K"
+                ],
+                "last": "Jain",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Massachusetts General Hospital Sayon Dutta Massachusetts General Hospital Triantafyllos Stylianopoulos",
+                    "institution": "Massachusetts General Hospital",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Understanding the underlying mechanisms of COVID-19 progression and the impact of various pharmaceutical interventions is crucial for the clinical management of the disease. We developed a comprehensive mathematical framework based on the known mechanisms of the SARS-CoV-2 virus infection, incorporating the renin-angiotensin system and ACE2, which the virus exploits for cellular entry, key elements of the innate and adaptive immune responses, the role of in ammatory cytokines and the coagulation cascade for thrombus formation. The model predicts the evolution of viral load, immune cells, cytokines, thrombosis, and oxygen saturation based on patient baseline condition and the presence of co-morbidities. Model predictions were validated with clinical data from healthy people and COVID-19 patients, and the results were used to gain insight into identi ed risk factors of disease progression including older age, co-morbidities such as obesity, diabetes, and hypertension, and dysregulated immune response 1,2 . We then simulated treatment with various drug classes to identify optimal therapeutic protocols. We found that the outcome of any treatment depends on the sustained response rate of activated CD8 + T cells and su cient control of the innate immune response. Furthermore, the best treatment -or combination of treatments -depends on the pre-infection health status of the patient. Our mathematical framework provides important insight into SARS-CoV-2 pathogenesis and could be used as the basis for personalized, optimal management of COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Other potential treatments include anti-in ammatory drugs and anti-thrombotic agents. Because of the systemic in ammation seen in many patients, anti-in ammatory drugs have been tested, including anti-IL6/IL6R therapy (e.g., tocilizumab, siltuximab) and anti-JAK1/2 drugs (e.g. barcitinib). It is not clear if these drugs will be effective as stand-alone treatments, particularly after the recent failure of tocilizumab in a phase III trial 3, [24] [25] [26] . In addition, given that a common complication of COVID-19 is the development of coagulopathies with microvascular thrombi potentially leading to the dysfunction of multiple organ systems 4, 5 , anti-thrombotic drugs (e.g., low molecular weight heparin) are being tested. Recognizing the interactions of COVID-19 with the immune system 27 , the corticosteroid dexamethasone have been tested, showing some promising results. Given the large range of patient comorbidities, disease severities, and variety of complications such as thrombosis, it is likely that patients will have heterogeneous responses to any given therapy, and such heterogeneity will continue to be a challenge for clinical trials of unselected COVID-19 patients 28 .",
+            "cite_spans": [
+                {
+                    "start": 441,
+                    "end": 443,
+                    "text": "3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 444,
+                    "end": 448,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 449,
+                    "end": 453,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 454,
+                    "end": 458,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 648,
+                    "end": 650,
+                    "text": "4,",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Here, we developed a systems biology-based mathematical model to address this urgent need. Our model incorporates the known mechanisms of SARS CoV-2 pathogenesis and the potential mechanisms of action of various therapeutic interventions that have been tested in COVID-19 patients. In previous work, we have exploited angiotensin receptor blockers (ARBs) and angiotensin converting enzyme inhibitors (ACEis) for the improvement of cancer therapies and developed mathematical models of the renin-angiotensin system in the context of cancer desmoplasia [29] [30] [31] [32] . Using a similar approach, we developed a detailed model that includes lung infection by the SARS-CoV-2 virus and a pharmacokinetic/pharmacodynamic (PK/PD) model of infection and thrombosis to simulate events that take place throughout the body during COVID-19 progression (Figure 1 and Supplementary   Figure 1 ). The model is rst validated against clinical data of healthy people and COVID-19 patients and then used to simulate disease progression in patients with speci c co-morbidities. Subsequently, we present model predictions for various therapies currently employed for treatment of COVID-19 alone or in combination, and we identify protocols for optimal clinical management for each of the clinically-observed COVID-19 phenotypes.",
+            "cite_spans": [
+                {
+                    "start": 551,
+                    "end": 555,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 556,
+                    "end": 560,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 561,
+                    "end": 565,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 566,
+                    "end": 570,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 845,
+                    "end": 854,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 859,
+                    "end": 883,
+                    "text": "Supplementary   Figure 1",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": ""
+        },
+        {
+            "text": "The model includes SARS-CoV-2 infection, the renin angiotensin system (RAS), in ammatory and anti-in ammatory cytokines, innate and adaptive immune cells, and factors involved in the coagulation cascade ( Fig. 1 ). SARS-CoV-2 enters the cell by docking to ACE2, a key component of the RAS. ACE2 can be membrane-bound or soluble, and it regulates in ammation by converting Ang II to Ang 1-7 and Ang I to Ang 1-9; as opposed to Ang I and Ang II, which lead to in ammation. Ang 1-7 and Ang 1-9 have anti-in ammatory effects. Intracellular virus initiates in ammatory pathways through toll-like receptors and NFkB, which produces interferons and other in ammatory cytokines. The viral antigens, along with in ammatory cytokines, cause activation of na\u00efve T cells, creating virus-speci c T effector cells. T cell activation is controlled by viral antigen strength and the presence of PD-L1 / PD-1 inhibition. We combine in ammatory cytokines into a single variable, but explicitly account for IL6 production via the trans pathway in epithelial and endothelial cells and the canonical pathway in immune cells. In the presence of in ammatory cytokines and virus, neutrophils can produce neutrophil extracellular traps (NETs).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 205,
+                    "end": 211,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Model Description"
+        },
+        {
+            "text": "Because the virus can infect endothelial cells, we also consider viral dissemination via the blood stream, and the possibility of systemic infection and thrombosis. We include the major organs in a PK/PD model, with physiological blood ow patterns explicitly modeled. Infection of endothelial cells, combined with high levels of in ammatory cytokines in the plasma, can result in thrombosis. Damage to virally-infected endothelial cells and the production of NETs can exacerbate the thrombosis, and microthrombi can enter the blood stream to accumulate in other organs, including the brain, heart and lung. We use a simpli ed model of the coagulation pathways, assuming that formation of microthrombi is proportional to the number of infected endothelial cells, the presence of neutrophil NETs, and the level of in ammatory cytokines. Transport of oxygen from the alveolar space to the blood vessels in the lung is calculated using a modi ed diffusion model, which accounts for damage-induce thickening of the alveolar membrane 33 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Description"
+        },
+        {
+            "text": "Model validation with data of healthy people and various COVID-19 phenotypes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Model predictions were validated with clinical data from healthy humans and severe COVID-19 patients [34] [35] [36] . Figure  2A Subsequently, we focused on the clinically observed phenotypes of COVID-19. We used the model to predict the time evolution of critical disease variables, namely the virus load, levels of IL6 and other pro-in ammatory cytokines, the formation of microthrombi in the lung, the numbers of neutrophils, macrophages and activated cytotoxic CD8 + T cells, and the blood oxygen saturation (SpO2). The COVID-19 patient phenotypes considered include young patients (age<35), older patients (age>65) who more frequently require hospitalization, female patients, as well as patients with co-morbidities such as hypertension, obesity and diabetes, and patients with a dysregulated immune response, whose condition is characterized by high levels of pro-in ammatory cytokines ( Figure 3 ). Supplementary Table 2 presents the model parameters that were modi ed from the baseline values to account for these various patient phenotypes. In all phenotypes, the viral load increases during early lung infection with divergent trajectories seen after day 5, depending on the levels of activated T cells. In younger patients (age<35) with a healthy immune system, the sustained recruitment of T cells results in a reduction in viral load and in ammation, as well as a decrease in neutrophils and macrophages. All these effects cause a signi cant reduction in the formation of thrombi and restoration of oxygenation.",
+            "cite_spans": [
+                {
+                    "start": 101,
+                    "end": 105,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 106,
+                    "end": 110,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 111,
+                    "end": 115,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 118,
+                    "end": 128,
+                    "text": "Figure  2A",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 895,
+                    "end": 903,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 921,
+                    "end": 928,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "In general, the simulations resulting in poor outcome were due to increased baseline in ammation or more active innate immune response combined with less effective adaptive immunity. This was the case -in varying degreesfor older patients and those with diabetes, obesity, hypertension, and dysregulated immunity (\"hyper-in amed\"; see supplement Table 2 for the parameters varied in each population). In the latter case, the adaptive immune response is intact and clears the virus, but the innate immune response is sustained, perpetuating in ammation, thrombosis and hypoxemia.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 346,
+                    "end": 353,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "An outstanding question is why males tend to have more severe COVID-19 disease compared with females 38 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Proposed mechanisms include the higher CD4/CD8 T cell ratio in females 39 and androgen-induced differences in susceptibility to viral entry into the cells due to higher TMPRSS levels in males 40 . To simulate COVID-19 in an older female, we decreased the production of na\u00efve T cells and the rate of virus entry into the cells 41 . The simulations predict lower viral load compared with the older males, with correspondingly less in ammation and hypoxemia.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "These results suggest that reduced viral entry into cells due to lower TMPRSS2 level can explain the improved outcomes in females-even if the adaptive immune response is not as vigorous 38 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "To identify optimal treatment protocols, we simulated the effects of the various treatments currently being investigated for COVID-19. We rst simulated a patient of age >65 years (assumed to have baseline in ammation and impaired T effector cell function) and performed simulations of various treatments given at early (day 3, SpO2 92%) and late (day 7, SpO2<90%) stages of the disease. For the purpose of the simulations, day 0 is the time of arrival of the virus in the lung, so signi cant symptoms are expected starting around day 3. Simulating treatment on day 3 represents early treatment (e.g., upon hospital admission); later treatment (day 7) could be due to delayed diagnosis/hospital admission or in response to disease progression. Treatments that were considered include: heparin (anti-coagulant), anti-viral therapy, dexamethasone, ARBs, ACEi, hrACE2, anti-IL6 and anti-IL6R treatment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E cacy of current treatments on COVID-19 progression"
+        },
+        {
+            "text": "Supplementary Table 2 Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 14,
+                    "end": 21,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 22,
+                    "end": 29,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "E cacy of current treatments on COVID-19 progression"
+        },
+        {
+            "text": "Unsurprisingly, we found that heparin decreases thrombus formation and improves oxygenation when administered during early stages of disease, but has no effect on viral load. The anti-viral remdesivir is effective in reducing viral load in early stages, but less effective in reducing thrombus formation and improving oxygenation. Interestingly, dexamethasone is helpful when started later, but early administration can prevent the production of activated T cells, making it di cult to reduce the viral load. This mirrors the data from the RECOVERY trial, where dexamethasone was demonstrated to improve outcomes in patients requiring ventilatory support, but not in those with milder symptoms. These simulations also identify IL-6 directed therapies as potential therapeutics that may bene t patients if started early in the disease course. As far as inhibitors of the RAS are concerned, both ARBs and ACEi show modest bene ts only when administered early, whereas the model predicts a signi cant bene t from the use of hrACE2 on day 7, but not day 3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E cacy of current treatments on COVID-19 progression"
+        },
+        {
+            "text": "Optimizing clinical management of COVID-19 by combining therapies Because of the diverse mechanisms involved in COVID-19 pathogenesis, clinical management currently involves combination of multiple therapies in an effort to optimize therapeutic outcomes. To investigate the effects of combination treatments, we performed simulations combining various therapeutic approaches in pairs, using the best treatment time for each single treatment (i.e., day 3 or day 7, Table 1 ). We also accounted for older patients and those with co-morbidities and dysregulated immune responses. Table 2 presents a summary of the combined treatments for older patients (>65 years); the results for the other COVID-19 phenotypes are presented in Supplementary Tables 3-6. According to the model predictions, effective clinical management of older patients (with some baseline in ammation and impaired adaptive immunity) involves combination of heparin (day 3) with dexamethasone (day 7), which can improve oxygenation and decrease micro-thrombosis signi cantly; however, these treatments have little effect on viral load. For patients with obesity or hypertension, the combination of heparin with dexamethasone is again bene cial compared to other treatments. In addition, the use of anti-IL6/anti-IL6R therapy could also be considered in both these patient populations. For diabetic patients, the combination of heparin with dexamethasone can improve oxygenation and thrombus formation similar to the other scenarios. Other treatments predicted to be bene cial for this phenotype is the combination of dexamethasone with hrACE2 or anti-IL6/anti-IL6R. These combination therapies in diabetic patients can treat hypoxemia and coagulation but also reduce the viral load. For patients with dysregulated immune systems, early blockade of IL6 combined with dexamethasone on day 7 give optimal results; anti-IL6/anti-IL6R combined with anti-viral therapy and/or heparin could also be considered.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 464,
+                    "end": 471,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 577,
+                    "end": 584,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "E cacy of current treatments on COVID-19 progression"
+        },
+        {
+            "text": "COVID-19 is a complex disease that can affect multiple organs and is characterized by extremely heterogenous presentation. As with other critical care syndromes such as septic shock, and non-COVID-19 ARDS disease severity results from a complex interplay of viral replication, adaptive and maladaptive immune response and patient comorbidities. Such heterogeneity is a challenge to the development of effective therapies as candidate approaches may elicit different responses depending on the phase of illness or patient comorbidities. Because of the complexity of the underlying mechanisms and interactions among the various components involved in the disease, the response of COVID-19 patients to any treatment is not intuitive and for that reason we developed a highly sophisticated mathematical model to provide insights into the underlying mechanisms and predict optimal treatment strategies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "A main conclusion of our study is that disease progression and outcome of any treatment largely depends on the response rate of activated CD8 + T cells and subsequent control of the innate immune system response. A sustained activation of CD8 + T cells along with the control of the populations of neutrophils and macrophages can lead to a decrease in viral load and in ammation. This, in turn, will improve arterial oxygen saturation levels due to the decreased endothelial damage and micro thrombosis, and limited formation of neutrophil extracellular traps (NETs) 42 . In line with these conclusions about the underlying mechanisms of the disease, our model predicts that anti-viral and anti-in ammatory drugs that were rst employed to treat COVID-19 might have limited e cacy, depending on the stage of the disease progression. Furthermore, our simulations suggest that an optimal approach would be to enhance the adaptive immune response in the early stages while limiting harmful in ammation in the later stages of the disease. We also found that addition of heparin to the treatment regimen of COVID-19 can improve therapeutic outcomes. In case of patients with co-morbidities (obesity, diabetes, hypertension) or dysregulated immunity, the treatment regimen could further include anti-in ammatory drugs (e.g., anti-IL6/anti-IL6R) and RAS inhibitors and hrACE2 for the diabetic patients in particular.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our mathematical modeling framework is subject to certain limitations. The model is able to account for the currently-known components and interactions involved in disease pathogenesis but results in a large number of model parameters. Most of the values of these parameters were taken from the literature. However, because COVID-19 is a new disease, many of the parameter values are not known yet. For these parameters, it was necessary to make reasonable assumptions about their values, as summarized in Supplementary Table 1 . We further validated the model predictions quantitatively with available clinical data for healthy and infected humans and qualitatively based on clinical observations for the different COVID-19 phenotypes. Our mathematical framework can be further re ned as new mechanisms and more data become available and can be adapted for other diseases similar to COVID-19.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 506,
+                    "end": 527,
+                    "text": "Supplementary Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Another limitation of the model is that it does not account for adverse effects of the various treatments considered in this study, which could affect the therapeutic outcome. For instance, heparin use might be associated with hemorrhage and RAS inhibitors can reduce blood pressure. Even though incorporation of adverse effects could be important, they would not affect the basic conclusions of the study and were omitted to avoid adding further complexity to the model. In conclusion, this study presents a mathematical representation of the known mechanisms of COVID-19 and could be utilized by the scienti c community as a useful tool for further understanding the disease and investigating the bene ts of treatments on a patient-speci c basis. To study how the virus affects systemic events, such as in ammation and thrombosis, we coupled the lung model with a PK/PD model of viral infection. The PK/PD model represents the major organs of the body as compartments connected in an anatomical manner by the blood and lymphatic circulations (Supplementary Figure 1) . The organ compartments are then further subdivided into vascular and extravascular sub-compartments, and each organ has a draining lymph node compartment. Brie y, the main transport processes for the biochemical species include: i) convective and diffusive transport across capillary walls, ii) reversible, non-saturable, nonspeci c binding in the extravascular compartments, iii) reversible, and saturable, speci c binding of virus to endothelial cells, and probabilistic infection of bound cells. Any infected cell generates microthrombi, which enter the circulation and can accumulate in target organs including brain, heart and lung. Each species can be produced, bound or degraded within each compartment. Blood ow is distributed according to known ows through each organ, and the overall mass balance allows calculation of the concentration of each species in each compartment over time. The PK/PD model includes the following key processes involved in the tra cking of viruses: i) transport from the lung via the systemic circulation, ii) entry into endothelial cells via binding to ACE2, iii) entry into the cell and replication, iv) exit from the cell and entry into the blood circulation. The important outputs of the model are the level of thrombosis in each organ and the viral load. When coupled with the lung model, we are able to analyze the dynamics of these readouts in light of local lung pathologies and predicted cytokine levels. Data availability. All data supporting the ndings of this study are available in the paper and the Supplementary Information.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1059,
+                    "end": 1068,
+                    "text": "Figure 1)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Code availability. The COMSOL code will become available in Zenodo upon acceptance of the manuscript.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Declarations Tables   Table 1. Summary of model predictions for the therapeutic outcome of currently employed treatments initiated either in the beginning (day 3) of the disease or later (day 7). The table presents the results at the end of the simulation (day 20). Values have been normalized to the corresponding initial values except for SpO2. Dynamics of disease progression. Time evolution of key model variables: viral load, IL6 concentration, proin ammatory cytokines concentration, activated T cells, microthrombosis in the lung, saturated oxygen levels, neutrophils and macrophages for young (<35 years old) and old (>65 years old) patients, females and patients with co-morbidities: hypertension, obesity and diabetes, as well as for hyper-in amed patients and for anti-androgen treatment. Values have been normalized to the corresponding initial values except for S(Po2).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 13,
+                    "end": 30,
+                    "text": "Tables   Table 1.",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "OpenSAFELY: factors associated with COVID-19 death in 17 million patients",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Williamson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2521-4"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Clinical course and risk factors for mortality of adult inpatients with COVID-19 in Wuhan, China: a retrospective cohort study",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "1054--1062",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30566-3"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Cytokine release syndrome in severe COVID-19",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Moore",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "June",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.abb8925"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Large-Vessel Stroke as a Presenting Feature of Covid-19 in the Young",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Oxley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2009787"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Association of Treatment Dose Anticoagulation With In-Hospital Survival Among Hospitalized Patients With COVID-19",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Paranjpe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Am Coll Cardiol",
+            "volume": "76",
+            "issn": "",
+            "pages": "122--124",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jacc.2020.05.001"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Pulmonary Arterial Thrombosis in COVID-19 With Fatal Outcome: Results From a Prospective",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Lax",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clinicopathologic Case Series",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-2566"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Obesity and impaired metabolic health in patients with COVID-19",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Stefan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Birkenfeld",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Schulze",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Ludwig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat Rev Endocrinol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41574-020-0364-6"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Obesity a Risk Factor for Severe COVID-19 Infection: Multiple Potential Mechanisms",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Sattar",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Mcinnes",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Mcmurray",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Circulation",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1161/CIRCULATIONAHA.120.047659"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Patients with cancer appear more vulnerable to SARS-COV-2: a multi-center study during the COVID-19 outbreak",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cancer Discovery",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1158/2159-8290.CD-20-0422"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Do Patients with Cancer Have a Poorer Prognosis of COVID-19? An Experience in New York City",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Miyashita",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Annals of Oncology in press",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Clinical Characteristics of Hospitalized Covid-19 Patients in New York medRxiv",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Paranjpe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.19.20062117"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Factors Associated With Death in Critically Ill Patients With Coronavirus Disease 2019 in the US",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA Intern Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jamainternmed.2020.3596"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Risk Factors Associated With Mortality Among Patients With COVID-19 in Intensive Care Units in Lombardy, Italy",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Grasselli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA Intern Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jamainternmed.2020.3539"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "20",
+            "issn": "",
+            "pages": "553--558",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30144-4"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Modelling the COVID-19 epidemic and implementation of population-wide interventions in Italy",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Giordano",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat Med",
+            "volume": "26",
+            "issn": "",
+            "pages": "855--860",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41591-020-0883-7"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "The effect of control strategies to reduce social mixing on outcomes of the COVID-19 epidemic in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Prem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Public Health",
+            "volume": "5",
+            "issn": "",
+            "pages": "261--270",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S2468-2667(20)30073-6"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Reconstruction of the full transmission dynamics of COVID-19 in Wuhan",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2554-8"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Timing of Antiviral Treatment Initiation is Critical to Reduce SARS-CoV-2 Viral Load",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Goncalves",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "CPT Pharmacometrics Syst Pharmacol",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/psp4.12543"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Modeling the viral dynamics of SARS-CoV-2 infection",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Math Biosci",
+            "volume": "328",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.mbs.2020.108438"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Pharmacologic Treatments for Coronavirus Disease",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Sanders",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Monogue",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Jodlowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Cutrell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.6019"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Remdesivir in adults with severe COVID-19: a randomised, double-blind, placebo-controlled, multicentre trial",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)31022-9"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Remdesivir for the Treatment of Covid-19 -Preliminary Report",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Beigel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2007764"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Triple combination of interferon beta-1b, lopinavir-ritonavir, and ribavirin in the treatment of patients admitted to hospital with COVID-19: an open-label, randomised, phase 2 trial",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Hung",
+                    "suffix": ""
+                },
+                {
+                    "first": ".-N",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "The Lancet",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)31042-4"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The cytokine release syndrome (CRS) of severe COVID-19 and Interleukin-6 receptor (IL-6R) antagonist Tocilizumab may be the key to reduce the",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Int J Antimicrob Agents",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijantimicag.2020.105954"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Baricitinib therapy in COVID-19: A pilot study on safety and clinical impact",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Cantini",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Infect",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jinf.2020.04.017"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Baricitinib for COVID-19: a suitable treatment",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Favalli",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Biggioggero",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Maioli",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Caporali",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infect Dis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30262-0"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "SARS-CoV-2-speci c T cell immunity in cases of COVID-19 and SARS, and uninfected controls",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Bert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2550-z"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Implications of Heterogeneity of Treatment Effect for Reporting and Analysis of Randomized Trials in Critical Care",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Iwashyna",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Am J Respir Crit Care Med",
+            "volume": "192",
+            "issn": "",
+            "pages": "1045--1051",
+            "other_ids": {
+                "DOI": [
+                    "10.1164/rccm.201411-2125CP"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Losartan inhibits collagen I synthesis and improves the distribution and e cacy of nanotherapeutics in tumors",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Diop-Frimpong",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Chauhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Krane",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Boucher",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jain",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "108",
+            "issn": "",
+            "pages": "2909--2914",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Angiotensin inhibition enhances drug delivery and potentiates chemotherapy by decompressing tumor blood vessels",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Chauhan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Nature Communications",
+            "volume": "4",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/ncomms.3516"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Reprogramming the microenvironment with tumor-selective angiotensin blockers enhances cancer",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Chauhan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "116",
+            "issn": "",
+            "pages": "10674--10680",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Losartan treatment enhances chemotherapy e cacy and reduces ascites in ovarian cancer models by normalizing the tumor stroma",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "116",
+            "issn": "",
+            "pages": "2210--2219",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.1818357116"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Theoretical analysis of the determinants of lung oxygen diffusing capacity",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Roy",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Secomb",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J Theor Biol",
+            "volume": "351",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jtbi.2014.02.009"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "High rate of increased level of plasma Angiotensin II and its gender difference in COVID-19: an analysis of 55 hospitalized patients with COVID-19 in a single hospital",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                },
+                {
+                    "first": "R.-G",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H.-M",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.04.27.20080432"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Elevated levels of IL-6 and CRP predict the need for mechanical ventilation in COVID-19",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Herold",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Allergy Clin Immunol",
+            "volume": "146",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jaci.2020.05.008"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Detectable serum SARS-CoV-2 viral load (RNAaemia) is closely correlated with drastically elevated interleukin 6 (IL-6) level in critically ill COVID-19 patients",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clin Infect Dis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/cid/ciaa449"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Respiratory Pathophysiology of Mechanically Ventilated Patients with COVID-19: A Cohort Study",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Ziehr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Am J Respir Crit Care Med",
+            "volume": "201",
+            "issn": "",
+            "pages": "1560--1564",
+            "other_ids": {
+                "DOI": [
+                    "10.1164/rccm.202004-1163LE"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Androgen-deprivation therapies for prostate cancer and risk of infection by SARS-CoV-2: a population-based study (N = 4532)",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Montopoli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann Oncol",
+            "volume": "31",
+            "issn": "",
+            "pages": "1040--1045",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.annonc.2020.04.479"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Sex differences in immune responses",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Flanagan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nat Rev Immunol",
+            "volume": "16",
+            "issn": "",
+            "pages": "626--638",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nri.2016.90"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Serendipity or Opportunity for Intervention? Cancer Discov 10",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Stopsack",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mucci",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Antonarakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Kantoff",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "779--782",
+            "other_ids": {
+                "DOI": [
+                    "10.1158/2159-8290.CD-20-0451"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Sex differences in immune responses to SARS-CoV-2 that underlie disease outcomes. medRxiv",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Takahashi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.06.06.20123414"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Targeting potential drivers of COVID-19: Neutrophil extracellular traps",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Barnes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Exp Med",
+            "volume": "217",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1084/jem.20200652"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "-D presents the comparison showing agreement between model predictions and clinical data for Angiotensin II (Ang II), Neutrophils, CD8 + T cells and IL6 levels. Figure 2E further validates model predictions for the evolution of IL6 in COVID-19 patients admitted to the intensive care unit of Massachusetts General Hospital 37 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "summarizes the model parameters that were modi ed from their baseline values to account for the different treatments. The severity of disease was primarily assessed based on the degree of hypoxemia and thrombus formation. The dynamics of the disease progression are shown in Supplementary Figure 2 and the values at the last day of the simulation (day 20) are summarized in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "detailed description of model equations, the description and values of model parameters and the solution strategy are provided in the Supplementary Information. The mathematical model consists of two components: a detailed model of lung infection by the SARS-CoV-2 virus and a pharmacokinetic/pharmacodynamic (PK/PD) model of COVID-19 infection and thrombosis to simulate events that happen throughout the body (Figure 1). The lung model incorporates the infection of epithelial and endothelial cells by the SARS-CoV-2 virus through ACE2 modulation and activity, the release of pro-in ammatory cytokines and the entire RAS. Cytokines that are central to COVID-19 (e.g., IL-6) are explicitly accounted for in the model, incorporating all known signaling pathways, such as the canonical and trans signaling pathway of IL-6 and its interaction with IL-6r and soluble IL-6r. Additional innate immune cells, speci cally neutrophils and macrophages, are incorporated into our model along with the interaction of immune cells with viral particles and infected cells as well as the formation of neutrophil extracellular traps (NETs). The model incorporates the recruitment of cytotoxic T cells by the infected cells and by IL-6 as well as the virus killing of cytotoxic T cells. In addition, the model accounts for the role of immune cells in modulating the expression of proin ammatory cytokines. Subsequent events, such as the impairment of the vascular network owing to the infection of endothelial cells by the SARS-CoV-2 virus and the resulting changes in blood oxygenation are also included.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The model consists of a set of 90 partial and ordinary differential equations. The values of the model parameters are summarized inSupplementary Table 1. We simulated COVID-19 infection and progression within a period of 20 days. Notice that the model does not account for the rst stages of virus infection of the upper respiratory tract but from the time the virus has infected the lungs. Therefore, day 0 of the simulations corresponds to the initiation of lung infection. For the formulation of the model and the solution of the equations, the commercial nite elements software COMSOL Multiphysics v.5.5 was used. The computational nite element mesh employed in the present study consisted of 2,440 elements resulting in 1,201,044 degrees of freedom. The solution was tested and found to be mesh-independent, the PARDISO solver was selected for the solution of the model equations and the total solution time was approximately 30 minutes.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "of the detailed lung model. The model incorporates the virus infection of epithelial and endothelial cells, the RAS, T cells activation and immune checkpoints, the known IL6 pathways, neutrophils and macrophages, as well as the formation of NETs, and the coagulation cascade. The lung model is coupled with a PK/PD model for the virus and thrombi dissemination through the body.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "of the model. A-B) Model comparison with clinical data for healthy, uninfected people and for severe COVID-19 patients taken from pertinent studies 34-36. E) Comparison of model predictions with IL6 clinical data from patients hospitalized at the Massachusetts General Hospital. The data were taken at day 1 and day 3 from the time of patient's admission to the Intensive Care Unit (ICU).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Figure 3",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Summary of model predictions for the therapeutic outcome of combined treatments for patients > 65 years old. The table presents the results at the end of the simulation (day 20). Values have been normalized to the corresponding initial values except for SpO2.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This is a list of supplementary les associated with this preprint. Click to download.SupportingMaterial.pdf",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Files"
+        }
+    ]
+}

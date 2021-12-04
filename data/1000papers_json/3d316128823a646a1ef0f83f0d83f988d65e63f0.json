@@ -1,0 +1,1617 @@
+{
+    "paper_id": "3d316128823a646a1ef0f83f0d83f988d65e63f0",
+    "metadata": {
+        "title": "Robotic Sewing and Knot Tying for Personalized Stent Graft Manufacturing",
+        "authors": [
+            {
+                "first": "Yang",
+                "middle": [],
+                "last": "Hu",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Lin",
+                "middle": [],
+                "last": "Zhang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Wei",
+                "middle": [],
+                "last": "Li",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Guang-Zhong",
+                "middle": [],
+                "last": "Yang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "This paper presents a versatile robotic system for sewing 3D structured object. Leveraging on using a customized robotic sewing device and closed-loop visual servoing control, an all-in-one solution for sewing personalized stent graft is demonstrated. Stitch size planning and automatic knot tying are proposed as the two key functions of the system. By using effective stitch size planning, sub-millimetre sewing accuracy is achieved for stitch sizes ranging from 2mm to 5mm. In addition, a thread manipulator for thread management and tension control is also proposed to perform successive knot tying to secure each stitch. Detailed laboratory experiments have been performed to access the proposed instruments and allied algorithms. The proposed framework can be generalised to a wide range of applications including 3D industrial sewing,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Vascular disease is a major contributor to cardiovascular deaths in the world. The incidence of abdominal aortic aneurysms increases significantly with age-by over 300% for those at age 70 compared to those at age 50. Endovascular therapy avoids major trauma associated with open operation, with clear advantages in terms of reduced morbidity and mortality, especially for patients unable to withstand traditional open surgery. This procedure of endovascular intervention requires the use of personalized stent grafts with bespoke openings (fenestrations) and branches for small blood vessels, thus providing better fit for a patient's anatomy. These personalized stent grafts are currently handmade by means of sewing thousands of stitches, which are expensive and timeconsuming. The long delay in customized graft manufacturing can subject patients to the risk of aneurysm rupture and precludes treatment for patients with acute symptoms. The development of an automated stent graft sewing technique would be very helpful to increase the speed of personalized stent manufacturing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Thus far, a few automated sewing methods have been proposed, e.g., a modified sewing machine is used for sewing tubular shape stent grafts as proposed by [1] . A bobbin, which is seated in a shuttle, carries a bottom thread through the bore of the tubular graft and forms a stitch in combination with a top thread carried on a needle which pierces the graft wall. This solution, however, has a number of potential issues. First, these sewing system is usually specific for one type of stitch; therefore it is not versatile for sewing a custom-made stent graft, which requires running stitch to attach the stent with the graft, applying blanket stitch to finish the edge of a fenestration and even tying knots the secure the sewing. Second, compared with handmade stitch, which only requires using one thread, double thread machine stitches are thick and easily coming out from the fabric once any point breaks. In order to solve the above problem, a visionguided robotic sewing system for stent graft manufacturing is proposed by Huang et al. [2] , [3] . This system mimics human sewing method by learning a specific sewing method from human demonstrations. One limitation of this system is that the success rate is only 75%. We believe the low success rate is mainly because this system uses two robot arms, each holding a grasper to manipulate a curved needle. Because the uncertainty in needle manipulation, e.g. during piercing and re-grasping, the needle might drop and slip from the grasper. In addition, this method uses a look and move method to guide the sewing process, which is slow, and the motion is not smooth, making it difficult to perform delicate stitching with high accuracy. In order to solve this problem, a multipurpose sewing device was developed by us and patented for a wide range of applications including 3D structured object sewing, as well as transferred to other clinical areas such as surgical suturing. This device could switch a double pointed curved needle to perform sewing. The thread is attached to the middle of the needle. The device avoids the problem of needle slippage and dropping in manual sewing. The nominal speed to complete one needle switching is 16s, which shows faster, reliable and more consistent performance than directly operating a surgical needle with a needle holder, making this device a suitable candidate for fully automated robotic sewing. The reader can refer to our following publications for the mechanical design of this new device. In this paper, we propose a robotic sewing system ( Fig. 1 ) integrated with the sewing device and depth sensing, which could automate some sewing tasks, like running stitch and knot tying. The contribution of this work is as follows:",
+            "cite_spans": [
+                {
+                    "start": 154,
+                    "end": 157,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 1043,
+                    "end": 1046,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1049,
+                    "end": 1052,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 2551,
+                    "end": 2557,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "\u2022 A dual-arm robotic system for sewing stent grafts. The robot arm is used for global positioning the sewing device, and the sewing device is used for local needle manipulation. \u2022 Application of a closed-loop visual servoing method for accurate positioning of the sewing device. \u2022 A trajectory planning method is designed to perform stitches in various sizes. \u2022 A novel knot tying method including a thread manipulator is proposed, which can continuously make overhand knots without cutting the thread.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "The remainder of the paper is organized as following. We first present the prior art and related work in Section II. Section III introduces the three new features of our system, i.e. the vision-guided stitching, stitch size planning and automatic knot tying. Section IV shows the experiment results, followed by the results discussion in section V. Then finally comes the conclusion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Extensive research on automated sewing has been performed in the apparel industry focusing on incorporating sensors and robots to augment the ability of conventional sewing machines. Relevant topics include fabric tension control for robot-assisted fabric feeding [4] , sewing seam tracking using an optical sensor [5] or a camera system [6] , multi-arm robotic sewing [7] , and automatic sewing worklines [8] . These systems, however, constrained by the incorporation of conventional sewing machines, work only on a flat sewing table. Recently, innovation in 3D structured object sewing is an important topic for industrial manufacturing. KSL Keilmann (Lorsch, Germany) has developed different singlesided sewing heads, such as KSL double needle RS 530, for sewing 3D fabric-reinforced structures for aircraft parts. Different to a conventional sewing machine, which applies stitches by using synchronized parts working on both side of the fabric, the single-sided sewing head features two needles, which are able to apply interwoven chain stitches from the outer surface of a 3D object. These single-sided sewing heads, however, are designed to sew large and heavy objects.",
+            "cite_spans": [
+                {
+                    "start": 264,
+                    "end": 267,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 315,
+                    "end": 318,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 338,
+                    "end": 341,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 369,
+                    "end": 372,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 406,
+                    "end": 409,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "II. RELATED WORKS"
+        },
+        {
+            "text": "The use of thread to stitch together objects is not only employed in the field of the apparel industry. Automated suturing in the field of robotic surgery is also a hot topic which arouses researchers' attention. Form the software side, a number of works, such as [9] , [10] have been trying to plan the needle trajectory to achieve optimal stitching result. On the hardware side, various suturing devices aiming to facilitate the suturing procedure have been developed, including the Autosuture EndoStitch TM (Covidien, Mansfield, UK) [11] , the SILS TM Suturing Device (Covidien, Mansfield, UK) [12] , Endo360 o Suturing Device, (EndoEvolution North Chelmsford, USA) [13] , the PROXISURE TM Suturing Device (Ethicon, New Jersey, USA) [14] and the Switch R Suturing Device (Mellon Medical, Netherlands) [15] . Based on the aforementioned suturing devices, visionguided robotic suturing systems, such as KidsArm Anastomosis Robot proposed by Looi et al. [16] and Smart Tissue Autonomous Robot (STAR) proposed by Leonard et al. [17] , [18] , demonstrate that it is feasible for a robot to autonomously perform anastomosis. Knot tying, used for securing the stitches or binding together objects is another important part of the robotic surgery. Making a knot in the confined space of minimally invasive surgery under poor visualization is a very challenging surgical task. The methods of automated knot tying have been proposed for reducing the burden of the surgeon. With using the conventional surgical instruments, a general way to tie a knot is conducted by using one grasper to wind the suture thread around another grasper to form a loop and then used the first grasper to pull the tail end of the suture through the loop. To achieve automated knot tying, various methods were proposed, e.g. thread shape modelling [19] , instrument moment planning [20] , and learning from surgeons' demonstration [21] . Another direction for automated knot tying is by designing specific hardware, e.g. [22] proposed a knot tying device for minimally invasive surgery, [23] proposed a single piece fixture for knot tying, and [24] uses the Endostitch TM suturing device and a grasper with a flexible hook to make a knot.",
+            "cite_spans": [
+                {
+                    "start": 264,
+                    "end": 267,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 270,
+                    "end": 274,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 536,
+                    "end": 540,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 597,
+                    "end": 601,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 669,
+                    "end": 673,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 736,
+                    "end": 740,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 804,
+                    "end": 808,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 954,
+                    "end": 958,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1027,
+                    "end": 1031,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1034,
+                    "end": 1038,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1819,
+                    "end": 1823,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1853,
+                    "end": 1857,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1902,
+                    "end": 1906,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1992,
+                    "end": 1996,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 2058,
+                    "end": 2062,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 2115,
+                    "end": 2119,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "II. RELATED WORKS"
+        },
+        {
+            "text": "The system consists of a dual-arm ABB YuMi R robot where each arm has 7 DoF. The end-effector of the left and right arm is equipped with a thread manipulator and a customised sewing device, respectively. The dual-arm robot is controlled using the ROS controller manager and the ABB Robot Web Services (RWS) via the Ethernet connection. The RWS interface provides a bandwidth of 10 host computer and the robot. A joint position controller 1 is used for the robot position control. An Intel R RealSense TM SR300 depth camera is rigidly mounted under the robot as shown in Fig. 1 , which is used to capture colour and depth images of the scene for automating the sewing task. The resolution of both colour and depth images are 640x480 and the intrinsic and extrinsic parameters of the colour and depth camera are provided by the manufacturer. The point cloud generated by the depth camera is in the camera coordinate. The robot base coordinate is registered with the camera reference frame via standard hand-eye calibration [25] . A complete definition of the coordinate frame used in this paper is shown in Fig. 2 .",
+            "cite_spans": [
+                {
+                    "start": 378,
+                    "end": 380,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1021,
+                    "end": 1025,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 570,
+                    "end": 576,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1105,
+                    "end": 1111,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "A. System Overview"
+        },
+        {
+            "text": "In this paper, a patented sewing device developed by the authors is used. The device features a sewing probe which can pass a double pointed semi-circular needle between two movable jaws to perform sewing. It has a needle driving mechanism that can drive the needle along its tangential direction. It consists of a needle locking mechanism built in each jaw to allow needle holding. The device simplifies the needle manipulation by providing fast and repeatable needle grasping and releasing. A marker with dot pattern is attached to the sewing device to facilitate tracking of the sewing device.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. System Overview"
+        },
+        {
+            "text": "In the proposed system, Image-Based Visual Servoing (IBVS) is applied for accurate positioning of the sewing device. For each point on the pattern, its 3-D coordinate in the camera coordinate frame {c} can be written as X c = [X, Y, Z, 1] , which has a corresponding 2D projection m = [u, v] on the image plane in pixel units. The m can be converted to normalised coordinate x = [x, y] in metre via:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "where f x , f y is the camera focal length expressed in the pixel units and c u , c v is the camera principal point.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "The velocity of the 3-D point relative to",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "with v the instantaneous linear velocity and \u03c9 the instantaneous angular velocity. The velocity of the corresponding ith 2D point\u1e8b can be derived via:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "where L x i an interaction matrix that is written as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "The depth Z is obtained from the RGBD camera. The 2D point on the image is tracked by a real-time vision-based method [26] .",
+            "cite_spans": [
+                {
+                    "start": 118,
+                    "end": 122,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "During the task execution, the pattern is tracked in each image frame while the dots in the pattern with invalid depth value are discarded. The n valid points are used to construct the interaction matrix by stacking (3):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "The 2D velocity\u1e8b of a point can be written a\u1e61",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "where x * is the desired position of the point. To transform the velocity v c from the camera coordinate to the robot endeffector coordinate v e , a velocity twist e V c is applied: v e = e V c v c . A velocity twist k V j that transforms velocities from coordinate {j} to coordinate {k} is defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "The k R j and k t j is the rotation matrix and translation vector that transform points from {j} to {k}. The [ k t j ] \u00d7 is the skew-symmetric matrix of the translation vector. In the proposed system, the transformation ( b R c and b t c ) between the camera coordinate {c} and robot base coordinate {b} is obtained from the hand-eye calibration. The transformation between the robot base {b} and end-effector {e} is computed by using the robot forward kinematics. The velocity twist e V c can be written as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "Using (4) and (5), the desired end-effector velocities can be calculated by: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Visual Servoing for Accurate Positioning"
+        },
+        {
+            "text": "The planned sewing trajectory consists of a sequence of needle tip poses c T t in {c}. As the visual servoing method uses the projection of the pattern dots for robot control, the desired 3D dot positions in {c} are required:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "where t T p is a fixed transformation between the needle tip and pattern that is given by the CAD model of the device. The desire robot end-effector velocity v e * can then be calculated using equation (1, 4, 6 and 7) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 202,
+                    "end": 217,
+                    "text": "(1, 4, 6 and 7)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "The stitching task can be accomplished via six steps as illustrated in Fig. 4 . The fabric piercing (step 2 in Fig. 4) , needle switching (step 4 in Fig. 4 ) and retrieving (step 5 in Fig. 4) are handled by the sewing device. To complete one stitch with desired size, the robot arm performs the other three steps with three planned trajectories with respect to the stitching point: (a) a trajectory for moving the device from the current position to a sewing target for stitching (step 1 in Fig. 4) ; (b) a trajectory for reorienting the device so that the needle can be passed to the other side easier (step 3 in Fig. 4) ; (c) a trajectory for pulling the needle out of the fabric (step 6 in Fig. 4 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 71,
+                    "end": 77,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 111,
+                    "end": 118,
+                    "text": "Fig. 4)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 149,
+                    "end": 155,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 184,
+                    "end": 191,
+                    "text": "Fig. 4)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 491,
+                    "end": 498,
+                    "text": "Fig. 4)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 614,
+                    "end": 621,
+                    "text": "Fig. 4)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 693,
+                    "end": 699,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "The first part of the stitching trajectory is planned according to the 3D profile of the fabric. A 3D point cloud is obtained from the RGBD camera. The normal to a selected target point on the fabric is estimated by computing the local gradient of the neighbouring points. As shown in Fig. 2 , the objective is to align the local needle tip frame {t} with the local sewing frame {s}. More specifically, the desired needle tip pose c T t is planned so that the local z-axis is pointing to the surface along the normal. The direction of x-axis is defined by the direction of the current and the next sewing points. The y-axis is the cross-product of the x-and y-axis. To allow easy needle piercing, the device is oriented \u2212\u03b1 around the tip local x-axis so that the needle tip is more perpendicular to the fabric surface. In addition, the stitch point has an offset from the sewing point which should be the half of the stitch size d. The above information can be applied to the desired tip pose via",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 285,
+                    "end": 291,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "where t T t * is defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "After the needle arrives at the entry point, as depicted by step 2 in Fig. 4 , the needle pierces into the fabric for l which is defined as l = \u03b8R. \u03b8 is the angle that the jaws are rotated and R is the radius of the needle. The length of the pierced segment of the needle equals to the stitch size that is d = l.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 70,
+                    "end": 76,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "Next, the device is reoriented so that the needle can make contact with the exit point on the fabric, as depicted by step 3 in Fig. 4 . A rotation of 2\u03b1 is applied to the device similar to (8) . To minimise the force applied on the fabric by the needle, the needle should rotate around the entry point without stretching the fabric. To this end, a sequence of intermediate poses is planned by rotating the needle 5 \u2022 each time. Upon arrival, the needle is passed to the other jaw to accomplish the stitch which is shown in step 5 of Fig. 4 .",
+            "cite_spans": [
+                {
+                    "start": 189,
+                    "end": 192,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 127,
+                    "end": 133,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 533,
+                    "end": 539,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "After a stitch is done, a trajectory is planned to pull the needle and thread out of the fabric, as depicted by step 6 in Fig. 4 . Interpolate between the current needle tip pose and a desired needle pose at a standby position is performed. More specifically, linear interpolation and spherical linear interpolation are used for translation and rotation, respectively.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 122,
+                    "end": 128,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "C. Trajectory Planning for Automated Stitching"
+        },
+        {
+            "text": "In this paper, a knot tying method is proposed to tie an overhand knot. This is accomplished by a combined used of the sewing device and a novel thread manipulation mechanism, called thread manipulator. Different with previous methods, one unique feature of the device is that it can perform successive stitching and knot tying along the sewing trajectory without cutting or replacing the thread. Making a loop and passing the thread end through the loop are two critical procedures for knot tying. The thread manipulator is introduced for three purposes: assisting in making a loop, keeping the thread in a known position and preventing the thread from floating everywhere, which may hinder the sewing process. The two flexible hooks attached to the thread manipulator can assist to make a loop. By moving the tip of the sewing device around the two flexible hooks, followed by the needle end of the thread, a loop is made. The reason for using two flexible hooks is that if the thread segment between the two flexible hooks is pulled tightly, the sewing device could easily pass the needle around the fixed thread segment to make an overhand knot.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Automatic knot tying"
+        },
+        {
+            "text": "To control the robot to carry out the knot tying task, a sequence of key poses are recorded via human demonstration. These poses are in the relative frame between the robot left end-effector frame and right end-effector frame, which is denoted as l T r . During the knot tying task, current left endeffector pose b l T l is obtained from the robot kinematics, then the desired right end-effector pose can be computed via br T r = b l T l l T r . It should be noted that the base coordinate frame of the left and right arms are identical (i.e. b l T br = I 4 ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Automatic knot tying"
+        },
+        {
+            "text": "In order to control the tension of the thread, the two flexible hooks are connected to a 3-axis force sensor (OptoForce Ltd, Budapest, Hungary), which is mounted on the endeffector of the left robot arm. In the tension control mode, instead using a fixed relative pose between the two arm, the sewing device arm serves as the leader to pull the thread while the thread manipulator arm serves as the follower to feed in the thread. By using the force measurement along the dominant axis as feedback and controlling the position of the thread manipulator arm, the tension of the thread can be kept with a simple proportional control strategy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Automatic knot tying"
+        },
+        {
+            "text": "Our knot tying method is a recursive method which contains five steps, as illustrated in Fig. 5 . We assume a knot is already formed using this method and the following describes how to make next knot. The initial condition is that the sewing device taking the thread move around the flexible hook, using the force sensor's reading to secure the previous knot. Start from the accomplishment of the stitching task, it takes following five steps to finish a knot:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 89,
+                    "end": 95,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "D. Automatic knot tying"
+        },
+        {
+            "text": "\u2022 As a stitch has been made by the right arm using the sewing device, the left hand start pulling the thread to ensure tension until a force threshold is achieved. In the meantime, the right arm moves towards the standby position relative to the left hand. \u2022 The sewing device moves to catch the thread segment between the two flexible hooks. At the same time, the tension control is turned on. By sensing the force on the flexible hooks, the left arm starts feeding in the thread with a predefined tension. \u2022 After reaching the position where it can catch the fixed thread segment within its jaws, the sewing device perform a needle switching. Then, an overhand knot is made. \u2022 The assistant arm tilts the flexible hooks to release the knot. \u2022 The sewing device takes the thread move around the flexible hook, using the force feedback to secure the previous knot.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D. Automatic knot tying"
+        },
+        {
+            "text": "To quantitatively validate the accuracy and robustness of the stitching process, a running stitch experiment is designed. As shown in Fig. 6 , a line is drawn on a sheet of fabric to Fig. 6 . The results of the running stitch task performed by the robot autonomously. Each column represents a trial with various desired stitch size ranging from 1mm to 5mm.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 134,
+                    "end": 140,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 183,
+                    "end": 189,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "A. Running Stitch Experiment"
+        },
+        {
+            "text": "indicate the desired stitch targets. To test the optimal stitch size the system is capable of, the experiment consists of 5 trials where each trial uses different stitch size d ranging from 1mm to 5mm. At the beginning of each trial, the user selects six stitching targets along the line. For each stitch, a trajectory is planned based on the local 3D profile and the stitch size d. The robot follows the planned trajectory by using the visual servoing technique. After each stitch is accomplished, the robot moves to a predefined standby pose before carrying the next stitch. We measure the distance between the entry and exit points of the thread on the fabric as the actual stitch size. The quantitative and qualitative results of the experiment are shown in Table I and Fig. 6 , respectively. The error for each trial is calculated as the mean absolute difference between the desired and actual stitch size. Most trials achieve an error less than 0.6mm except the 1mm trial which has an average error of 1.2mm. The actual stitch size for the 1mm group is always not less than 2mm which leads to a consistent error. The main reason of the error is that as the sewing device closes the jaws to pass the needle in the fabric (as shown in step 4 of Fig. 4) , the left side of the jaw would press and deform the fabric when the needle comes out of the fabric.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 762,
+                    "end": 769,
+                    "text": "Table I",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 774,
+                    "end": 780,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 1249,
+                    "end": 1256,
+                    "text": "Fig. 4)",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "A. Running Stitch Experiment"
+        },
+        {
+            "text": "The performance of the knot tying method is evaluated by sewing one stent on the graft. In order to perform sewing on the surface of the stent graft, a cylindrical object, called a mandrel, is used for holding the graft and the stent in place during sewing. This mandrel provides tension for the fabric being sewn. The area under the stent graft is hollow so that the needle can easily pierce through without contacting with the mandrel. The thickness, edge length and the diameter of the stent used in this experiment is 0.4mm, 12mm and 22mm respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Knot Tying for Stent Graft"
+        },
+        {
+            "text": "The knots on the stent are completed successively where each knot consists of a stitch with an overhand knot. Similar to the running stitch experiment, the user selects the desired knot position on the sewing target, which is along the stent edge in this case. The tail of the thread is attached to a fixed position before starting using our method to successively apply stitch and knot. Once the robot finishes the stitch, it moves the sewing device to the standby pose followed by the knot tying step. In this paper, we used a nylon thread with a diameter of 0.2mm which has been used for commercial handmade stent graft. The desired force to keep the thread tension is 0.7N along the dominant axis while the force required to secure a knot is around 2N. The length of the thread used for the experiment is approximated 250mm, which could be applied for tying 12-16 knots using our method. The execution time of the vision-guided stitching and tying a single knot is about 3 minutes and 2 minutes, respectively. See the supplementary video via https:// youtu.be/WX63S55PE3w.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Knot Tying for Stent Graft"
+        },
+        {
+            "text": "In this paper, we have proposed a novel single sided 3D sewing system for arbitrary 3D structures. For the stitch size planning method, sub-millimetre accuracy is achieved. Due to the geometry constraints of the circular needle, the sewing device is not suitable for making a stitch whose size is larger than 5mm. It is worth noting that making a small stitch less than 2mm needs to consider deformation of the fabric. To solve this problem, a new mechanism which could precisely reorientate the sewing device is helpful. Then the robot arm only serves for positioning purpose. In addition, we found the tension on the fabric is another factor which can influence the sewing accuracy. The needle may fail to enter the fabric or stitch a wrong position if the fabric is not well tensioned.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. DISCUSSION"
+        },
+        {
+            "text": "The accuracy of the needle positioning using the visual servoing technique depends on several factors. The point cloud of the sewing targets obtained from the depth camera can be noisy as the fabric surface is slanted in the camera view. To address this issue, the fabric can be brought towards the camera which also requires modification of the pattern attached to the device as it needs to be visible for the visual servoing. Another limitation of the vision system is the resolution of the depth camera which is only 640x480. When the user selects the target on the image, the 3D position of adjacent pixels can be very far. Nevertheless, this can be addressed as the hardware is upgraded (the latest RealSense TM D-series depth camera supports 1280x720 resolution). Furthermore, a useful improvement for the proposed system is the markerless tracking of the device or needle. This will extend the flexibility of the system by allowing control of the sewing device from different viewing angles and occlusion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. DISCUSSION"
+        },
+        {
+            "text": "For the knot tying experiment, we have demonstrated a promising solution for applications requires successively applying knot to secure each stitch. This could secure the stent more reliably compared with purely using running stitch. During the experiment, some issues were also identified. First, to keep the tension on a long thread, the arm holding the thread manipulator needs to move a long distance, which is not cost-effective and may reach its workspace limitation. A rolling mechanism which could automatically wind the thread can be a potential solution. Second, the overhand knot made by the robot is tied around an object. The knot has the working end brought over and under the standing end. It can also be called a half hitch. To better secure each stitch, it is desired to apply two successive half hitches to make up the common clove hitch. Third, the direction and force to pull the thread to secure the knot are important to make a proper knot. As shown in Fig. 7 , the robot made knot is not as tight as the handmade knot. The thread used in our experiment is more elastic which can be loose even it is pulled tightly. However, another more important reason is that it is not the optimal directions for pulling the thread to place the knot. Kang et al. [24] has proposed a knot sliding condition for properly placing a knot, which can be further investigated in future.",
+            "cite_spans": [
+                {
+                    "start": 1272,
+                    "end": 1276,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 975,
+                    "end": 981,
+                    "text": "Fig. 7",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "V. DISCUSSION"
+        },
+        {
+            "text": "In this paper, we have proposed an autonomous robotic sewing system with an integration of the ABB YuMi R dual-arm robot, closed-loop visual servoing control and the customised sewing hardware for personalized stent graft manufacturing. The customised sewing device facilitates the automation of the sewing task by providing needle handling on one hand. We have used closed-loop visual servoing based on RGBD sensing to achieve accurate device positioning and steady motion which benefits the autonomous stitching. Leveraging on this novel system, a trajectory planning method for the sewing various stitch sizes is proposed. In addition, a novel thread manipulator with force sensing capability is proposed for thread manipulation during knot tying. The thread manipulator allows simplified thread manipulation during the robotic sewing. We have demonstrated that the proposed system can accomplish continuous stitches with reasonable accuracy as well as successively tie overhand knots for the stent graft manufacturing. The system has shown the potential to be transferred to other clinical areas such as surgical suturing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "VI. CONCLUSIONS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Method for manufacturing stent-grafts",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Phillips",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Woodward",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R B"
+                    ],
+                    "last": "Halket",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Beaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Perks",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Angel",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Frost",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A visionguided dual arm sewing system for stent graft manufacturing",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vandini",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-L",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "G.-Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Intelligent Robots and Systems (IROS), 2016 IEEE/RSJ International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "751--758",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A multirobot cooperation framework for sewing personalised stent grafts",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-L",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vandini",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "IEEE Transactions on Industrial Informatics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Experiments towards automated sewing with a multi-robot system",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schrimpf",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Wetterwald",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Robotics and Automation (ICRA), 2012 IEEE International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "5258--5263",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Real-time system integration in a multi-robot sewing cell",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schrimpf",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Wetterwald",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lind",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Intelligent Robots and Systems (IROS), 2012 IEEE/RSJ International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "2724--2729",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Multi-arm robot control system for manipulation of flexible materials in sewing operation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kudo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Nasu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mitobe",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Borovac",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Mechatronics",
+            "volume": "10",
+            "issn": "3",
+            "pages": "371--402",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Experiments towards automated sewing with a multi-robot system",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schrimpf",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Wetterwald",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Robotics and Automation (ICRA), 2012 IEEE International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "5258--5263",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Your next t-shirt will be made by a robot",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Guizzo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Spectrum",
+            "volume": "55",
+            "issn": "1",
+            "pages": "50--57",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Needle path planning for autonomous robotic surgical suturing",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Jackson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Robotics and Automation (ICRA), 2013 IEEE International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "1669--1675",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Automating multi-throw multilateral surgical suturing with a mechanical needle guide and sequential convex optimization",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Garg",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Gealy",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mckinley",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Goldberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Robotics and Automation (ICRA)",
+            "volume": "",
+            "issn": "",
+            "pages": "4178--4185",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Automation of a suturing device for minimally invasive surgery",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "G\u00f6pel",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "H\u00e4rtl",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Buss",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Feussner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Surgical endoscopy",
+            "volume": "25",
+            "issn": "7",
+            "pages": "2100--2104",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "New laparoscopic suturing device: initial clinical experience",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Adams",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Schulam",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Moore",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Partin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Kavoussi",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Urology",
+            "volume": "46",
+            "issn": "2",
+            "pages": "242--245",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Apparatus and method for minimally invasive suturing",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Meade",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Brecher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Circular needle applier with offset needle and carrier tracks",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Martin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "398",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Surgical suture apparatus",
+            "authors": [
+                {
+                    "first": "T.-J",
+                    "middle": [],
+                    "last": "Holwerda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Kidsarman imageguided pediatric anastomosis robot",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Looi",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Umasthan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Drake",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Intelligent Robots and Systems (IROS), 2013 IEEE/RSJ International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "4105--4110",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Smart tissue anastomosis robot (star): A vision-guided robotics system for laparoscopic suturing",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Leonard",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Krieger",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "IEEE Transactions on Biomedical Engineering",
+            "volume": "61",
+            "issn": "4",
+            "pages": "1305--1317",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Supervised autonomous robotic soft tissue surgery",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shademan",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Decker",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Opfermann",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Leonard",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Krieger",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Science translational medicine",
+            "volume": "8",
+            "issn": "337",
+            "pages": "337--64",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Twisting knot tying method of suture-a novel method for robotic knot tying",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yue",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Caot",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Complex Medical Engineering",
+            "volume": "",
+            "issn": "",
+            "pages": "87--91",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Improved knot-tying methods for autonomous robot surgery",
+            "authors": [
+                {
+                    "first": "D.-L",
+                    "middle": [],
+                    "last": "Chow",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Newman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "2013 IEEE International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "461--465",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A system for robotic heart surgery that learns to tie knots using recurrent neural networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Mayer",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gomez",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wierstra",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Nagy",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Knoll",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schmidhuber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Advanced Robotics",
+            "volume": "22",
+            "issn": "",
+            "pages": "1521--1537",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "A laparoscopic knot-tying device for minimally invasive cardiac surgery",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Jernigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chanoit",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Veeramani",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Owen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hilliard",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cormier",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Laffitte",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Buckner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "European Journal of Cardio-Thoracic Surgery",
+            "volume": "37",
+            "issn": "3",
+            "pages": "626--630",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Knot tying with single piece fixtures",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bell",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Balkcom",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "ICRA 2008. IEEE International Conference on",
+            "volume": "",
+            "issn": "",
+            "pages": "379--384",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Robotic assisted suturing in minimally invasive surgery",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A new technique for fully autonomous and efficient 3d robotics hand/eye calibration",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Tsai",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Lenz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "IEEE Trans. Robot. Autom",
+            "volume": "5",
+            "issn": "3",
+            "pages": "345--358",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Real-time surgical tool tracking and pose estimation using a hybrid cylindrical marker",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "P.-L",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "G.-Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "International journal of computer assisted radiology and surgery",
+            "volume": "12",
+            "issn": "6",
+            "pages": "921--930",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "An overview of the setup of the autonomous sewing system for stent graft manufacturing.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Illustration of the coordinate frames used in this paper. The camera coordinate frame is located at the optical centre of the colour camera which is denoted as {c}. The pattern and needle tip coordinate frames are denoted as {p} and {t} respectively. The left and right robot base coordinate frames are denoted as {b l } and {br} respectively. The coordinate frame at the sewing point on the fabric is denoted as {s}. The robot left and right endeffector coordinate frames are denoted as {l} and {r} respectively.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "An overview of the framework developed in this paper.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Illustration of a stitching process using the customised sewing device. For a single stitch, six steps (indicated by the number) are needed to accomplish the stitch at a target (purple point) with a desired stitch size (distance between two blue points).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "An illustration of the proposed knot tying method using the thread manipulator.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "(a) An example of commercial handmade stent graft. (b) The results of the sewed stent produced by the proposed autonomous knot tying method.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Hz between the",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "RESULTS OF RUNNING STITCH WITH DIFFERENT SIZES.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "ACKNOWLEDGMENT This work is supported by UK EPSRC Personalised Stent Graft Manufacturing for Endovascular Intervention Project (EP/L020688/1). The authors would like to thank Yoshua Nava from KTH for his assistance on the YuMi robot.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

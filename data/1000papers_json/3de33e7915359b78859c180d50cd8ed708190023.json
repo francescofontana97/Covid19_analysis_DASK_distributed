@@ -1,0 +1,1151 @@
+{
+    "paper_id": "3de33e7915359b78859c180d50cd8ed708190023",
+    "metadata": {
+        "title": "A Lane Line Detection Algorithm Based on Convolutional Neural Network",
+        "authors": [
+            {
+                "first": "Ling",
+                "middle": [],
+                "last": "Ding",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Hubei University of Science and Technology",
+                    "location": {
+                        "postCode": "437100",
+                        "settlement": "Xianning",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Zhuoran",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Central China Normal University",
+                    "location": {
+                        "postCode": "430072",
+                        "settlement": "Wuhan",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jiafei",
+                "middle": [],
+                "last": "Zong",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Hubei University of Science and Technology",
+                    "location": {
+                        "postCode": "437100",
+                        "settlement": "Xianning",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jinshen",
+                "middle": [],
+                "last": "Xiao",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Wuhan University",
+                    "location": {
+                        "postCode": "430072",
+                        "settlement": "Wuhan",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Chen",
+                "middle": [],
+                "last": "Shu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Wuhan University",
+                    "location": {
+                        "postCode": "430072",
+                        "settlement": "Wuhan",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Bin",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Hubei University of Science and Technology",
+                    "location": {
+                        "postCode": "437100",
+                        "settlement": "Xianning",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "This paper presents an algorithm for lane line detection based on convolutional neural network. The algorithm adopts the structural mode of encoder and decoder, in which the encoder part uses VGG16 combined with cavity convolution as the basic network to extract the features of lane lines, and the cavity convolution can expand the receptive field. Through experimental comparison, the full connection layer of the network is discarded, the last maximum pooling layer of the VGG16 network is removed, and the processing of the last three convolutional layers is replaced by empty convolution, which can better balance the detection rate and accuracy. The decoder part USES the index function of the maximum pooling layer to carry out up-sampling of the encoder in an anti-pooling way to achieve semantic segmentation, and combines with the instance segmentation, and finally realizes the detection of lane lines through fitting. The test results show that the algorithm has a good balance in speed and accuracy and good robustness.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "With regard to lane line detection, the traditional detection methods mainly use image processing technology to carry out edge detection, threshold processing and curve fitting of road images. The main steps are to preprocess the image first, select the Region of Interest (ROI), and detect its edges. After Hough Transformation, threshold processing is carried out, and then straight line or curve fitting is performed on the result. Common fitting methods mainly include least square method, polynomial fitting and Random Sample Consensus (RANSAC) algorithm.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Traditional lane line detection methods [1] rely on highly specialized, hand-made features and heuristic constraints, and usually require optimization of various postprocessing techniques, which are extremely unstable due to changes in road scenes. In recent years, deep learning has developed rapidly in the field of computer vision. With the improvement of hardware, especially the computing power of GPU, a breakthrough has been made in deep learning schemes. More and more scholars use deep learning to conduct lane line detection.",
+            "cite_spans": [
+                {
+                    "start": 40,
+                    "end": 43,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In 2014 literature [2] , a Convolutional Neural network (CNN) combined with RANSAC's lane line detection method is proposed. Firstly, the edge detection and lane information enhancement of the original image were carried out. Then, it was judged that in simple road scenes, the literature author believed that the RANSAC method could be used to complete the detection, while for complex road conditions, such as shadow, fence and other interference, the RANSAC method could be used after CNN processing. The CNN network structure consists of three convolutional layers, two lower sampling layers, multi-layer perceptron and three full connection layers. The edge image of the region of interest is input, and the image containing only white lane lines and black background is output through the CNN network. The judgment of scene complexity depends on the setting of conditional threshold, and different scenes have different requirements on conditions. Meanwhile, the CNN network structure is very simple, so the robustness of the whole algorithm is not high.",
+            "cite_spans": [
+                {
+                    "start": 19,
+                    "end": 22,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The 2016 literature [3] obtained the corresponding top view from the image front view by inverse perspective transformation method, and obtained the candidate region and the candidate lane line by the cap weighted filter. Double View Convolutional Neural Network (DVCNN) is designed to input the original front view image and top view image corresponding to the candidate region into the dvcnn network simultaneously. The final optimal lane line output is obtained by using the global optimization function considering the information including lane length, number, probability, direction and width. Combining different views improves the accuracy of detection, but also increases the running speed of the algorithm. In terms of speed, Jang et al. [4] proposed a convolutional neural network fast Learning algorithm based on Extreme Learning Machine (ELM) in 2017 and applied it to lane line detection. The convolutional neural network can enhance the input image before lane detection by eliminating noises and obstacles irrelevant to edge detection results. ELM is a fast learning method for calculating the network weight between the output and hidden layers in one iteration. This method reduces the learning time of the network, but the role of the network focuses on the enhancement of the image.",
+            "cite_spans": [
+                {
+                    "start": 20,
+                    "end": 23,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 748,
+                    "end": 751,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In 2018, Liu X et al. [5] proposed an RPP model based on single convolution visual road detection. Specifically, Robust Planar Pose(RPP) algorithm is a deep complete convolution residual segmentation network with pyramid pools. In order to greatly improve the predictive accuracy of kitti-Road detection tasks, Liu proposed the new strategy by adding road edge tags and introducing appropriate data enhancements. It is an effective way to use semantic segmentation in deep learning to complete the detection of road or lane.",
+            "cite_spans": [
+                {
+                    "start": 22,
+                    "end": 25,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The algorithm in this paper is an improvement on the road segmentation and lane detection algorithm [6] , and the application of discriminant loss function [7] in LaneNet [8] algorithm and the application of cavity convolution in DeepLabv1 [9] and Local Mean Decomposition(LMD) [10] algorithm are used for reference. The cavity convolution is a replacement of the ordinary convolutional layer to extract the feature to enlarge the receptive field, while the discriminant loss function is easy to be integrated into different network structures and realize instance segmentation through post-processing. The algorithm in this paper combines these two advantages to complete the fast and correct detection of lane lines.",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 103,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 156,
+                    "end": 159,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 171,
+                    "end": 174,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 240,
+                    "end": 243,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 278,
+                    "end": 282,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Method"
+        },
+        {
+            "text": "In the lane line detection algorithm based on convolutional neural network in this paper, Encoder and Decoder structure modes are adopted to improve Encoder and Decoder parts respectively on the basis of existing algorithms. Encoder drops the full connection layer of VGG16 network and the last 2 \u00d7 2 maximum pooling layer. Encoder ends the convolutional layer with three layers are set as empty convolution. Decoder has two branches, one of which is an up-sampling of Encoder to achieve semantic segmentation. Using the index function of the pooling layer, the upsampling was carried out in the way of unpool. After each upsampling, multiple convolutional layers were immediately followed and the standard cross entropy loss function was used to train the segmentation network. The other branch is the instance segmentation branch. The network generates the pixel vector feature map in the high-dimensional feature space, USES the discriminant loss function combined with the semantic segmentation results to realize the instance segmentation, and finally realizes the instance detection of lane lines through fitting.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Method"
+        },
+        {
+            "text": "Algorithm in this paper the Encoder -Decoder structure model, in which the Encoder part adopts VGG16 network based model to extract the lane line features, discarded VGG16 network connection layer, and only keep VGG16 in the first four biggest pooling layer, 2 \u00d7 2 empty convolution can be used to expand the characteristics of the receptive field, the 11th, 12th and 13th convolution layer set to empty, empty rate was 2. Decoder has two branches, one is the Encoder on sampling, realize the semantic segmentation, mainly using the largest pooling layer index function, sampling, on the basis of Upsampling by four Upsampling layer and ten convolution, after each Upsampling layer activation function ReLU to better deal with gradient disappeared, using the standard cross entropy loss function training network segmentation. The other branch is the instance segmentation branch, which USES the discriminant loss function based on distance metric learning to realize the instance segmentation on the generated pixel vector feature graph, and finally completes the instance detection of lane lines through clustering fitting.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction to Network Structure"
+        },
+        {
+            "text": "The algorithm flow chart of this paper is shown in Fig. 1 . The specific network structure is introduced in Sect. 3.1, and the specific parameter distribution is introduced in each module in the following chapters. The sample data to be input during network training include the original graph containing lane lines, the semantic segmentation real labels of the original graph and the instance segmentation real labels of the original graph. The network model is obtained after the training convergence, and then the lane line detection is carried out on the test data using the model, which is useful for post-processing of clustering fitting in the test process.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 51,
+                    "end": 57,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Computational Flow Chart"
+        },
+        {
+            "text": "Encoder is the part of algorithm network structure to extract image features. Based on VGG16, Encoder is mainly composed of convolutional layer and pooling layer. The resolution of the input training samples was adjusted to 512 \u00d7 256, a set of feature graphs were generated by convolution operation with the filter bank, and then they were batch standardized, followed by the activation function linear rectifier function. Then, the maximum pooling is used to perform a two-fold subsampling, and before the subsampling, the location of the maximum eigenvalue in each pooled window is stored for each feature map. In the last three convolution layer, to not continue with the largest pool of operations, but use, is the hole at a rate of 2 empty convolution instead of the ordinary convolution operation, therefore, the resolution of the encoder network at the end of the feature mapping tripled, hollow convolution can expand the receptive field and does not require any additional parameters and calculate the cost.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Encoder"
+        },
+        {
+            "text": "The semantic segmentation part mainly realizes the segmentation of lane line and background, and achieves the same resolution of output and input data by up-sampling the encoder. In computer vision, up-sampling generally includes three methods, namely bilinear interpolation, de-pooling and deconvolution. The main idea of bilinear interpolation is to perform a linear interpolation in two directions. Deconvolution is the inverse process of convolution operation. Compared with the former two, the parameters in the deconvolution process need to be trained and learned. Theoretically, deconvolution can realize anti-pooling operation if the parameters of convolution kernel are set reasonably. Anti-pooling operations tend to be more efficient in terms of memory usage because they require fewer indexes to be stored. The schematic diagram of de-pooling and deconvolution is shown in Fig. 2 , where Figure (a) represents maximum pooling and corresponding de-pooling operation, and figure (b) represents convolution and corresponding deconvolution operation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 885,
+                    "end": 891,
+                    "text": "Fig. 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "The Decoder"
+        },
+        {
+            "text": "The function of semantic segmentation is mainly to provide masks for instance segmentation. Instance segmentation involves the post-processing of clustering. If the clustering effect consumes a lot of time in the whole image, the mask provided according to semantic segmentation can ignore the background information which accounts for a large proportion, which can accelerate the speed of clustering.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "In order to prevent the occurrence of overfitting, Dropout emerges at the right moment, which reduces the risk of network structure by randomly setting part weight or output to zero during the learning process. The zeroing of some weights will reduce the interdependence among nodes, which is conducive to the regularization of network structure, reduce the incidence of overfitting, and improve the generalization ability of the model. The main working principle of Dropout is shown in Fig. 3 , in which Figure (a) represents the standard neural network structure and figure (b) represents the neural network structure after the use of Dropout, and it can be seen that some weights are randomly zeroed.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 487,
+                    "end": 493,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "The Decoder"
+        },
+        {
+            "text": "The Dropout layer usually exists in networks with many parameters such as full connection, and is rarely used in the ordinary convolutional network hidden layer, mainly because of the sparseness of convolution itself and the use of many sparse activation functions, such as ReLU. At the same time, the probability P value of Dropout layer is a super parameter, and different networks need different probability values. However, there is no specific and effective method to determine the P value, so it is necessary to keep trying the P value, which will undoubtedly consume a lot of training time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "After removing the full connection layer, the number of parameters in this paper is greatly reduced. Compared with the Dropout layer with different P values, the training effect of Dropout layer with different P values is not good. However, the training effect of Dropout layer with different P values is normal, and the model performs well in different test data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "The semantic segmentation of one of the decoder branches USES the cross entropy loss function. Its main purpose is to segment the two categories of lane line and image background. However, the proportion of lane line and image background is extremely unbalanced, and the background information seriously interferes the segmentation effect. Data imbalance means that the proportion of each category varies greatly. If the data is unbalanced, such as the proportion of category 1 is 1% and the proportion of category 2 is 99%, the network model will get the highest accuracy if the prediction result is biased to category 2, but the effect is not good in practical application.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "There are mainly two kinds of strategies to solve the problem of data imbalance: one is to consider the data set used for training and achieve the relative category data balance by increasing the training sample with a low data proportion or reducing the training sample with a large data proportion; The other is based on the structural algorithm. For example, the weighted loss value of different categories can be approximated by imposing penalty costs with different weights on different categories.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "For this reason, category weights should be added to weight the cross entropy, as shown in formula (1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "Where, is the probability of the occurrence of the corresponding category in the population sample, is the super parameter, which is set as 1.03 in this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Decoder"
+        },
+        {
+            "text": "In many common algorithms, Fully Connected Layers generally follow several convolutional Layers and pooling Layers, acting as a \"classifier\". The convolutional layer and pooling layer map the input original data to the hidden layer feature space for feature extraction, while the full connection layer maps the learned features to the sample marker space. As shown in Fig. 4, nodes a,b and c of the full connection layer are connected with nodes X, Y and Z of the previous layer respectively, which play a role in integrating the previously extracted features. But at the same time, due to the feature that all nodes are connected, the parameters of the whole connection layer generally take the largest proportion in the network structure. For example, in the familiar VGG16, for the input of 224 \u00d7 224 \u00d7 3, the first full connection layer FC6 has a total of 4096 nodes, and the upper layer of FC6 is the fifth largest pooling layer, with 7 \u00d7 7 \u00d7 512, a total of 25088 nodes, which means that 4096 \u00d7 25088 weights are needed, which consumes a huge amount of memory. Full connection layer is used in both semantic segmentation FCN network and literature [6] network. Literature [6] reduces the number of filters in full connection layer from 4096 to 1024. However, even so, parameters of full connection layer are still very redundant. In order to maintain the resolution of the feature map and consider the running speed of the algorithm, this paper chose to directly discard the operation of the full connection layer, thus greatly reducing the number of parameters. Finally, the comparison experiment also confirmed the acceleration of the speed.",
+            "cite_spans": [
+                {
+                    "start": 1154,
+                    "end": 1157,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1178,
+                    "end": 1181,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 368,
+                    "end": 385,
+                    "text": "Fig. 4, nodes a,b",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Remove the Full Connection Layer"
+        },
+        {
+            "text": "In the current semantic segmentation algorithms, it is almost inevitable to apply downsampling [11] . The existence of down-sampling makes the operating filter have a larger receptive field, which is conducive to collecting more context information and improving the segmentation accuracy. However, the output of the final result of semantic segmentation requires the same resolution as the input, which means that the strong down-sampling will require the same strong up-sampling; On the other hand, down-sampling not only reduces the resolution of features, but also loses important spatial information such as edge shape, and it is much less operable to restore the lost information to its original state. In this regard, the proposal and application of void convolution can well avoid these problems. Void convolution provides an effective mechanism to control the visual field, and can expand the filter's receptive field to contain greater context information without using down-sampling. Figure 5 (a) The size of the convolution kernel is 3 \u00d7 3, and the cavity rate is 1, which is not different from common convolution operations. Figure 5 (b) The size of the convolution kernel is 3 \u00d7 3, and the cavity rate is 2. Only the nine red points and the 3 \u00d7 3 convolution kernel are convolved, while the remaining points are not convolved. It can also be considered that the size of the convolution kernel is 7 \u00d7 7, and only the red points have non-0 weight, while the weight of the remaining points is 0. Therefore, it can be understood that although the size of the convolution kernel is only 3 \u00d7 3, the receptive field of convolution operation has reached 7 \u00d7 7. Similarly, in Fig. 8 (c) , the convolution kernel size is 3 \u00d7 3 and the cavity rate is 4, but the receptive field of convolution operation increases to 15 \u00d7 15. If the size of the convolution kernel is 3 \u00d7 3 and the cavity rate is 1, 2 and 4 respectively in the three successive convolutional layers, as shown in Fig. 5 (a), Fig. 5 (b) and Fig. 5 (c), then the nine red points in Fig. 5 (b) are the output of Fig. 5 (a) and the nine red points in Fig. 5 (c) are the output of Fig. 5 (b) , and the receptive field of the entire three-layer convolution reaches 15 \u00d7 15. Compared with the ordinary convolution operation, the convolution operation with the size of the continuous three-layer convolution kernel is 3 \u00d7 3. In the case of the same step size of 1, the perceptron with only 7 \u00d7 7 can be calculated according to the formula (Kernel-1 \u00d7 layer + 1). Thus, it can be seen that the receptive field of ordinary convolution operation has a linear relationship with the number of layers, while the receptive field of empty convolution has an exponential relationship with the number of layers.",
+            "cite_spans": [
+                {
+                    "start": 95,
+                    "end": 99,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 995,
+                    "end": 1003,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1138,
+                    "end": 1150,
+                    "text": "Figure 5 (b)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1681,
+                    "end": 1691,
+                    "text": "Fig. 8 (c)",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 1980,
+                    "end": 2002,
+                    "text": "Fig. 5 (a), Fig. 5 (b)",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 2007,
+                    "end": 2013,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 2047,
+                    "end": 2053,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 2076,
+                    "end": 2082,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 2114,
+                    "end": 2120,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 2143,
+                    "end": 2153,
+                    "text": "Fig. 5 (b)",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Increase the Cavity Convolution"
+        },
+        {
+            "text": "This article will last three convolution encoder layer using hollow convolution instead of, not only expand the receptive field, at the same time do not need any additional parameters and calculate the cost, combined with discarding the largest pool of different number of layers, the last experiment just remove the last one of the biggest pooling layer for the lane line detection effect is best, especially to reduce the residual.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Increase the Cavity Convolution"
+        },
+        {
+            "text": "Instance segmentation branch network is mainly realized by discriminant loss function.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Instance Segmentation"
+        },
+        {
+            "text": "A differentiable function is used to map each pixel in the image to a point in the highdimensional feature space. N is used to represent the N-dimensional feature space, and its size is related to the samples used for training. The more samples there are, the larger n will be. In the high-dimensional feature space, the pixel embedded vectors with the same label will end up close to each other after training, while the pixel embedded vectors with different labels will move away from each other [12] . Discriminant loss function is developed on the basis of literature, which proposes a loss function to implement pixel embedding, including two terms: one is used to punish embedded pixels with the same label but with a large distance; the other is used to punish embedded pixels with different labels but with a small distance. The discriminant loss function improves the second item [13] . For a frame of image, the number of instances in the image is less than the pixels in the image [14] . Therefore, for the object with different labels but small distance, the average embedding of different labels will be changed from each pair of embedded pixels, which will be much faster in calculation.",
+            "cite_spans": [
+                {
+                    "start": 498,
+                    "end": 502,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 889,
+                    "end": 893,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 992,
+                    "end": 996,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Instance Segmentation"
+        },
+        {
+            "text": "Discriminant loss function used by Decoder instance segmentation branch involves clustering operation, which is only needed when lane detection is carried out but does not participate in the training process, and clustering is completed through iteration [8] . First, mean shift clustering was used to make the cluster center move along the direction with high density. Then, threshold processing was carried out. With the cluster center as the center of the circle and 2\u03b4 v as the radius, all embedded pixel vectors in the circle were selected to be grouped into the same lane line. Repeat this step until all lane lines embedded pixel vectors are assigned to the corresponding instance lane. Finally, the output instance lane line is obtained by fitting.",
+            "cite_spans": [
+                {
+                    "start": 255,
+                    "end": 258,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Afterprocessing"
+        },
+        {
+            "text": "Common fitting methods include voting method based on Hough Transform, Bessel curve fitting, polynomial fitting based on least square and random sampling consistent algorithm [15] . The voting method converts the coordinate space into parameter space, and then performs traversal after obtaining the lane edge points. The method is simple, but if there are too many data, the traversal speed will be affected. Moreover, it cannot handle the curve well, so it is suitable for the straight road with simple environment. Bessel curve, also known as Baez curve, is composed of line segments and nodes with accurate fitting, but the calculation is complex and cannot be modified locally. Changing the position of a control point has an impact on the whole curve. RANSAC iteratively estimates the parameters of the mathematical model, which is an uncertain algorithm with only a certain probability to get the appropriate model. In addition, relevant thresholds need to be set. Polynomial fitting based on least square is the most simple lane line fitting method with a small amount of computation. However, the lane segmentation clustering algorithm in this paper has a relatively high accuracy, and the least square method can also be used to fit lane lines well for sections with curvature. ",
+            "cite_spans": [
+                {
+                    "start": 175,
+                    "end": 179,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Afterprocessing"
+        },
+        {
+            "text": "The algorithm presented in this paper to test a variety of environment under the scenario of video sequences, including day, high-speed, night, rain, such as scene, the scene also includes the corners, vehicle interference, shade, strong light, the complex road conditions, such as a bar line interference, a total of 8 groups of video, algorithm running speed and accuracy as the evaluation standard for statistics. In addition, various open source lane-line data sets are tested in this paper to verify the robustness of the algorithm. Finally, the experimental results prove the effectiveness of the proposed algorithm.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lane Line Detection Results"
+        },
+        {
+            "text": "Detection results in each scene of the self-made data set: different colors represent different lane instances; solid line represents solid line; dashed line represents dashed line. In Fig. 7 (a), Fig. 7 (b) and Fig. 7 (c) , there are lane double lines. Since the algorithm in this paper does not distinguish the category of double lines, it is regarded as the detection conducted by different lane instances. Above shows a good traffic lane line recognition effect under different environment, as shown in Fig. 7 shows a multi lane road lane line test results correctly, as shown in Fig. 8 shows the tunnel section lane line identification results, Fig. 9 shows the bend lane line basic accurate test results, Fig. 10 for rainy days under the environment of the lane line detection effect, Fig. 11 shows the night environment lane line identification results.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 185,
+                    "end": 207,
+                    "text": "Fig. 7 (a), Fig. 7 (b)",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 212,
+                    "end": 222,
+                    "text": "Fig. 7 (c)",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 507,
+                    "end": 513,
+                    "text": "Fig. 7",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 584,
+                    "end": 590,
+                    "text": "Fig. 8",
+                    "ref_id": "FIGREF7"
+                },
+                {
+                    "start": 650,
+                    "end": 656,
+                    "text": "Fig. 9",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 711,
+                    "end": 718,
+                    "text": "Fig. 10",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 791,
+                    "end": 798,
+                    "text": "Fig. 11",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Test Results of Homemade Data Set"
+        },
+        {
+            "text": "The missing and false detection results in the experimental test are shown in Fig. 12 . Missing detection analysis: considering the running speed of the algorithm, the network structure is relatively simple; The diversity of data sets is not reflected in the fact that lane lines of different widths are not considered.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 78,
+                    "end": 85,
+                    "text": "Fig. 12",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Test Results of Homemade Data Set"
+        },
+        {
+            "text": "Mistakenly identified analysis: data sets production not precise enough, especially longer dotted line is easy to cause error checking, and the solid line is wear block, and so on and so forth will be mistakenly identified as a dotted line, the other tags form when using the coordinates, then get the split samples set width of real labels, inevitably contains background information. When network clustering, the setting of super parameters does not meet all the circumstances of the lane. In addition, similar features are also easy to cause false detection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Test Results of Homemade Data Set"
+        },
+        {
+            "text": "Open source data set detection results: Where different colors represent different lane instances, solid lines represent solid lane lines, and dashed lines represent dashed lane lines. The materials of Tucson data set are all taken from the highway, but it is not easy to detect. The difficulty lies in that the lane lines are badly worn and the characteristics of the lane lines are not obvious. However, the detection results of this algorithm are relatively good (Fig. 14) . The CULane data set has a relatively large resolution and contains more interference information of its own vehicle head. In the case of good road conditions, the algorithm proposed in this paper can still accurately identify lane lines (Fig. 15 ). The KITTI data set provides two types of markings, road and current lane, which are mainly used for the study of the division of the drivable area of vehicles, with lane lines mainly existing in the middle of the road, and the method in this paper has basically accurately identified the lane lines.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 466,
+                    "end": 475,
+                    "text": "(Fig. 14)",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 715,
+                    "end": 723,
+                    "text": "(Fig. 15",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Open Source Dataset Test Results"
+        },
+        {
+            "text": "In the experiment of this algorithm, lane lines under different data sets and different weather conditions were tested respectively, and the accuracy and robustness were verified by experimental results. In the algorithm comparison experiment, the detection speed of this algorithm is 30.38% faster than that of the algorithm in reference [6] , and the corresponding accuracy is almost the same, only 1.39% lower. When comparing the traditional methods based on voting, the algorithm in this paper is much slower in detection speed, but much higher in detection accuracy. Especially for the virtual and real detection of lane lines and curve detection, it is difficult for traditional methods to achieve effective detection. By contrast, the algorithm in this paper can basically achieve accurate detection.",
+            "cite_spans": [
+                {
+                    "start": 339,
+                    "end": 342,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "A review of recent advances in lane detection and departure warning system",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Narote",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Bhujbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Narote",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Pattern Recogn",
+            "volume": "73",
+            "issn": "",
+            "pages": "216--234",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Robust lane detection based on convolutional neural network and random sample consensus",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "ICONIP 2014",
+            "volume": "8834",
+            "issn": "",
+            "pages": "454--461",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-319-12637-1_57"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Accurate and robust lane detection based on Dual-View Convolutional Neutral Network",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Intelligent Vehicles Symposium",
+            "volume": "",
+            "issn": "",
+            "pages": "1041--1046",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Fast learning method for convolutional neural networks using extreme learning machine and its application to lane detection",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Jang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Neural Netw",
+            "volume": "87",
+            "issn": "",
+            "pages": "109--121",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Segmentation of drivable road using deep fully convolutional residual network with pyramid pooling",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Cogn. Comput",
+            "volume": "10",
+            "issn": "2",
+            "pages": "272--281",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12559-017-9524-y"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Efficient deep models for monocular road segmentation",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Oliveira",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Burgard",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Brox",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Intelligent Robots and Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "4885--4891",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Semantic instance segmentation with a discriminative loss function",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "De Brabandere",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Neven",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Van Gool",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1708.02551"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Towards end-to-end lane detection: an instance segmentation approach",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Neven",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "De Brabandere",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Georgoulis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Intelligent Vehicles Symposium",
+            "volume": "",
+            "issn": "",
+            "pages": "286--291",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Semantic image segmentation with deep convolutional nets and fully connected CRFs",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Papandreou",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Kokkinos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1412.7062"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Efficient road lane marking detection with deep learning",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lo",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "International Conference on Digital Signal Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Large kernel matters -improve semantic segmentation by global convolutional network",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "1743--1751",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Learning to segment object candidates",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Pinheiro",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Collobert",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Dollar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Neural Information Processing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "1990--1998",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "International Conference on Computer Vision",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Gkioxari",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Dollar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "2961--2969",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "End-to-end ego lane estimation based on sequential transfer learning for self-driving cars",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "1194--1202",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "ENet: a deep neural network architecture for real-time semantic segmentation",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Paszke",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Chaurasia",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Culurciello",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1606.02147"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Algorithm flow chart in this paper.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Schematic diagram of contrast between deconcentration and deconvolution.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Use the Dropout neural network model.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Schematic diagram of full connection layer.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Schematic diagram of empty convolution.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Cluster fitting result diagram. As shown in Fig. 11, Fig. 6 (a) and Fig. 6 (b) are renderings after clustering, and Fig. 6 (c) and Fig. 6 (d) are result graphs after corresponding fitting. It can be clearly seen from the figure that clustering has completed the detection of lane lines, but it contains a lot of background information. After fitting, the specific location of lane lines can be more accurately represented.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Multi-lane section detection results.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Tunnel section detection results.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Test results of bend section.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Environmental test results on rainy days.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Night environment test results.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Schematic diagram of false detection and omission.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "a) shows the false detection caused by the similarity of road tooth characteristics, andFig. 12 (b)shows the missing detection caused by different lane line widths.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "Test results of the data set of the 2018 Smart Car Future Challenge.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "a) The interference of vehicle occlusion can be accurately detected;Fig. 13(b) Interference with strong light;Fig. 13(c) Interference with colored bar lines on the ground.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "Tucson dataset detection results.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "CULane dataset detection results.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "KITTI dataset detection.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Acknowledgement. This work was supported by the industry-university-research innovation fund of science and technology development center of Ministry of Education: 2020QT02.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "acknowledgement"
+        }
+    ]
+}

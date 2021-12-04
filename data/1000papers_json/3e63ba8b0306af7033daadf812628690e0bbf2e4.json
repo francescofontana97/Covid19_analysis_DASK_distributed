@@ -1,0 +1,546 @@
+{
+    "paper_id": "3e63ba8b0306af7033daadf812628690e0bbf2e4",
+    "metadata": {
+        "title": "WeightedLD: The Application of Sequence Weights to Linkage Disequilibrium",
+        "authors": [
+            {
+                "first": "Oscar",
+                "middle": [
+                    "J"
+                ],
+                "last": "Charles",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1N 1EH",
+                        "settlement": "London",
+                        "country": "UK"
+                    }
+                },
+                "email": "oscar.charles.18@ucl.ac.uk"
+            },
+            {
+                "first": "Joseph",
+                "middle": [],
+                "last": "Roberts",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Cambridge",
+                    "location": {
+                        "postCode": "CB2 1PZ",
+                        "settlement": "Cambridge",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Judith",
+                "middle": [],
+                "last": "Breuer",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1N 1EH",
+                        "settlement": "London",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Richard",
+                "middle": [
+                    "A"
+                ],
+                "last": "Goldstein",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University College London",
+                    "location": {
+                        "postCode": "WC1E 6BT",
+                        "settlement": "London",
+                        "country": "UK"
+                    }
+                },
+                "email": ":r.goldstein@ucl.ac.uk"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Sequence-weighting methods are commonly employed to account for biases in sequence datasets. We use a weighting scheme which considers the observed distinctiveness of sequences and apply it to calculations of linkage disequilibrium. Each sequence now contributes a weighted score to linkage disequilibrium measurements of pairwise loci. We demonstrate that this reduces the effect of uneven sampling, as underrepresented groups of sequences will each contribute more individually than redundant, similar sequences.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Availability: Source code for a python and rust implementation are freely available at under an MIT license at github.com/ojcharles/WeightedLD.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Contact",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Assembling a set of sequence data is a common first step in population genetics projects. The composition of such sets is affected by factors such as geography, accessibility of different populations, similarity to laboratory strains and the idiosyncratic nature of sequencing efforts. This results in sequencing data that is highly biased, complicating and compromising downstream analyses.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Sequence weighting schemes have been developed to compensate for overrepresentation of populations in genetic data. The more redundant and less distinct a sequence is, the lower its weight and the less it contributes to downstream analyses. Conversely a sequence that is divergent will be assigned a relatively high weight and will more strongly influence later calculations. While there is consensus that sequence weighting is important, there are a number of different methodologies 1,2 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Linkage Disequilibrium (LD) measures the non-random association between genetic markers across different sites in the genome 3 . LD analyses are frequently applied to pairwise variable loci in a multiple sequence alignment (MSA) in order to test for the presence of recombination. Alleles presenting long-range LD can suggest functional similarities of encoding gene products 4 , the presence of population admixtures, epistatic selection, or other selection pressures 5 .",
+            "cite_spans": [
+                {
+                    "start": 125,
+                    "end": 126,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 376,
+                    "end": 377,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Despite its widespread use in sequence analysis, sequence weighting has not yet been applied to most population genetics calculations such as LD. Consider a set of sequences representing disproportionately sampled populations, by geography or clinical presentation. It is possible that noteworthy signals represented in the minor populations, and/or interplay between the major and minor populations would be diluted by the dominant linkage of alleles in the major population. We describe how sequence weighting can alleviate much of the effect of biases in sample composition in calculations of LD. This represents a general methodology which could be applied to a wide range of population genetic studies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Consider a multiple sequence alignment derived from one or more specific populations. The composition of such an alignment has inevitable biases, such as an overrepresentation of samples from golf-playing nations (GPNs) or nearly exact copies of laboratory strains. We wish to calculate LD in a manner that is robust to these compositional biases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "We define to be the frequency of allele at a locus to be the frequency of allele at a second locus, and as the joint frequency of sequences with both alleles at these loci. if there is complete random association between these two loci, = . This will not be true in the presence of linkage disequilibrium. The amount of the discrepancy is quantified by , the linkage disequilibrium coefficient, given by 6,7 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methodology"
+        },
+        {
+            "text": "As will be affected by the amount of variation at these two sites, it is common for this quantity to be normalised",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "= \u2212"
+        },
+        {
+            "text": "Next, we introduce sequence weights into this framework. If the weight of sequence is and we are considering two sites, one where sequence has allele , the other where it has allele , then:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "= \u2212"
+        },
+        {
+            "text": "For calculating these weights, we use the approach developed by Henikoff and Henikoff 8 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "= \u2212"
+        },
+        {
+            "text": "We implemented a procedure that calculates LD using sequence weighting and the LD scores above in both Python and Rust 9,10 . The software accepts a multiple sequence alignment or variant call file as input, identifies all variable positions and then returns a matrix of values for [position , position +, , \u2032, 2 ] per pairwise comparison. To account for ambiguous bases there is an option to set --min-acgt fraction, which will throw out variable positions which contain below this fraction of A, C, G, or T. Also, there is a -min-minor argument, which ignores positions with a (dominant) minor fraction less than the specified value. We benchmarked the rust implementation compute time with default settings on an i7-8650U laptop with 32GB RAM. Sequence data were obtained from NCBI or the 1000 genomes project and aligned with MAFFT [11] [12] [13] . The Hepatitis C weighting and LD calculations shown below completed in 0.35 seconds, 100000 Sars-cov2 global whole genomes from 2021 in 1.02s and Human GRch38 chromosome 19 positions 44000000-45000000 from 200 diploid individuals, evenly split among GBR and PJL populations required 21.53s.",
+            "cite_spans": [
+                {
+                    "start": 836,
+                    "end": 840,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 841,
+                    "end": 845,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 846,
+                    "end": 850,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Implementation and testing"
+        },
+        {
+            "text": "Sequence weighted LD calculations should be beneficial in reconstructing a more accurate population LD when only biased data is available. To demonstrate this we generated an unbiased MSA containing two sets of 137 whole genome sequences of Hepatitis C subtype 1 of Japanese and USA origin. This alignment was unevenly sampled to create a second biased alignment of 25 Japanese and 137 USA sequences. With these two alignments we computed three sets of results using WeightedLD, 1) Unbiased-unweighted 2) Biased-unweighted and 3) Biased-Weighted. Figures 1 and 2 demonstrate that assigning weights to sequences results in higher contribution from the minor Japanese population, shifting LD pairwise calculations towards the values obtained with an unbiased set. The following results were calculated using parameters --min-acgt 0.9 --min-minor 0.02 --r2threshold 0.02. Within the figures the Wilcoxon test, Pearson correlation coefficients, and graphics were generated in R 14 . ",
+            "cite_spans": [
+                {
+                    "start": 974,
+                    "end": 976,
+                    "text": "14",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 547,
+                    "end": 562,
+                    "text": "Figures 1 and 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Implementation and testing"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "CLUSTAL W: improving the sensitivity of progressive multiple sequence alignment through sequence weighting, position-specific gap penalties and weight matrix choice",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Thompson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Higgins",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gibson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Nucleic Acids Res",
+            "volume": "22",
+            "issn": "",
+            "pages": "4673--4680",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Weighting in sequence space: a comparison of methods in terms of generalized sequences",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Vingron",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Sibbald",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "PNAS",
+            "volume": "90",
+            "issn": "",
+            "pages": "8777--8781",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Linkage disequilibrium -understanding the evolutionary past and mapping the medical future",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Slatkin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Nature Reviews Genetics",
+            "volume": "9",
+            "issn": "",
+            "pages": "477--485",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Population-specific long-range linkage disequilibrium in the human genome and its influence on identifying common disease variants",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Scientific Reports",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Long Range Linkage Disequilibrium across the Human Genome",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Koch",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ristroph",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kirkpatrick",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "PLOS ONE",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The Evolutionary Dynamics of Complex Polymorphisms",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lewontin",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kojima",
+                    "suffix": ""
+                }
+            ],
+            "year": 1960,
+            "venue": "Evolution",
+            "volume": "14",
+            "issn": "",
+            "pages": "458--472",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "SOME APPLICATIONS OF MATHEMATICS TO BREEDING PROBLEMS I1",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Robbins",
+                    "suffix": ""
+                }
+            ],
+            "year": 1918,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Position-based sequence weights",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Henikoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Henikoff",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Journal of Molecular Biology",
+            "volume": "243",
+            "issn": "",
+            "pages": "574--578",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "The rust language",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Matsakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Klock",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Ada Lett",
+            "volume": "34",
+            "issn": "",
+            "pages": "103--104",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Array programming with NumPy",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Harris",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "585",
+            "issn": "",
+            "pages": "357--362",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Database resources of the National Center for Biotechnology Information",
+            "authors": [],
+            "year": 2018,
+            "venue": "Nucleic Acids Res",
+            "volume": "46",
+            "issn": "",
+            "pages": "8--13",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "MAFFT Multiple Sequence Alignment Software Version 7: Improvements in Performance and Usability",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Katoh",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Standley",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Mol Biol Evol",
+            "volume": "30",
+            "issn": "",
+            "pages": "772--780",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A global reference for human genetic variation",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Auton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Nature",
+            "volume": "526",
+            "issn": "",
+            "pages": "68--74",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "ggpubr: 'ggplot2' Based Publication Ready Plots",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kassambara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Weighted D' values of each pairwise comparison of variable sites obtained for the biased unweighted (vermillion) and biased weighted (blue) datasets compared with that obtained with the unbiased dataset. For each point the error is represented by the distance from the black central line.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Violin plot of the absolute differences in LD D' of the biased unweighted dataset (vermillion) and biased weighted dataset (blue) relative to that obtained with the unbiased sample. Mean \u2206D' for unweighted and Henikoff weighted were 0.129 and 0.045 respectively.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

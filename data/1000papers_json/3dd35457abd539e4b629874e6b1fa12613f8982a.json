@@ -1,0 +1,1372 @@
+{
+    "paper_id": "3dd35457abd539e4b629874e6b1fa12613f8982a",
+    "metadata": {
+        "title": "Viral Processes by Random Walks on Random Regular Graphs",
+        "authors": [
+            {
+                "first": "Mohammed",
+                "middle": [],
+                "last": "Abdullah",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "King's College London",
+                    "location": {}
+                },
+                "email": "mohammed.abdullah@kcl.ac.uk"
+            },
+            {
+                "first": "Colin",
+                "middle": [],
+                "last": "Cooper",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "King's College London",
+                    "location": {}
+                },
+                "email": "colin.cooper@kcl.ac.uk"
+            },
+            {
+                "first": "Moez",
+                "middle": [],
+                "last": "Draief",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Imperial College London",
+                    "location": {}
+                },
+                "email": "m.draief@imperial.ac.uk"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "We study the SIR epidemic model with infections carried by k particles making independent random walks on a random regular graph. We give a edge-weighted graph reduction of the dynamics of the process that allows us to apply standard results of Erd\u0151s-Renyi random graphs on the particle set. In particular, we show how the parameters of the model produce two phase transitions: In the subcritical regime, O(ln k) particles are infected. In the supercritical regime, for a constant C determined by the parameters of the model, Ck get infected with probability C, and O(ln k) get infected with probability (1 \u2212 C). Finally, there is a regime in which all k particles are infected. Furthermore, the edge weights give information about when a particle becomes infected. We demonstrate how this can be exploited to determine the completion time of the process by applying a result of Janson on randomly edge weighted graphs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The spread of an infection throughout a population, often referred to loosely as an epidemic, has come to be modelled in various ways in the literature, spurred by the richness of the domains in which the abstract notion of a virus has gone beyond the traditional biological phenomenon. Electronic viruses over computer networks are not the only extension, others include rumour spreading [20] or broadcasting [3] and viral marketing [13, ch. 9 ]. Models may vary over domains, but the underlying principle is one of spread of some unit of information or change of state through interaction between individuals.",
+            "cite_spans": [
+                {
+                    "start": 389,
+                    "end": 393,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 410,
+                    "end": 413,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 434,
+                    "end": 444,
+                    "text": "[13, ch. 9",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In much of the literature on the spread of epidemics as well as the dissemination of information, individuals reside at fixed locations connected by a graph and the evolution of the state of an individual depends on the state of its neighbours in the graph. In particular if the graph is complete, mean-field (homogeneous mixing) models have been exploited to study the outcome of the diffusion process [9] . More recently, there has been an increasing interest in understanding the impact of the network topology on the spread of epidemics in networks with fixed nodes, see [13] for a review of such results. There has however been little analytical work to date on models where the possible interactions between the nodes are dynamic, i.e., evolves in time.",
+            "cite_spans": [
+                {
+                    "start": 403,
+                    "end": 406,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 575,
+                    "end": 579,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We explore a particular instance of dynamicity in interaction by assuming that individuals are mobile particles and can only infect each other if they are in sufficiently close proximity. The model is motivated both by certain kinds of biological epidemics, whose transmission may be dominated by sites at which individuals gather in close proximity (e.g., workplaces or public transport for a disease like SARS, cattle markets for foot-and-mouth disease, etc.) and by malware. Furthermore, it is relevant to studying the dissemination of information in opportunistic networks [5] where the information is transmitted between users who happen to be in each others range. As in the case of static networks [20] one may be interested in the time it takes for the rumour to be known to all users.",
+            "cite_spans": [
+                {
+                    "start": 577,
+                    "end": 580,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 705,
+                    "end": 709,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In our model (elaborated upon below) the virus can be carried by k particles making independent random walks on an n-vertex r-regular random graph G which represents the environment. Each particle is in one of three states: susceptible (S), infected (I), recovered (R). An infected particle can infect a susceptible particle, which remains infected for a fixed infectious period \u03be before recovering permanently. This is a known as the SIR epidemic model and is extensively studied in the literature. When \u03be = \u221e (the SI model ) particles never go from I to R. Two questions can be asked: (1) When \u03be < \u221e, how many particles ever get infected? (2) How long does the process take to complete? We address both of these questions by reducing the dynamics of the process to what we term an interaction graph. This is an Erd\u0151s-Renyi (E-R) random graph G k,q on the set of particles, where the edge probabilityq is a function of the parameters of the model. Infected particles are connected components in G k,q , and so well known results from the literature on E-R random graphs can be directly applied using our reduction to answer question (1) . In particular, we show how the parameters of the model produce two phase transitions: In the subcritical regime, O(ln k) particles are infected. In the supercritical regime, for a constant C determined by the parameters of the model, Ck get infected with probability C, and O(ln k) get infected with probability (1 \u2212 C). Finally, there is a regime in which all k particles are infected. Statements are with high probability (whp), that is, with probability tending to 1 as n \u2192 \u221e. Furthermore, the graph reduction assigns weights on the edges that give information about when a particle becomes infected. This information can be used for addressing question (2) . As an example, in the case of \u03be = \u221e, we apply a result of Janson [16] on randomly-weighted graphs to deduce that completion time converges in probability to 2\u03b8rn k ln k, where \u03b8 r = r\u22121 r\u22122 . This matches the expectation determined in [8] for the same example.",
+            "cite_spans": [
+                {
+                    "start": 1134,
+                    "end": 1137,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 1797,
+                    "end": 1800,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1868,
+                    "end": 1872,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 2038,
+                    "end": 2041,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Whilst the metaphor of an epidemic is a motivating and illustrative one, this work is part of the more general scope of interacting particle systems (see, e.g., [2, ch. 14] ).",
+            "cite_spans": [
+                {
+                    "start": 161,
+                    "end": 172,
+                    "text": "[2, ch. 14]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Note, due to space restrictions, we refer to [1] for a more detailed exposition and proofs of lemmas and theorems not presented in this paper.",
+            "cite_spans": [
+                {
+                    "start": 45,
+                    "end": 48,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Let r \u2265 3 be fixed. Let G r denote the set of r-regular graphs with vertex set V = {1, 2, . . . , n} and the uniform measure. Let G = (V G , E G ) be chosen uniformly at random (uar) from G r . The results in this paper are always asymptotic in n = |V G |. The notation A n \u223c B n means that lim n\u2192\u221e A n /B n = 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "At step t, let S(t), I(t), R(t) be the set of susceptible, infected and recovered particles respectively. These form a partition of the particle set P. Thus, |P| = k.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "When two particles x and y meet at some vertex v at time step t, an interaction takes place between them at that time step with probability \u03c1 \u2208 (0, 1], which is a fixed constant parameter of the model. We term such an event an xy interaction and call \u03c1 the interaction probability. If one of the particles is infected and the other is susceptible, the infection takes place upon interaction. We define the completion time of the process to be the time step at which the last infection takes place. Consider that the counter has just changed from time step t \u2212 1 to t. The sequence of actions is as follows: (i)Every particle makes an independent move in its random walk. (ii)A particle x \u2208 I(t \u2212 1) that had reached the end of its infectious period by time t changes from state I to state R, so x / \u2208 I(t) and x \u2208 R(t). Otherwise, it remains in state I, i.e., x \u2208 I(t). (iii)Each pair of particles x, y at the same vertex v interact with probability \u03c1; the particle-pair interactions are independent of each other. If one of x or y is in I(t), and the other was in S(t \u2212 1), the latter becomes infected, and it becomes a member of I(t). New infections are considered to have started at time t; we say a particle is infected at step t, and step t counts as one unit in the infectious period. (iv) The counter changes from t to t + 1, and the sequence is repeated.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "A note on notation and terminology: When we refer to a 'period' [t 1 , t 2 ], we mean the set of time steps {t 1 , t 1 + 1, t 1 + 2 . . . , t 2 }. When we refer to \"time t\" we are referring to step t on the counter -this is a discrete time process. The first time step is t = 1, and t = 0 is not a time step, just a useful convention to express the state of the system before the first time step.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "Observe the pair-wise independence of the interactions: If x, y, z meet at a vertex v at time step t, there is an interaction between each pair ({xy, yz, xz}) with probability \u03c1, independently of the other interactions. From the sequence of actions, it can be seen that it is also the case that an infection is not transitive in a single time step. For example, say they meet at the same vertex at time step t, x is infected but y and z are not. If x interacts with y but not z, then y does not pass on the infection to z at that time step, even if they interact at that time step. Let M k be the total number of particles that ever get infected in the course of the process, and let T k be the completion time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model"
+        },
+        {
+            "text": "Theorem 1. Suppose \u03c1 = 1 and k \u2192 \u221e as n \u2192 \u221e. Define",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "all the particles get infected).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Theorem 1 is for finite \u03be, but observe that taking the convention that x \u221e = 0 for |x| < 1 means that part (iii) is consistent with the SI model, for which all particles get infected almost surely. The theorem effectively gives conditions for transitions between different possible \"regimes\" of behaviour. The most interesting is the regime of part (ii), which is entered as \u03c6 transitions from \u03c6 < 1 to \u03c6 > 1. When I 0 = 1, roughly speaking, in this transition the number of infected particles goes from very few (O(ln k)) whp, to a constant fraction Ck with probability C, or O(ln k) with probability 1 \u2212 C. Hence, it's \"all or nothing\", with a constant probability C of being \"all\".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "k . This is unsurprising since it can be seen from the tools we use in our analysis that the hitting time of one particle to any of the k others is distributed approximately Geom( k \u03b8rn ), and hence has expected value \u03b8rn k . Concerning the completion times, we will demonstrate in Sect. 7.2 that for \u03be = \u221e, (that is, the SI model) and \u03c1 = 1, how the edge weightings can be exploited by a fairly straightforward application of a theorem of [16] to get",
+            "cite_spans": [
+                {
+                    "start": 440,
+                    "end": 444,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "where T k is the completion time for k particles. This is not a new result since it is implied by the matching expectation result from [8] , however, our weighting sheme generalises to \u03c1 < 1 and/or \u03be < \u221e and in principle can be exploited in the same manner. In fact, for \u03be = \u221e, \u03c1 < 1 we claim that (2) holds as T k ln k/k p \u2212 \u2192 2 \u03b8rn \u03c8 . For \u03c1 < 1, we claim that Theorem 1 holds when the term 1",
+            "cite_spans": [
+                {
+                    "start": 135,
+                    "end": 138,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "See [1] .",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 7,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "In this section, we briefly describe some of the relevant related work on diffusion processes like epidemic spreading and the dissemination of information in mobile environments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "There has been a growing body of work in the interacting particle systems community analysing epidemic models with mobile particles. In [10] the authors provide a review of the results, techniques and conjectures when the graph is an infinite lattice. In [21] , the authors explore by means of mean-field approximations the evolution of the number of infected individuals when individuals perform random motions on the plane. Recent papers by Peres et al [19] and Pettarin et al [22] both analyse mobile networks modeled as multiple random walks; the former as Brownian motion on R d and the latter as walks on the grid. In each case, there is a parameter r within which distance a pair of walks can communicate, producing a communication graph (which is disconnected below a certain threshold r c ). [19] studies various aspects of the communication graph, such as how long it takes a particular point to become part of the giant component. [22] studies the broadcast time T B of a piece of information and originating in one agent in relation to r. Setting r = 0 means information is passed only when particles are coincident. In this case, T B is equivalent to our completion time and [22] give T B =\u0398(n/ \u221a k). Of closer relevance to this work are [12] and [11] . Both of these papers study infections carried by random walks on graphs. In particular [11] analyses an SI model similar to ours; multiple random walks on a graph G that carry a virus, and the quantity of interest is the completion time. They give a general upper bound E[T k ] = O(m * ln k) for any graph G, where m * is the expected meeting time of a pair of random walks maximised over all pairs of starting vertices. Special cases are analysed too, in particular, they give an upperbound of E[T k ] = O( nr k ln k ln n) for random r-regular graphs. This is a factor ln n larger than the precise value of the process considered in this paper.",
+            "cite_spans": [
+                {
+                    "start": 136,
+                    "end": 140,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 255,
+                    "end": 259,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 455,
+                    "end": 459,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 479,
+                    "end": 483,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 801,
+                    "end": 805,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 942,
+                    "end": 946,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1188,
+                    "end": 1192,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1251,
+                    "end": 1255,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1260,
+                    "end": 1264,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1354,
+                    "end": 1358,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Finally, we mention [3] , which studies flooding on dynamic random networks. A fixed set of n vertices is part of a dynamic random graph process where each edge is an independent two-state Markov chain, either existing or not existing. A single initial vertex initially holds a message and any vertex which receives this message broadcasts it on existing edges for the next k steps. Although flooding is a different process to multiple random walks, the authors develop a reduction to a weighted random graph with some similarity to the interaction graphs we present. It allows them to derive relations between the edge-Markov probabilities and state asymptotic bounds on the number of vertices that receive the message, as well as the broadcast (equivalently, completion) time.",
+            "cite_spans": [
+                {
+                    "start": 20,
+                    "end": 23,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "If each particle is distance at least \u03c9(k, n) \u2261 \u03a9(ln ln n + ln k) from every other then we say the particles are in general position (g.p.). We assume the following: A typical graph (formally defined in the appendix) is one that has a number of specific properties. It is connected and non-bipartite, which implies that a random walk will converge to a stationary distribution \u03c0 on the vertex set. Because the graph is regular, \u03c0 will be the uniform distribution. A typical graph also has good expansion properties, meaning that a random walk will converge quickly to the stationary distribution; it will be rapidly mixing. In fact, for all the graph we consider, O(k ln n) steps is sufficient for our results. A typical graph also has most of its vertices treelike. A vertex v is treelike if there is no cycle in the subgraph G[v, L 1 ] induced by the set of vertices within distance L 1 = 1 log r n of v, where 1 > 0 is a sufficiently small constant. The near-uniformity and treelike structure throughout the graph allows us to make precise calculations for the behaviour of a random walk from a treelike vertex within the period of the mixing time. This helps us separete the analysis of the period within the mixing time from the period after it. The rapid mixing means that the dynamics of the process is dominated by the long-term behaviour very quickly, and that essentially, short-term behaviour is restricted to groups of local interactions that don't interfere with each other. This provides a degree of homogeneity to the process.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "Assumptions (ii) and (iii) are not unreasonable: G is typical whp (Lemma 10 in appendix), and it is straightforward to verify that if the positions of each of the k particles are chosen uar from the vertices of G, then whp they will be in g.p. with respect to each other if is small enough. We will require additional assumptions beyond those stated in this section and previous ones, and they will be shown to hold whp too. Assumption (iv) implies |S(0)| = k \u2212 I 0 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "The analysis of multiple random walks can be reduced to a single random walk, in a way we informally describe here based on techniques developed in [8] and extended in [1] . We refer to the latter for details and rigorous justification for this section.",
+            "cite_spans": [
+                {
+                    "start": 148,
+                    "end": 151,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 168,
+                    "end": 171,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "We We can calculate the times for a pair of particles (or one particle and a set of others, or any pair from a set of pairs, or whatever) to meet by calculating the time for the single random walk W H u (t) to visit the relevant set of vertices S \u2286 V H . This is turn is done by the contraction described above, and calculating the time for the walk W \u0393 u (t) on \u0393 to visit \u03b3(S). These two times asymptotically equal.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "The dynamics of the system, is as follows. The random walks have a mixing time T = O(k ln n), and the distribution of a particle at some timet \u2265 T is almost the stationary distribution. In this case, because the graph is regular, the stationary distribution is uniform across the vertices of G.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "Consider a set A of particle pairs. For a particle pair (x, y) \u2208 A, let B (x,y) (t) be the event {no pair in A meet in the period [T, t\u22121] and x and y meet at time t}. Note, (x, y) is unordered. Subject to some restrictions (which are satisfied by the type of interactions relevant to this paper), it is established in [1] that",
+            "cite_spans": [
+                {
+                    "start": 319,
+                    "end": 322,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "During the mixing time, we cannot be precise in general. However, if the particles begin in general position with respect to each other then whp, the particles don't meet in the mixing time. This is a consequence of Lemma 5. We say a visit to vertex v, or a particle-pair meeting is T -distinct if it occurs at least T steps after a previous T -distinct visit/meeting, or the start of the walk. As suggested by the above, we can view the dynamics within the mixing time separately to the dynamics after the mixing time, up until the visit to a vertex or a particle-pair meeting.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumptions and Approach"
+        },
+        {
+            "text": "In this section, we discuss how the system behaves when k = 2. Let s and x be the two particles, with s being the initial infective. Suppose that the assumptions stated above hold. We allow \u03be < \u221e and/or \u03c1 < 1. The former conditions means that x may never get infected, the latter condition means that it may take more than one meeting between s and x before an interaction takes place. Note, that if s and x were at the same vertex at time t, and happen to move to the same neighbouring vertex in the next step, then this counts as another meeting.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-Particle System"
+        },
+        {
+            "text": "By (4) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-Particle System"
+        },
+        {
+            "text": "The RHS of (6) is the probability of a Geom(p) random variable taking value t. Now, suppose s and x have just stepped to the same vertex v. With probability \u03c1 there will be an interaction. After this, they will move again, either to the same neighbour of v with probability 1/r or to different neighbours with probability (r \u2212 1)/r. Let \u03c6 = Pr(No sx interaction before they move apart)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "The following lemma is from [8] : G be a typical r-regular graph, and let v be a vertex Using this lemma, let \u03c6 T = Pr(No sx interaction before being apart more than T time steps) (9)",
+            "cite_spans": [
+                {
+                    "start": 28,
+                    "end": 31,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 34,
+                    "end": 87,
+                    "text": "G be a typical r-regular graph, and let v be a vertex",
+                    "ref_id": null
+                }
+            ],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "Now, assuming s and x start at the same vertex, Pr(sx interaction occurs within T time steps) (11) \u223c Pr(sx interaction occurs before s and x have been apart more than T steps)(12)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "Recall \u03c8 was defined in (3), and observe that \u03c1 \u2264 \u03c8 \u2264 1 with \u03c8 = 1 iff \u03c1 = 1. Clearly, the number of T -distinct meetings in [0, t] is at most t/T . Subject to slightly more stringent restrictions, it can be shown (see [1] ) that we have",
+            "cite_spans": [
+                {
+                    "start": 219,
+                    "end": 222,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "i.e., it is approximately distributed Bin(t, p) . The probability that there are no interactions in any of the i intervals [t j , t j + T ] where t j is the time of the j'th T -distinct meeting is (1 \u2212 \u03c8) i . Thus",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 38,
+                    "end": 47,
+                    "text": "Bin(t, p)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "Hence,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "When \u03c1 = \u03c8 = 1, (15) looks similar to the bracketed terms in (1). This is, of course, not a coincidence since the bracketed term in (1) is essentially the probability that an infection is passed between a pair of particles if one of them had been infected, and therefore, \u03c6 is effectively the expected number of other particles that are infected by a particular particle.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Pr(first meeting between s and x after T is at step"
+        },
+        {
+            "text": "We remind the reader that proofs of lemmas and theorems not present in what follows are given in [1] . We can study the SI model (the case \u03be = \u221e) by analysing the edge weights of the interaction graph \u03a5 = (V \u03a5 , E \u03a5 ). This is a complete graph on the particle set P, thus V \u03a5 = P and E \u03a5 = {(x, y) : x, y \u2208 P, x = y}. For a particle x, let t(x) be the time at which x got infected, or \u221e if it never gets infected. For an interaction edge e = (x, y) \u2208 E \u03a5 , let t(e) = min{t(x), t(y)}. Then the weight w \u03a5 (e) of the edge is a random variable defined as w \u03a5 (e) = min{t \u2212 t(e) : t > t(e) and there was an xy interaction at step t}.",
+            "cite_spans": [
+                {
+                    "start": 97,
+                    "end": 100,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SI Model"
+        },
+        {
+            "text": "If the other particle was susceptible at the time of interaction, it becomes infected at the point of interaction. \u03a5 , therefore, is a space of randomly-weighted complete graphs, and the distribution on \u03a5 is the joint distribution of the edge weight random variables w \u03a5 (e). A member Z of this space -an instance of \u03a5 -is a specific set of values for each random variable w \u03a5 (e). We may write Z \u03a5 \u2208 \u03a5 to denote a particular instance drawn from the space \u03a5 with probability Pr(Z \u03a5 ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SI Model"
+        },
+        {
+            "text": "We claim that the joint distribution of edge weights, is well approximated by the joint distribution of random edge weights of another complete graph on P, \u039b = (V \u039b , E \u039b ). The weight w \u039b (e) of each edge e \u2208 E \u039b is an independent random variable with distribution Geom(q), where q = \u03c8 \u03b8r n . Labelling the edges in \u039b as e i with 1 \u2264 i \u2264 k 2 , observe",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SI Model"
+        },
+        {
+            "text": "Observe that with probability one, neither graph has an edge of infinite weight.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SI Model"
+        },
+        {
+            "text": "In what follows we give a proof of the following theorem for the special case in which \u03c1 = 1 (implying \u03c8 = 1). We claim that it holds when \u03c1 < 1 as well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Approximation"
+        },
+        {
+            "text": "where F \u2208 {\u03a5, \u039b}. Then",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "Edge weightings in the interaction graph are pair-wise independent by virtue of the independence of the random walks. However there is a correlation when more than two edges are considered. For example, if particles x and y interacted at some time t and x and z interacted at some time close to t, then y and z are more likely to have interacted at some time close to t.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "We ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "Let A 0 be the set of active edges at time \u03c4 0 = 0. For example, in the case",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "for some R, denote the times at which the set of active edges changes. Let A i be the set of edges active in the period [\u03c4 i , \u03c4 i+1 \u2212 1]. We call the \u03c4 i 's epochs. A particular edge e i = (x, y) will become active at some epoch \u03c4 = d \u03a5 (e i ) and remain so until \u03c4 \u2212 1 (inclusive), where \u03c4 = d \u03a5 (e i ) + z i is some epoch after \u03c4 . Its period of activation may, therefore, cross a number of epochs, in which case it will be a member of a number of edge sets A j .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "We analyse each period [\u03c4 j + 1, \u03c4 j+1 ] individually through application of (4). In the product graph H, we identify the set of vertices S(A j ) \u2286 V H such that v \u2208 S(A j ) iff for some (x, y) \u2208 A j v represents x and y being at the same vertex in G. Thus, if v = (v 1 , v 2 , . . . , v k ), then v r = v s where r and s are the vector indices for x and y respectively. Since each pair is not to interact in the period [\u03c4 j + 1, \u03c4 j+1 \u2212 1], and since we assume \u03c1 = 1, the walk W on H must avoid the set S(A j ) until \u03c4 j+1 \u2212 1 (inclusive). Then, at \u03c4 j+1 it must visit S j \u2286 S(A j ). v \u2208 S j iff it represents any of the (x, y) \u2208 A j that interact at time \u03c4 j+1 being at the same vertex in G. We deal with (non-)visits to S(A j ) and S j by applying (4) to their contractions \u03b3(S(A j )) and \u03b3(S j ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "W do not prove (19) for all possible Z \u03a5 , only those that are termed good. Let T = O(k ln n) be a mixing time and let L = T 3 , and let = 2(T + L).",
+            "cite_spans": [
+                {
+                    "start": 15,
+                    "end": 19,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "Call Z \u03a5 good if it satisfies these criteria: (a) k 3 ln n ( k 2 ) i=1 z i = o(n 2 ) (b) None of the k 2 interactions that form the edges of \u03a5 take place within steps of each other.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Theorem 3. Let"
+        },
+        {
+            "text": "We shall assume the Z \u03a5 that is drawn is good. Note part (b) implies R = k 2 and so we only need to consider cases of Z \u03a5 where, for each j, S j is a single particle pair. It also implies that during the period [\u03c4 j + 1, \u03c4 j + ], we do not need to account for interactions. The following lemma applies (4) sequentially for each period [\u03c4 j + 1, \u03c4 j+1 ]. By the Markov property, we can multiply the probabilities for each period. Theorem 3 follows from this.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 5. With high probability, Z \u03a5 \u2208 \u03a5 is good."
+        },
+        {
+            "text": "In (21) we have included correction factors which we left out in (4) for clarity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 5. With high probability, Z \u03a5 \u2208 \u03a5 is good."
+        },
+        {
+            "text": "In [8] an expectation of 2\u03b8r n k ln k was determined for the completion time of a broadcasting model on k particles that is equivalent to the SI model with I 0 = 1 and \u03c1 = 1. We apply a theorem from [16] to get a convergence in probability to the same value. Assign each edge (i, j) of a complete graph on n vertices a random weight Y ij . The weights are assumed to be independent and identically distributed, non-negative and satisfying Pr(Y ij \u2264 t) = t + o(t) as t \u2192 0. Let X ij be the minimal total weight of a path between a given pair of vertices i, j. The theorem states max j\u2264n Xij ln n/n p \u2212 \u2192 2. By scaling, we can apply the result to an exponential analogue of the edge probabilities of \u039b, and show that the distribution is well approximated, thereby giving (2) . See [1] for details.",
+            "cite_spans": [
+                {
+                    "start": 3,
+                    "end": 6,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 199,
+                    "end": 203,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 769,
+                    "end": 772,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 779,
+                    "end": 782,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Completion Time"
+        },
+        {
+            "text": "To analyse the SIR model, we build an interaction graph but we modify the process by considering two phases. Phase 1 assigns edge weights as before: an edge e = (x, y) is weighted by the time it takes for an xy interaction after one of them has become infected. It is possible, of course, that neither ever get infected when \u03be is finite, in which case the edge (x, y) does not become active (and is not given a weight) in this phase. Phase 1 ends at \u03c4 end when there are no more active edges. At this point, there remains a set of susceptible particles S(\u03c4 end ) that were never infected in phase 1. Phase 2 begins with an arbitrary z \u2208 S(\u03c4 end ) being given a pseudo-infection with an infinite infectious period, and we proceed with an SI process on the particle set S(\u03c4 end ), giving them edge weights, as per the normal SI process. A pseudo-infection is the same process as an infection but we do not count pseudo-infected particles as infected; only particles infected in phase 1 are counted as infect. Phase 2 exists to maintain the same probability space as in the SI model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SIR Model"
+        },
+        {
+            "text": "Call the resulting (complete) graph \u03a8 . We remove an edge e in \u03a8 if w \u03a8 (e) > \u03be and call the resulting graph \u03a8 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SIR Model"
+        },
+        {
+            "text": "Let C(x) be the component of \u03a8 containing a particle x. LetD \u03a8 (x, y) be the weighted distance between particles x and y if y \u2208 C(x), otherwise let D \u03a8 (x, y) = \u221e. Let d \u03a8 (y) = min{D \u03a8 (x, y) : x \u2208 I(0)}. Theorem 7. In \u03a8 , (i) A particle y is infected if and only if y \u2208 C(x) for some initial infective x \u2208 I(0), (ii) If a particle y gets infected, the infection time is t(y) = d \u03a8 (y).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SIR Model"
+        },
+        {
+            "text": "We show that Theorem 3 holds for \u03a8 . Let \u039b and Z F for some graph space F be as before.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Graph Framework: SIR Model"
+        },
+        {
+            "text": "Pr(Z \u03a8 ) = (1 + o(1))Pr(Z \u039b ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 8."
+        },
+        {
+            "text": "As with \u03a8 , \u03a8 is a space of weighted graphs. Furthermore, we can define an equivalence relation \u223c on \u03a8 such that for Y, Z \u2208 \u03a8 , we have Y \u223c Z iff E(Y ) = E(Z), that is, they have the same edge set. Let \u03a8 /\u223c be the graph space induced by \u03a8 and the equivalence relation \u223c. Thus, the probability a graph G is drawn from \u03a8 /\u223c , that is, Pr(G \u2208 \u03a8 /\u223c ) = Pr(some Z is drawn from \u03a8 such that E(Z) = E(G)). We show \u03a8 /\u223c is approximated by G k,q , the space of Erd\u0151s-Renyi random graphs with edge probabilit\u0177 q = 1 \u2212 (1 \u2212 q) \u03be , where q = \u03c8 \u03b8rn for the special case \u03c1 = \u03c8 = 1. Lemma 9. Let G be a graph on the particle set P.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 8."
+        },
+        {
+            "text": "Pr(G \u2208 \u03a8 /\u223c ) = (1 + o(1))Pr(G \u2208 G k,q ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 8."
+        },
+        {
+            "text": "(24)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lemma 8."
+        },
+        {
+            "text": "Proof of Theorem 1. For an Erd\u0151s-Renyi random graph space G n,p on n vertices and edge probability p, the connectivity results are well known (see, e.g., [13] ). By Lemma 9, the whp statements carry through to \u03a8 /\u223c . Since Theorem 1 deals with the case of one initial infective s, the infected particles will be those in C(s). Cases (i) and (iii) of Theorem 1 are straightforward to see from the above. For case (ii), there is a unique giant component g of size C 1 in G \u2208 \u03a8 /\u223c . By the symmetry of the model, the probability any particular particle x being in g is |g|/k = (1 + o(1))C. Thus, the giant component is infected with this probability. Otherwise, s will be placed in a component of size at most O(ln k). 2",
+            "cite_spans": [
+                {
+                    "start": 154,
+                    "end": 158,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Lemma 8."
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Viral Processes by Random Walks on Random Regular Graphs",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Abdullah",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cooper",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Draief",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Reversible Markov Chains and Random Walks on Graphs",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Aldous",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Fill",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Parsimonious Flooding in Dynamic Graphs",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Baumann",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Crescenzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Fraigniaud",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proceedings of the 28th ACM Symposium on Principles of Distributed Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "260--269",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Disease Spreading in Populations of Moving Agents",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Buscarino",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fortuna",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Frasca1",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Latora",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Europhysics Letters)",
+            "volume": "82",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Impact of Human Mobility on Opportunistic Forwarding Algorithms",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Chaintreau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hui",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Scott",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gass",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Crowcroft",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diot",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "IEEE Transactions Mobile Computing",
+            "volume": "6",
+            "issn": "6",
+            "pages": "606--620",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The Cover Time of Random Regular Graphs",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cooper",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Frieze",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "SIAM Journal on Discrete Mathematics",
+            "volume": "18",
+            "issn": "",
+            "pages": "728--740",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "The Cover Time of the Giant Component of a Random graph",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cooper",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Frieze",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Random Structures and Algorithms",
+            "volume": "32",
+            "issn": "",
+            "pages": "401--439",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Multiple Random Walks in Random Regular Graphs",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Cooper",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Frieze",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Radzik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "SIAM Journal on Discrete Mathematics",
+            "volume": "23",
+            "issn": "",
+            "pages": "1738--1761",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Epidemic Modelling: An Introduction",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Daley",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Studies in Mathematical Biology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Activated Random Walkers: Facts, Conjectures and Challenges",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dickman",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Rolla",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Sidoravicius",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of Statistical Physics",
+            "volume": "138",
+            "issn": "",
+            "pages": "126--142",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The Infection Time of Graphs",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Dimitriou",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Nikoletseas",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Spirakis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Discrete Applied Mathematics",
+            "volume": "154",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A random Walk Model for Infection on Graphs: Spread of Epidemics and Rumours with Mobile Agents",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Draief",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ganesh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Discrete Event Dynamic Systems",
+            "volume": "21",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Epidemics and Rumours in Complex Networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Draief",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Massouli\u00e9",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "London Mathematical Society Series",
+            "volume": "369",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "An Introduction to Probability Theory",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Feller",
+                    "suffix": ""
+                }
+            ],
+            "year": 1960,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "A Proof of Alon's Second Eigenvalue Conjecture and Related Problems",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Friedman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "195",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "One, Two and Three Times log n/n for Paths in a Complete Graph with Random Weights",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Janson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Combinatorics, Probability and Computing",
+            "volume": "8",
+            "issn": "",
+            "pages": "347--361",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Limit Theorems for an Epidemic Model on the Complete Graph",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Kurtz",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Lebensztayn",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Leichsenring",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Machado",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Latin American Journal of Probability and Mathematical Statistics",
+            "volume": "4",
+            "issn": "",
+            "pages": "45--55",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Random Walks on Graphs: A Survey",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lov\u00e1sz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Combinatorics. In: Paul Erd\u0151s is Eighty",
+            "volume": "2",
+            "issn": "",
+            "pages": "1--46",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Mobile Geometric Graphs: Detection, Coverage and Percolation",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Peres",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sinclair",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sousi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stauffer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the Twenty-Second Annual ACM-SIAM Symposium on Discrete Algorithms",
+            "volume": "",
+            "issn": "",
+            "pages": "412--428",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "On spreading a rumor",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Pittel",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "SIAM Journal of Applied Mathematics",
+            "volume": "47",
+            "issn": "1",
+            "pages": "213--223",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "The Opportunistic Transmission of Wireless Worms Between Mobile Devices",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Rhodes",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nekovee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Physica A: Statistical Mechanics and Its Applications",
+            "volume": "387",
+            "issn": "27",
+            "pages": "6837--6840",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Tight Bounds on Information Dissemination in Sparse Mobile Networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pettarin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pietracaprina",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Pucci",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Upfal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the 30th Annual ACM SIGACT-SIGOPS Symposium on Principles of Distributed Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Epidemic Spreading in Communities with Mobile Agents",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liua",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Physica A: Statistical Mechanics and its Applications",
+            "volume": "388",
+            "issn": "7",
+            "pages": "1228--1236",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "The number of particles k \u2264 n where is some sufficiently small constant.(ii) G is typical. (iii) Particles start in general position. (iv) I 0 = |I(0)| \u2265 1 and |R(0)| = 0.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "define a product graph H = (V H , E H ) with vertex set V H = V k and edgeset E H = E k . The vertices v of H consist of k-tuples v = (v 1 , v 2 , . . . , v k ) of vertices v i \u2208 V (G), i = 1, . . . , k, with repeats allowed. Two vertices v, w are adjacent if (v 1 , w 1 ), . . . , (v k , w k ) are edges of G.The graph H replaces k random walks W ui (t) on G with current positions v i and starting positions u i by a single walk W H u (t). If S \u2286 V H , then \u0393 = \u0393 (S) is obtained from H by contracting S to a single vertex \u03b3(S). All edges, including loops and parallel edges are retained, producing a multigraph. Thus d \u0393 (\u03b3) = d H (S), where d F denotes vertex degree in graph F . Moreover \u0393 and H have the same total degree (nr) k , and the degree of any vertex of \u0393 , except \u03b3, is r k .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "of G, treelike to depth L 1 = 1 log r n . Suppose that at time zero, two independent random walks (W 1 , W 2 ) start from v. Let (a, b) denote the position of the particles at any step. Let S = {(u, u) : u \u2208 V }. Let f be the probability of a first return to S within T = O(k ln n) steps given that the walks leave v by different edges at time zero. Then f = 1 (r \u2212 1) 2 + O n \u2212\u03a9(1) .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "say an edge e is active in the period [t(e), t(e) + w \u03a5 (e) \u2212 1]. The event Z \u03a5 can be restated as follows: For each edge e i = (x, y), the first xy interaction after time t(e i ) is at time t(e i ) + z i . For a pair of particles x, y and some weighted graph F on the particle set, let D F (x, y) represent the weighted distance between x and y in F . Let d F (x) = min{D F (s, x) : s \u2208 I(0)}. Furthermore, for an edge e = (x, y), let d F (e) = min{d F (x), d F (y)}. T Lemma 4. For a particle x, t(x) = d \u03a5 (x), and so for an edge e \u2208 E \u03a5 , t(e) = d \u03a5 (e). Therefore, Z\u03a5 = {For each edge ei = (x, y), there is no xy interaction in the period [d\u03a5 (ei) + 1, d\u03a5 (ei) + zi \u2212 1] and there is an xy interaction at time d\u03a5 (ei) + zi}.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We say an r-regular graph G is typical if it satisfies the properties P1-P4 listed below. We first give some definitions.LetP1. G is connected and not bipartite. P2. The second eigenvalue of the adjacency matrix of G is at most 2 \u221a r \u2212 1 + , where > 0 is an arbitrarily small constant. P3. There are at most n 2 1 vertices on small cycles. P4. No pair of cycles C 1 , C 2 with |C 1 |, |C 2 | \u2264 100L 1 are within distance 100L 1 of each other.Note that P3 implies that at most n C vertices of a typical r-regular graph are not treelike, whereLemma 10. Let G r \u2286 G r be the set of typical r-regular graphs. Then |G r |\u223c |G r |.For Lemma 10, that P2 holds whp is a very difficult result of Friedman [15] . The other properties are straightforward to establish; see, e.g., [6] .",
+            "cite_spans": [
+                {
+                    "start": 696,
+                    "end": 700,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 769,
+                    "end": 772,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Typical r-regular Graphs"
+        }
+    ]
+}

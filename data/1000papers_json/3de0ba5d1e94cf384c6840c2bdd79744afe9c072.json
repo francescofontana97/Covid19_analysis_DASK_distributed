@@ -1,0 +1,1252 @@
+{
+    "paper_id": "3de0ba5d1e94cf384c6840c2bdd79744afe9c072",
+    "metadata": {
+        "title": "A two-wave epidemiological model of COVID-19 outbreaks using MS-Excel \u00ae",
+        "authors": [
+            {
+                "first": "Agenor",
+                "middle": [],
+                "last": "De",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Noni",
+                "middle": [],
+                "last": "Junior",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Federal University of Santa Catarina -UFSC",
+                    "location": {
+                        "settlement": "Florian\u00f3polis",
+                        "region": "SC",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Bernardo",
+                "middle": [],
+                "last": "Araldi Da Silva",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Federal University of Santa Catarina -UFSC",
+                    "location": {
+                        "settlement": "Florian\u00f3polis",
+                        "region": "SC",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Felipe",
+                "middle": [],
+                "last": "Dal-Pizzol",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of the Extreme South of Santa Catarina -UNESC",
+                    "location": {
+                        "settlement": "Crici\u00fama",
+                        "region": "SC",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Marques",
+                "middle": [],
+                "last": "Porto",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Federal University of Santa Catarina -UFSC",
+                    "location": {
+                        "settlement": "Florian\u00f3polis",
+                        "region": "SC",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The emergence of the coronavirus SARS-CoV-2 has raised a global issue and a pandemic disease outbreak, COVID-19, was declared by the World Health Organization on March 12 th , 2020. The new virus is rapidly spreading in humans and cases of severe acute respiratory syndromes are being reported worldwide. Health authority advisors and governments from small towns to large countries need to quickly manage and deal with growing epidemiological data on a daily basis. In this work, current available data from reported cases and deaths over time were analyzed and treated. Lethality has been calculated by finding linearization of death cases against reported ones, using a time-delayed data transposition. A two-wave statistical model, 2WM, based on the superposition of normal distributions was used to fit current data and to estimate the evolution of infections and deaths, using Microsoft \u00ae Excel. The model showed good agreement even for apparent single wave behavior in some countries and can easily be extended to any number of waves. A gamma distribution was used as a risk function to estimate death probability from patient admission to reported death. Evolution of fatality cases over time can then be estimated from the model with reasonable accuracy. Data from South Korea, China, Australia, Germany, Italy and Spain were used to validate the model. Data from The United States, United Kingdom and Brazil were used to study the epidemiology as the pandemic progresses. Additionally, the 2WM was applied to world data and to the Brazilian state of Santa Catarina. The model was implemented in MS-Excel, a popular and easy to use analytical tool. A template spreadsheet is provided as supplementary material. Constant lethality can be determined from the initial stage of the pandemic wave. Values ranged from 1.7% to 15.3%, depending on the degree of possible sub notification cases. Even for places with low testing, a linear relationship can be found. The two-wave model can be fine-tuned to properly adjust the data. The second wave pattern was estimated according to the first wave parameter. The accuracy for estimating COVID-19 evolution was compared to the classic SIR model with good agreement. According to the model, based on current trends, health protocols and policies, approximately 10,000,000 cases and 860,000 deaths will be recorded worldwide. Approximately 99% of that number would be reached by the end of July 2020 given constant conditions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "By the end of 2019, the World Health Organization (WHO) [1] noticed that cases of pneumonia from unknown causes were disclosed in Wuhan City, Hubei Province of China. After that, the WHO announced that it was an odd species of coronavirus (2019-nCoV). The novel species was further named by the International Committee on Taxonomy of Viruses as severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) on February 11 th , 2020 [2] . It is coming up as the third highly pathogenic disease that rise in the last 20 years [3] . The transmission rate has been heavily described and the number of deaths has been increasing exponentially. By May 3 rd , 2020, WHO reported 3,356,205 confirmed cases and 238,730 confirmed deaths, spread around 215 countries, areas or territories.",
+            "cite_spans": [
+                {
+                    "start": 56,
+                    "end": 59,
+                    "text": "[1]",
+                    "ref_id": null
+                },
+                {
+                    "start": 431,
+                    "end": 434,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 523,
+                    "end": 526,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "An investigation [4] reported that the virus may be originated from bats and its transmission associated with a seafood market (Huanan Seafood Wholesale Market) in China [5] . COVID-19, the coronavirus disease promoted by SARS-CoV-2, can be compared with other disease outbreaks such as Ebola [6] and Influenza H1N1 [7] which infected and killed a great number of people worldwide, but it increases the pressure on particular demands of health systems around the world, due to ICU and respirators for longer times. Since the initial outbreak of COVID-19 efforts are being made to better understand the syndrome and its agent infectious pattern. The Center of Systems Science and Engineering at Johns Hopkins University claims that the most important way to measure the burden of COVID-19 is mortality. Different fatality ratios have been reported throughout the countries worldwide, which is defined as the number of deaths divided by the number of confirmed cases [8] . Differences in mortality have been attributed to the differences in the number of people tested, demographics, characteristics of the health care system, among others.",
+            "cite_spans": [
+                {
+                    "start": 17,
+                    "end": 20,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 170,
+                    "end": 173,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 293,
+                    "end": 296,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 316,
+                    "end": 319,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 965,
+                    "end": 968,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The literature discusses the fatality rate, which represents the proportion of cases of who eventually die from a certain disease [8] , although it is only possible to calculate it once the epidemic has ended by dividing the number of deaths by the number of cases. When the epidemic is on course, as it is the case of SARS-CoV-2 disease outbreak in the first months of 2020, this formula can be inaccurate. On the other hand, there is urgent need to better understand the spread of the disease and its outcome and risks. Particularly, one wishes to mitigate the pandemic in order to buy precious time, so the health system is better prepared to deal with the incoming patients. Researchers are using different and complementary approaches such as reviewing techniques for disinfection of surfaces [3] , studying transmission factors and their dynamics [9] , looking for the origin of the virus [4] and developing alternative mathematical models to predict transmissibility and COVID-19 evolution [2] . Due to the easiness and the achievements of good results, mathematical models are being built to estimate the dynamic of the transmission of the virus [1, 4, 6] . However, some models require software only familiar to experts and many parameters are necessary to process and interpret the data. Sometimes those tools are not easily available and/or are not easily accessible for people directly involved with local data management and critical policy decision. Although there is a lack of good data sets, everywhere, mostly due to the small number of tests, the reported data are those which the leaders, health authorities and public agents have in order to support their decisions, trying to balance saving as many lives as they can, at the minimal economic and social costs.",
+            "cite_spans": [
+                {
+                    "start": 130,
+                    "end": 133,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 798,
+                    "end": 801,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 853,
+                    "end": 856,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 895,
+                    "end": 898,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 997,
+                    "end": 1000,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1154,
+                    "end": 1157,
+                    "text": "[1,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1158,
+                    "end": 1160,
+                    "text": "4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1161,
+                    "end": 1163,
+                    "text": "6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Many of the problems related to the emergent SARS-CoV-2 remain poorly understood and a lot of efforts have been made to overcome those concerns [11] . Therefore, the aim of this work is to contribute to data analysis and treatment providing a simple way to predict possible scenarios for pandemic evolution from a country down to a state or city using the well-known software MS-Excel, based on data with low accuracy but promoting satisfactory and, hopefully, useful results. Instead of using somehow more difficult to handle deterministic models based on a set of differential equations, we have chosen to use more intuitive statistical modeling tools. Statistical approach was also suggested in a recent published paper [9] ; in that case the author applied a hierarchical five-parameter logistic model and one wave, solved by a scripting code in R. The aim of this work is to contribute to the SARS-CoV-2 pandemic analysis as it progresses, offering a very simple but useful fitting model based on classical statistics, a combination of gaussian and gamma distributions, implemented in a MS-Excel spreadsheet. In addition, we provide a simple and easy to use MS-Excel (.xlsx) file and a brief tutorial so the interested user can use to easily follow SARS-CoV-2 epidemic progress.",
+            "cite_spans": [
+                {
+                    "start": 144,
+                    "end": 148,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 723,
+                    "end": 726,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The schematic diagram shown in Figure 1 shows the general approach we have used. Total number of new cases are fitted to a two-wave model, the superposition of two normal (gaussian) distribution functions and, in parallel, death cases are linearized against case numbers (confirmed infection cases). A hazard function is used to consider clinical data (hospitalization time) and evolution of death is then calculated. Model adjustment and actual data fittings and validation are continuously updated to treat new data. CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 31,
+                    "end": 39,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "General description"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General description"
+        },
+        {
+            "text": "Epidemiological data are being reported as cumulative confirmed cases, active cases, number of deaths and recovered cases. Other relevant parameters are the incidence and testing rates (given in cases per 100,000 people) and the case-fatality and hospitalization rates (usually given as percentage rate). The modeling developed and applied in this study uses the cases and deaths officially reported. In order to treat the epidemiological data as the disease evolves, we have assumed the following hypotheses:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling"
+        },
+        {
+            "text": "1. Cumulative data behave like a sum of normal, gaussian (normal) distribution, curves; 2. The data were fitted by the addition of two gaussian curves; 3. Each gaussian was named as a single wave; 4. The onset of symptoms corresponds to the beginning of the patient admission date; 5. There is no delay between the date of death and the date of its communication into the public database; 6. A probability of death during hospitalization is implemented as a hazard function, \u210e ( ), and assumed to follow a gamma distribution, i.e., \u210e ( ) = \u0393( ; , ), with = 12 e = 1; 7. The average onset time is constant throughout the outbreak.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling"
+        },
+        {
+            "text": "Below we briefly introduce and describe major model variables and parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling"
+        },
+        {
+            "text": "Model input variables for the gaussian distribution and linearization:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling"
+        },
+        {
+            "text": "C Total (cumulative) number of cases (confirmed infections) D Total number of (confirmed) deaths X",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Modeling"
+        },
+        {
+            "text": "Model parameter for the gamma distribution:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time vector (in days)"
+        },
+        {
+            "text": "Parameter of gamma function, assumed to be equal to 12 Parameter of gamma function, assumed to be equal to 1",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time vector (in days)"
+        },
+        {
+            "text": "Output variables:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time vector (in days)"
+        },
+        {
+            "text": "L Virus lethality, determined by linearization of the observed data from C and D Time at day i (i = 0, 1, 2, ...) ( ) Evolution of total number of cases as a function of time, determined by adjusting the model to the reported data ( ) Prediction of daily deaths as a function of time, calculated from the relationship between L, ( ) and \u0393( )",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time vector (in days)"
+        },
+        {
+            "text": "The lethality of the virus was determined through linearization by translation of the abscissa axis according to Equation 1:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lethality, L"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lethality, L"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095133 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "where is the time interval between the date of announcement of the case and the respective death; c is the linear coefficient of the equation; L and c are calculated for the interval in order to maximize R 2 . Usually, c value is found to be zero.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The evolution of cases over time, ( ), can be described from the superposition of shifted gaussian distribution curves in order to fit the data, according to Equations 2 to 4 of individual waves. In this study, the deconvolution of the cases in two sequential waves was used, but the reader may see that additional cycles could benefit from a greater number of wave outbreaks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cumulative number of cases, ( )"
+        },
+        {
+            "text": "where: The parameters , , \u0305 , , , were determined by adjusting the observed data to the model, by least squares, for countries where the outbreak was at advanced stage being possible to identify with significant clarity the behavior of the second wave. is a parameter adjusted from the results of Eq. 6.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cumulative number of cases, ( )"
+        },
+        {
+            "text": "The prediction of the cumulative number of deaths was calculated from Equation 6.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cumulative number of deaths, ( )"
+        },
+        {
+            "text": "where we have introduced the gamma function as the hazard, probabilistic weighting function, to account for the hospitalization period.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cumulative number of deaths, ( )"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cumulative number of deaths, ( )"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . The increase in the number of cases is simply calculated as",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 74,
+                    "text": "May 12, 2020. .",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "In cases where different lethality is mathematically identified, L1 and L2, are found for each C1 and C2 waves, respectively. Equation 9 was used rather than Equation 7 and Equation 10 instead of Equation 8 .",
+            "cite_spans": [
+                {
+                    "start": 167,
+                    "end": 168,
+                    "text": "7",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 196,
+                    "end": 206,
+                    "text": "Equation 8",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Eq. 9",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Data source regarding cases and deaths through time for selected countries was obtained from Our World in Data [12] with last update in April 24 th , 2020. South Korea (KOR), China (CHN), Australia (AUS) Germany (DEU), Italy (ITA) and Spain (ESP) were selected as reference countries to test and validate the model. Clinical reported data was applied to reference cases for time distribution from admission to death [13] to fit the gamma function. The major reference was a Chinese study that reported \u0305 = 11.5 days and s = 10.6 days for 40 individuals, ~90% ranged between 4 and 23 days, using \uf061 = 2.0 and \uf062 = 4.7 [13] . Those parameters were applied to China and South Korea. For other countries where that clinical information could not be obtained the authors have established the equivalent set of \uf061 = 12 and \uf062 = 1. Therefore, \uf061 can directly represent the average time from admission to death, ranging from 4 to 23 days, which represents 99% of death probability.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 115,
+                    "text": "[12]",
+                    "ref_id": null
+                },
+                {
+                    "start": 416,
+                    "end": 420,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 615,
+                    "end": 619,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Procedures"
+        },
+        {
+            "text": "Microsoft\u00ae Excel (2019) (Microsoft Inc., Redmond, WA) was chosen as the spreadsheet used to implement the model. MS-Excel has the advantage of being popular, worldwide used, and support the model with its current tools. The Solver\u00ae toolbox, a supplement tool available in MS-Excel distributions, was used to determine the best fit, by minimum square regression of Eq. 3 and Eq. 4, sequentially. The outputs are compared with observed data to check the model adjustment.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Procedures"
+        },
+        {
+            "text": "Once the validation of the model is accomplished, the second wave parameters ( , \u0305 , ) were expressed as a function of the first wave ( , \u0305 , ), following the relations given in Equations 11 to 13, below:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Procedures"
+        },
+        {
+            "text": "The model was applied to United Kingdom (GBR), United States of America (USA) and Brazil (BRA). In addition, the model was applied to the word (WRLD) and to the state of Santa Catarina (SC), in Brazil.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Procedures"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Procedures"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . Results were compared to the prediction calculated by the SIR model with codes available in Matlab\u00ae (Mathworks Inc., Natick, MA) [14] applied in April 28 th by Singapore University of Technology and Design (SUTD), Data-Driven Innovation Lab, available in the website [15] . The chart data available there was extracted by WebPlotDigitalizer [16] . Comparisons were done using the same data sources (https://ourworldindata.org/coronavirus-source-data), at the same date [12] .",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 74,
+                    "text": "May 12, 2020. .",
+                    "ref_id": null
+                },
+                {
+                    "start": 204,
+                    "end": 208,
+                    "text": "[14]",
+                    "ref_id": null
+                },
+                {
+                    "start": 342,
+                    "end": 346,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 416,
+                    "end": 420,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 544,
+                    "end": 548,
+                    "text": "[12]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "3.1 Lethality, L Figure 2 shows the number of total current and future deaths against officially registered cases at a certain day for some selected countries as a raw data (RAW = current death) and after linearization (LIN = deaths predicted). In all analyzed cases it was possible to obtain linear adjustment of the data by proper shifting (translation) of the time axis. Linearization procedure was applied to this pair of variables but testing different shifts. It was noticed that each country has its own particularities that this simple procedure can reveal. It was possible to find a lethality value (L) that is constant throughout each outbreak \"cycle\". However, for China, South Korea and Australia the procedure revealed two straight line segments. This does not mean that in practice the outbreak had two different lethality. It just shows that conditions may have changed for the disease dynamics or for the data registration protocol, possibly for both. Still, for mathematical modeling purposes, it will be considered that the outbreak may be adjusted as having two pseudo-lethality values, even for cases where those conditions have not changed. . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 17,
+                    "end": 25,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Results and Discussion"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . Table I shows some important information about the pandemic for the selected countries. This table also shows the quantitative results of the linearization procedure, L and R 2 . Despite the differences on testing policies between countries, ranged from 1.4 to 27.8 tests per thousand inhabitants, all cases presented a high linearity behavior, high correlation coefficient, R 2 , as well as a low error on L values. This result indicates that even with low testing, the information on the number of cases can be linearly associated with the deaths that will be caused by SARS-CoV-2. Thus, even with underreporting of cases, if a country maintains a regular testing policy, it can use those results with as a reliable indicator to measure trends in the evolution of the pandemic. Of course, we know that the absolute values of the lethality may vary. For the countries we have considered, it goes from 1.7% (AUS) to 14.3% (ITA), with a world average of 8.4%. These figures require a more in-depth analysis of the particularities of each country. The problem of underreporting has been widely reported. A country with a high lethality value may indicate that it has a higher rate of unreported cases. Table I also shows the corresponding for each country. Germany has presented the highest value, needing = 12 days for the linear relationship between death and case numbers. This value match with the average time of 11.5 day from admission to death reported in the literature [13] . We speculate that, in the case of Germany a very systematic procedure between sampling, test result and communication are been conducting. So, the delay time for Germany is \u2248 0. Data from the USA also show typical dynamic delay response with = 8 days. If time from hospitalization to death in the USA is about 12 days, them \u2248 4 days. However, it is only possible to estimate an accurate average value of for a particular country or region if the mean admission to death time is known. Considering the information from the literature [13] as aleatory sampling, a confidence interval could be estimated for the average time from admission to death as 9 to 15 days. Figure 3 shows the graphs of new cases over time for the analyzed countries. The two-wave model fitted the cases satisfactorily. KOR is the only country where the observed data clearly shows a true second wave. In other countries, deconvolution by the two-wave model suggests the possible influence of a second wave, superposed on the previous one while was still progressing. KOR, CHI and AUS outbreaks apparently had a break and the two-wave model was sufficient to describe the cases so far. DEU, ESP and ITA outbreaks are still ongoing; the two-wave model can then describe data evolution for a near future. It is not possible to state that just two waves will be sufficient to describe all outbreaks around the world for the whole pandemic, but as mentioned before, one can easily add new wave cycles as necessary. Please notice that, in the case of CHN, the new cases announced on February 14th and 15th were not considered in the model. The strong discontinuity observed and reported in the literature [9] is a serious burden for any modeling attempted. ",
+            "cite_spans": [
+                {
+                    "start": 1551,
+                    "end": 1555,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 2091,
+                    "end": 2095,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 3230,
+                    "end": 3233,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 75,
+                    "end": 82,
+                    "text": "Table I",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1275,
+                    "end": 1282,
+                    "text": "Table I",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 2221,
+                    "end": 2229,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ESP (f)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . Table II shows the adjusted parameters found for the reference/chosen countries as well as the parameters for the two-wave model applied to other regions. Another possibility is to use the most expected value for each parameter directly. The standard deviation of the first wave is the key factor for a more accurate prediction, specially at the beginning of the outbreak. It is also important to compare \u0305 with other countries. Within the error margins it is possible to draw different scenarios and compare different countries/regions. The fitted values for \u0305 and for USA, GRB, BRA and SC state were within the limits estimated for the countries taken as reference. Table III gives first and second wave parameters as calculated from reference countries, i.e., countries chosen to validate the model. The average and range between lower and upper limits may be used to build possible scenarios for a target country or region. 3.3. Deaths Evolution, ( ) Figure 4 shows the case and death evolution over the time and deaths as a function of cases for the simulated linearized function. KOR and DEU were selected as representative cases. The combination of two-wave modeling for the cases evolution, lethality and hazard function could estimate the death with a good level of proximity. South Korea, as well as China and Australia, presented two values for lethality, according to the linearization procedure. Mathematically, this information was not incorporated into the model. However, before concluding that there are in fact two distinct lethality, it is necessary to analyze at least two important aspects: (1) if the duration of the outbreak is faster than the hospital stay until death and (2) if there was any significant change in testing policy or protocol and confirmed cases. The analysis of the data treated here allows to evaluate the first aspect. These countries were the ones that presented the shortest time for the first wave cycle. In the case of KOR the value was = 4.6 days, see Table II . This means that approximately 85% of people infected in the first wave were infected within 15 days. The average length of stay according to the literature varies from 2 to 56 days, with an average of 11.5 days and standard deviation of 10 days. Thus, it can be said that the period of the outbreak is faster than the length of hospital stays until death. Thus, the lethality of the . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 75,
+                    "end": 83,
+                    "text": "Table II",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 743,
+                    "end": 752,
+                    "text": "Table III",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1030,
+                    "end": 1038,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 2076,
+                    "end": 2084,
+                    "text": "Table II",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. . https://doi.org/10.1101/2020.05.08.20095133 doi: medRxiv preprint virus in these countries is more likely to be approximately constant over the outbreak interval. The model would be able to simulate this scenario, but in this case, it would be necessary to obtain accurate information on the distribution of the length of hospital stay until death in the countries considered. Table IV presents a critical parameter for adjusting the model, , that corresponds to the average delay time between hospitalization and confirmation of the case. The sum + represents approximately the average length of stay until death. If the length of hospital stay is different from that considered in the calculations, the difference may be subtracted from the value of . This adjustment is a position adjustment. If there are no significant variations in the testing protocols during the pandemic, this is a value that does not tend to change. The table also presents a comparison between the predictions obtained with the two-wave model, 2WM, and the SIR model. Differences in the forecast of the total number of cases fluctuated by approximately 20%. The dates predicted to end the outbreak in question also resulted in close values. The biggest discrepancy is related to the forecast for the end of the pandemic in the world. It is observed that the statistical model of two waves allows to obtain forecasts with results similar to those of the SIR, but with the advantages of simplicity and ease of implementation and analysis. . CC-BY-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 452,
+                    "end": 460,
+                    "text": "Table IV",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 12, 2020. .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "A two-wave statistical model, 2WM, based on the superposition of normal distributions was developed and used to fit current data and to estimate the evolution of infections and deaths in chosen reference countries and other ongoing places. The model showed good agreement even for apparent single wave behavior in some countries and can easily be extended to any number of waves. A gamma distribution was used to estimate death probability from patient admission at a health service to his/her reported death. Evolution of fatality cases over time is estimated from the model with reasonable accuracy. The model was successfully implemented in MS-Excel\u00ae, a popular and easy to use analytical tool. Constant lethality was determined from the initial stage of the pandemic wave. Values ranged from 1.7% to 15.3%, depending on the degree of possible sub notification cases. Even for places with low testing, a linear relationship could be found, by properly translating time series data. The two-wave model can be fine-tuned to properly adjust a variety of situations. A second wave pattern was estimated according to the first wave parameters. Confirmation of the future scenario, as predicted by the model, is vulnerable to changes in behavior on the part of the population and policies to deal with the epidemic. As a result, the characteristics of the second wave can extrapolate, for more or less, the observed and parameterized behavior. The accuracy for estimating COVID-19 evolution was compared to the classic SIR model, based on ordinary differential equations, with good agreement. According to our two-wave model and based on current trends, health protocols and policies, approximately 10,000,000 cases and 860,000 deaths will be recorded worldwide by the end of the pandemic. Approximately 99% of that number would be reached by the end of July 2020, given current conditions. In this way, the model offers complementary information to the classic models, hopefully contributing to the monitoring and management of the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A mathematical model for simulating the phase-based transmissibility of a novel coronavirus",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rui",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infect Dis Poverty",
+            "volume": "9",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s40249-020-00640-3"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Persistence of coronaviruses on inanimate surfaces and their inactivation with biocidal agents",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kampf",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Todt",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pfaender",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Steinmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Hosp Infect",
+            "volume": "104",
+            "issn": "",
+            "pages": "246--51",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jhin.2020.01.022"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "579",
+            "issn": "",
+            "pages": "270--273",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2012-7"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Early transmission dynamics in Wuhan, China, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "1199--207",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2001316"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Ebola haemorrhagic fever",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Feldmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Geisbert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Lancet",
+            "volume": "377",
+            "issn": "10",
+            "pages": "60667--60675",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "A study of the swine flu (H1N1) epidemic among health care providers of a medical college hospital of Delhi",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Rajoura",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Roy",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Agarwal",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kannan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Indian J Community Med",
+            "volume": "36",
+            "issn": "",
+            "pages": "187--90",
+            "other_ids": {
+                "DOI": [
+                    "10.4103/0970-0218.86518"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Methods for estimating the case fatality ratio for a novel, emerging infectious disease",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ghani",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Donnelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cox",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Griffin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fraser",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lam",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Am J Epidemiol",
+            "volume": "162",
+            "issn": "",
+            "pages": "479--86",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/aje/kwi230"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Projection of Cumulative Coronavirus Disease 2019 ( COVID-19 ) Case Growth with a Hierarchical Logistic Model",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kriston",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "30260--30269",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Impact of non-pharmaceutical interventions (NPIs) to reduce COVID-19 mortality and helathcare demand",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Neil",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Ferguson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gemma",
+                    "middle": [],
+                    "last": "Laydon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natsuko",
+                    "middle": [],
+                    "last": "Nedjati-Gilani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kylie",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marc",
+                    "middle": [],
+                    "last": "Ainslie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sangeeta",
+                    "middle": [],
+                    "last": "Baguelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adhiratha",
+                    "middle": [],
+                    "last": "Bhatia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zulma",
+                    "middle": [],
+                    "last": "Boonyasiri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gina",
+                    "middle": [],
+                    "last": "Cucunub\u00e1",
+                    "suffix": ""
+                },
+                {
+                    "first": "Amy",
+                    "middle": [],
+                    "last": "Cuomo-Dannenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ilaria",
+                    "middle": [],
+                    "last": "Dighe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Han",
+                    "middle": [],
+                    "last": "Dorigatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katy",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Will",
+                    "middle": [],
+                    "last": "Gaythorpe",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Green",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Estimating clinical severity of COVID-19 from the transmission dynamics in Wuhan, China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bushman",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kishore",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Niehus",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "De Salazar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat Med",
+            "volume": "26",
+            "issn": "",
+            "pages": "506--516",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41591-020-0822-7"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Predictive Monitoring of COVID-19 2020:1-10. Singapure Univerisity of Technology and Design",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Jianxi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "WebPlotDigitizer 2020",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Schematic diagram showing how data source is analyzed and treated. Total number of new cases are fitted to a two-wave model and, in parallel, death cases are linearized against case numbers. A hazard function is used to consider clinical data (hospitalization time) and evolution of death is calculated. Model and actual data adjustment and validation are continuously updated to fit new data.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": ",..., Total number of cases in the waves 1, 2 and n \u0305 , ,..., Time at peak of cases in waves 1, 2 and n, the average time of the respective cycle , ,..., Standard deviation in waves 1, 2 e n The time delay between the date of patient admission and the announcement of a new case.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Total number of deaths against total number of cases without linearization (RAW) and after linearization (LIN). This procedure could disclosure a linear relationship between death and cases along the outbreak for a given time shift in one of the variables. The case of KOR, CHN and AUS is detailed in the discussion section.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Observed and modeled data for new cases against time. The contribution of each wave to the total effect is detailed. The time zero for all charts is Jan 9 th , 2020. The two-wave model could satisfactory describe the observed data, considering intrinsic data dispersion.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Cases and deaths evolution over the time and deaths against cases for South Korea (KOR) and Germany (DEU), the chosen representative countries. Deaths were calculated combining the two-wave model for cases, lethality, and hazard function. Number of total cases are given in thousands.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Pandemic data from selected countries or region, lethality and other linearization results as",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Two-wave model parameters for the reference countries and for the selected countries/regions where the model was applied",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "First and second wave parameters as extracted from regression fitting of Eq. 2.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Estimates for deaths, cases and end dates. Comparison between 2WM and SIR cases. SIR results from: Singapore University of Technology and Design (SUTD), Data-Driven Innovation Lab[15] 97% of est'd cases 99% of est'd cases",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors acknowledge the Brazilian agencies Coordination for the improvement of Higher Education Personnel (CAPES) and the National Council for Scientific and Technological Development (CNPq) for their continuous support.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "The authors declare no conflict of interests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of interests"
+        }
+    ]
+}

@@ -1,0 +1,4314 @@
+{
+    "paper_id": "03dd5db8238fa1732051a4656b2afd3065b1a025",
+    "metadata": {
+        "title": "ON THE QUANTIFICATION OF MODEL UNCERTAINTY: A BAYESIAN PERSPECTIVE",
+        "authors": [
+            {
+                "first": "David",
+                "middle": [],
+                "last": "Kaplan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Wisconsin-Madison",
+                    "location": {
+                        "settlement": "Madison",
+                        "country": "USA"
+                    }
+                },
+                "email": "dka-plan@education.wisc.edu"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Issues of model selection have dominated the theoretical and applied statistical literature for decades. Model selection methods such as ridge regression, the lasso, and the elastic net have replaced ad hoc methods such as stepwise regression as a means of model selection. In the end, however, these methods lead to a single final model that is often taken to be the model considered ahead of time, thus ignoring the uncertainty inherent in the search for a final model. One method that has enjoyed a long history of theoretical developments and substantive applications, and that accounts directly for uncertainty in model selection, is Bayesian model averaging (BMA). BMA addresses the problem of model selection by not selecting a final model, but rather by averaging over a space of possible models that could have generated the data. The purpose of this paper is to provide a detailed and up-to-date review of BMA with a focus on its foundations in Bayesian decision theory and Bayesian predictive modeling. We consider the selection of parameter and model priors as well as methods for evaluating predictions based on BMA. We also consider important assumptions regarding BMA and extensions of model averaging methods to address these assumptions, particularly the method of Bayesian stacking. Simple empirical examples are provided and directions for future research relevant to psychometrics are discussed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Issues surrounding the specification of statistical models for prediction and explanation have dominated the theoretical and applied statistical literature for decades. The underlying issue has been one of the well-known bias-variance trade-off problem-namely that under-specified models can lead to parameter bias, and over-specified models can lead to poor predictions in future samples. Model selection methods such as ridge regression (Hoerl and Kennard 1970; Hoerl 1985) , the lasso (Tibshirani 1996) , the elastic net (Zou and Hastie 2005) , and their Bayesian counterparts (Hsiang 1975; Park and Casella 2008; Li and Lin 2010) among others, have been advocated as a means of regularizing models to provide a balance between bias and variance. In the end, however, these methods lead to a single final model that is often taken to be the model considered ahead of time. The problem is that, in practice, model uncertainty often goes unnoticed, and the impact of this uncertainty can be quite serious. Hoeting et al. (1999) wrote Standard statistical practice ignores model uncertainty. Data analysts typically select a model from some class of models and then proceed as if the selected model had generated the data. This approach ignores the uncertainty in model selection, leading to over-confident inferences and decisions that are more risky than one thinks they are. (pg. 382)",
+            "cite_spans": [
+                {
+                    "start": 439,
+                    "end": 463,
+                    "text": "(Hoerl and Kennard 1970;",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 464,
+                    "end": 475,
+                    "text": "Hoerl 1985)",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 488,
+                    "end": 505,
+                    "text": "(Tibshirani 1996)",
+                    "ref_id": "BIBREF80"
+                },
+                {
+                    "start": 524,
+                    "end": 545,
+                    "text": "(Zou and Hastie 2005)",
+                    "ref_id": "BIBREF92"
+                },
+                {
+                    "start": 580,
+                    "end": 593,
+                    "text": "(Hsiang 1975;",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 594,
+                    "end": 616,
+                    "text": "Park and Casella 2008;",
+                    "ref_id": "BIBREF68"
+                },
+                {
+                    "start": 617,
+                    "end": 633,
+                    "text": "Li and Lin 2010)",
+                    "ref_id": "BIBREF56"
+                },
+                {
+                    "start": 1007,
+                    "end": 1028,
+                    "text": "Hoeting et al. (1999)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "This overview of BMA is situated in the Bayesian predictivist framework discussed in Bernardo and Smith (2000) . An excellent review of Bayesian predictive modeling can be also found in Vehtari and Ojanen (2012) , and we will borrow notation from their paper.",
+            "cite_spans": [
+                {
+                    "start": 85,
+                    "end": 110,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 186,
+                    "end": 211,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Elements of Predictive Modeling"
+        },
+        {
+            "text": "Arguably, the overarching goal of statistics is prediction. In other words, a key characteristic of statistics is to develop accurate predictive models, and all other things being equal, a given model is to be preferred over other competing models if it provides better predictions of what actually occurred (Dawid 1984) . Indeed, it is hard feel confident about inferences drawn from a model that does a poor job of predicting the extant data. The problem, however, is how to develop accurate predictive models, and, importantly, how to evaluate their accuracy. The approach to developing accurate predictive models discussed in this review is BMA, and the evaluation of BMA-based analyses is best situated in the context of Bayesian decision theory.",
+            "cite_spans": [
+                {
+                    "start": 308,
+                    "end": 320,
+                    "text": "(Dawid 1984)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Elements of Predictive Modeling"
+        },
+        {
+            "text": "Bayesian decision theory (see, e.g., Good 1952; Lindley 1991; Berger 2013 ) provides a natural and intuitive approach to evaluating Bayesian predictive models generally, and BMA in particular. Specifically, as will be expanded on below, Bayesian decision theory casts the problem of predictive evaluation in the context of maximizing the expected utility of a model-that is, the benefit that is accrued from using a particular model to predict future observations. The greater the expected utility, the better the model is at predictive performance in comparison to other models.",
+            "cite_spans": [
+                {
+                    "start": 37,
+                    "end": 47,
+                    "text": "Good 1952;",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 48,
+                    "end": 61,
+                    "text": "Lindley 1991;",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 62,
+                    "end": 73,
+                    "text": "Berger 2013",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Elements of Predictive Modeling"
+        },
+        {
+            "text": "Let D = {y i , x i } n i=1 be a set of data assumed to be fixed in the Bayesian sense, where y i is an outcome of interest and x i is a (possibly vector-valued) set of predictors. Further, let (\u1ef9,x) be future observations of the outcome and the set of predictors, respectively. Further, let M = {M k } K k=1 represent a set of models specified to provide a prediction of the outcome\u1ef9, and let M k represent a specific chosen model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fixing Notation and Concepts"
+        },
+        {
+            "text": "The elements of Bayesian decision theory that we adopt in this paper have been described by Bernardo and Smith (2000) and Vehtari and Ojanen (2012) among many others. These elements consist of (a) an unknown state of the world denoted as \u03c9 \u2208 , (b) an action a \u2208 A, where A is the action space, (c) a utility function u(a, \u03c9) : A \u00d7 \u2192 R that rewards an action a when the state of the world is realized as \u03c9, and (d) p(\u03c9|D) representing one's current belief about the state of world conditional on observing the data, D.",
+            "cite_spans": [
+                {
+                    "start": 92,
+                    "end": 117,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 122,
+                    "end": 147,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixing Notation and Concepts"
+        },
+        {
+            "text": "To provide a context for these ideas, and in anticipation of our empirical example, consider the problem of predicting reading performance measured on 15-year-old students in the USA using data from the OECD Program on International Student Assessment (PISA) (OECD 2017) . In line with Bernardo and Smith (2000) , Lindley (1991) , Vehtari and Ojanen (2012) and Berger (2013) and the notation given previously, (a) the states of the world correspond to the future observations of reading literacy\u1ef9 \u2208 Y, (b) the action a \u2208 A is the actual prediction of those future observations, (c) the utility function u(a,\u1ef9) defines the reward attached to the prediction, and (d) p(\u1ef9|D, M * ) is a posterior predictive distribution that encodes our belief about the future reading literacy observations conditional on the data, D, and a belief model, M * (described later).",
+            "cite_spans": [
+                {
+                    "start": 259,
+                    "end": 270,
+                    "text": "(OECD 2017)",
+                    "ref_id": null
+                },
+                {
+                    "start": 286,
+                    "end": 311,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 314,
+                    "end": 328,
+                    "text": "Lindley (1991)",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 331,
+                    "end": 356,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                },
+                {
+                    "start": 361,
+                    "end": 374,
+                    "text": "Berger (2013)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixing Notation and Concepts"
+        },
+        {
+            "text": "The goal of predictive modeling is to optimize the utility of taking an action a. A number of utility functions exist, but common utility functions rest on the negative quadratic loss function u(a,\u1ef9) = \u2212(\u1ef9 \u2212 a) 2 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility Functions for Evaluating Predictions"
+        },
+        {
+            "text": "(1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility Functions for Evaluating Predictions"
+        },
+        {
+            "text": "The optimal action a * is the one that maximizes the posterior expected utility, written as (see Clyde and Iversen 2013) ",
+            "cite_spans": [
+                {
+                    "start": 97,
+                    "end": 120,
+                    "text": "Clyde and Iversen 2013)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Utility Functions for Evaluating Predictions"
+        },
+        {
+            "text": "The idea here is to take an action a that maximizes the utility u when the future observation is y. Clyde and Iversen (2013) show that the optimal decision obtains when a * = E(\u1ef9|D), which is the posterior predictive mean of\u1ef9 given the data D. Under the assumption that the true model exists and is among the set of models under consideration, this can be expressed as",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 124,
+                    "text": "Clyde and Iversen (2013)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Utility Functions for Evaluating Predictions"
+        },
+        {
+            "text": "where\u0177 M k is the posterior predictive mean of\u1ef9 under M k . The expression in (3) is Bayesian model averaging.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility Functions for Evaluating Predictions"
+        },
+        {
+            "text": "It is important to note that when considering the selection of a single model, one might be tempted to choose the model with the highest posterior model probability (PMP) p(M k |D). In the case of only two models, the model with the largest PMP will be the closest to the BMA solution. However, for more than two models, Clyde and Iversen (2013) point out that the model closest to the BMA solution might not be the one with the largest PMP.",
+            "cite_spans": [
+                {
+                    "start": 321,
+                    "end": 345,
+                    "text": "Clyde and Iversen (2013)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Utility Functions for Evaluating Predictions"
+        },
+        {
+            "text": "In a complex real-world setting such as the one we find ourselves in when trying to develop a predictive model of reading literacy, substantive discussions would suggest that many different models could be entertained as reasonable models of reading literacy. In this case, we agree with Clyde and Iversen (2013) that to maximize our utility it would be best to average over the space of possible models via BMA.",
+            "cite_spans": [
+                {
+                    "start": 288,
+                    "end": 312,
+                    "text": "Clyde and Iversen (2013)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian Model Averaging"
+        },
+        {
+            "text": "Bayesian model averaging has had a long history of theoretical developments and practical applications. Early work by Leamer (1978) laid the foundation for BMA. Fundamental theoretical work on BMA was conducted in the mid-1990s by Madigan and his colleagues (e.g., Madigan and Raftery 1994; Raftery et al. 1997; Hoeting et al. 1999) . Additional theoretical work was conducted by Clyde (1999 Clyde ( , 2003 . Draper (1995) discussed how model uncertainty can arise even in the context of experimental designs, and Kass and Raftery (1995) provided a review of Bayesian model averaging and the costs of ignoring model uncertainty. Reviews of the general problem of model uncertainty can be found in Clyde and George (2004) and more recently in Steel (2020) with a focus on economics. A review of Bayesian model averaging with a focus on psychology can be found in Hinne et al. (2020) .",
+            "cite_spans": [
+                {
+                    "start": 118,
+                    "end": 131,
+                    "text": "Leamer (1978)",
+                    "ref_id": "BIBREF54"
+                },
+                {
+                    "start": 265,
+                    "end": 290,
+                    "text": "Madigan and Raftery 1994;",
+                    "ref_id": "BIBREF59"
+                },
+                {
+                    "start": 291,
+                    "end": 311,
+                    "text": "Raftery et al. 1997;",
+                    "ref_id": "BIBREF74"
+                },
+                {
+                    "start": 312,
+                    "end": 332,
+                    "text": "Hoeting et al. 1999)",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 380,
+                    "end": 391,
+                    "text": "Clyde (1999",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 392,
+                    "end": 406,
+                    "text": "Clyde ( , 2003",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 409,
+                    "end": 422,
+                    "text": "Draper (1995)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 514,
+                    "end": 537,
+                    "text": "Kass and Raftery (1995)",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 697,
+                    "end": 720,
+                    "text": "Clyde and George (2004)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 742,
+                    "end": 754,
+                    "text": "Steel (2020)",
+                    "ref_id": "BIBREF79"
+                },
+                {
+                    "start": 862,
+                    "end": 881,
+                    "text": "Hinne et al. (2020)",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian Model Averaging"
+        },
+        {
+            "text": "Practical applications and developments of Bayesian model averaging can be found across a wide variety of domains. A perusal of the extant literature shows applications of Bayesian model averaging to economics (e.g., Fern\u00e1ndez et al. 2001b) , political science (e.g., Montgomery and Nyhan 2010) , bioinformatics of gene express (e.g., Yeung et al. 2005) , weather forecasting (e.g., Raftery et al. 2005; Sloughter et al. 2013) , propensity score analysis (Kaplan and Chen 2014) , structural equation modeling (Kaplan and Lee 2015) , missing data (Kaplan and Yavuz 2019), probabilistic forecasting with large-scale assessment data (Kaplan & Huang, under review) .",
+            "cite_spans": [
+                {
+                    "start": 217,
+                    "end": 240,
+                    "text": "Fern\u00e1ndez et al. 2001b)",
+                    "ref_id": null
+                },
+                {
+                    "start": 268,
+                    "end": 294,
+                    "text": "Montgomery and Nyhan 2010)",
+                    "ref_id": "BIBREF64"
+                },
+                {
+                    "start": 335,
+                    "end": 353,
+                    "text": "Yeung et al. 2005)",
+                    "ref_id": "BIBREF89"
+                },
+                {
+                    "start": 383,
+                    "end": 403,
+                    "text": "Raftery et al. 2005;",
+                    "ref_id": "BIBREF72"
+                },
+                {
+                    "start": 404,
+                    "end": 426,
+                    "text": "Sloughter et al. 2013)",
+                    "ref_id": "BIBREF78"
+                },
+                {
+                    "start": 455,
+                    "end": 477,
+                    "text": "(Kaplan and Chen 2014)",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 509,
+                    "end": 530,
+                    "text": "(Kaplan and Lee 2015)",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 630,
+                    "end": 660,
+                    "text": "(Kaplan & Huang, under review)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian Model Averaging"
+        },
+        {
+            "text": "The popularity of BMA across many different disciplines is due to the fact that BMA is known to provide better out-of-sample predictive performance than any other model under consideration as measured by the logarithmic scoring rule (Raftery and Zheng 2003) . In addition, Bayesian model averaging has been implemented in the R software programs BMA (Raftery et al. 2015) , BMS (Zeugner and Feldkircher 2015) , and BAS (Clyde 2017). These packages are quite general, allowing Bayesian model averaging over linear models, generalized linear models, and survival models, with flexible handling of parameter and model priors.",
+            "cite_spans": [
+                {
+                    "start": 233,
+                    "end": 257,
+                    "text": "(Raftery and Zheng 2003)",
+                    "ref_id": "BIBREF75"
+                },
+                {
+                    "start": 350,
+                    "end": 371,
+                    "text": "(Raftery et al. 2015)",
+                    "ref_id": "BIBREF73"
+                },
+                {
+                    "start": 378,
+                    "end": 408,
+                    "text": "(Zeugner and Feldkircher 2015)",
+                    "ref_id": "BIBREF91"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian Model Averaging"
+        },
+        {
+            "text": "Following Madigan and Raftery (1994) , consider a quantity of interest such as a future observation. Again, denoting this quantity as\u1ef9, our goal is to obtain an optimal prediction of\u1ef9 the sense that the utility of predicting\u1ef9 is maximized. Next, consider a set of competing models M = {M k } K k=1 that are not necessarily nested. The posterior distribution of\u1ef9 given data D can be written as a mixture distribution,",
+            "cite_spans": [
+                {
+                    "start": 10,
+                    "end": 36,
+                    "text": "Madigan and Raftery (1994)",
+                    "ref_id": "BIBREF59"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Statistical Specification of BMA"
+        },
+        {
+            "text": "where p(M k |D) is the posterior probability of model M k written as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Statistical Specification of BMA"
+        },
+        {
+            "text": "where the first term in the numerator on the right-hand side of (5) is the probability of the data given model k, also referred to as the integrated likelihood written as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Statistical Specification of BMA"
+        },
+        {
+            "text": "where p(\u03b8 k |M k ) is the prior distribution of the parameters \u03b8 k under model M k (Raftery et al. 1997 ).",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 103,
+                    "text": "(Raftery et al. 1997",
+                    "ref_id": "BIBREF74"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Statistical Specification of BMA"
+        },
+        {
+            "text": "The posterior model probabilities can be considered mixing weights associated with the mixture distribution given in (4) (Clyde and Iversen 2013) . The second term p(M k ) on the right-hand side of (5) is the prior model probability for model k, allowing each model to have a different prior probability based on past performance of that model or a belief regarding which of the models might be the true model. The denominator of (5) ensures that p(M k |y) integrates to 1.0, as long as the true model is in the set of models under consideration. We will defer the discussion of a true model until later and then explicitly deal with the case where the true model is not in the set of models under consideration.",
+            "cite_spans": [
+                {
+                    "start": 121,
+                    "end": 145,
+                    "text": "(Clyde and Iversen 2013)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Statistical Specification of BMA"
+        },
+        {
+            "text": "An important feature of (5) is that p(M k |y) captures the posterior uncertainty that a given model is the true model and this uncertainty will likely vary across models. Herein lies the problem of model selection; given the choice of a particular model, the analyst effectively ignores the uncertainty in other models that could have generated the data. Of course, (5) could be used as a method for model selection by simply choosing the model with the largest posterior model probability. However, model uncertainty is still being ignored because, often in practice, the posterior probability of this model will not be 1.0 which is assumed if one were to select a single model and act as though that was the model the analyst had in mind all along.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Connections to Bayes Factors"
+        },
+        {
+            "text": "Yet another common approach for model selection is the Bayes factor which provides a way to quantify the odds that the data favor one model over another (Kass and Raftery 1995) . A key benefit of Bayes factors is that models do not have to be nested. To motivate the Bayes factors, consider two competing models, denoted as M k and M l , which could be nested within a larger space of alternative models. Let \u03b8 k and \u03b8 l be the two parameter vectors associated with these two models. These could be two regression models with a different number of variables, or two structural equation models specifying very different directions of mediating effects. The goal is to develop a quantity that expresses the extent to which the data support M k over M l . One quantity could be the posterior odds of M k over M l , expressed as",
+            "cite_spans": [
+                {
+                    "start": 153,
+                    "end": 176,
+                    "text": "(Kass and Raftery 1995)",
+                    "ref_id": "BIBREF48"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Connections to Bayes Factors"
+        },
+        {
+            "text": "The first term on the right-hand side of (7) is the ratio of two integrated likelihoods. This ratio is referred to as the Bayes factor for M k over M l , denoted here as B F kl . In words, our prior opinion regarding the odds of M k over M l , given by p(M k )/ p(M l ), is weighted by our consideration of the data, given by p(D|M k )/ p(D|M l ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Connections to Bayes Factors"
+        },
+        {
+            "text": "A connection between the Bayes factor in (7) and the posterior model probability in (5) has been pointed by others (see, e.g., Clyde 1999) . Specifically, when examining more than two models, and assuming equal prior odds, then the Bayes factor for M k over M l can be written as",
+            "cite_spans": [
+                {
+                    "start": 127,
+                    "end": 138,
+                    "text": "Clyde 1999)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Connections to Bayes Factors"
+        },
+        {
+            "text": "Assuming that we fix the first model M l as the baseline model, (5) can be re-expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Connections to Bayes Factors"
+        },
+        {
+            "text": "As pointed out by Hoeting et al. (1999) , BMA can be difficult to implement. In particular, they note that the number of terms in (4) can be quite large, the corresponding integrals can be hard to compute, the specification of p(M k ) may not be straightforward, and choosing the class of models to average over is also challenging. To address the problem of computing (6) the Laplace method, which has been used productively for the computation of Bayes factors (Kass and Raftery 1995) , can be used and this will lead to a simple BIC approximation under certain circumstances (see Tierney and Kadane 1986; Raftery 1996) . The problem of reducing the overall number of models that one could incorporate in the summation of (4) has led to two interesting solutions. One solution is based on the so-called Occam's window criterion (Madigan and Raftery 1994) and the other is based on a Metropolis sampler referred to as Markov chain Monte Carlo Model composition (MC 3 ) (Madigan and York 1995) 2.3.1. Occam's Window To motivate the idea behind Occam's window, consider the problem of finding the best subset of predictors in a linear regression model. Following closely the discussion given in Raftery et al. (1997) we would initially start with very large number of predictors, but the goal would be to pare this to a smaller number of predictors that provide accurate predictions. As noted in the earlier quote by Hoeting et al. (1999) , the concern in drawing inferences from a single best model is that the choice of a single set of predictors ignores uncertainty in model selection. Occam's window provides an approach to BMA that reduces the subset of models under consideration, but instead of settling on a final \"best\" model, we instead integrate over the parameters of the smaller set with weights reflecting the posterior uncertainty in each model.",
+            "cite_spans": [
+                {
+                    "start": 18,
+                    "end": 39,
+                    "text": "Hoeting et al. (1999)",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 463,
+                    "end": 486,
+                    "text": "(Kass and Raftery 1995)",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 583,
+                    "end": 607,
+                    "text": "Tierney and Kadane 1986;",
+                    "ref_id": "BIBREF81"
+                },
+                {
+                    "start": 608,
+                    "end": 621,
+                    "text": "Raftery 1996)",
+                    "ref_id": "BIBREF71"
+                },
+                {
+                    "start": 830,
+                    "end": 856,
+                    "text": "(Madigan and Raftery 1994)",
+                    "ref_id": "BIBREF59"
+                },
+                {
+                    "start": 970,
+                    "end": 993,
+                    "text": "(Madigan and York 1995)",
+                    "ref_id": "BIBREF60"
+                },
+                {
+                    "start": 1194,
+                    "end": 1215,
+                    "text": "Raftery et al. (1997)",
+                    "ref_id": "BIBREF74"
+                },
+                {
+                    "start": 1416,
+                    "end": 1437,
+                    "text": "Hoeting et al. (1999)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computational Considerations"
+        },
+        {
+            "text": "The algorithm proceeds as follows (Raftery et al. 1997 ). In the initial step, the space of possible models is initially reduced by implementing the so-called \"leaps and bounds\" algorithm developed by Furnival and Wilson (1974) in the context of best subsets regression (see also Raftery 1995) . This initial step can substantially reduce the number of models, after which Occam's window can then be employed. The general idea is that models are eliminated from (4) if they predict the data less well than the model that provides the best predictions based on a caliper value C chosen in advance by the analyst. The caliper C sets the width of Occam's window. Formally, consider again a set of models {M k } K k=1 . Then, the set A is defined as",
+            "cite_spans": [
+                {
+                    "start": 34,
+                    "end": 54,
+                    "text": "(Raftery et al. 1997",
+                    "ref_id": "BIBREF74"
+                },
+                {
+                    "start": 201,
+                    "end": 227,
+                    "text": "Furnival and Wilson (1974)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 280,
+                    "end": 293,
+                    "text": "Raftery 1995)",
+                    "ref_id": "BIBREF70"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computational Considerations"
+        },
+        {
+            "text": "In words, (10) compares the model with the largest posterior model probability, max l { p(M l |y)}, to a given model p(M k |y). If the ratio in (10) is greater than the chosen value C, then it is discarded from the set A of models to be included in the model averaging. Notice that the set of models contained in A is based on Bayes factor values. The set A now contains models to be considered for model averaging. In the second, optional, step, models are discarded from A if they receive less support from the data than simpler submodels. Formally, models are further excluded from (4) if they belong to the set",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Computational Considerations"
+        },
+        {
+            "text": "Again, in words (11) states that there exists a model M l within the set A and where M l is simpler than M k . If a complex model receives less support from the data than a simpler sub-model-again based on the Bayes factor-then it is excluded from B. Notice that the second step corresponds to the principle of Occam's razor (Madigan and Raftery 1994) .",
+            "cite_spans": [
+                {
+                    "start": 325,
+                    "end": 351,
+                    "text": "(Madigan and Raftery 1994)",
+                    "ref_id": "BIBREF59"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computational Considerations"
+        },
+        {
+            "text": "With step 1 and step 2, the problem of reducing the size of the model space for BMA is simplified by replacing (4) with",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Computational Considerations"
+        },
+        {
+            "text": "In other words, models under consideration for BMA are those that are in A but not in B. Formally, A = A \\ B. Madigan and Raftery (1994) outline an approach to the choice between two models to be considered for Bayesian model averaging. To make the approach clear, consider the case of just two models M 1 and M 0 , where M 0 is the simpler of the two models. This could be the case where M 0 contains fewer predictors than M 1 in a regression analysis. In terms of posterior odds, if the odds are positive, indicating support for M 0 , then we reject M 1 . If the posterior odds is large and negative, then we reject M 0 in favor of M 1 . Finally, if the posterior odds lies in between the pre-set criterion, then both models are retained. For linear regression models, the leaps and bounds algorithm combined with Occam's window is available in the BICREG option in the R program BMA (Raftery et al. 2015) .",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 136,
+                    "text": "Madigan and Raftery (1994)",
+                    "ref_id": "BIBREF59"
+                },
+                {
+                    "start": 886,
+                    "end": 907,
+                    "text": "(Raftery et al. 2015)",
+                    "ref_id": "BIBREF73"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Computational Considerations"
+        },
+        {
+            "text": "Markov chain Monte Carlo model composition (MC 3 ) is based on the Metropolis-Hastings algorithm (see, e.g., Gilks et al. 1996) and is also designed to reduce the space of possible models that can be explored via Bayesian model averaging. Following Hoeting et al. (1999) , the MC 3 algorithm proceeds as follows. First, let M represent the space of models of interest; in the case of linear regression this would be the space of all possible combinations of variables. Next, the theory behind MCMC allows us to construct a Markov chain {M(t), t = 1, 2, . . . , } which converges to the posterior distribution of model k, that is, p(M k |y).",
+            "cite_spans": [
+                {
+                    "start": 109,
+                    "end": 127,
+                    "text": "Gilks et al. 1996)",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 249,
+                    "end": 270,
+                    "text": "Hoeting et al. (1999)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Markov Chain Monte Carlo Model Composition"
+        },
+        {
+            "text": "The manner in which models are retained under MC 3 is as follows. First, for any given model currently explored by the Markov chain, we can define a neighborhood for that model which includes one more variable and one less variable than the current model. So, for example, if our model has four predictors x 1 , x 2 , x 3 and x 4 , and the Markov chain is currently examining the model with x 2 and x 3 , then the neighborhood of this model would include {x 2 }, {x 3 }, {x 2 , x 3 , x 4 }, and {x 1 , x 2 , x 3 }. Now, a transition matrix is formed such that moving from the current model M to a new model M has probability zero if M is not in the neighborhood of M and has a constant probability if M is in the neighborhood of M. The model M is then accepted for model averaging with probability",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Markov Chain Monte Carlo Model Composition"
+        },
+        {
+            "text": "otherwise, the chain stays in model M.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Markov Chain Monte Carlo Model Composition"
+        },
+        {
+            "text": "One of the key steps when implementing BMA is to choose priors for both the parameters of the model and the model space itself. Discussions of the choice of parameter and model priors can be found in Fern\u00e1ndez et al. (2001a) ; Liang et al. (2008) ; Eicher et al. (2011); Feldkircher and Zeugner (2009) , with applications found in Fern\u00e1ndez et al. (2001a) and Kaplan and Huang (under review) . A large number of choices for model and parameter priors are implemented in the R software program BMS (Zeugner and Feldkircher 2015) . This section discusses the extant choices of parameter and model priors, following closely the discussion given in Kaplan and Huang (under review) .",
+            "cite_spans": [
+                {
+                    "start": 200,
+                    "end": 224,
+                    "text": "Fern\u00e1ndez et al. (2001a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 227,
+                    "end": 246,
+                    "text": "Liang et al. (2008)",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 249,
+                    "end": 270,
+                    "text": "Eicher et al. (2011);",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 271,
+                    "end": 301,
+                    "text": "Feldkircher and Zeugner (2009)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 331,
+                    "end": 355,
+                    "text": "Fern\u00e1ndez et al. (2001a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 360,
+                    "end": 391,
+                    "text": "Kaplan and Huang (under review)",
+                    "ref_id": null
+                },
+                {
+                    "start": 497,
+                    "end": 527,
+                    "text": "(Zeugner and Feldkircher 2015)",
+                    "ref_id": "BIBREF91"
+                },
+                {
+                    "start": 645,
+                    "end": 676,
+                    "text": "Kaplan and Huang (under review)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model and Parameter Priors"
+        },
+        {
+            "text": "The choice of parameter priors available in the extant BMA software rests on variations of Zellner's g-prior (Zellner 1986 ). Specifically, Zellner introduced a naturalconjugate Normal-Gamma g-prior for regression coefficients \u03b2 under the normal linear regression model, written as,",
+            "cite_spans": [
+                {
+                    "start": 109,
+                    "end": 122,
+                    "text": "(Zellner 1986",
+                    "ref_id": "BIBREF90"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Priors"
+        },
+        {
+            "text": "where \u03b5 is i.i.d. N (0, \u03c3 2 ). For a give model, say M k , Zellner's g-prior can be written as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Priors"
+        },
+        {
+            "text": "Feldkircher and Zeugner (2009) have argued for using the g-prior for two reasons: its consistency in asymptotically uncovering the true model, and its role as a penalty term for model size.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Priors"
+        },
+        {
+            "text": "The g-prior has been the subject of some criticism. In particular, Feldkircher and Zeugner (2009) have pointed out that the particular choice of g can have a very large impact on posterior inferences drawn from BMA. In particular, small values of g can yield a posterior mass that is spread out across many models while large values of g can yield a posterior mass that is concentrated on fewer models. Feldkircher and Zeugner (2009) use the term supermodel effect to describe how values of g impact the posterior statistics including posterior model probabilities (PMPs) and posterior inclusion probabilities (PIPs).",
+            "cite_spans": [
+                {
+                    "start": 67,
+                    "end": 97,
+                    "text": "Feldkircher and Zeugner (2009)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 403,
+                    "end": 433,
+                    "text": "Feldkircher and Zeugner (2009)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Priors"
+        },
+        {
+            "text": "To account for the supermodel effect researchers (Fern\u00e1ndez et al. 2001a; Liang et al. 2008; Eicher et al. 2011; Feldkircher and Zeugner 2009 ) have proposed alternative priors based on extensions of the work of Zellner (1986) . Generally speaking, these alternatives can be divided into two categories: fixed priors and flexible priors. Fern\u00e1ndez et al. (2001a) recommended using benchmark priors which belong to the class of fixed priors when sample sizes are large. Liang et al. (2008) introduced mixtures of g-priors to address the inconsistency when using fixed priors and showed its advantages compared to other default priors. Instead of only employing modeldependent priors, Feldkircher and Zeugner (2009) proposed a hyper-g-prior that \"let the data choose,\" thus reducing the sensitivity of the prior choice of the g-prior on the posterior mass. In a detailed study, Eicher et al. (2011) compared twelve candidate default priors and concluded that the unit information prior (UIP) combined with the uniform model prior outperformed the other choices.",
+            "cite_spans": [
+                {
+                    "start": 49,
+                    "end": 73,
+                    "text": "(Fern\u00e1ndez et al. 2001a;",
+                    "ref_id": null
+                },
+                {
+                    "start": 74,
+                    "end": 92,
+                    "text": "Liang et al. 2008;",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 93,
+                    "end": 112,
+                    "text": "Eicher et al. 2011;",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 113,
+                    "end": 141,
+                    "text": "Feldkircher and Zeugner 2009",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 212,
+                    "end": 226,
+                    "text": "Zellner (1986)",
+                    "ref_id": "BIBREF90"
+                },
+                {
+                    "start": 338,
+                    "end": 362,
+                    "text": "Fern\u00e1ndez et al. (2001a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 469,
+                    "end": 488,
+                    "text": "Liang et al. (2008)",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 683,
+                    "end": 713,
+                    "text": "Feldkircher and Zeugner (2009)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 876,
+                    "end": 896,
+                    "text": "Eicher et al. (2011)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Parameter Priors"
+        },
+        {
+            "text": "The set of fixed priors that are available in BMS are (see Zeugner and Feldkircher 2015) :",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 88,
+                    "text": "Zeugner and Feldkircher 2015)",
+                    "ref_id": "BIBREF91"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixed Parameter Priors"
+        },
+        {
+            "text": "\u2022 Unit Information Prior: g = N . This is a typical default prior. Liang et al. (2008) suggested using UIP in combination with the uniform model prior to yield the best predictive performance. \u2022 Risk Inflation Criterion Prior (RIC): g = Q 2 , where Q is the number of predictors. Foster and George (1994) showed that the selection of the model with the highest PMP is equivalent to selecting the model with the highest RIC as long as g = Q 2 . \u2022 Benchmark risk inflation criterion (BRIC): g = max(N , Q 2 ). This is a combination of the UIP and RIC. When N \u2264 Q 2 , Fern\u00e1ndez et al. (2001a) recommend using g = Q 2 ; When N > Q 2 , use g = N in the variable selection context. \u2022 Hannan and Quinn Priors: g = log(N ) 3 : This prior is based on the Hannan-Quinn criterion for model selection. Hannan and Quinn (1979) advocated to use HQ criteria = 3 for large N .",
+            "cite_spans": [
+                {
+                    "start": 67,
+                    "end": 86,
+                    "text": "Liang et al. (2008)",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 280,
+                    "end": 304,
+                    "text": "Foster and George (1994)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 565,
+                    "end": 589,
+                    "text": "Fern\u00e1ndez et al. (2001a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 790,
+                    "end": 813,
+                    "text": "Hannan and Quinn (1979)",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fixed Parameter Priors"
+        },
+        {
+            "text": "The set of flexible priors are (see Zeugner & Feldkircher, 2015) :",
+            "cite_spans": [
+                {
+                    "start": 36,
+                    "end": 64,
+                    "text": "Zeugner & Feldkircher, 2015)",
+                    "ref_id": "BIBREF91"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Flexible Parameter Priors"
+        },
+        {
+            "text": "; F k is the Fstatistic and R 2 k is the regression coefficient of determination for model M k . This approach estimates g separately for each model with maximum likelihood methods based on the observed data (George and Foster 2000; Liang et al. 2008; Hansen and Yu 2001) .",
+            "cite_spans": [
+                {
+                    "start": 208,
+                    "end": 232,
+                    "text": "(George and Foster 2000;",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 233,
+                    "end": 251,
+                    "text": "Liang et al. 2008;",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 252,
+                    "end": 271,
+                    "text": "Hansen and Yu 2001)",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Flexible Parameter Priors"
+        },
+        {
+            "text": "\u2022 Hyper-g priors: This family of priors was proposed for data-dependent shrinkage. Following Feldkircher and Zeugner (2009) , the hyper-g prior is a Beta prior on the shrinkage factor g 1+g , that is p g 1+g \u223c Beta(1, \u03b1 2 \u2212 1), with E g 1+g = 2 \u03b1 . Instead of eliciting g directly, the hyper-g prior requires the elicitation of the hyperparameter \u03b1 \u2208 (2, \u221e). As \u03b1 approaches 2, the prior distribution on the shrinkage factor g 1+g will be close to 1; while for \u03b1 = 4, the prior distribution on the shrinkage factor will be uniform distributed. In the context of noisy data, the hyper-g prior will distribute posterior model probabilities more uniformly across the model space. In the case of low noise in the data, the hyper-g prior will be concentrated on a few models, and perhaps even more concentrated than in the fixed prior case with large g (Feldkircher and Zeugner 2009 ).",
+            "cite_spans": [
+                {
+                    "start": 93,
+                    "end": 123,
+                    "text": "Feldkircher and Zeugner (2009)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 848,
+                    "end": 877,
+                    "text": "(Feldkircher and Zeugner 2009",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Flexible Parameter Priors"
+        },
+        {
+            "text": "Here we discuss three model priors that are available in the BMS program: (a) the uniform model prior, (b) the binomial model prior, and (c) the Beta-binomial model prior.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Model Priors"
+        },
+        {
+            "text": "\u2022 Uniform model prior: The uniform model prior is a common default prior for Bayesian model averaging. Specifically, if there are Q predictors, then the prior on the space of models is 2 \u2212Q . The difficulty with the uniform model prior was pointed out by Zeugner and Feldkircher (2015) who noted that the uniform model prior implies that the expected model size is Q q=0 Q q q2 \u2212Q = Q/2. However, the distribution of model sizes is not even-there are more models of size 2 or 5, then there are of size 1 or 6. The result is that the uniform model prior actually places more mass on intermediate size models. A demonstration of the impact of this problem is given in Zeugner and Feldkircher (2015) .",
+            "cite_spans": [
+                {
+                    "start": 255,
+                    "end": 285,
+                    "text": "Zeugner and Feldkircher (2015)",
+                    "ref_id": "BIBREF91"
+                },
+                {
+                    "start": 666,
+                    "end": 696,
+                    "text": "Zeugner and Feldkircher (2015)",
+                    "ref_id": "BIBREF91"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model Priors"
+        },
+        {
+            "text": "\u2022 Binomial model prior: To address the problem with the uniform model prior, Zeugner and Feldkircher (2015) proposed placing a fixed inclusion probability on each predictor in the model, denoted as \u03b8 . Then, for model k, the prior probability for a model of size",
+            "cite_spans": [
+                {
+                    "start": 77,
+                    "end": 107,
+                    "text": "Zeugner and Feldkircher (2015)",
+                    "ref_id": "BIBREF91"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model Priors"
+        },
+        {
+            "text": "Notice that the expected model size, saym, is Q\u03b8 , and thus the analysts prior expected model size ism. Moreover, if \u03b8 = .5, then the binomial model prior reduces to the uniform model prior. In practice, this suggests that choosing \u03b8 < .5 weights the posterior mass toward smaller models, and visa versa (Zeugner and Feldkircher 2015) . \u2022 Beta-binomial model prior: The binomial prior discussed above suffers from the fact that the inclusion probability \u03b8 is fixed. Following Ley and Steel (2009) , greater flexibility is provided by treating \u03b8 as random. A logical choice for the probability distribution of \u03b8 is the Beta distribution with hyperparameters a, b > 0, viz., \u03b8 \u223c Beta(a, b) . Under the Beta-binomial prior the first and second moments of the model sizem are,",
+            "cite_spans": [
+                {
+                    "start": 304,
+                    "end": 334,
+                    "text": "(Zeugner and Feldkircher 2015)",
+                    "ref_id": "BIBREF91"
+                },
+                {
+                    "start": 476,
+                    "end": 496,
+                    "text": "Ley and Steel (2009)",
+                    "ref_id": "BIBREF55"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 675,
+                    "end": 687,
+                    "text": "\u223c Beta(a, b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model Priors"
+        },
+        {
+            "text": "With such a wide variety of choices available for parameter and model priors, it is important to have a method for evaluating the impact of these choices when applying BMA to substantive problems. Given that the utility of BMA lies in its optimal predictive performance, a reasonable method for evaluation should be based on measures that assess predictive performance-referred to as scoring rules.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluating Bayesian Model Averaging"
+        },
+        {
+            "text": "Scoring rules provide a measure of the accuracy of probabilistic predictions (or synonymously, forecasts), and a prediction can be said to be \"well-calibrated\" if the assigned probability of the outcome match the actual proportion of times that the outcome occurred (Dawid 1982) . 1 A scoring rule is a utility function (Gneiting and Raftery 2007) , and the goal of the forecaster is to be honest and provide a forecast that will maximize the utility. One can consider scoring rules from a subjectivist Bayesian perspective. Here, Winkler (1996 ) quotes Finetti (1962 The scoring rule is constructed according to the basic idea that the resulting device should oblige each participant to express his true feelings, because any departure from his own personal probability results in a diminution of his own average score as he sees it.",
+            "cite_spans": [
+                {
+                    "start": 266,
+                    "end": 278,
+                    "text": "(Dawid 1982)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 281,
+                    "end": 282,
+                    "text": "1",
+                    "ref_id": null
+                },
+                {
+                    "start": 320,
+                    "end": 347,
+                    "text": "(Gneiting and Raftery 2007)",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 531,
+                    "end": 544,
+                    "text": "Winkler (1996",
+                    "ref_id": "BIBREF86"
+                },
+                {
+                    "start": 545,
+                    "end": 567,
+                    "text": ") quotes Finetti (1962",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Strictly Proper Scoring Rules"
+        },
+        {
+            "text": "Because scoring rules only require the stated probabilities and realized outcomes, they can be developed for ex-post or ex-ante probability evaluations. However, as suggested by Winkler (1996) , the ex-ante perspective of probability evaluation should lead us to consider strictly proper scoring rules because these rules are maximized if and only if the forecaster is honest in reporting their scores. Following the discussion and notation given in Winkler (1996, see also; Jose et al. 2008 ), let p represent the forecaster's subjective probability distribution of an outcome of interest, let r represent the forecaster's reported forecast probability, and let e i represent the probability distribution that assigns probability one if the event i occurs and probability zero for all other events. Then, a scoring rule, denoted as S(r, p), provides a score S(r, e i ) if the event occurs. The expected score obtained when the forecaster reports r when their true distribution is p is",
+            "cite_spans": [
+                {
+                    "start": 178,
+                    "end": 192,
+                    "text": "Winkler (1996)",
+                    "ref_id": "BIBREF86"
+                },
+                {
+                    "start": 450,
+                    "end": 474,
+                    "text": "Winkler (1996, see also;",
+                    "ref_id": null
+                },
+                {
+                    "start": 475,
+                    "end": 491,
+                    "text": "Jose et al. 2008",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Strictly Proper Scoring Rules"
+        },
+        {
+            "text": "The scoring rule is strictly proper if S(p, p) \u2265 S(r, p) for every r and p with equality when r = p (Jose et al. 2008 (Jose et al. , pg. 1147 . A large number of scoring rules have been reviewed in the literature (see, e.g., Winkler 1996; Bernardo and Smith 2000; Jose et al. 2008; Merkle and Steyvers 2013; Gneiting and Raftery 2007) . Here, however, we highlight two related strictly proper scoring rules that are commonly used to evaluate predictions arising from Bayesian model averaging: the log predictive density score, and the Kullback-Leibler divergence score (see, e.g., Fern\u00e1ndez et al. 2001b; Hoeting et al. 1999; Kaplan and Yavuz 2019; Kaplan and Huang, under review, for examples) .",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 117,
+                    "text": "(Jose et al. 2008",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 118,
+                    "end": 141,
+                    "text": "(Jose et al. , pg. 1147",
+                    "ref_id": null
+                },
+                {
+                    "start": 225,
+                    "end": 238,
+                    "text": "Winkler 1996;",
+                    "ref_id": "BIBREF86"
+                },
+                {
+                    "start": 239,
+                    "end": 263,
+                    "text": "Bernardo and Smith 2000;",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 264,
+                    "end": 281,
+                    "text": "Jose et al. 2008;",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 282,
+                    "end": 307,
+                    "text": "Merkle and Steyvers 2013;",
+                    "ref_id": "BIBREF61"
+                },
+                {
+                    "start": 308,
+                    "end": 334,
+                    "text": "Gneiting and Raftery 2007)",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 581,
+                    "end": 604,
+                    "text": "Fern\u00e1ndez et al. 2001b;",
+                    "ref_id": null
+                },
+                {
+                    "start": 605,
+                    "end": 625,
+                    "text": "Hoeting et al. 1999;",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 626,
+                    "end": 648,
+                    "text": "Kaplan and Yavuz 2019;",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 649,
+                    "end": 694,
+                    "text": "Kaplan and Huang, under review, for examples)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Strictly Proper Scoring Rules"
+        },
+        {
+            "text": "The log predictive density score (LPS) (Good 1952; Bernardo and Smith 2000) can be written as",
+            "cite_spans": [
+                {
+                    "start": 39,
+                    "end": 50,
+                    "text": "(Good 1952;",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 51,
+                    "end": 75,
+                    "text": "Bernardo and Smith 2000)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Log Predictive Density Score"
+        },
+        {
+            "text": "where, for example,\u1ef9 i is the predictive density for ith person, x and y represent the model information for the remaining individuals, andx i is the information on the predictors for individual i. The model with the lowest log predictive score is deemed best in terms of long-run predictive performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Log Predictive Density Score"
+        },
+        {
+            "text": "Closely related to the log-predictive score is the Kullback-Leibler Divergence (KLD) score (also referred to as relative entropy (Kullback and Leibler 1951; Kullback 1959 Kullback , 1987 . Here we consider two distributions, p(y) and g(y|\u03b8), where p(y) could be the distribution of observed reading literacy scores, and g(y|\u03b8) could be the prediction of these reading scores based on a model. The KLD between these two distributions can be written as",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 156,
+                    "text": "(Kullback and Leibler 1951;",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 157,
+                    "end": 170,
+                    "text": "Kullback 1959",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 171,
+                    "end": 186,
+                    "text": "Kullback , 1987",
+                    "ref_id": "BIBREF51"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Kullback-Leibler Divergence Score"
+        },
+        {
+            "text": "where KLD( f, g) is the information lost when g(y|\u03b8) is used to approximate p(y). For example, the actual reading outcome scores might be compared to the predicted outcome using Bayesian model averaging along with different choices of model and parameter priors. The model with the lowest KLD measure is deemed best in the sense that the information lost when approximating the actual reading outcome distribution with the distribution predicted on the basis of the model is lowest. The LPS and KLD scoring rules are applicable to continuous outcomes and we will focus on these two in our example below. However, it should be noted that BMA can be applied to binary outcomes, and here, a popular scoring rule that is based on quadratic loss is the Brier score (Brier 1950) . Following the notation above, the Brier score can be defined as",
+            "cite_spans": [
+                {
+                    "start": 760,
+                    "end": 772,
+                    "text": "(Brier 1950)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Kullback-Leibler Divergence Score"
+        },
+        {
+            "text": "where the forecast p estimates an indicator vector of an event e. For example, p may represent the forecast probability of rain on a given day, and e i represents the realization of the event scored 1/0 should rain occur on that day or not. The Brier score penalizes the forecaster in proportion to the squared Euclidean distance between the forecast and the event (Jose et al. 2008 (Jose et al. , p. 1148 ",
+            "cite_spans": [
+                {
+                    "start": 365,
+                    "end": 382,
+                    "text": "(Jose et al. 2008",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 383,
+                    "end": 405,
+                    "text": "(Jose et al. , p. 1148",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Kullback-Leibler Divergence Score"
+        },
+        {
+            "text": "This example will draw on reading literacy data obtained from the Program for International Student Assessment (PISA). Launched in 2000 by the Organization for Economic Cooperation and Development, PISA is a triennial international survey that aims to evaluate education systems worldwide by testing the skills and knowledge of 15-year-old students. In 2018, 600,000 students, statistically representative of 32 million 15-year-old students in 79 countries and economies, took an internationally agreed-upon two-hour test. Students were assessed in science, mathematics, reading, collaborative problem solving, and financial literacy. PISA is arguably the most important policy-relevant international survey that is currently operating (OECD 2002) .",
+            "cite_spans": [
+                {
+                    "start": 736,
+                    "end": 747,
+                    "text": "(OECD 2002)",
+                    "ref_id": "BIBREF65"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A Simple Example of BMA"
+        },
+        {
+            "text": "The benefit of developing optimally predictive models for large-scale assessments such as PISA is to recognize that these assessments can be used to monitor progress toward internationally agreed-upon educational goals such as the United Nations (UN) adopted the Sustainable Development Goals (SDGs). Also, as educational systems around the world face new challenges due to the COVID-19 pandemic, developing optimally predictive models may help identify the long-run impact of this unprecedented health crisis on global education.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Simple Example of BMA"
+        },
+        {
+            "text": "Following the overview in Kaplan and Kuger (2016) , the sampling framework for PISA follows a two-stage stratified sample design. Each country/economy provides a list of all \"PISAeligible\" schools, and this list constitutes the sampling frame. Schools are then sampled from this frame with sampling probabilities that are proportional to the size of the school, with the size being a function of the estimated number of PISA-eligible students in the school. The second stage of the design requires sampling students within the sampled schools. A target cluster size of 35 students within schools was desired, though for some countries, this target cluster size was negotiable.",
+            "cite_spans": [
+                {
+                    "start": 26,
+                    "end": 49,
+                    "text": "Kaplan and Kuger (2016)",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A Simple Example of BMA"
+        },
+        {
+            "text": "We will focus on the reading literacy results from PISA 2018. The method of assessment for PISA follows closely the spiraling design and plausible value methodologies originally developed for National Assessment of Educational Progress. (see, e.g., OECD 2017) In addition to these socalled \"cognitive outcomes,\" policymakers and researchers alike have begun to focus increasing attention on the non-academic contextual aspects of schooling. Context questionnaires provide important variables for models predicting cognitive outcomes and these variables have become important outcomes in their own right-often referred to as \"non-cognitive outcomes\" (see, e.g., Heckman and Kautz 2012) . PISA also assesses these non-cognitive outcomes via a one-half hour internationally agreed-upon context questionnaire (see Kuger et al. 2016 ). The list of variables used in this example are given in Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 661,
+                    "end": 684,
+                    "text": "Heckman and Kautz 2012)",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 810,
+                    "end": 827,
+                    "text": "Kuger et al. 2016",
+                    "ref_id": "BIBREF49"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 887,
+                    "end": 894,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "A Simple Example of BMA"
+        },
+        {
+            "text": "For this example, we use the software package BMS (Zeugner and Feldkircher 2015) which implements the so-called Birth/Death algorithm as a default for conducting MC 3 . It is beyond the scope of this paper to describe the BD algorithm or other choices of algorithms in the BMS program. See Zeugner and Feldkircher (2015) for more detail.",
+            "cite_spans": [
+                {
+                    "start": 290,
+                    "end": 320,
+                    "text": "Zeugner and Feldkircher (2015)",
+                    "ref_id": "BIBREF91"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A Simple Example of BMA"
+        },
+        {
+            "text": "The analysis steps for this example are as follows: 1. We begin by implementing BMA with default unit information priors for the model parameters and the uniform prior on the model space. We will outline the major components of the results including the posterior model probabilities and the posterior inclusion probabilities. 2. We next examine the results under different combinations of parameter and model priors available in BMS and compare results using the LPS and KLD.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Simple Example of BMA"
+        },
+        {
+            "text": "The Bayesian model averaging results under unit information priors for model parameters and the uniform prior for the model space are shown in Tables 2 and 3. It should be noted that the results under different choices of parameter and model priors demonstrate some sensitivity to the choice of parameter and model priors and these results are available on the author's website (http://bmer.wceruw.org/index.html). We note that there are 19 predictors and thus 2 19 = 524288 models in the full space of models to be visited. Table 2 presents a summary of the birth/death algorithm used to implement MC 3 in BMS. We find that the algorithm only visited 471 models (0.09%) out of the total model space; however, these models accounted for 100% of the posterior model mass. 2 The column labeled \"Avg # predictors\" shows that across all of the models explored by the algorithm, the average number of predictors was 11.8 out of 19.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 525,
+                    "end": 532,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "BMA Results"
+        },
+        {
+            "text": "In the second row of Table 2 we present the posterior model probabilities (PMPs) associated with the top five models out of the 471 models explored by the algorithm. It is important to note Table 3 . The column labeled \"PIP\" shows the posterior inclusion probabilities for each variable, referring to the proportion of times the variable appeared in the models visited by the algorithm. For example, the PIP for ESCS is 1.00, meaning that across all the models selected by the algorithm, ESCS appeared in 100% of the models. In contrast, ATTLNACT only appears in 0.09% of the models visited by the algorithm. The PIP thus provides a different perspective on variable importance. The columns labeled \"Post Mean\" and \"Post SD\" are the posterior estimates of the regression coefficients and their posterior standard deviations, respectively. The column labeled \"Cond. Pos. Sign\" refers to the probability that the sign of the respective regression coefficient is positive conditional on its inclusion in the model. We find, for example, that the sign of ESCS is positive in 100% of the models in which ESCS appears. By contrast, the probability that the sign of the PISADIFF effect positive is zero, meaning that in 100% of the models visited by the algorithm, the sign of PISADIFF is negative. 3 We find that the first 12 predictors (ESCS thru GENDER) have relatively high PIPs. The majority of these predictors have PIPs of 1.0 indicating their importance. It is also interesting to note that these predictors contain a mix of demographic measures (e.g., ESCS, GENDER), attitudes/perceptions (e.g., TEACHINT, JOYREAD, SCREADCOMP) and cognitive strategies involved in reading (e.g., METASUM). Table 4 presents the results based on comparing LPS and KLD values for different parameter priors under the fixed prior setting (upper half) and flexible prior setting (lower half), respectively. Owing to the large-sample size, the findings show relative robustness to the choice of parameter and model priors.",
+            "cite_spans": [
+                {
+                    "start": 1292,
+                    "end": 1293,
+                    "text": "3",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 21,
+                    "end": 28,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 190,
+                    "end": 197,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1691,
+                    "end": 1698,
+                    "text": "Table 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "BMA Results"
+        },
+        {
+            "text": "Earlier, our discussion made mention of belief models and true models, and a perusal of the extant literature on model averaging reveals a distinction between a so-called actual belief model (sometimes referred to as a Bayesian belief model), M * , and a true model, denoted as M T . Unfortunately, there does not appear to be a consensus about the meaning of belief models or true models, and in some cases, they are viewed as roughly the same thing. For example, Bernardo and Smith (2000) introduced the idea of the actual belief model but seem to be describing it as the true model, and in fact labeled the actual belief model as M T , suggesting that M * is the true but unknown data generating model This position appears to be held by Clyde and Iversen (2013) who adopt a similar notation and seem to use the terms \"belief model\" and \"true model\" interchangeably.",
+            "cite_spans": [
+                {
+                    "start": 465,
+                    "end": 490,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "True Models, Belief Models, and M-Frameworks"
+        },
+        {
+            "text": "In contrast, Vehtari and Ojanen (2012) suggest that M * is different from M T and is something that we have access to insofar as it derived from what we have learned from our encounter with data. For our example, M * would be the result of what has been learned from the construction and criticism of a substantive model of reading literacy. That is, if (a) one has specified a reasonable probability model for the reading literacy outcome, (b) one has access to a rich enough set of policy-relevant predictors of reading literacy, (c) all of the important prior uncertainties have been captured, and (d) the model has withstood criticisms, say in the form of posterior predictive checks (Gelman et al. 1996) , then this model is M * . Regarding M T , Vehtari and Ojanen (2012, p. 155) suggest that \"the properties of the true model are specified by the modeller a priori, and they are not learned from the data properties.\" Vehtari and Ojanen (2012) view the specification of M T in very general terms, such as an i.i.d assumption regarding the outcome of interest.",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 38,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                },
+                {
+                    "start": 688,
+                    "end": 708,
+                    "text": "(Gelman et al. 1996)",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 752,
+                    "end": 785,
+                    "text": "Vehtari and Ojanen (2012, p. 155)",
+                    "ref_id": null
+                },
+                {
+                    "start": 925,
+                    "end": 950,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                }
+            ],
+            "ref_spans": [],
+            "section": "True Models, Belief Models, and M-Frameworks"
+        },
+        {
+            "text": "With respect to model averaging, the distinction between M * and M T is important in practice. First, BMA assumes that M T \u2208 M. If that assumption does not hold, then conventional BMA does not make sense because the priors on the model space are elicited to reflect the analyst's belief about the existence of the true model within the full set of models under consideration. Second, as noted by Vehtari and Ojanen (2012) , the process of model averaging begins with assuming the existence of a true model that must be approximated from the data, and this approximation is often based on an actual belief model that the researcher implicitly holds. Moreover, when using BMA software such as BMA or BMS, an intital model must be specified to initiate the search through the model space. The question that arises is whether this initial model is M * or M T . It Table 4 . does not seem reasonable that this model is M T , if by M T we mean some general probability model for the outcome, not conditional on any covariates. Rather, this initial model is much more akin to what is meant by M * , having perhaps resulted from giving careful consideration to an initial model based on past research, expert opinion, and so forth.",
+            "cite_spans": [
+                {
+                    "start": 396,
+                    "end": 421,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 860,
+                    "end": 867,
+                    "text": "Table 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "True Models, Belief Models, and M-Frameworks"
+        },
+        {
+            "text": "To clarify terminology, we prefer the following set of distinctions. First, there is a true model M T that we do not fully know, except in the case of computer simulation studies (Clarke and Clarke 2018) , and it may be a highly complex process associated with many covariates in perhaps complicated non-linear and structural relationships. Second, M * is our best, or most convenient, approximation to M T and forms the empirical launching point for model averaging. Finally, the goal of model averaging is to start with M * and locate a model M k that is as close to M T as possible with \"closeness\" defined in terms of an index such as the Kullback-Leibler divergence (Kullback and Leibler 1951; Kullback 1959 Kullback , 1987 .",
+            "cite_spans": [
+                {
+                    "start": 179,
+                    "end": 203,
+                    "text": "(Clarke and Clarke 2018)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 671,
+                    "end": 698,
+                    "text": "(Kullback and Leibler 1951;",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 699,
+                    "end": 712,
+                    "text": "Kullback 1959",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 713,
+                    "end": 728,
+                    "text": "Kullback , 1987",
+                    "ref_id": "BIBREF51"
+                }
+            ],
+            "ref_spans": [],
+            "section": "True Models, Belief Models, and M-Frameworks"
+        },
+        {
+            "text": "Our discussion of belief models and true models is necessary in order to address a critical problem when conducting BMA in practice-namely whether it is reasonable to assume that M T \u2208 M. If we assume that M T is in the space of models under consideration, this is referred to as the M-closed framework, introduced by Bernardo and Smith (2000) and further discussed in Clyde and Iversen (2013) .",
+            "cite_spans": [
+                {
+                    "start": 318,
+                    "end": 343,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 369,
+                    "end": 393,
+                    "text": "Clyde and Iversen (2013)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "True Models, Belief Models, and M-Frameworks"
+        },
+        {
+            "text": "As implied earlier, the M-closed framework for BMA may be especially difficult to warrant in the social and behavioral sciences. Nevertheless, as pointed out by Bernardo and Smith (2000) , there may be cases in which it is reasonable to act as though there is a true model, keeping in mind that Bernardo and Smith (2000) seem to suggest that M T is what we are referring to here as M * . For example, we may wish to act as though M-closed holds when a model has demonstrated good predictive capabilities under a wide variety of situations, but that under a new situation, new uncertainties arise. Taking our example of the prediction of reading literacy, an analyst typically would specify a set of variables that cover the range of what theory and past analyses have suggested are important predictors of reading competencies-predictors such (a) as measures of socio-demographics, (b) measures of teacher practices in support of reading literacy, (c) perceptions of classroom and school environments, including instructional resources, and (d) student attitudes and dispositions toward reading. In this example, Bayesian analyses from prior relevant studies such as PISA 2009 (the last reading cycle of PISA) (OECD 2009), might serve to provide informative priors for the analysis of reading data from PISA 2018. Given policy and research papers that derive from the analyses of PISA 2018, it may be reasonable to specify an initial belief model, M * . However, now the analyst might recognize that there is uncertainty in that choice of M * and wish to address that uncertainty using BMA to optimize the prediction of reading competencies for future cycles of PISA. Such uncertainties may be due to applying a model estimated on one PISA country to another. Or, changes in educational policies and practices due to the COVID-19 pandemic may render much greater uncertainty to a model that may have worked well in the past. As long as the analyst is comfortable assigning model priors, then the M-closed framework can be adopted. Nevertheless, the truth or falsity of the M-closed framework notwithstanding, it is important to reiterate that conventional BMA takes place under the M-closed framework and, indeed, readily available BMA software typically employ a non-informative prior to the space of models as a default, with the idea that the true model lies in the model space.",
+            "cite_spans": [
+                {
+                    "start": 161,
+                    "end": 186,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 295,
+                    "end": 320,
+                    "text": "Bernardo and Smith (2000)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "True Models, Belief Models, and M-Frameworks"
+        },
+        {
+            "text": "With the M-closed assumption unlikely to hold in practice, we are faced with the problem of how to obtain the benefits of model averaging with respect to predictive accuracy. One approach would be to create a list of simpler \"proxy\" linear models, {M k } K k=1 specified for clarity of communication and ease of analysis (Bernardo and Smith 2000) . Each of these models would be evaluated in light of the true model. This is referred to as the M-complete framework (Bernardo and Smith 2000) . Under M\u2212complete, BMA would not, in principle, be conducted as it does not make sense to place a discrete prior on the model space when one does not believe that M T \u2208 M. Instead, as suggested by Clyde and Iversen (2013) , Yao et al. (2018) , and Vehtari and Ojanen (2012) one simply selects the model M k \u2208 M that maximizes expected utility with respect to predictive distributions. However, this suggests that a single model is being used for predictive purposes with the result that model uncertainty is again not being addressed.",
+            "cite_spans": [
+                {
+                    "start": 321,
+                    "end": 346,
+                    "text": "(Bernardo and Smith 2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 465,
+                    "end": 490,
+                    "text": "(Bernardo and Smith 2000)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 689,
+                    "end": 713,
+                    "text": "Clyde and Iversen (2013)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 716,
+                    "end": 733,
+                    "text": "Yao et al. (2018)",
+                    "ref_id": "BIBREF88"
+                },
+                {
+                    "start": 740,
+                    "end": 765,
+                    "text": "Vehtari and Ojanen (2012)",
+                    "ref_id": "BIBREF84"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model Averaging in the M-Complete Framework"
+        },
+        {
+            "text": "More recently, Clarke and Clarke (2018) discussed the idea that M-complete could constitute a range of inaccessibility to M T , and that methods such as BMA could be justified under M \u2212 complete insofar as the model priors would encode ones belief as to how good an approximation a given model is to M T under an M \u2212 closed problem. In any event, modeling under the M \u2212 complete framework does not provide an approach to directly addressing the problem of model uncertainty, when M \u2212 closed is hard to maintain.",
+            "cite_spans": [
+                {
+                    "start": 15,
+                    "end": 39,
+                    "text": "Clarke and Clarke (2018)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model Averaging in the M-Complete Framework"
+        },
+        {
+            "text": "If it is difficult to warrant model priors as required under M-closed, and if selecting a single model under M-complete that maximizes expected utility is not satisfactory, then we need an approach that allows for model averaging without the need to assume that M T \u2208 M. This is referred to as the M-open framework (Bernardo and Smith 2000) . An example of an M-open problem is in specifying a set of regression models with different choices of predictors. These different regression models would represent reasonable alternative belief models. Then, rather than using posterior model probabilities as weights, each model would yield a separate score without presuming the existence of a true model underlying any of the separate models. These models would be combined using their scores as weights, and the resulting predictive distribution would be obtained. This type of model averaging in the M-open framework describes the methodology of Bayesian stacking which we consider next.",
+            "cite_spans": [
+                {
+                    "start": 315,
+                    "end": 340,
+                    "text": "(Bernardo and Smith 2000)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Model Averaging in the M-Open Framework"
+        },
+        {
+            "text": "The method of stacking was originally developed in the machine learning literature by Wolpert (1992) and Breiman (1996) and brought into the Bayesian paradigm by Iversen (2013). The basic idea behind stacking is to enumerate a set of K (k = 1, 2, . . . K ) models and then create a weighted combination of their predictions. Returning to our reading literacy example, we can specify a set of candidate (belief) models of reading literacy as",
+            "cite_spans": [
+                {
+                    "start": 86,
+                    "end": 100,
+                    "text": "Wolpert (1992)",
+                    "ref_id": "BIBREF87"
+                },
+                {
+                    "start": 105,
+                    "end": 119,
+                    "text": "Breiman (1996)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian Stacking"
+        },
+        {
+            "text": "were f k are different models of the reading literacy outcome-e.g., some models may include only demographic predictors, others may include various combinations of attitudes and behaviors related to reading literacy. Predictions from these models are then combined (stacked) as (see Le and Clarke 2017) ",
+            "cite_spans": [
+                {
+                    "start": 283,
+                    "end": 302,
+                    "text": "Le and Clarke 2017)",
+                    "ref_id": "BIBREF53"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bayesian Stacking"
+        },
+        {
+            "text": "wheref k estimates f k . The weights,\u0175 k (\u0175 1 ,\u0175 2 , . . .\u0175 K ) are obtained a\u015d",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bayesian Stacking"
+        },
+        {
+            "text": "wheref k,\u2212i (x i ) is an estimate of f k based on n \u2212 1 observations, leaving the ith observation out.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Bayesian Stacking"
+        },
+        {
+            "text": "We see from (24) that a method is needed to estimate f k based on n \u2212 1 observations leaving the i th observation out, and the most common approach is referred to as leave-one-out cross validation. Leave-one-out-cross-validation (LOOCV) is a special case of k-fold cross-validation (k-fold CV) when k = n. In k-fold CV, a sample is split into k groups (folds) and each fold is taken to be the validation set with the remaining k \u2212 1 folds serving as the training set. For LOOCV, each observation serves as the validation set with the remaining n \u2212 1 observations serving as the training set. Leave-one-out cross-validation is available in the R software program loo (Vehtari et al. 2019) . 4 Following Vehtari et al. (2017) , let y i (i = 1, . . . , n) be an n-dimensional vector of data following a distribution conditional on parameters \u03b8 -viz., p(y|\u03b8) = n i=1 p(y i |\u03b8). Given a prior distribution on the parameters, p(\u03b8 ), we can obtain the posterior distribution, p(\u03b8 |y) as well as a posterior predictive distribution of predicted values\u1ef9 written as p(\u1ef9|y) = p(\u1ef9 i |\u03b8) p(\u03b8 |y)d\u03b8 . The Bayesian LOOCV rests on the derivation of the expected log point-wise predictive density (elpd) for new data defined as",
+            "cite_spans": [
+                {
+                    "start": 666,
+                    "end": 687,
+                    "text": "(Vehtari et al. 2019)",
+                    "ref_id": "BIBREF82"
+                },
+                {
+                    "start": 690,
+                    "end": 691,
+                    "text": "4",
+                    "ref_id": null
+                },
+                {
+                    "start": 702,
+                    "end": 723,
+                    "text": "Vehtari et al. (2017)",
+                    "ref_id": "BIBREF83"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Leave-One-Out Cross-Validation"
+        },
+        {
+            "text": "where p t (\u1ef9 i ) represents the distribution of the true but unknown data-generating process for the predicted values\u1ef9 i and where (25) is approximated by cross-validation procedures. The elpd provides a measure of predictive accuracy for the n data points taken one at a time . From here, the Bayesian LOO estimate can be written as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Leave-One-Out Cross-Validation"
+        },
+        {
+            "text": "where",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Leave-One-Out Cross-Validation"
+        },
+        {
+            "text": "which is the leave-one-out predictive distribution using the log predictive score to assess predictive accuracy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Leave-One-Out Cross-Validation"
+        },
+        {
+            "text": "It is useful to note that an information criterion based on LOO (LOOIC) can be easily derived as LOOIC = \u22122 elpd loo",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Leave-One-Out Cross-Validation"
+        },
+        {
+            "text": "which places the LOOIC on the \"deviance scale\" (see Vehtari et al. 2017 for more details on the implementation of the LOOIC in loo). Among a set of competing models, the one with the smallest LOOIC is considered best from an out-of-sample point-wise predictive point of view. As pointed out by Vehtari et al. (2017) , it can be time-consuming to calculate exact LOOCV values and this may be a reason why LOOCV is not widely adopted. To remedy this, Vehtari et al. (2017) developed a fast and stable approach to obtaining LOOCV referred to as Pareto-smoothed importance sampling (PSIS-LOO) (see Vehtari et al. 2017 , for more details). The PSIS approach is implemented in loo (Vehtari et al. 2019).",
+            "cite_spans": [
+                {
+                    "start": 52,
+                    "end": 71,
+                    "text": "Vehtari et al. 2017",
+                    "ref_id": "BIBREF83"
+                },
+                {
+                    "start": 294,
+                    "end": 315,
+                    "text": "Vehtari et al. (2017)",
+                    "ref_id": "BIBREF83"
+                },
+                {
+                    "start": 449,
+                    "end": 470,
+                    "text": "Vehtari et al. (2017)",
+                    "ref_id": "BIBREF83"
+                },
+                {
+                    "start": 594,
+                    "end": 613,
+                    "text": "Vehtari et al. 2017",
+                    "ref_id": "BIBREF83"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Leave-One-Out Cross-Validation"
+        },
+        {
+            "text": "It is interesting to note that LOOCV has connections to other types of weights that can be used for stacking. For example, in the case of maximum likelihood estimation, LOOCV weights are asymptotically equivalent to Akaike information criterion (AIC) weights (Akaike 1973 ) that are used in frequentist model averaging applications (Yao et al. 2018 , see also; Burnham and Anderson 2002; Fletcher 2018) . In addition, so-called pseudo-BMA weights were proposed by Geisser and Eddy (1979, see also; Gelfand 1996) . This approach replaces marginal likelihoods with Bayesian LOOCV predictive densites. The difficulty with pseudo-BMA weights is that they do not take into account uncertainty in future data distributions. To address this Yao et al. (2018) proposed an approach that combines the Bayesian bootstrap (see Rubin 1981) with the ELPD defined earlier. They refer to this approach as pseudo-BMA+ and show that it performs better than BMA and pseudo-BMA in M-open settings, but not as well as stacking using the log-score.",
+            "cite_spans": [
+                {
+                    "start": 259,
+                    "end": 271,
+                    "text": "(Akaike 1973",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 332,
+                    "end": 348,
+                    "text": "(Yao et al. 2018",
+                    "ref_id": "BIBREF88"
+                },
+                {
+                    "start": 361,
+                    "end": 387,
+                    "text": "Burnham and Anderson 2002;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 388,
+                    "end": 402,
+                    "text": "Fletcher 2018)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 464,
+                    "end": 497,
+                    "text": "Geisser and Eddy (1979, see also;",
+                    "ref_id": null
+                },
+                {
+                    "start": 498,
+                    "end": 511,
+                    "text": "Gelfand 1996)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 734,
+                    "end": 751,
+                    "text": "Yao et al. (2018)",
+                    "ref_id": "BIBREF88"
+                },
+                {
+                    "start": 815,
+                    "end": 826,
+                    "text": "Rubin 1981)",
+                    "ref_id": "BIBREF77"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Other Types of Weights"
+        },
+        {
+            "text": "For this paper, we demonstrate Bayesian stacking using the software program loo with the same PISA 2018 data set used to demonstrate BMA. The analysis steps for this demonstration are as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "An Example of Bayesian Stacking"
+        },
+        {
+            "text": "1. Specify four models of reading literacy. From Table 1 , Model 1 includes only demographic measures (FEMALE, ESCS, HOMEPOS, ICTRES); Model 2 includes only attitudes and behaviors specifically directed toward reading (JOYREAD, PISADIFF, SCREADCOMP, SCREADDIF); Model 3 includes predictors related to academic mindset as well as general well-being; (METASUM, GFOFAIL, MASTGOAL, SWBP, WORKMAST, ADAPTIVITY, COMPETE); and Model 4 includes attitudes toward school (PERFEED, TEACHINT, BELONG). 2. Obtain results from log-score stacking weights, pseudo-BMA weights, and pseudo-BMA+ weights. 3. Obtain posterior predictive distributions using the R software program rstanarm (Goodrich et al. 2020). 4. Obtain KLD measures comparing the predicted distribution of reading scores to the observed distribution. All code and data for this example are available on the authors website (http://bmer.wceruw.org/index.html). Table 5 presents the results for Bayesian stacking. We find that Model 2, which includes predictors-related attitudes and behaviors directed toward reading, has the highest weight regardless of how the weights were calculated. We find that pseudo-BMA and pseudo-BMA+ places almost all of the weight on Model 2 whereas the stacking weights based on the log predictive score are somewhat more spread out, with model 3 having the next highest weight. We also find that the Model 2 has the lowest LOOIC value.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 49,
+                    "end": 56,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 910,
+                    "end": 917,
+                    "text": "Table 5",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "An Example of Bayesian Stacking"
+        },
+        {
+            "text": "The bottom row of Table 5 presents the KLD measures obtained from comparing the distribution of predicted reading scores to the observed reading scores for each method of obtaining weights. Here we find the that lowest KLD value obtained under the log-score stacking weights. Overall, we find that stacking using loo weights provides overall the best predictive performance. It may be interesting to note that the KLD values for the BMA results in Table 4 are uniformly lower compared to the KLD values in Table 5 although it needs to be reiterated that BMA assumes an M-closed framework. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 18,
+                    "end": 25,
+                    "text": "Table 5",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 448,
+                    "end": 455,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 506,
+                    "end": 513,
+                    "text": "Table 5",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Bayesian Stacking Results"
+        },
+        {
+            "text": "Although the orientation of this paper was focused on Bayesian methods for quantifying model uncertainty, it should be pointed out that issues of model uncertainty and model averaging have been addressed within the frequentist domain. The topic of frequentist model averaging (FMA) has been covered extensively in Hjort and Claeskens (2003) , Claeskens and Hjort (2008) and Fletcher (2018) . Our focus on Bayesian model averaging is based on some important advantages over FMA. As noted by Steel (2020) , (a) BMA is optimal (under M-closed) in terms of prediction as measured by the log predictive density score; (b) BMA is easier to implement in situations where the model space is large due to very fast algorithms such as MC 3 ; (c) BMA naturally leads to substantively valuable interpretations of posterior model probabilities and posterior inclusion probabilities; and (d) in the majority of content domains wherein model averaging is required, BMA is more frequently used than FMA.",
+            "cite_spans": [
+                {
+                    "start": 314,
+                    "end": 340,
+                    "text": "Hjort and Claeskens (2003)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 343,
+                    "end": 369,
+                    "text": "Claeskens and Hjort (2008)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 374,
+                    "end": 389,
+                    "text": "Fletcher (2018)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 490,
+                    "end": 502,
+                    "text": "Steel (2020)",
+                    "ref_id": "BIBREF79"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "As the history of model uncertainty quantification illustrates, the problem has received considerable attention in statistical theory and practice-particularly in the fields of economics and weather forecasting. However, relatively less attention has been paid to the problem of model uncertainty in psychometrics. Given the pervasive nature of model uncertainty and the consequence of ignoring the problem with respect to predictive accuracy, certain challenges and opportunities for research present themselves. The first challenge relates to shifting our research orientation away from developing models for explanation and toward developing models for prediction. Of course, these orientations are not mutually exclusive, but we argue that prediction should take precedent to explanation simply due to the fact that it is hard to warrant explanations of psychological phenomena derived from a psychometric model if the model has difficulty predicting what has actually occurred (see Dawid 1982) . Posterior predictive checking (Gelman et al. 1996) in the context of model selection or model averaging should become standard practice across the social and behavioral sciences. The second challenge derives from listing those uniquely psychometric methods, such as item response theory and factor analysis, and then identifying the elements of model uncertainty that might arise when such methods are applied to real problems. For example, an interesting practical question that might arise concerns the extent of model uncertainty in the estimation of plausible values developed for large-scale assessments such as NAEP and PISA (Mislevy 1991; Mislevy et al. 1992) . The estimation of plausible values is essentially a missing data problem, and although Kaplan and Yavuz (2019) showed how BMA could be incorporated into the multiple imputation setting, they did not extend their method to the full machinery of plausible value methodology. Indeed, the problem of model uncertainty as it pertains to the estimation of latent variables generally, either through IRT or factor analysis, would be very interesting to explore and obviously quite relevant to psychometric theory and practice. Promising research on this topic has begun with Rights et al. (2018) , but much more work remains.",
+            "cite_spans": [
+                {
+                    "start": 987,
+                    "end": 998,
+                    "text": "Dawid 1982)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1031,
+                    "end": 1051,
+                    "text": "(Gelman et al. 1996)",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1632,
+                    "end": 1646,
+                    "text": "(Mislevy 1991;",
+                    "ref_id": "BIBREF62"
+                },
+                {
+                    "start": 1647,
+                    "end": 1667,
+                    "text": "Mislevy et al. 1992)",
+                    "ref_id": "BIBREF63"
+                },
+                {
+                    "start": 1757,
+                    "end": 1780,
+                    "text": "Kaplan and Yavuz (2019)",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 2238,
+                    "end": 2258,
+                    "text": "Rights et al. (2018)",
+                    "ref_id": "BIBREF76"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "In conclusion, this review highlighted the ubiquitous problem of model uncertainty and the availability of Bayesian methods to address this problem. Given that model uncertainty raises the risk of \"...over-confident inferences and decisions that are more risky than one thinks they are\" (Hoeting et al. 1999, pg. 382) , future research should continue to be directed to the problem of model uncertainty in the social and behavioral sciences.",
+            "cite_spans": [
+                {
+                    "start": 287,
+                    "end": 317,
+                    "text": "(Hoeting et al. 1999, pg. 382)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Information theory and an extension of the maximum likelihood principle",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Akaike",
+                    "suffix": ""
+                }
+            ],
+            "year": 1973,
+            "venue": "Second international symposium on information theory",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Statistical decision theory and Bayesian analysis",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Berger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Bayesian theory",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Bernardo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "F M"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Stacked regressions",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Breiman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Machine Learning",
+            "volume": "24",
+            "issn": "",
+            "pages": "49--64",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Verification of forecasts expressed in terms of probability",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Brier",
+                    "suffix": ""
+                }
+            ],
+            "year": 1950,
+            "venue": "Monthly Weather Review",
+            "volume": "78",
+            "issn": "",
+            "pages": "1--3",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Model selection and multimodel inference: A practical information-theoretic approach",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Burnham",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Model selection and model averaging",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Claeskens",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hjort",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Predictive statistics: Analysis and inference beyond models",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Clarke",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Clarke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Bayesian model averaging and model search strategies",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clyde",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Bayesian statistics",
+            "volume": "6",
+            "issn": "",
+            "pages": "157--185",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Model averaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clyde",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Subjective and objective Bayesian statistics: Principles, models, and applications",
+            "volume": "",
+            "issn": "",
+            "pages": "320--335",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "BAS: Bayesian adaptive sampling for bayesian model averaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clyde",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Model uncertainty",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clyde",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "George",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Statistical Science",
+            "volume": "19",
+            "issn": "",
+            "pages": "81--94",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Bayesian model averaging in the M-open framework. Bayesian theory and applications",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clyde",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Iversen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "483--498",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The well-calibrated Bayesian",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Dawid",
+                    "suffix": ""
+                }
+            ],
+            "year": 1982,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "77",
+            "issn": "",
+            "pages": "605--610",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Statistical theory: The prequential approach",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Dawid",
+                    "suffix": ""
+                }
+            ],
+            "year": 1984,
+            "venue": "Journal of the Royal Statistical Society, Series A",
+            "volume": "147",
+            "issn": "",
+            "pages": "202--278",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Does it make sense to speak of good probability appraisers",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "De Finetti",
+                    "suffix": ""
+                }
+            ],
+            "year": 1962,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "357--364",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Assessment and propagation of model uncertainty (with discussion)",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Draper",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Journal of the Royal Statistical Society (Series B)",
+            "volume": "57",
+            "issn": "",
+            "pages": "55--98",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Bayesian model specification: Heuristics and examples. Bayesian theory and applications",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Draper",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "483--498",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "A Research Agenda for Assessment and Propagation of Model Uncertainty",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Draper",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hodges",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Leamer",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Morris",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Rubin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Default priors and predictive performance in Bayesian model averaging, with application to growth determinants",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Eicher",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Papageorgiou",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of Applied Econometrics",
+            "volume": "26",
+            "issn": "1",
+            "pages": "30--55",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Benchmark priors revisited: on adaptive shrinkage and the supermodel effect in Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Feldkircher",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zeugner",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Benchmark priors for Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fern\u00e1ndez",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ley",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "F J"
+                    ],
+                    "last": "Steel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Journal of Econometrics",
+            "volume": "100",
+            "issn": "",
+            "pages": "381--427",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Model uncertainty in cross-country growth regressions",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Fern\u00e1ndez",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ley",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "F J"
+                    ],
+                    "last": "Steel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Journal of Applied Econometrics",
+            "volume": "16",
+            "issn": "",
+            "pages": "563--576",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Model averaging",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fletcher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "The risk inflation criterion for multiple regression",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Foster",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "George",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Annals of Statistics",
+            "volume": "22",
+            "issn": "",
+            "pages": "1947--1975",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Regressions by leaps and bounds",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Furnival",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Wilson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1974,
+            "venue": "Technometrics",
+            "volume": "16",
+            "issn": "",
+            "pages": "499--511",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Model determination using sampling-based methods",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Gelfand",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "145--161",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Posterior predictive assessment of model fitness via realized discrepancies: With commentary",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gelman",
+                    "suffix": ""
+                },
+                {
+                    "first": "X.-L",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Stern",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Statistical Science",
+            "volume": "6",
+            "issn": "",
+            "pages": "733--807",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Calibration and empirical Bayes variable selection",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "George",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Foster",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Biometrika",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/biomet/87.4.731"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Markov Chain Monte Carlo in practice",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Gilks",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Richardson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Spiegelhalter",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Strictly proper scoring rules, prediction, and estimation",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gneiting",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "102",
+            "issn": "",
+            "pages": "359--378",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "rstanarm: Bayesian applied regression modeling via Stan",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Good",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Goodrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gabry",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Ali",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Brilleman",
+                    "suffix": ""
+                }
+            ],
+            "year": 1952,
+            "venue": "Journal of the Royal Statistical Society Series B (Methodological)",
+            "volume": "14",
+            "issn": "",
+            "pages": "107--114",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "The determination of the order of an autoregression",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hannan",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Quinn",
+                    "suffix": ""
+                }
+            ],
+            "year": 1979,
+            "venue": "Journal of the Royal Statistical Society Series B (Methodological)",
+            "volume": "41",
+            "issn": "2",
+            "pages": "190--195",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Model selection and the principle of minimum description length",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Hansen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "96",
+            "issn": "",
+            "pages": "746--774",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Hard evidence on soft skills",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Heckman",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kautz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Labour Economics",
+            "volume": "19",
+            "issn": "",
+            "pages": "451--464",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "A conceptual introduction to Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hinne",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gronau",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Van Den Bergh",
+                    "suffix": ""
+                },
+                {
+                    "first": "E.-J",
+                    "middle": [],
+                    "last": "Wagenmakers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Advances in Methods and Practices in Psychological Science",
+            "volume": "3",
+            "issn": "",
+            "pages": "200--215",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Frequentist model average estimators",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Hjort",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Claeskens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "98",
+            "issn": "",
+            "pages": "879--899",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Ridge regression: Biased estimation for nonorthogonal problems",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hoerl",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Kennard",
+                    "suffix": ""
+                }
+            ],
+            "year": 1970,
+            "venue": "Technometrics",
+            "volume": "12",
+            "issn": "1",
+            "pages": "55--67",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Ridge analysis 25 years later",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hoerl",
+                    "suffix": ""
+                }
+            ],
+            "year": 1985,
+            "venue": "The American Statistician",
+            "volume": "39",
+            "issn": "3",
+            "pages": "186--192",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Bayesian model averaging: A tutorial",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hoeting",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Madigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Volinsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Statistical Science",
+            "volume": "14",
+            "issn": "",
+            "pages": "382--417",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "A Bayesian View on Ridge Regression",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hsiang",
+                    "suffix": ""
+                }
+            ],
+            "year": 1975,
+            "venue": "Journal of the Royal Statistical Society, D (The Statistician)",
+            "volume": "24",
+            "issn": "",
+            "pages": "267--268",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Scoring rules, generalized entropy, and utility maximization",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "R R"
+                    ],
+                    "last": "Jose",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Nau",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Winkler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Operations Research",
+            "volume": "56",
+            "issn": "",
+            "pages": "1146--1157",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Bayesian model averaging for propensity score analysis",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Multivariate Behavioral Research",
+            "volume": "49",
+            "issn": "",
+            "pages": "505--517",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Bayesian probabilistic forecasting with state NAEP data",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Assessing contexts of learning world-wide-extended context assessment frameworks",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kuger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Bayesian model averaging over directed acyclic graphs with implications for the predictive performance of structural equation models",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Structural Equation Modeling",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/10705511.2015.1092088"
+                ]
+            }
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "An approach to addressing multiple imputation model uncertainty using Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yavuz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Multivariate Behavioral Research",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/00273171.2019.1657790"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Bayes factors",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Kass",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "90",
+            "issn": "",
+            "pages": "773--795",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Assessing contexts of learning: An international perspective",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kuger",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Klieme",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Jude",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Information theory and statistics",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kullback",
+                    "suffix": ""
+                }
+            ],
+            "year": 1959,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "The Kullback-Leibler distance",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kullback",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "The American Statistician",
+            "volume": "41",
+            "issn": "",
+            "pages": "340--341",
+            "other_ids": {}
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "On information and sufficiency",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kullback",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Leibler",
+                    "suffix": ""
+                }
+            ],
+            "year": 1951,
+            "venue": "Annals of Mathematical Statistics",
+            "volume": "22",
+            "issn": "",
+            "pages": "79--86",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "A Bayes interpretation of stacking for M-complete and M-open settings",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Le",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Clarke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Bayesian Analysis",
+            "volume": "12",
+            "issn": "",
+            "pages": "807--829",
+            "other_ids": {}
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "Specification searches: Ad hoc inference with nonexperimental data",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Leamer",
+                    "suffix": ""
+                }
+            ],
+            "year": 1978,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "On the effect of prior assumptions in bayesian model averaging with applications to growth regression",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ley",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "F J"
+                    ],
+                    "last": "Steel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Journal of Applied Econometrics",
+            "volume": "24",
+            "issn": "",
+            "pages": "651--674",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "The Bayesian elastic net",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Bayesian Analysis",
+            "volume": "5",
+            "issn": "",
+            "pages": "151--170",
+            "other_ids": {
+                "DOI": [
+                    "10.1214/10-BA506"
+                ]
+            }
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "Mixtures of g-priors for Bayesian variable selection",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Paulo",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Molina",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Clyde",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Berger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "103",
+            "issn": "",
+            "pages": "410--423",
+            "other_ids": {}
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "Making Decisions",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lindley",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF59": {
+            "ref_id": "b59",
+            "title": "Model selection and accounting for model uncertainly in graphical models using Occam's window",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Madigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "89",
+            "issn": "",
+            "pages": "1535--1546",
+            "other_ids": {}
+        },
+        "BIBREF60": {
+            "ref_id": "b60",
+            "title": "Bayesian graphical models for discrete data",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Madigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "York",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "International Statistical Review",
+            "volume": "63",
+            "issn": "",
+            "pages": "215--232",
+            "other_ids": {}
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "Choosing a strictly proper scoring rule",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Merkle",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Steyvers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Decision Analysis",
+            "volume": "10",
+            "issn": "",
+            "pages": "292--304",
+            "other_ids": {}
+        },
+        "BIBREF62": {
+            "ref_id": "b62",
+            "title": "Randomization-based inference about latent variables from complex samples",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Mislevy",
+                    "suffix": ""
+                }
+            ],
+            "year": 1991,
+            "venue": "Psychometrika",
+            "volume": "56",
+            "issn": "",
+            "pages": "177--196",
+            "other_ids": {}
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "Estimating population characteristics from sparse matrix samples of item responses",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Mislevy",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Beaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kaplan",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Sheehan",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Journal of Educational Measurement",
+            "volume": "29",
+            "issn": "",
+            "pages": "133--161",
+            "other_ids": {}
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "Bayesian model averaging: Theoretical developments and practical applications",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Montgomery",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Nyhan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Political Analysis",
+            "volume": "18",
+            "issn": "",
+            "pages": "245--270",
+            "other_ids": {}
+        },
+        "BIBREF65": {
+            "ref_id": "b65",
+            "title": "Pisa 2009 assessment framework-key competencies in reading, mathematics and science. Paris: Organization for Economic Cooperation and Development",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Oecd",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF67": {
+            "ref_id": "b67",
+            "title": "Equity in Education: Breaking Down Barriers to Social Mobility",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Oecd",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1787/9789264073234-en"
+                ]
+            }
+        },
+        "BIBREF68": {
+            "ref_id": "b68",
+            "title": "The Bayesian lasso",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Casella",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "103",
+            "issn": "",
+            "pages": "681--686",
+            "other_ids": {}
+        },
+        "BIBREF69": {
+            "ref_id": "b69",
+            "title": "Comparison of Bayesian prediction methods for model selection",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Piironen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vehtari",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Statistics and Computing",
+            "volume": "27",
+            "issn": "",
+            "pages": "711--735",
+            "other_ids": {}
+        },
+        "BIBREF70": {
+            "ref_id": "b70",
+            "title": "Bayesian model selection in social research (with discussion)",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Sociological Methodology",
+            "volume": "25",
+            "issn": "",
+            "pages": "111--196",
+            "other_ids": {}
+        },
+        "BIBREF71": {
+            "ref_id": "b71",
+            "title": "Approximate Bayes factors and accounting for model uncertainty in generalized linear models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Biometrika",
+            "volume": "83",
+            "issn": "",
+            "pages": "251--266",
+            "other_ids": {}
+        },
+        "BIBREF72": {
+            "ref_id": "b72",
+            "title": "Using Bayesian model averaging to calibrate forecast ensembles",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gneiting",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Balabdaoui",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Polakowski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Monthly Weather Review",
+            "volume": "133",
+            "issn": "",
+            "pages": "1155--1174",
+            "other_ids": {}
+        },
+        "BIBREF73": {
+            "ref_id": "b73",
+            "title": "BMA: Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hoeting",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Volinsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Painter",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF74": {
+            "ref_id": "b74",
+            "title": "Bayesian model averaging for linear regression models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Madigan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hoeting",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "92",
+            "issn": "",
+            "pages": "179--191",
+            "other_ids": {}
+        },
+        "BIBREF75": {
+            "ref_id": "b75",
+            "title": "Discussion: Performance of Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "98",
+            "issn": "",
+            "pages": "931--938",
+            "other_ids": {}
+        },
+        "BIBREF76": {
+            "ref_id": "b76",
+            "title": "Addressing model uncertainty in item response theory person scores through model averaging",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rights",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sterba",
+                    "suffix": ""
+                },
+                {
+                    "first": "S.-J",
+                    "middle": [],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Preacher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Behaviormetrika",
+            "volume": "45",
+            "issn": "",
+            "pages": "495--503",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s41237-018-0052-1"
+                ]
+            }
+        },
+        "BIBREF77": {
+            "ref_id": "b77",
+            "title": "The Bayesian bootstrap",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Rubin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1981,
+            "venue": "The Annals of Statistics",
+            "volume": "9",
+            "issn": "",
+            "pages": "130--134",
+            "other_ids": {}
+        },
+        "BIBREF78": {
+            "ref_id": "b78",
+            "title": "Probabilistic wind vector forecasting using ensembles and Bayesian model averaging",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Sloughter",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gneiting",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Monthly Weather Review",
+            "volume": "141",
+            "issn": "",
+            "pages": "2107--2119",
+            "other_ids": {}
+        },
+        "BIBREF79": {
+            "ref_id": "b79",
+            "title": "Model averaging and its use in economics",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "F J"
+                    ],
+                    "last": "Steel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Economic Literature",
+            "volume": "58",
+            "issn": "",
+            "pages": "644--719",
+            "other_ids": {}
+        },
+        "BIBREF80": {
+            "ref_id": "b80",
+            "title": "Regression shrinkage and selection via the lasso",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tibshirani",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Journal of the Royal Statistical Society Series B (Methodological)",
+            "volume": "58",
+            "issn": "",
+            "pages": "267--288",
+            "other_ids": {}
+        },
+        "BIBREF81": {
+            "ref_id": "b81",
+            "title": "Accurate approximations for posterior moments and marginal densities",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tierney",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Kadane",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "81",
+            "issn": "",
+            "pages": "82--86",
+            "other_ids": {}
+        },
+        "BIBREF82": {
+            "ref_id": "b82",
+            "title": "loo: Efficient leave-one-out cross-validation and WAIC for Bayesian models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vehtari",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gabry",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gelman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF83": {
+            "ref_id": "b83",
+            "title": "Practical Bayesian model evaluation using leave-one-out cross-validation and WAIC",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vehtari",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gelman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gabry",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Statistics and Computing",
+            "volume": "27",
+            "issn": "",
+            "pages": "1413--1432",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11222-016-9696-4"
+                ]
+            }
+        },
+        "BIBREF84": {
+            "ref_id": "b84",
+            "title": "A survey of Bayesian predictive methods for model assessment, selection and comparison",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vehtari",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ojanen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Statistics Surveys",
+            "volume": "6",
+            "issn": "",
+            "pages": "142--228",
+            "other_ids": {
+                "DOI": [
+                    "10.1214/12-SS102"
+                ]
+            }
+        },
+        "BIBREF85": {
+            "ref_id": "b85",
+            "title": "Asymptotic equivalence of Bayes cross validation and widely applicable information criterion in singular learning theory",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Watanabe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of Machine Learning Research",
+            "volume": "11",
+            "issn": "",
+            "pages": "3571--3594",
+            "other_ids": {}
+        },
+        "BIBREF86": {
+            "ref_id": "b86",
+            "title": "Scoring rules and the evaluation of probabilities",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Winkler",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Test",
+            "volume": "5",
+            "issn": "",
+            "pages": "1--60",
+            "other_ids": {}
+        },
+        "BIBREF87": {
+            "ref_id": "b87",
+            "title": "Stacked generalization",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wolpert",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Neural Networks",
+            "volume": "5",
+            "issn": "",
+            "pages": "241--259",
+            "other_ids": {}
+        },
+        "BIBREF88": {
+            "ref_id": "b88",
+            "title": "Using stacking to average Bayesian predictive distributions (with discussion)",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yao",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vehtari",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Simpson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gelman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bayesian Analysis",
+            "volume": "13",
+            "issn": "",
+            "pages": "917--1007",
+            "other_ids": {
+                "DOI": [
+                    "10.1214/17-BA1091"
+                ]
+            }
+        },
+        "BIBREF89": {
+            "ref_id": "b89",
+            "title": "Bayesian model averaging: Development of an improved multi-class, gene selection, and classification tool for microarray data",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Bumbarner",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Raftery",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Bioinformatics",
+            "volume": "21",
+            "issn": "",
+            "pages": "2394--2402",
+            "other_ids": {}
+        },
+        "BIBREF90": {
+            "ref_id": "b90",
+            "title": "On assessing prior distributions and Bayesian regression analysis with g prior distributions",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zellner",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "Studies in Bayesian Econometrics",
+            "volume": "",
+            "issn": "",
+            "pages": "233--243",
+            "other_ids": {}
+        },
+        "BIBREF91": {
+            "ref_id": "b91",
+            "title": "Bayesian model averaging employing fixed and flexible priors: The BMS package for R",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zeugner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Feldkircher",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Journal of Statistical Software",
+            "volume": "68",
+            "issn": "4",
+            "pages": "1--37",
+            "other_ids": {
+                "DOI": [
+                    "10.18637/jss.v068.i04"
+                ]
+            }
+        },
+        "BIBREF92": {
+            "ref_id": "b92",
+            "title": "Regularization and variable selection via the elastic net",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zou",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hastie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Manuscript Received: 11 OCT 2020 Final Version Received",
+            "volume": "67",
+            "issn": "",
+            "pages": "301--320",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.1467-9868.2005.00503.x"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "are based on a sample size of 2500 respondents due to a sample size limitation in the BMS software.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "PISA 2018 predictors of reading literacy.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Summary of birth/death algorithm and top posterior model probabilities.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Log-score stacking, PseudoBMA, and PseudoBMA+ weights along with LOOIC and Kullback-Leibler divergence.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The author would like to thank Mingya Huang for valuable contributions to the empirical examples in this paper, and to Betrand Clarke, David Draper, Jonah Gabry, Aki Vehtari, and Yuling Yao for valuable discussions on the problem of model uncertainty. Any errors of commission or omission in this paper are solely the responsibility of the author.Publisher's Note Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

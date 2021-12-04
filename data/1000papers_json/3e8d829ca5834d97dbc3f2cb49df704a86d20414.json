@@ -1,0 +1,4565 @@
+{
+    "paper_id": "3e8d829ca5834d97dbc3f2cb49df704a86d20414",
+    "metadata": {
+        "title": "AC2: An Efficient Protein Sequence Compression Tool Using Artificial Neural Networks and Cache-Hash Models",
+        "authors": [
+            {
+                "first": "Milton",
+                "middle": [],
+                "last": "Silva",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Aveiro",
+                    "location": {
+                        "postCode": "3810-193",
+                        "settlement": "Aveiro",
+                        "country": "Portugal"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Diogo",
+                "middle": [],
+                "last": "Pratas",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Aveiro",
+                    "location": {
+                        "postCode": "3810-193",
+                        "settlement": "Aveiro",
+                        "country": "Portugal"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Armando",
+                "middle": [
+                    "J"
+                ],
+                "last": "Pinho",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Aveiro",
+                    "location": {
+                        "postCode": "3810-193",
+                        "settlement": "Aveiro",
+                        "country": "Portugal"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jerry",
+                "middle": [
+                    "D"
+                ],
+                "last": "Gibson",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Khalid",
+                "middle": [],
+                "last": "Sayood",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "One of the most demanding challenges in data compression is related to the lossless compression of protein (or amino acid) sequences. These sequences' origins follow the gene expression process, from DNA to RNA, to make a functional product: a protein.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The first phase is transcription, where the information in every cell's DNA, possibly noncontiguous, is converted into small, portable RNA messages. Symbolically, only the T symbol is transcripted in U from the 4-symbol DNA alphabet (A, C, G, T). The second phase is the translation, where each triplet of RNA is encoded into one of the twenty possible amino acids. Here, it is essential to remember that a different triplet can create the same amino acid and, hence, it is a lossy encoding process. Finally, a specific chain or set of chains of amino acids establishes a protein.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Although proteins have a three-dimensional (3D) structure that reshapes over time, they are usually represented in FASTA files as a (static) 1D string of characters. Therefore, structural correlations between similar parts need to be modeled to extend compression gains. These involve the beta-pleated sheets, alfa-helix, side-chain interactions, and possible combinations of multiple amino acid chains [1] . Recent developments in protein folding have shown that high structural prediction can be achieved from the DNA source [2].",
+            "cite_spans": [
+                {
+                    "start": 403,
+                    "end": 406,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, for coding applications, time constraints and the use of side information provides additional challenges. In addition, extra challenges are presented when modeling protein sequences without information of the DNA sequence (which is the case in this article) and, hence, relying on the product of a process that may contain errors and imprecision at several phases. Therefore, data compressors need to consider protein sequences containing extra symbols to represent ambiguity, error, indecision, or incompleteness [3] .",
+            "cite_spans": [
+                {
+                    "start": 523,
+                    "end": 526,
+                    "text": "[3]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The main purpose of data compression is to reduce storage and increase transmission efficiency, specifically requiring high speed and efficient data compressors [4] . A growing application for data compression is data analysis, for example in Bioinformatics [5] . In this case, the main focus is on the maximum compression ratio, although the improvement in data compressors' speed is valuable, particularly for large-scale data analysis [6] . As an analysis tool in the genomics and proteomics fields, data compression has been used in many applications [7] , for example, to estimate the Kolmogorov complexity of sequences [8, 9] , classification [10, 11] , phylogenomic and phylogenetic analysis [12, 13] , information retrieval [14] , variation and rearrangement detection [15, 16] , structural analysis [17, 18] , pan-genome analysis [19] , metagenomics [20] , detection of DNA-binding proteins [21] , and domain composition studies [22, 23] .",
+            "cite_spans": [
+                {
+                    "start": 161,
+                    "end": 164,
+                    "text": "[4]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 258,
+                    "end": 261,
+                    "text": "[5]",
+                    "ref_id": null
+                },
+                {
+                    "start": 438,
+                    "end": 441,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 555,
+                    "end": 558,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 625,
+                    "end": 628,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 629,
+                    "end": 631,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 649,
+                    "end": 653,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 654,
+                    "end": 657,
+                    "text": "11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 699,
+                    "end": 703,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 704,
+                    "end": 707,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 732,
+                    "end": 736,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 777,
+                    "end": 781,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 782,
+                    "end": 785,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 808,
+                    "end": 812,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 813,
+                    "end": 816,
+                    "text": "18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 839,
+                    "end": 843,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 859,
+                    "end": 863,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 900,
+                    "end": 904,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 938,
+                    "end": 942,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 943,
+                    "end": 946,
+                    "text": "23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the literature, the use of specialized protein sequence compressors is low compared with that of DNA sequence compressors, mainly because specialized programs, similar to those that model the inverted repeats in DNA, are much harder to design, given the substantial higher uncertainty and lower specific sequence patterns [24] . Therefore, high ratio general-purpose data compressors are very close to the specialized category.",
+            "cite_spans": [
+                {
+                    "start": 325,
+                    "end": 329,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In the specialized category, the ProtComp [25] exploits approximate repeats and uses a hybrid method combining a substitution approach using Huffman coding and a first-order Markov model with arithmetic coding. ProtCompSecS [26] , adds to ProtComp a dictionarybased method to encode the secondary information related to proteins. The algorithm presented in [27] uses the Burrows-Wheeler transform and the sorted common prefix combined with substitutions to exploit sequence long-range correlation.",
+            "cite_spans": [
+                {
+                    "start": 42,
+                    "end": 46,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 224,
+                    "end": 228,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 357,
+                    "end": 361,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In 2007, Benedetto et al. show that models that consider short and medium size correlation were more likely to achieve higher compression rates [28] . This characteristic was applied in XM through the combination of expert models with short and medium size, namely repeat and context models [29] . A fusion of dictionary and sequence alignment methods for the compression of protein databases was proposed in CaBLASTP [30] . This algorithm searches for solid sequence alignments, and when one exists, it stores an index instead of the sequence. In [22] , a heuristic approach was proposed to transform a hypergraph representing the proteome into a minimum spanning hypertree. In 2017, CAD [31] was proposed, relying on an adaptive dictionary with Huffman coding.",
+            "cite_spans": [
+                {
+                    "start": 9,
+                    "end": 25,
+                    "text": "Benedetto et al.",
+                    "ref_id": null
+                },
+                {
+                    "start": 144,
+                    "end": 148,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 291,
+                    "end": 295,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 418,
+                    "end": 422,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 548,
+                    "end": 552,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 689,
+                    "end": 693,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "More recently, the challenge of protein sequence compression has been revisited, namely with the proposal of AC, NAF, and CoMSA. Specifically, the AC tool [9, 32] uses an ensemble of Markov models (finite context and substitution tolerant context models) with adaptive weights per model and arithmetic encoder. The NAF tool [33] uses a 4-bit encoding followed by its compression with general-purpose compressor zstd (https://github.com/facebook/zstd, accessed on 23 April 2021). The challenge of data compression in aligned data gain momentum with CoMSA [34] , a compression tool using the generalization of the positional Burrows-Wheeler transform for non-binary alphabets. In the natural sequence domain, interesting approaches using prediction-based compression through the decoupling of the context model from the frequency model have been proposed [35] .",
+            "cite_spans": [
+                {
+                    "start": 155,
+                    "end": 158,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 159,
+                    "end": 162,
+                    "text": "32]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 324,
+                    "end": 328,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 554,
+                    "end": 558,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 853,
+                    "end": 857,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this article, we describe AC2, an evolution of the AC compressor. Contrarily to AC, AC2 uses a neural network to mix the experts and memory caches for the models with high context orders. Specifically, AC2 takes a meta-learning approach to the mixture of experts [36] . We use a neural network with input of the probabilities of each amino acid given by each Markov model. As additional inputs, we derive other features to improve the accuracy of the network. As outputs, the network uses one node per amino acid.",
+            "cite_spans": [
+                {
+                    "start": 266,
+                    "end": 270,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Each output node gives the final probability for the corresponding amino acid. We use a small multilayer perceptron for the neural network, which is trained online for each new symbol in the sequence. Moreover, to reduce the model's memory, specifically in the compression of protein sequence collections, we develop cache-hashes for the highest-order context models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The main contributions of this paper can be summarized by the following points: The next sections of this article present the implementation details of AC2, the comprehensive benchmark results, including several protein sequences with different characteristics, and state-of-the-art compressors. Additionally, we provide compression-based analysis examples employing the AC2 compressor.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This section presents the details of the AC2 compressor methodology. AC2 uses identical models as AC, namely a combination of context models and substitution tolerant context models of several order depths. The usage of substitution tolerant models in biological sequences is crucial because they provide a solid improvement factor over highratio general-purpose data compressors and, hence, are models that can be considered of specific biological nature [37, 38] .",
+            "cite_spans": [
+                {
+                    "start": 456,
+                    "end": 460,
+                    "text": "[37,",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 461,
+                    "end": 464,
+                    "text": "38]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "The most significant developments of AC2 are a neural network to augment the expert mixing and an individual memory cache-hash for the models with the highest context orders. These implementations allow AC2 to improve the compression ratio while reducing the memory usage substantially. In the following subsections, we provide details on the neural network, cache-hash and counter precision, and parameters used.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "In this subsection, we review the literature related to selecting suitable artificial neural networks for sequence prediction, namely, to incorporate an appropriate network into the proposed data compressor. The computational resources required and the feasibility of the network integration in the data compressor are essential because we are concerned with the network accuracy and efficiency.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Selecting a Neural Network Type"
+        },
+        {
+            "text": "Although we searched explicitly for literature that compared different architecture networks in protein sequence compression, we were unable to find a single work. Nevertheless, we found an analogous work, specifically, DNA sequence compression [39] . This analogous work describes a compressor based on neural networks and compares two types of recurrent neural networks (RNNs) and a multilayer perceptron (MLP). Overall, the RNNs provide the best compression rate, although there is a dependency on the dataset. Moreover, this method uses a top-of-the-line GPU, consuming several hours to compress sequences with 10MB length. Because performing a compression-based analysis in an extensive protein sequence dataset (with gigabyte length) is one of the applications of our work, speed is critical; therefore, this limits the usage of this methodology. We also found benchmarks of neural networks to time series prediction problems; these seem to fit with the stochastic nature of the issue we are analyzing [40] .",
+            "cite_spans": [
+                {
+                    "start": 245,
+                    "end": 249,
+                    "text": "[39]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1008,
+                    "end": 1012,
+                    "text": "[40]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Selecting a Neural Network Type"
+        },
+        {
+            "text": "In terms of computational resources, we intuitively deduce that the multilayer perceptron (MLP) would have the best performance because of its elementary nature; this is supported by [41] , where we can notice that even with large networks, the MLP is the fastest network by approximately 50%, and the convolutional is the second fastest, followed by the recurrent networks.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 187,
+                    "text": "[41]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Selecting a Neural Network Type"
+        },
+        {
+            "text": "In terms of accuracy, the performance appears to be very dependent on the dataset. In [42] , a multilayer perceptron (MLP), a convolutional neural network (CNN), a recurrent neural network (RNN), and a long short term memory (LSTM) are used to predict the values of the stock market. The results favor the CNN followed by the MLP, with the LSTM and the RNN trailing behind. In diverse datasets, the MLP is superior to the CNN. In [41] , an MLP, a CNN, and an LSTM are compared using several datasets. Overall, the CNN performs best, followed by the LSTM and then the MLP. As in the previous comparison, there is no single network that achieves the best result in all datasets. In [43] , the authors compare an LSTM to an MLP and conclude that the MLP has performance equal to or better than that of the LSTM. In [44] , several neural networks and datasets are compared; among these are various types of CNNs and an MLP. Two types of CNNs, the residual neural network (ResNet) [45] and the fully convolutional neural network (FCN) [46] , provide the best overall accuracy, with the MLP placing fourth out of the nine evaluated networks. In [47] , a hybrid network combining a CNN and an LSTM is used to predict power consumption, stock values, and gas concentrations. In some datasets, the CNN has better predictions than the LSTM. The proposed hybrid approach always presents better predictions in the three datasets. In [48] , two neuro-fuzzy networks are compared with an MLP to model the reference evapotranspiration. The neuro-fuzzy networks displayed higher accuracy than the MLP. Finally, in [49] , we see a comparison of a neuro-like structure with a sequential geometric transformations model (SGTM) [50] and an MLP. The SGTM has better accuracy and spends less time during the training phase.",
+            "cite_spans": [
+                {
+                    "start": 86,
+                    "end": 90,
+                    "text": "[42]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 430,
+                    "end": 434,
+                    "text": "[41]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 680,
+                    "end": 684,
+                    "text": "[43]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 812,
+                    "end": 816,
+                    "text": "[44]",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 976,
+                    "end": 980,
+                    "text": "[45]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 1030,
+                    "end": 1034,
+                    "text": "[46]",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1139,
+                    "end": 1143,
+                    "text": "[47]",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 1421,
+                    "end": 1425,
+                    "text": "[48]",
+                    "ref_id": "BIBREF47"
+                },
+                {
+                    "start": 1598,
+                    "end": 1602,
+                    "text": "[49]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 1708,
+                    "end": 1712,
+                    "text": "[50]",
+                    "ref_id": "BIBREF49"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Selecting a Neural Network Type"
+        },
+        {
+            "text": "No network appears to be the best in all datasets, as anticipated by the results of the no free lunch theorem [51] .",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 114,
+                    "text": "[51]",
+                    "ref_id": "BIBREF50"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Selecting a Neural Network Type"
+        },
+        {
+            "text": "Based on the above literature review, we elected to use the MLP, which confers accurate and efficient predictions [42] . Specifically, this network is one of the most resource-efficient neural networks in execution time and memory usage. Furthermore, it has demonstrated high performance in other tasks also using biological sequences [52] and is straightforward to implement and validate.",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 118,
+                    "text": "[42]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 335,
+                    "end": 339,
+                    "text": "[52]",
+                    "ref_id": "BIBREF51"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Neural Network Architecture"
+        },
+        {
+            "text": "Specifically, the network has a single hidden layer, where all nodes have the sigmoid activation function. The output layer uses the softmax activation, ensuring that all output nodes sum to one, and the loss function is the cross-entropy. The network has two bias nodes, one in the input layer and one in the hidden layer. The weights are set according to the Xavier initialization [53] . Figure 1 depicts a high-level overview of the mixer architecture, including its inputs. The inputs to the network consist of the outputs of the context models and substitution tolerant context models and the output of the mixing done in the AC compressor. Therefore, we do not substitute the mixing done in AC, but instead, we are augmenting it. In other words, the mixing performed in AC is considered as another model. We transform these probabilities by subtracting 1 n , where n is the number of unique symbols in the sequence. After the subtraction, we multiply the result by five in the case of a model and ten in the AC mixer output case. These types of transformations and their motivation are explained in [54] .",
+            "cite_spans": [
+                {
+                    "start": 383,
+                    "end": 387,
+                    "text": "[53]",
+                    "ref_id": "BIBREF52"
+                },
+                {
+                    "start": 1105,
+                    "end": 1109,
+                    "text": "[54]",
+                    "ref_id": "BIBREF53"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 390,
+                    "end": 398,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Neural Network Architecture"
+        },
+        {
+            "text": "Moreover, we use derived features with the mean symbol frequencies for the last 8, 16, and 64 symbols; these are also multiplied by five. Finally, we use an exponential moving average for all symbols, such that when a symbol occurs, the average for symbol i is updated according to",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural Network Inputs"
+        },
+        {
+            "text": "If symbol i does not occur, then the update rule is ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural Network Inputs"
+        },
+        {
+            "text": "For the outputs, we use one node per amino acid; each one has the probability for that symbol. These are the values that are passed to the arithmetic encoder. The network is trained online for each new symbol. The training vector is filled with zeroes except for the position corresponding to the symbol that occurred. This position has a value of one. The training algorithm is the stochastic gradient descent without momentum [55] .",
+            "cite_spans": [
+                {
+                    "start": 428,
+                    "end": 432,
+                    "text": "[55]",
+                    "ref_id": "BIBREF54"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Neural Network Outputs and Training"
+        },
+        {
+            "text": "We noticed that the neural network initialized with the random values had less accurate predictions at the beginning of the sequence. We improved the network, pretraining it by activating the same symbol in all models with a value of one. Moreover, the same symbol is used for training. Essentially, this forces the bias that if all models agree on the same symbol with absolute certainty, then the output is forced to be that symbol.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural Network Pre-Training and Selection Heuristic"
+        },
+        {
+            "text": "Additionally, we added a heuristic that selects between the AC mixer and the neural network output. The mixer used is the best performing one. This choice is determined by an exponential moving average of the number of estimated bits produced by the two mixers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Neural Network Pre-Training and Selection Heuristic"
+        },
+        {
+            "text": "One of the significant limitations of AC is the substantial increase of RAM provided with the combination of high-context orders and large sequence sizes. For example, when the sequences to compress are larger than, say, 200 MB and AC use context orders higher than 7, the RAM increases to values that regular laptops can not support. To resolve this issue, AC2 uses cache-hash memory models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cache-Hash and Counter Precision"
+        },
+        {
+            "text": "A cache-hash [56] enables storing in memory only the latest entries up to a certain number of hash collisions. This model enables the use of deep context orders with very sparse representations. If AC2 stored its entries in a table, this would require |A| k+1 entries, where |A| is the size of the protein sequence alphabet and k the context order of the model; this means that assuming counters of 8 bits for a k = 10 and an |A| of 20 would require 186 TB of RAM. For small sequences, a linear hash would be feasible, depending on the available RAM. However, for large sequences, this becomes unfeasible.",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 17,
+                    "text": "[56]",
+                    "ref_id": "BIBREF55"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Cache-Hash and Counter Precision"
+        },
+        {
+            "text": "Therefore, AC2 uses a cache-hash for each high context order model to remove space constraints. AC2 uses a parameter that represents the maximum number of collisions, enabling a constant maximum peak of RAM. Moreover, we reduced the size of the counters for the models. AC2 now uses two bits per symbol, unlike eight bits in AC. The practical outcomes are speed and RAM improvements, enabling the compression of extensive sequences, specifically large collections of protein sequences. The disadvantage is the slightly higher code complexity of AC2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cache-Hash and Counter Precision"
+        },
+        {
+            "text": "In addition to the AC parameters, AC2 includes parameters to control the learning rate, the number of nodes in the hidden layer, and the cache's size per model. AC2 also adds a more powerful compression level.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameters and Optimization"
+        },
+        {
+            "text": "All the internal and external parameters were determined empirically. These include the coefficients for the exponential moving averages, the window size for the moving averages, the input transformations, the learning rates, the hidden layer, and the number of models and their parameters. The internal parameters are fixed for all experiments, while the external parameters were adjusted for each sequence; the parameters used are available in the same repository as the source code.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameters and Optimization"
+        },
+        {
+            "text": "In this section, we evaluate the performance and accuracy of AC2 as a protein sequence compressor in two benchmarks, namely in reference-free and reference-based compression. AC2 is available for free download (GPv3 license) at https://github.com/cobilab/ac2, accessed on accessed on 23 April 2021.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "For benchmarking AC2 as a reference-free compressor, we used two datasets, namely \u2022 DS1: three protein databases used in [57] :",
+            "cite_spans": [
+                {
+                    "start": 121,
+                    "end": 125,
+                    "text": "[57]",
+                    "ref_id": "BIBREF56"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Datasets and Materials"
+        },
+        {
+            "text": "-UniProt: the UniProt collection of sequences [58] ; -PDBaa: the Protein Data Bank [59] ; -GRCh38: the human reference genome [60] .",
+            "cite_spans": [
+                {
+                    "start": 46,
+                    "end": 50,
+                    "text": "[58]",
+                    "ref_id": "BIBREF57"
+                },
+                {
+                    "start": 83,
+                    "end": 87,
+                    "text": "[59]",
+                    "ref_id": "BIBREF58"
+                },
+                {
+                    "start": 126,
+                    "end": 130,
+                    "text": "[60]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Datasets and Materials"
+        },
+        {
+            "text": "\u2022 DS2: a comprehensive dataset (proposed in [9] ), containing the following sequences: For benchmarking AC2 as a reference-based compressor, we used four complete proteomes of four primates (human, gorilla, chimpanzee, and orangutan) with a pairwise chromosomal compression. For each chromosomal pair, the following compression was performed:",
+            "cite_spans": [
+                {
+                    "start": 44,
+                    "end": 47,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Datasets and Materials"
+        },
+        {
+            "text": "\u2022 Chimpanzee (PT) using human (HS) as a reference; \u2022 Gorilla (GG) using human (HS) as a reference; \u2022 Orangutan (PA) using human (HS) as a reference.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Materials"
+        },
+        {
+            "text": "Unless otherwise stated, the benchmarks were performed on an Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz running Linux 5.4.0 with the scaling governor set to performance and 32GB of RAM.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Materials"
+        },
+        {
+            "text": "For the comparison with AC2, we selected two specialized protein compressors: AC and NAF. These are the only available and working compressors we could find; therefore, we added general-purpose compressors to make a comprehensive comparison. The generalpurpose compressors added are the Big Block BWT (Burrows-Wheeler transform) [61] , the LZMA [62] , and the CMIX [63] .",
+            "cite_spans": [
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[61]",
+                    "ref_id": null
+                },
+                {
+                    "start": 345,
+                    "end": 349,
+                    "text": "[62]",
+                    "ref_id": "BIBREF61"
+                },
+                {
+                    "start": 365,
+                    "end": 369,
+                    "text": "[63]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Reference-Free Compression Benchmark"
+        },
+        {
+            "text": "The results from Table 1 show that AC2 achieves the best compression ratio for all sequences, except for the smallest sequence (EP). For DS1 (collections of protein sequences), AC2 achieves gains of 2%, 4%, 7%, 9%, and 35%, compared to CMIX, LZMA, NAF, AC, and BBB, respectively. For DS2 (individual proteome sequence compression), AC2 achieves gains of 2%, 3%, 4%, 6%, and 13%, compared to AC, CMIX, NAF, LZMA, and BBB, respectively.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 17,
+                    "end": 24,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Reference-Free Compression Benchmark"
+        },
+        {
+            "text": "It should be noted that the bits per symbol (bps) are for the resulting archive file, which in the case of AC2 includes a header with parameters to describe the models and the network parameters. For small sequences, this is a significant portion of the final size. If we ignore the header size, which makes sense when an analysis is a primary goal, AC2 achieves even more significant gains than AC. Even with this disadvantage, AC2 shows a better compression ratio than AC for all sequences tested.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reference-Free Compression Benchmark"
+        },
+        {
+            "text": "In terms of memory usage, AC2 uses substantially less RAM than AC, and the cache size parameters limit the increase in RAM. In challenging cases, such as the UniProt sequence's compression, the memory usage of AC2 is approximately 86% less than that of AC (111 GB to 16 GB). With the present configuration, the AC2 uses less memory than the two closest higher compression ratio compressors, CMIX and AC. For the UniProt sequence, the RAM usage is 660 MB, 740 MB, 3 GB, 16 GB, 19 GB, and 111 GB for LZMA, BBB, NAF, AC2, CMIX, and AC, respectively. Parameters control the memory requirements of AC2; thus, the needed memory can be decreased with a penalty of a small precision payoff, providing utility to computers with lower computational resources.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Reference-Free Compression Benchmark"
+        },
+        {
+            "text": "The computational time of AC2 is \u22483\u00d7 slower than of AC, but it is \u22487-19\u00d7 faster than CMIX. Compared to the other compressors (BBB, LZMA, and NAF), AC2 is \u224815-49\u00d7 slower. Compressing the UniProt sequence with AC had to be done in a different machine with more RAM but a slower processor; this is why the execution was slower. While AC2 is slower than AC, this gap should decrease soon due to the inclusion of specialized instructions and data types in general-purpose consumer CPUs [64, 65] . The parameters used for this benchmark focus on maximum compression ratio, but we can decrease the execution time while maintaining the best ratios. For example, in the PDBaa sequence, we can reduce the number of hidden nodes from 128 to 40, which gives us 1.725 bps at half the execution time (10 min). Figure 2 depicts the difference between the AC and the AC2 compression performance, described as gain complexity profiles. Gain complexity profiles are numerical representations of the gain in terms of bits per symbol for each sequence element. Using the GTO toolkit [66] , we applied a low-pass filter to the gain complexity profiles to smooth the peaks and valleys and better perceive the trends. Table 1 . The bits per symbol (bps) and time needed to represent an amino acid sequence for BBB, LZMA, CMIX, NAF, AC and AC2. NAF uses the highest compression level (22) for all sequences. BBB uses the parameters 'cfm100q' for all sequences. LZMA uses the highest level (-9 -e) for all sequences. For DS2, AC and AC2 use the same levels as in [9] . For DS1, the models used by AC are '-tm 1:1:0. ",
+            "cite_spans": [
+                {
+                    "start": 481,
+                    "end": 485,
+                    "text": "[64,",
+                    "ref_id": "BIBREF63"
+                },
+                {
+                    "start": 486,
+                    "end": 489,
+                    "text": "65]",
+                    "ref_id": "BIBREF64"
+                },
+                {
+                    "start": 1063,
+                    "end": 1067,
+                    "text": "[66]",
+                    "ref_id": "BIBREF65"
+                },
+                {
+                    "start": 1360,
+                    "end": 1364,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1538,
+                    "end": 1541,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 796,
+                    "end": 804,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 1195,
+                    "end": 1202,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Reference-Free Compression Benchmark"
+        },
+        {
+            "text": "Bps Gain We can see the heuristic effect of switching between the new and the old mixer for small sequences, such as the XV and FV. Flat regions, with the number of bits per symbol equal to zero, corresponds to regions where the old mixer is used. It is also visible for smaller sequences that even with the heuristic and the pre-training, the AC2 mixer sporadically produces lower results than the AC mixer. These are shown in the plot when the graph has negative values. This situation is due to the lag associated with the exponential moving average that controls the mixer switching. The lag can be reduced, and for small sequences, the compression does benefit; the reverse is true for large sequences. For extensive sequences (HS), we can see that the plot is always positive with this smoothness level. In this case, AC2 appears to compress consistently more.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "c)"
+        },
+        {
+            "text": "Finally, all plots show small peaks of at most 0.4 Bps. On the one hand, this is due to the smoothness function applied. On the other hand, it shows no large regions (as a percentage of the total sequence) where AC2 is vastly superior to AC. Even so, there appear to be new regions of interest that could provide new insights into the sequences' nature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "HS -Homo sapiens"
+        },
+        {
+            "text": "In this section, we compare AC with AC2 for the compression of proteins using a reference because, as far as we know, AC it is the only data compression tool (currently working) for reference-based protein sequence compression. AC has some reference-based compression errors related to the incapability to deal with a different alphabet between reference and target sequences. Therefore, we improved AC2 to output the AC compression estimates, using the AC mixer's probabilities to calculate the expected number of bits with \u2212 log 2 (p sym ). The results in Table 2 show that AC2 improves the compression ratio by 6-7% compared to AC. Chromosomes 5 and 17 of the gorilla show the least improvement and also the worst bits per symbol. This performance is due to a hypothetical rearrangement in the gorilla that diverges from the other three primates [67] . In practice, a similar part of one of the chromosomes is present in the other, decreasing the capability of using the reference sequences as an auxiliary input [68] . A way to improve these particular sequences' compression would be to use the references of both proteomic sequences from chromosomes 5 and 17 of the human. The plots in Figure 3 show a similar trend to the plots from the reference-free compression. For the mitochondrion sequence, we can see the effects of the heuristic switching between the AC and neural network mixer. For the larger sequences, we can see more consistently positive values. Table 2 .",
+            "cite_spans": [
+                {
+                    "start": 849,
+                    "end": 853,
+                    "text": "[67]",
+                    "ref_id": "BIBREF66"
+                },
+                {
+                    "start": 1016,
+                    "end": 1020,
+                    "text": "[68]",
+                    "ref_id": "BIBREF67"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 558,
+                    "end": 565,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 1192,
+                    "end": 1200,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 1467,
+                    "end": 1474,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Reference-Based Compression Benchmark"
+        },
+        {
+            "text": "As an example of identifying similar protein sequences in terms of quantity of information, we studied the most similar protein sequences, in the whole UniProt database, to the proteins of the human Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) [69] , respecting important Bioinformatics guidelines [70] .",
+            "cite_spans": [
+                {
+                    "start": 260,
+                    "end": 264,
+                    "text": "[69]",
+                    "ref_id": "BIBREF68"
+                },
+                {
+                    "start": 314,
+                    "end": 318,
+                    "text": "[70]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "SARS-CoV-2 is a positive-sense single-strand RNA virus with an origin traced to a food market in Wuhan, China, in December 2019 that can cause COVID-19 disease [71] . SARS-CoV-2 is transmitted by inhalation or contact with infected droplets with an incubation period from 2 to 14 days [72] . According to the World Health Organization (WHO), SARS-CoV-2 has already caused more than 146 million infections and 3.1 million deaths, where the variation of the latter seems to be related to seasonality [73] . New developments of fast diagnostic methods are emerging, for example, a 10-min antibody assay [74] , enabling reacting and predicting infection and vaccine responses much faster.",
+            "cite_spans": [
+                {
+                    "start": 160,
+                    "end": 164,
+                    "text": "[71]",
+                    "ref_id": "BIBREF70"
+                },
+                {
+                    "start": 285,
+                    "end": 289,
+                    "text": "[72]",
+                    "ref_id": "BIBREF71"
+                },
+                {
+                    "start": 498,
+                    "end": 502,
+                    "text": "[73]",
+                    "ref_id": "BIBREF72"
+                },
+                {
+                    "start": 600,
+                    "end": 604,
+                    "text": "[74]",
+                    "ref_id": "BIBREF73"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "Although several therapeutics have already been proposed [75, 76] , the emergence of multiple variants brings additional complexity to the challenge both in diagnostics and therapeutics [76, 77] . Much has been learned with the current pandemic; however, much progress is still required. One of the inconclusive themes is related to SARS-CoV-2 protein sequence similarity to other viral protein sequences. Despite several studies addressing this topic both at genomic and proteomic level [78, 79] , different interpretations have been provided at the animal host origins [80] [81] [82] . Perhaps the reason is related to the characteristics of the measures used, namely the use of normalized scores applying alignments that do not rigorously consider quantities of information, overestimation issues, and the respect of distance properties, such as symmetry and idempotency [83] . Without respecting the theoretical foundations that characterize an information distance (or distance of dissimilarity), a problematic question arises: where should one draw the threshold or the splitting line? Therefore, defining thresholds in these cases can substantially contradict conclusions, not because one of the measures is incorrect but because the starting point or assumptions are fundamentally different.",
+            "cite_spans": [
+                {
+                    "start": 57,
+                    "end": 61,
+                    "text": "[75,",
+                    "ref_id": "BIBREF74"
+                },
+                {
+                    "start": 62,
+                    "end": 65,
+                    "text": "76]",
+                    "ref_id": "BIBREF75"
+                },
+                {
+                    "start": 186,
+                    "end": 190,
+                    "text": "[76,",
+                    "ref_id": "BIBREF75"
+                },
+                {
+                    "start": 191,
+                    "end": 194,
+                    "text": "77]",
+                    "ref_id": "BIBREF76"
+                },
+                {
+                    "start": 488,
+                    "end": 492,
+                    "text": "[78,",
+                    "ref_id": "BIBREF77"
+                },
+                {
+                    "start": 493,
+                    "end": 496,
+                    "text": "79]",
+                    "ref_id": "BIBREF78"
+                },
+                {
+                    "start": 571,
+                    "end": 575,
+                    "text": "[80]",
+                    "ref_id": "BIBREF79"
+                },
+                {
+                    "start": 576,
+                    "end": 580,
+                    "text": "[81]",
+                    "ref_id": "BIBREF80"
+                },
+                {
+                    "start": 581,
+                    "end": 585,
+                    "text": "[82]",
+                    "ref_id": "BIBREF81"
+                },
+                {
+                    "start": 874,
+                    "end": 878,
+                    "text": "[83]",
+                    "ref_id": "BIBREF82"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "Accordingly, in this paper, we present the SARS-CoV-2 protein sequence similarity to other viral protein sequences relying on AC2, the data compressor benchmarked with the best-known compression ratios (shown in this paper above) and through the computation of the Normalized Compression Distance (NCD) [84] .",
+            "cite_spans": [
+                {
+                    "start": 303,
+                    "end": 307,
+                    "text": "[84]",
+                    "ref_id": "BIBREF83"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "For this purpose, we separated all protein sequences in the UniProt database and all proteins of the SARS-CoV-2 into different classes. Then, we measured the (dis)similarity across each pair of elements of the classes using the NCD through the approximation of the conditional complexity [85] as",
+            "cite_spans": [
+                {
+                    "start": 288,
+                    "end": 292,
+                    "text": "[85]",
+                    "ref_id": "BIBREF84"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "For approximating the complexity (C(x) and C(y)) and conditional complexity (C(x|y) and C(y|x)), we used AC2 with optimized parameters for each type of compression as follows: Figure 4 depicts the results with the lowest NCD and, hence, the most similar sequences according to a reference SARS-CoV-2. As presented in the architecture of Figure 4d ,g, several protein sequences can be localized, namely the (Open Reading Frame) ORF1ab, spike (S), envelope (E), membrane (M), and nucleocapsid (N). The ORF1ab includes ORF1a and ORF1b, which characterize a non-structural polyprotein involved in the transcription and replication of viral RNAs, containing the proteinases responsible for the protein's cleavages. ORF3 is an accessory protein specialized for environment change inside the infected cell, through the membrane's rupture, increasing the virus replication. The membrane (M) is a structural protein that forms part of the virus's outer coat, playing a crucial role in virus morphogenesis and assembly via its interactions with other viral proteins. The nucleocapsid protein (N) is a structural protein that packages the RNA into a helical ribonucleocapsid (RNP) and is essential during assembly through its interplays with the viral genome and membrane protein (M). It also magnifies the efficiency of subgenomic viral RNA transcription and replication [86] .",
+            "cite_spans": [
+                {
+                    "start": 1361,
+                    "end": 1365,
+                    "text": "[86]",
+                    "ref_id": "BIBREF85"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 176,
+                    "end": 184,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 337,
+                    "end": 346,
+                    "text": "Figure 4d",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "According to the remain of Figure 4 , the NCD for the flagged proteins is consistently lower for pangolin coronavirus, followed by the ranked alternation between multiple bats and human coronavirus. In humans, the highest similarities stand for MERS [87] and SARS [88] coronaviruses, naturally showing the evolution under the host. The pangolin and bat coronaviruses with higher similarities to the SARS-CoV-2 are in accordance with some studies of both origin species of SARS-CoV-2 [89] , measured at the genomic [78] and proteomic level [79] . Moreover, the results show that the pangolin coronaviruses are the most similar in terms of information (Kolmogorov complexity [90] ). Furthermore, the last protein sequence (marked with an X in Figure 4) , also known as ORF10, shows only relevant similarity according to the pangolin coronavirus. Despite the consistency of the results provided at the proteomic level, the discovery of new proteomes with higher similarity (or lower NCD) to the SARS-CoV-2 may change the conclusions. ",
+            "cite_spans": [
+                {
+                    "start": 250,
+                    "end": 254,
+                    "text": "[87]",
+                    "ref_id": "BIBREF86"
+                },
+                {
+                    "start": 264,
+                    "end": 268,
+                    "text": "[88]",
+                    "ref_id": "BIBREF87"
+                },
+                {
+                    "start": 483,
+                    "end": 487,
+                    "text": "[89]",
+                    "ref_id": "BIBREF88"
+                },
+                {
+                    "start": 514,
+                    "end": 518,
+                    "text": "[78]",
+                    "ref_id": "BIBREF77"
+                },
+                {
+                    "start": 539,
+                    "end": 543,
+                    "text": "[79]",
+                    "ref_id": "BIBREF78"
+                },
+                {
+                    "start": 650,
+                    "end": 677,
+                    "text": "(Kolmogorov complexity [90]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 27,
+                    "end": 35,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 741,
+                    "end": 750,
+                    "text": "Figure 4)",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Application: SARS-CoV-2 Protein Sequence Similarity to Other Viral Proteins"
+        },
+        {
+            "text": "This paper describes AC2, a new protein sequence compressor that uses a neural network to mix experts with a stacked generalization approach and individual cachehash memory models to the highest context orders. We show gains over the previous compressor (AC) between 2 and 9%, depending on the dataset characteristics. These gains come at the cost of slower execution times \u22483\u00d7. AC2 substantially improves the memory usage compared to AC, with memory usages about 7\u00d7 lower. Compared to the previous best available state-of-the-art compressors, AC2 achieves an overall compression ratio improvement of approximately 2% and 6% in reference-free and reference-based modes, respectively. Nevertheless, we think that AC2 can still be improved in singleorganism proteome compression. For example, to address this challenge, we can derive other experts that model the secondary information of the proteins, similar to the algorithm in [26] . Another crucial area of improvement has to do with the computational resources, as these may limit the efficiency of analysis. To improve the execution speed, we can drive computations to a GPU, with the neural network as the most likely candidate to benefit. Furthermore, different caching strategies directly applied to the models may reduce the memory requirements while bringing some improvements.",
+            "cite_spans": [
+                {
+                    "start": 928,
+                    "end": 932,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Additionally, we provided an application of the usage of AC2 for comparative proteomic analysis, namely measuring the similarity between each SARS-CoV-2 viral protein sequence with each viral protein sequence from the whole UniProt database. This straightforward alignment-free solution infers the most similar proteomic sequence using very flexible, balanced, and consistent measures. According to the eventual redundancy in the sequences, alignment-based measures may provide overestimated results, given its small size and ambiguous choices. On the other hand, our approach quantifies the similarity using information without overestimation (a property of using data compression through the NCD). Moreover, it uses multiple experts of different nature in an unsupervised learning approach. This characteristic means that the data compressor can use models of another nature, for example, energy, structural, or algorithmic models [91] , to combine the predictions besides simple vertical amino acid comparison. In this paper, the results consistently show higher similarity to the pangolin coronavirus in the provided application, followed by the bat and other human coronaviruses. However, as with any other known comparative methods, this approach has a drawback: discovering new proteomes with higher similarity to the SARS-CoV-2 may change the conclusions.",
+            "cite_spans": [
+                {
+                    "start": 933,
+                    "end": 937,
+                    "text": "[91]",
+                    "ref_id": "BIBREF90"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "The game has changed.' AI triumphs at protein folding",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Dill",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Maccallum",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Science",
+            "volume": "338",
+            "issn": "",
+            "pages": "1144--1145",
+            "other_ids": {
+                "DOI": [
+                    "10.1126/science.370.6521.1144"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Foundations of Info-Metrics: Modeling, Inference, and Imperfect Information",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Golan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Introduction to Data Compression",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sayood",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Accelerated implementation of FQSqueezer novel genomic compression method",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Amich",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "De Luca",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Fiscale",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the 2020 19th International Symposium on Parallel and Distributed Computing (ISPDC)",
+            "volume": "",
+            "issn": "",
+            "pages": "158--163",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Data compression concepts and algorithms and their applications to bioinformatics",
+            "authors": [
+                {
+                    "first": "\u00d6",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Nalbantoglu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sayood",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Entropy",
+            "volume": "12",
+            "issn": "",
+            "pages": "34--52",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/e12010034"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "On the approximation of the Kolmogorov complexity for DNA sequences",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the Iberian Conference on Pattern Recognition and Image Analysis",
+            "volume": "",
+            "issn": "",
+            "pages": "259--266",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "AC: A compression tool for amino acid sequences",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hosseini",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Interdiscip. Sci. Comput. Life Sci",
+            "volume": "11",
+            "issn": "",
+            "pages": "68--76",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s12539-019-00322-1"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Application of compression-based distance measures to protein sequence classification: A methodological study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kocsor",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kert\u00e9sz-Farkas",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kaj\u00e1n",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pongor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Bioinformatics",
+            "volume": "22",
+            "issn": "",
+            "pages": "407--412",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/bti806"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Compression-based classification of biological sequences and structures via the Universal Similarity Metric: Experimental assessment",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ferragina",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Giancarlo",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Greco",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Manzini",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Valiente",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "BMC Bioinform",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/1471-2105-8-252"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Fast Whole-Genome Phylogeny of the COVID-19 Virus SARS-CoV-2 by Compression",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Cilibrasi",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Vit\u00e1nyi",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2020.07.22.216242"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Statistical Inference through Data Compression",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Cilibrasi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Relative Lempel-Ziv compression of genomes for large-scale storage and retrieval",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kuruppu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Puglisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zobel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proceedings of the International Symposium on String Processing and Information Retrieval",
+            "volume": "",
+            "issn": "",
+            "pages": "201--206",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Smash++: An alignment-free and memory-efficient tool to find genomic rearrangements",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hosseini",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Morgenstern",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/gigascience/giaa048"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "An improved encoding of genetic variation in a Burrows-Wheeler transform",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "B\u00fcchler",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ohlebusch",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Bioinformatics",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1413--1419",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btz782"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Prediction of protein structural features from sequence data based on Shannon entropy and Kolmogorov complexity",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Bywater",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PLoS ONE",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0119306"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Statistical compression of protein folding patterns for inference of recurrent substructural themes",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Subramanian",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Allison",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Stuckey",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "De La",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Banda",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Abramson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Lesk",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Konagurthu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 2017 Data Compression Conference (DCC)",
+            "volume": "",
+            "issn": "",
+            "pages": "340--349",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Efficient construction of a compressed de Bruijn graph for pan-genome analysis",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Beller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Ohlebusch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the Annual Symposium on Combinatorial Pattern Matching",
+            "volume": "",
+            "issn": "",
+            "pages": "40--51",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Metagenomic composition analysis of sedimentary ancient DNA from the Isle of Wight",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 2018 26th European Signal Processing Conference (EUSIPCO)",
+            "volume": "",
+            "issn": "",
+            "pages": "1177--1181",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Improved detection of DNA-binding proteins via compression technology on PSSM information",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "PLoS ONE",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0185587"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Proteome compression via protein domain compositions",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hayashida",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Ruan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Akutsu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Methods",
+            "volume": "67",
+            "issn": "",
+            "pages": "380--385",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ymeth.2014.01.012"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Analyzing Order of Domains in Grammar-based Compression of Proteomes",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hayashida",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ishibashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Koyano",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the International Conference on Parallel and Distributed Processing Techniques and Applications (PDPTA)",
+            "volume": "",
+            "issn": "",
+            "pages": "278--281",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "A survey on data compression methods for biological sequences",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hosseini",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/info7040056"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Protein is compressible",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hategan",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Tabus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proceedings of the 6th Nordic Signal Processing Symposium",
+            "volume": "",
+            "issn": "",
+            "pages": "192--195",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Jointly Encoding Protein Sequences and their Secondary Structure Information",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hategan",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Tabus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proceedings of the 2007 IEEE International Workshop on Genomic Signal Processing and Statistics",
+            "volume": "",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "On compressibility of protein sequences",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Adjeroh",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Nan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Proceedings of the Data Compression Conference (DCC'06)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Compressing proteomes: The relevance of medium range correlations",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Benedetto",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Caglioti",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Chica",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "EURASIP J. Bioinform. Syst. Biol",
+            "volume": "",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {
+                "DOI": [
+                    "10.1155/2007/60723"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "A simple statistical algorithm for biological sequence compression",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Cao",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Dix",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Allison",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Mears",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proceedings of the 2007 Data Compression Conference (DCC'07)",
+            "volume": "",
+            "issn": "",
+            "pages": "43--52",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Compressive genomics for protein databases",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Daniels",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gallant",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cowen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baym",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Berger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Bioinformatics",
+            "volume": "29",
+            "issn": "",
+            "pages": "283--290",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btt214"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Adaptive dictionary-based compression of protein sequences",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Nag",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Karforma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Int. J. Educ. Manag. Eng",
+            "volume": "5",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Compression of amino acid sequences",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hosseini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the International Conference on Practical Applications of Computational Biology & Bioinformatics",
+            "volume": "",
+            "issn": "",
+            "pages": "105--113",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Nucleotide Archival Format (NAF) enables efficient lossless reference-free compression of DNA sequences",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kryukov",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Ueda",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Nakagawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Imanishi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Bioinformatics",
+            "volume": "35",
+            "issn": "",
+            "pages": "3826--3828",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btz144"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "CoMSA: Compression of protein multiple sequence alignment files",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Deorowicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Walczyszyn",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Debudaj-Grabysz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Bioinformatics",
+            "volume": "35",
+            "issn": "",
+            "pages": "227--234",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/bty619"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Decoupling the Frequency Model From the Context Model in Prediction-Based Compression",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Fulber-Garcia",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Sardi Mergen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Luisa",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Comput. J",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/comjnl/bxaa074"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Stacked generalization",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wolpert",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Neural Netw",
+            "volume": "5",
+            "issn": "",
+            "pages": "241--259",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0893-6080(05)80023-1"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Allowing mutations in maximal matches boosts genome compression performance",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Bioinformatics",
+            "volume": "2020",
+            "issn": "",
+            "pages": "4675--4681",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/bioinformatics/btaa572"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Substitutional tolerant Markov models for relative compression of DNA sequences",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hosseini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the International Conference on Practical Applications of Computational Biology & Bioinformatics",
+            "volume": "",
+            "issn": "",
+            "pages": "265--272",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Lossless Data Compression using Recurrent Neural Networks. arXiv 2018",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goyal",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tatwawadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chandak",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Ochoa",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Deepzip",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1811.08162"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Stochastic models for heterogeneous DNA sequences",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Churchill",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Bull. Math. Biol",
+            "volume": "51",
+            "issn": "",
+            "pages": "79--94",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0092-8240(89)80049-7"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "On the performance of deep learning models for time series classification in streaming",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Lara-Ben\u00edtez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Carranza-Garc\u00eda",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Mart\u00ednez-\u00c1lvarez",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Riquelme",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.02544"
+                ]
+            }
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "NSE stock market prediction using deep-learning models",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hiransha",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gopalakrishnan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Menon",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Soman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Procedia Comput. Sci",
+            "volume": "132",
+            "issn": "",
+            "pages": "1351--1362",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Hierarchical temporal memory and recurrent neural networks for time series prediction: An empirical validation and reduction to multilayer perceptrons",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Struye",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Latr\u00e9",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Neurocomputing",
+            "volume": "396",
+            "issn": "",
+            "pages": "291--301",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.neucom.2018.09.098"
+                ]
+            }
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Deep learning for time series classification: A review",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Fawaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Forestier",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Weber",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Idoumghar",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Muller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Data Min. Knowl. Discov",
+            "volume": "33",
+            "issn": "",
+            "pages": "917--963",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10618-019-00619-1"
+                ]
+            }
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Time series classification from scratch with deep neural networks: A strong baseline",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Oates",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 2017 International joint conference on neural networks (IJCNN)",
+            "volume": "",
+            "issn": "",
+            "pages": "1578--1585",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Hybrid neural networks for learning the trend in time series",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Aberer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the Twenty-Sixth International Joint Conference on Artificial Intelligence",
+            "volume": "",
+            "issn": "",
+            "pages": "2273--2279",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Modelling reference evapotranspiration by combining neuro-fuzzy and evolutionary strategies",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Alizamir",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Kisi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Muhammad Adnan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kuriqi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Acta Geophys",
+            "volume": "68",
+            "issn": "",
+            "pages": "1113--1126",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11600-020-00446-9"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "A non-iterative neural-like framework for missing data imputation",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tkachenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Mishchuk",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Izonin",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kryvinska",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Stoliarchuk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Procedia Comput. Sci",
+            "volume": "155",
+            "issn": "",
+            "pages": "319--326",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.procs.2019.08.046"
+                ]
+            }
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Model and principles for the implementation of neural-like structures based on geometric data transformations",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Tkachenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Izonin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the International Conference on Computer Science, Engineering and Education Applications",
+            "volume": "",
+            "issn": "",
+            "pages": "578--587",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "An empirical overview of the no free lunch theorem and its effect on real-world machine learning classification",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "G\u00f3mez",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rojas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Neural Comput",
+            "volume": "28",
+            "issn": "",
+            "pages": "216--228",
+            "other_ids": {
+                "DOI": [
+                    "10.1162/NECO_a_00793"
+                ]
+            }
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Efficient DNA sequence compression with neural networks. GigaScience 2020, 9",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Silva",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/gigascience/giaa119"
+                ]
+            }
+        },
+        "BIBREF52": {
+            "ref_id": "b52",
+            "title": "Understanding the difficulty of training deep feedforward neural networks",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Glorot",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proceedings of the Thirteenth International Conference on Artificial Intelligence and Statistics",
+            "volume": "",
+            "issn": "",
+            "pages": "249--256",
+            "other_ids": {}
+        },
+        "BIBREF53": {
+            "ref_id": "b53",
+            "title": "Neural Networks: Tricks of the Trade",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lecun",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Bottou",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Orr",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "M\u00fcller",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Efficient",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "9--48",
+            "other_ids": {}
+        },
+        "BIBREF54": {
+            "ref_id": "b54",
+            "title": "A stochastic approximation method",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Robbins",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Monro",
+                    "suffix": ""
+                }
+            ],
+            "year": 1951,
+            "venue": "Ann. Math. Stat",
+            "volume": "22",
+            "issn": "",
+            "pages": "400--407",
+            "other_ids": {
+                "DOI": [
+                    "10.1214/aoms/1177729586"
+                ]
+            }
+        },
+        "BIBREF55": {
+            "ref_id": "b55",
+            "title": "Compression-based normal similarity measures for DNA sequences",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ferreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 2014 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)",
+            "volume": "",
+            "issn": "",
+            "pages": "419--423",
+            "other_ids": {}
+        },
+        "BIBREF56": {
+            "ref_id": "b56",
+            "title": "Sequence Compression Benchmark (SCB) database-A comprehensive evaluation of reference-free compressors for FASTA-formatted sequences",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kryukov",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Ueda",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Nakagawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Imanishi",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "GigaScience",
+            "volume": "2020",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/gigascience/giaa072"
+                ]
+            }
+        },
+        "BIBREF57": {
+            "ref_id": "b57",
+            "title": "UniProt: A worldwide hub of protein knowledge",
+            "authors": [
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Consortium",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nucleic Acids Res",
+            "volume": "47",
+            "issn": "",
+            "pages": "506--515",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/gky1049"
+                ]
+            }
+        },
+        "BIBREF58": {
+            "ref_id": "b58",
+            "title": "The protein data bank",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Berman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Westbrook",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Gilliland",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Bhat",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Weissig",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Shindyalov",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Bourne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Nucleic Acids Res",
+            "volume": "28",
+            "issn": "",
+            "pages": "235--242",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/nar/28.1.235"
+                ]
+            }
+        },
+        "BIBREF61": {
+            "ref_id": "b61",
+            "title": "Software Development Kit)",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [
+                        "Lzma"
+                    ],
+                    "last": "Pavlov",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sdk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF63": {
+            "ref_id": "b63",
+            "title": "BFLOAT16-Hardware Numerics Definition",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF64": {
+            "ref_id": "b64",
+            "title": "IBM Reveals Next-Generation IBM POWER10 Processor",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF65": {
+            "ref_id": "b65",
+            "title": "GTO: A toolkit to unify pipelines in genomic and proteomic research",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Almeida",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pinho",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Oliveira",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Fajarda",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.softx.2020.100535"
+                ]
+            }
+        },
+        "BIBREF66": {
+            "ref_id": "b66",
+            "title": "Segmental duplications and the evolution of the primate genome",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Samonte",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Eichler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Nat. Rev. Genet",
+            "volume": "3",
+            "issn": "",
+            "pages": "65--72",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nrg705"
+                ]
+            }
+        },
+        "BIBREF67": {
+            "ref_id": "b67",
+            "title": "Hominoid chromosomal rearrangements on 17q map to complex regions of segmental duplication",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Cardone",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "D&apos;addabbo",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Archidiacono",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rocchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Eichler",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ventura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Genome Biol",
+            "volume": "9",
+            "issn": "",
+            "pages": "1--11",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/gb-2008-9-2-r28"
+                ]
+            }
+        },
+        "BIBREF68": {
+            "ref_id": "b68",
+            "title": "A pneumonia outbreak associated with a new coronavirus of probable bat origin",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Si",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "579",
+            "issn": "",
+            "pages": "270--273",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2012-7"
+                ]
+            }
+        },
+        "BIBREF70": {
+            "ref_id": "b70",
+            "title": "A new coronavirus associated with human respiratory disease in China",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Tao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Pei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "579",
+            "issn": "",
+            "pages": "265--269",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2008-3"
+                ]
+            }
+        },
+        "BIBREF71": {
+            "ref_id": "b71",
+            "title": "A novel coronavirus outbreak of global health concern",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Horby",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Hayden",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "470--473",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30185-9"
+                ]
+            }
+        },
+        "BIBREF72": {
+            "ref_id": "b72",
+            "title": "Effects of environmental factors on severity and mortality of COVID-19",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kifer",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bugada",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Villar-Garcia",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Gudelj",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Menni",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sudre",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Vu\u010dkovi\u0107",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Ugrina",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Lorini",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Posso",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3389/fmed.2020.607786"
+                ]
+            }
+        },
+        "BIBREF73": {
+            "ref_id": "b73",
+            "title": "A 10-Minute \"Mix and Read\" Antibody Assay for SARS-CoV-2. Viruses",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rusanen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kareinen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Levanov",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mero",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Pakkanen",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kantele",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Amanat",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Krammer",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hedman",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Vapalahti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/v13020143"
+                ]
+            }
+        },
+        "BIBREF74": {
+            "ref_id": "b74",
+            "title": "Durability of responses after SARS-CoV-2 mRNA-1273 vaccination",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Widge",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Rouphael",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Jackson",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Roberts",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Makhene",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Chappell",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Denison",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Stevens",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Pruijssers",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "N. Engl. J. Med",
+            "volume": "384",
+            "issn": "",
+            "pages": "80--82",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2032195"
+                ]
+            }
+        },
+        "BIBREF75": {
+            "ref_id": "b75",
+            "title": "SARS-CoV-2 variants and ending the COVID-19 pandemic",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Fontanet",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Autran",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lina",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Kieny",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S A"
+                    ],
+                    "last": "Karim",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Sridhar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Lancet",
+            "volume": "397",
+            "issn": "",
+            "pages": "952--954",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(21)00370-6"
+                ]
+            }
+        },
+        "BIBREF76": {
+            "ref_id": "b76",
+            "title": "SARS-CoV-2 variants lacking a functional ORF8 may reduce accuracy of serological testing",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Pereira",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "J. Immunol. Methods",
+            "volume": "488",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jim.2020.112906"
+                ]
+            }
+        },
+        "BIBREF77": {
+            "ref_id": "b77",
+            "title": "Probable pangolin origin of SARS-CoV-2 associated with the COVID-19 outbreak",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Curr. Biol",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1346--1351",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cub.2020.03.022"
+                ]
+            }
+        },
+        "BIBREF78": {
+            "ref_id": "b78",
+            "title": "Synonymous mutations and the molecular evolution of SARS-Cov-2 origins",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Pipes",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nielsen",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/ve/veaa098"
+                ]
+            }
+        },
+        "BIBREF79": {
+            "ref_id": "b79",
+            "title": "Isolation of SARS-CoV-2-related coronavirus from Malayan pangolins",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Zou",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "583",
+            "issn": "",
+            "pages": "286--289",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-2313-x"
+                ]
+            }
+        },
+        "BIBREF80": {
+            "ref_id": "b80",
+            "title": "Evidence for SARS-CoV-2 related coronaviruses circulating in bats and pangolins in Southeast Asia",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wacharapluesadee",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Maneeorn",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Duengkae",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Joyjinda",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Kaewpom",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Chia",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Ampoot",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Nat. Commun. 2021",
+            "volume": "12",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {}
+        },
+        "BIBREF81": {
+            "ref_id": "b81",
+            "title": "Six months of coronavirus: The mysteries scientists are still racing to solve",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Callaway",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ledford",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mallapaty",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "583",
+            "issn": "",
+            "pages": "178--179",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/d41586-020-01989-z"
+                ]
+            }
+        },
+        "BIBREF82": {
+            "ref_id": "b82",
+            "title": "Information distance",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Bennett",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "G\u00e1cs",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Vit\u00e1nyi",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Zurek",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "IEEE Trans. Inf. Theory",
+            "volume": "44",
+            "issn": "",
+            "pages": "1407--1423",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/18.681318"
+                ]
+            }
+        },
+        "BIBREF83": {
+            "ref_id": "b83",
+            "title": "The similarity metric",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Vit\u00e1nyi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "IEEE Trans. Inf. Theory",
+            "volume": "50",
+            "issn": "",
+            "pages": "3250--3264",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TIT.2004.838101"
+                ]
+            }
+        },
+        "BIBREF84": {
+            "ref_id": "b84",
+            "title": "Perceptually Inspired Normalized Conditional Compression Distance",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Nikvand",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Farjow",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Fernando",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Sadat-Nejad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 2019 53rd Asilomar Conference on Signals, Systems, and Computers",
+            "volume": "",
+            "issn": "",
+            "pages": "1788--1795",
+            "other_ids": {}
+        },
+        "BIBREF85": {
+            "ref_id": "b85",
+            "title": "Genetic architecture of host proteins involved in SARS-CoV-2 infection",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Pietzner",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Wheeler",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Carrasco-Zanini",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Raffler",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Kerrison",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Oerton",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Auyeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Luan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Finan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Casas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Commun",
+            "volume": "11",
+            "issn": "",
+            "pages": "1--14",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41467-020-19996-z"
+                ]
+            }
+        },
+        "BIBREF86": {
+            "ref_id": "b86",
+            "title": "Middle East respiratory syndrome coronavirus in bats, Saudi Arabia",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Memish",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Mishra",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Olival",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Fagbo",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Kapoor",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Epstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Alhakeem",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Durosinloun",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Al Asmari",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Islam",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Emerg. Infect. Dis",
+            "volume": "19",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3201/eid1911.131172"
+                ]
+            }
+        },
+        "BIBREF87": {
+            "ref_id": "b87",
+            "title": "Severe acute respiratory syndrome coronavirus as an agent of emerging and reemerging infection",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Woo",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Yuen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Clin. Microbiol. Rev",
+            "volume": "20",
+            "issn": "",
+            "pages": "660--694",
+            "other_ids": {
+                "DOI": [
+                    "10.1128/CMR.00023-07"
+                ]
+            }
+        },
+        "BIBREF88": {
+            "ref_id": "b88",
+            "title": "Pangolins harbor SARS-CoV-2-related coronaviruses",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Han",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Trends Microbiol",
+            "volume": "2020",
+            "issn": "",
+            "pages": "515--517",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.tim.2020.04.001"
+                ]
+            }
+        },
+        "BIBREF89": {
+            "ref_id": "b89",
+            "title": "Three approaches to the quantitative definition of information",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Kolmogorov",
+                    "suffix": ""
+                }
+            ],
+            "year": 1965,
+            "venue": "Probl. Inf. Transm",
+            "volume": "1",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/00207166808803030"
+                ]
+            }
+        },
+        "BIBREF90": {
+            "ref_id": "b90",
+            "title": "Statistical Complexity Analysis of Turing Machine tapes with Fixed Algorithmic Complexity Using the Best-Order Markov Model",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Silva",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Pinho",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Matos",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pratas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Entropy",
+            "volume": "22",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/e22010105"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "BT: Bos taurus; -HS: Homo sapiens; -SC: Saccharomyces cerevisiae; -HT: Haloterrigena turkmenica; -EC: Escherichia coli; -LC: Lactobacillus casei; -SA: Staphylococcus aureus; -HI: Haemophilus influenzae; -MJ: Methanococcus jannaschii; -DA: Desulfurococcus amylolyticus; -AP: Acanthamoeba polyphaga; -HA: Hadesarchaea archaeon; -FM: Fomitiporia mediterranea; -FV: Fowlpox virus; -XV: Xanthomonas virus Xp10; -EP: Enterococcus phage.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "', which are equivalent to level 8 for AC2. The asterisk (*) next to the time means that the compression was run on a different machine, with more RAM but slower CPUs. The underlined values represent the fastest computations, and the bold stand for the best compression rates.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Smoothed gain of AC2 relatively to AC, in bits per symbol (bps). Regions with the line above zero indicate that AC2 has better compression than AC. Three profiles are depicted for three species, namely (a) XV: Xanthomonas virus Xp10, (b) FV: Fowlpox virus, (c) HS: Homo sapiens.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The bits per symbol (b) needed to represent a protein sequence of a chromosome (Chr: Chromosome, MT: Mitochondria) using as a reference the corresponding Human's. AC and AC2 use the following models '",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Smoothed gain of AC2 relatively to AC in bits per symbol (Bps). Regions with the line above zero indicate that AC2 has better compression than AC. Three profiles are depicted for referential compression of three sequence pairs, namely (a) Chromosome 1 of chimpanzee, (b) Chromosome 17 of gorilla, and (c) Mitochondrion of orangutan. All target sequences use the corresponding human sequence as reference. The compression parameters are the same as in",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "x|y), C(y|x): all the models used in C(x) and C(y) and -rm 1",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Analysis of the most similar protein sequences from the NCBI database according to multiple protein sequences of the SARS-CoV-2. The similarity metric used is the Normalized Compression Distance (NCD). The lower the NCD, higher the similarity. Five protein sequences are used for comparison: (a) membrane, (b) nucleoprotein, (c) envelope, (e) Replicase polyprotein (ORF 1ab), and (f) spike. The (d) panel depicts an illustration of the two-dimensional localization of the proteins in SARS-CoV-2, while (g) shows localization in one-dimension of the sequences that correspond to the proteins.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Figure 1. Mixer architecture: high level overview of inputs to the neural network (mixer) used in AC2. Model 1 through Model n represent the AC model outputs (probabilities for all the amino acids). EMA represents the exponential moving average for each symbol. Freqs are the frequencies for the last 8, 16, and 64 symbols. The network outputs represent the probabilities for each amino acid symbol.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors declare that they have no competing interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest:"
+        }
+    ]
+}

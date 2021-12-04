@@ -1,0 +1,3212 @@
+{
+    "paper_id": "3de0e65b87d59a21b35ea4d8b6173aab94b093b3",
+    "metadata": {
+        "title": "Leveraging Administrative Data for Bias Audits: Assessing Disparate Coverage with Mobility Data for COVID-19 Policy",
+        "authors": [
+            {
+                "first": "Amanda",
+                "middle": [],
+                "last": "Coston",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {}
+                },
+                "email": "acoston@cs.cmu.edu"
+            },
+            {
+                "first": "Neel",
+                "middle": [],
+                "last": "Guha",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {}
+                },
+                "email": "nguha@stanford.edu"
+            },
+            {
+                "first": "Derek",
+                "middle": [],
+                "last": "Ouyang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {}
+                },
+                "email": "douyang1@stanford.edu"
+            },
+            {
+                "first": "Lisa",
+                "middle": [],
+                "last": "Lu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Alexandra",
+                "middle": [],
+                "last": "Chouldechova",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "Daniel",
+                "middle": [
+                    "E"
+                ],
+                "last": "Ho",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Stanford University",
+                    "location": {}
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Anonymized smartphone-based mobility data has been widely adopted in devising and evaluating COVID-19 response strategies such as the targeting of public health resources. Yet little attention has been paid to measurement validity and demographic bias, due in part to the lack of documentation about which users are represented as well as the challenge of obtaining ground truth data on unique visits and demographics. We illustrate how linking largescale administrative data can enable auditing mobility data for bias in the absence of demographic information and ground truth labels. More precisely, we show that linking voter roll data-containing individual-level voter turnout for specific voting locations along with race and age-can facilitate the construction of rigorous bias and reliability tests. These tests illuminate a sampling bias that is particularly noteworthy in the pandemic context: older and nonwhite voters are less likely to be captured by mobility data. We show that allocating public health resources based on such mobility data could disproportionately harm high-risk elderly and minority groups.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Mobility data has played a central role in the response to COVID-19. Describing the movement of millions of people, smartphonebased mobility data has been used to analyze the effectiveness of social distancing polices (non-pharmaceutical interventions), illustrate how movement impacts the transmission of COVID-19, and probe how different sectors of the economy have been affected by social distancing policies [1, 4, 7, 10, 20, 22, 33, 46] . Despite the high-stakes settings in which this data is deployed, there has been no independent assessment of the reliability of this data. In this paper we show how administrative data (i.e., data from government agencies kept for administrative purposes) can be used to perform such an assessment.",
+            "cite_spans": [
+                {
+                    "start": 412,
+                    "end": 415,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 416,
+                    "end": 418,
+                    "text": "4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 419,
+                    "end": 421,
+                    "text": "7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 422,
+                    "end": 425,
+                    "text": "10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 426,
+                    "end": 429,
+                    "text": "20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 430,
+                    "end": 433,
+                    "text": "22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 434,
+                    "end": 437,
+                    "text": "33,",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 438,
+                    "end": 441,
+                    "text": "46]",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Data reliability should be a foremost concern in all policy-making and policy evaluation settings, and is especially important for mobility data due to the lack of transparency surrounding data provenance. Mobility data providers obtain their data from opt-in location-sharing mobile apps, such as navigation, weather, or social media apps, but do not disclose which specific apps feed into their data [31] . This opacity prevents data consumers such as policymakers and researchers from understanding who is represented in the mobility data, a key question for enabling effective and equitable policies in high-stakes settings such as the COVID-19 pandemic. Grantz et al. describe \"a critical need to understand where and to what extent these biases may exist\" in their discussion on the use of mobility data for COVID-19 response.",
+            "cite_spans": [
+                {
+                    "start": 402,
+                    "end": 406,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Of particular interest is potential sampling bias with respect to important demographic variables in the context of the pandemic: age and race. Older age has been established as an increased risk factor for COVID-19-related mortality [52] . African-American, Native-American and LatinX communities have seen disproportionately high case and death counts from COVID-19 [45] and the pandemic has reinforced existing health inequities that affect vulnerable communities [24] . If certain races or age groups are not well-represented in data used to inform policy-making, we risk enacting policies that fail to help those at greatest risk and serve to further exacerbate disparities.",
+            "cite_spans": [
+                {
+                    "start": 234,
+                    "end": 238,
+                    "text": "[52]",
+                    "ref_id": "BIBREF51"
+                },
+                {
+                    "start": 368,
+                    "end": 372,
+                    "text": "[45]",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 467,
+                    "end": 471,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "In this paper we assess SafeGraph, a widely-used point-of-interest (POI)-based mobility dataset 1 for disparate coverage by age and race. We define coverage with respect to a POI: coverage is the proportion of traffic at a POI that is recorded in the mobility data. For privacy reasons, many mobility datasets are aggregated up from the individual level to the physical point-of-interest (POI) level. Due to this aggregation, we lack the resolution to assess individual-level coverage quantities like the fraction of members of a demographic subgroup of interest who are represented in the data. Nonetheless, our POI-based notion of coverage is relevant for many COVID-19 policies that are made based on traffic to POIs, such as deciding to close certain business sectors or determining where to locate resources like pop-up testing sites. We use differences in the distributions of age and race across POIs to assess demographic disparities in coverage.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "While we focus here on a specific dataset and implications for COVID-19 policy, the question of how one can assess disparate coverage is a more general one in algorithmic governance. Ground truth is often lacking, which is precisely why policymakers and academics have flocked toward big data, on the implicit assumption that scale can overcome more conventional questions of data reliability, sampling bias, and the like [2, 35] . Government agencies may not always have access to protected attributes, making fairness and bias assessments challenging [32] .",
+            "cite_spans": [
+                {
+                    "start": 422,
+                    "end": 425,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 426,
+                    "end": 429,
+                    "text": "35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 553,
+                    "end": 557,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "The main contributions of our paper are as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "(1) We show how administrative data can enable audits for bias and reliability ( \u00a7 5)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "(2) We characterize the measurement validity of a smartphonebased mobility dataset that is widely used for COVID-19 research, SafeGraph ( \u00a7 4.2, 6.1) (3) We illuminate significant demographic disparities in the coverage of SafeGraph ( \u00a7 6.2) (4) We illustrate how this disparate coverage may distort policy decisions to the detriment of vulnerable populations ( \u00a7 6.3) (5) We perform robustness tests that evaluate our results against a possible type of confounding ( \u00a7 5.3, 6.2.1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Our paper proceeds as follows. Section 2 and Section 3 discuss related work and background on the uses of mobility data in the pandemic. Section 4 provides an overview of our auditing framework and formalizes the assumptions to construct bias and reliability tests. Section 5 discusses the estimation approach using voter roll data. Section 6 presents results that while SafeGraph can be used to estimate voter turnout, the mobility data systematically undersamples older individuals and minorities. Section 7 discusses interpretation and limitations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Our assessment of disparate coverage is related to several strands in the literature. First, the most closely related work to ours is Safe-Graph's own analysis of sampling bias discussed below. However, that analysis examines demographic bias only at the national aggregated level and does not address the question of demographic bias for POI-specific inferences. Ours is the first independent assessment of demographic bias to the extent we are aware.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Second, our work relates to existing work on demographic bias in smartphone-based estimates [51] . A notable line of survey research has examined the distinct demographics of smartphone users [18, 36] . [49] and [50] document significant concerns about mobility-based estimates from mobile phone data, including particularly low coverage for elderly. The literature further finds that smartphone ownership in the United States varies significantly with demographic attributes [6] . In 2019 an estimated 81% of Americans owned smartphones with ownership rates of 96% for those aged 18-29 and ownership rates of 53% for those aged over 65 [42] . Racial disparities in smartphone ownership are less pronounced, with an ownership rate of 82%, 80%, and 79% for White, Latinx, and African-American individuals, respectively. Even conditional on mobile phone ownership, however, demographic disparities may still exist. App usage may differ by demographic group. According to one report, 69% of U.S. teenagers, for instance, use Snapchat, compared to 24% of U.S. adults. Of particular relevance to mobility datasets, the rate at which users opt in to location sharing may vary by demographic subgroup. Hoy and Milne, for instance, reported that college-aged women exhibit greater concerns with third party data usage. And even among users who who opt in to a specific app, usage behavior may differ according to demographics. Older users, for instance, may be more likely to use a smartphone as a \"classic phone\" [3] .",
+            "cite_spans": [
+                {
+                    "start": 92,
+                    "end": 96,
+                    "text": "[51]",
+                    "ref_id": "BIBREF50"
+                },
+                {
+                    "start": 192,
+                    "end": 196,
+                    "text": "[18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 197,
+                    "end": 200,
+                    "text": "36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 203,
+                    "end": 207,
+                    "text": "[49]",
+                    "ref_id": "BIBREF48"
+                },
+                {
+                    "start": 212,
+                    "end": 216,
+                    "text": "[50]",
+                    "ref_id": "BIBREF49"
+                },
+                {
+                    "start": 476,
+                    "end": 479,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 637,
+                    "end": 641,
+                    "text": "[42]",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1506,
+                    "end": 1509,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Our work is in many ways a response to a recent call to characterize the biases in mobility data used for COVID-19 policies [23] . Grantz et al. highlight the potential for demographic bias, citing \"clear sociodemographic and age biases of mobile phone ownership. \" They note, \"Identifying and quantifying these biases is particularly challenging, though, when there is no clear gold standard against which to validate mobile phone data. \" We provide the first rigorous test for demographic bias using auxiliary estimates of ground truth.",
+            "cite_spans": [
+                {
+                    "start": 124,
+                    "end": 128,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Third, our work bears similarity to the literature on demographic bias in medical data and decision-making. A long line of research has demonstrated that medical research is disproportionately conducted on white males [17, 38, 41] . This literature has cataloged the harmful effects of making treatment decisions for subgroups that were underrepresented in the data [5, 47, 48] . In much the same vein, our work calls into question research conclusions based on SafeGraph data that may not be relevant for older or minority subgroups.",
+            "cite_spans": [
+                {
+                    "start": 218,
+                    "end": 222,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 223,
+                    "end": 226,
+                    "text": "38,",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 227,
+                    "end": 230,
+                    "text": "41]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 366,
+                    "end": 369,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 370,
+                    "end": 373,
+                    "text": "47,",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 374,
+                    "end": 377,
+                    "text": "48]",
+                    "ref_id": "BIBREF47"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "Last, our work relates more broadly to the sustained efforts within machine learning to understand sources of demographic bias in algorithmic decision making [12, 13, 21, 25, 34] . Important work has audited demographic bias of facial recognition technology [8] , child welfare screening tools [11] , criminal risk assessment scores [43] , and health care allocation tools [2, 39] . Often the underlying data is identified as a major source of bias that propagates through the algorithm and leads to disparate impacts in the decision-making stage. Similarly, our study illustrates how disparate coverage in smartphone-based data can misallocate COVID-19 resources.",
+            "cite_spans": [
+                {
+                    "start": 158,
+                    "end": 162,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 163,
+                    "end": 166,
+                    "text": "13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 167,
+                    "end": 170,
+                    "text": "21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 171,
+                    "end": 174,
+                    "text": "25,",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 175,
+                    "end": 178,
+                    "text": "34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 258,
+                    "end": 261,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 294,
+                    "end": 298,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 333,
+                    "end": 337,
+                    "text": "[43]",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 373,
+                    "end": 376,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 377,
+                    "end": 380,
+                    "text": "39]",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK"
+        },
+        {
+            "text": "We now discuss the SafeGraph mobility dataset, illustrate how this data has been widely deployed to study and provide policy recommendations for the public health response to COVID-19, and discuss SafeGraph's own assessment of sampling bias.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BACKGROUND ON SAFEGRAPH MOBILITY DATA"
+        },
+        {
+            "text": "SafeGraph contains mobility data from roughly 47M mobile devices in the United States. The company sources this data from mobile applications, such as navigation, weather, or social media apps, where users have opted in to location tracking. It aggregates this information by points-of-interest (POIs) such as schools, restaurants, parks, airports, and brick-and-mortar stores. Hourly visit counts are available for each of over 6M POIs in their database. 2 Individual device pattern data is not distributed for researchers due to privacy concerns. Our analysis relies on SafeGraph's 'research release' data which aggregates visits at the POI level.",
+            "cite_spans": [
+                {
+                    "start": 456,
+                    "end": 457,
+                    "text": "2",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SafeGraph Mobility Data"
+        },
+        {
+            "text": "When the pandemic hit, SafeGraph released much of its data for free as part of the \"COVID-19 Data Consortium\" to enable researchers, non-profits, and governments to leverage insights from mobility data. As a result, SafeGraph's mobility data has become the dataset de rigueur in pandemic research. The Centers for Disease Control and Prevention (CDC) employs SafeGraph data to examine the effectiveness of social distancing measures [37] . According to SafeGraph, the CDC also uses SafeGraph to identify healthcare sites that are reaching capacity limits and to tailor health communications. The California Governor's Office, and the cities of Los Angeles [19] , San Francisco, San Jose, San Antonio, Memphis, and Louisville, have each relied on SafeGraph data to formulate COVID-19 policy, including risk measurements of specific areas and facilities and enforcement of social distancing measures. Academics, too, have employed the data widely to understand the pandemic: [10] used SafeGraph data to examine how social distancing compliance varied by demographic group; [15, 16] used SafeGraph to infer the effect of \"superspreader\" events such as the Sturgis Motorcycle Rally and campaign events; [40] examined whether social distancing was more prevalent in in areas with higher xenophobia; and [1] examined whether social distancing compliance was driven by political partisanship, to name a few. What is common across all of these works is that they assume that SafeGraph data is representative of the target population.",
+            "cite_spans": [
+                {
+                    "start": 433,
+                    "end": 437,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 656,
+                    "end": 660,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 973,
+                    "end": 977,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1071,
+                    "end": 1075,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1076,
+                    "end": 1079,
+                    "text": "16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1199,
+                    "end": 1203,
+                    "text": "[40]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 1298,
+                    "end": 1301,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Use of SafeGraph Data in COVID-19 Response"
+        },
+        {
+            "text": "SafeGraph has issued a public report about the representativeness of its data [44] . While SafeGraph does not have individual user attributes (e.g., race, education, income), it merged census data based on census block group (CBG), the smallest geographic unit for which the census publishes data, to assess bias along demographic characteristics. The racial breakdown of device holders, for instance, was allocated proportionally based on the racial breakdown of a CBG. SafeGraph then compared the total SafeGraph imputed demographics against census population demographics at the national, state, county, and CBG levels. According to Safe-Graph, the results looked \"quantitatively very close to the expected\" at the state and county levels, but the sampling rates at the CBG level looked highly unrepresentative. SafeGraph warned that \"local analyses examining only a few CBGs\" should proceed with caution. SafeGraph's examination for sampling bias should be applauded. Companies may not always have the incentive to address these questions directly, and SafeGraph's analysis is transparent, with data and replication code provided. As far as we are aware, it remains the only analysis of SafeGraph sampling bias.",
+            "cite_spans": [
+                {
+                    "start": 78,
+                    "end": 82,
+                    "text": "[44]",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SafeGraph Analysis of Sampling Bias"
+        },
+        {
+            "text": "Nevertheless, their analysis suffers from several key limitations. First, because SafeGraph lacks demographic information about the users, the imputation of the CBG attributes imposes a strong homogeneity assumption. The mere fact that 52% of Atlanta's population is African American does not mean that five out of ten SafeGraph devices in Atlanta belong to African-Americans. Second, by aggregating demographic analyses nationally for a single attribute at a time, the results may miss significant differences in the joint distribution of features. For instance, if coverage is better for younger populations and for whiter populations, but whiter populations are on average older than non-white populations, then evaluating coverage marginally against either race or age will underestimate disparities. Indeed we present evidence for such an effect in \u00a7 6. Third, the dramatic variation in SafeGraph coverage across CBGs is serious cause for concern because many of the COVID-19 analyses referenced above leverage SafeGraph data at finer geographic units than CBGs (e.g. POIs). This risks drawing conclusions from data at a level of resolution that SafeGraph has not established to be free from coverage disparities. Because SafeGraph's analysis examines demographic bias only at census aggregated levels and does not address the question of demographic bias for POI-specific inferences, an independent coverage audit remains critical.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SafeGraph Analysis of Sampling Bias"
+        },
+        {
+            "text": "In this section we outline our proposed auditing methodology and state the conditions under which the proposed method allows us to detect demographic disparities in coverage. We motivate our approach by first describing the idealized audit we would perform if we had access to ground truth data. We then modify this framework to account for the limitations of available administrative data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "AUDITING FRAMEWORK"
+        },
+        {
+            "text": "Let I = {1, ..., } denote a set of SafeGraph POIs. Let \u2208 R denote a vector of the SafeGraph traffic count (i.e. number of visits) for day \u2208 J where each element indicates the traffic to POI on day . Similarly let denote the ground truth traffic (visits) to POI during day . When the context is clear, we omit the superscript when referring to vectors \u2208 R and \u2208 R . We use \u2298 to denote Hadamard division (the element-wise division of two matrices). With this, we define our coverage function ( , ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation"
+        },
+        {
+            "text": "Definition 1 (Coverage function). Let ( , ) : R \u00d7 R \u21a6 \u2192 R denote the following coverage function:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation"
+        },
+        {
+            "text": "The coverage function yields a vector where the ith element equals and describes the coverage of POI i.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notation"
+        },
+        {
+            "text": "denote a numeric measure of the demographics of visitors to POI on day ; for instance may be the percentage of visitors to a location on a specific day that are over the age of 65. Let cor( , ) = cov( , ) \u221a var( )var( ) denote the Pearson correlation between vectors and and let ( ) be the rank function that returns the rank of vector . 3 Our audit will consider the (Spearman) rank correlation cor( ( ), ( )), which provides a more flexible measure of association since it assumes only monotonicity (versus the linearity assumption in the Pearson correlation).",
+            "cite_spans": [
+                {
+                    "start": 338,
+                    "end": 339,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Let"
+        },
+        {
+            "text": "Our audit assesses how well SafeGraph measures ground truth visits and whether this coverage varies with demographics. We operationalize these two targets as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Idealized Audit"
+        },
+        {
+            "text": "Definition 2 (Measurement signal and validity). Define the strength of measurement signal as cor( ( ), ( )).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Idealized Audit"
+        },
+        {
+            "text": "A positive signal indicates facial measurement validity, and a signal close to one indicates high measurement validity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Idealized Audit"
+        },
+        {
+            "text": "Definition 3 (Disparate coverage). We will say that disparate coverage exists when the rank correlation between coverage \u210e (a) Causal association (b) Non-causal association Figure 1 : Possible mechanisms under which disparate coverage arises. Disparate coverage may be a result of a causal associations such as (a) whereby older people are less likely to own or use smartphones and therefore places frequented by older people have lower coverage. Disparate coverage may also arise due to a non-causal associations such as (b) whereby rural regions have higher percentages of older residents and worse cell reception which reduces coverage. Both types of associations are policy-relevant because in both cases, certain age groups are underrepresented. and the demographic measure is statistically different from zero:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 173,
+                    "end": 181,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Idealized Audit"
+        },
+        {
+            "text": "We are interested in identifying an association of any kind; we are not concerned with identifying a causal effect. Age might have a causal effect on smartphone usage, setting aside the question of manipulability [28] , as depicted in the top panel (a) of Fig. 1 . But as the bottom panel (b) depicts, age may not directly affect SafeGraph coverage but be directly correlated with a factor like urban/rural residence, which in turn does affect SafeGraph coverage. For either mechanism, the policy-relevant conclusion remains that SafeGraph is underrepresenting certain age groups.",
+            "cite_spans": [
+                {
+                    "start": 213,
+                    "end": 217,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 256,
+                    "end": 262,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Idealized Audit"
+        },
+        {
+            "text": "In reality, there is no ground truth source of information about foot traffic and the corresponding demographics for all 6 million POIs. Instead, we must make do with estimates of and based on auxiliary data sources about some subset of visits to a subset of POIs. In order to identify the relationship of interest (Def. 3) between coverage and demographics, we need the following to hold: Assumption 1 (No induced confounding). The estimation procedure does not induce a confounding factor that affects both the estimate of demographics and the estimate of coverage (see Figure 2 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 572,
+                    "end": 580,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Real-world audit"
+        },
+        {
+            "text": "After introducing our auxiliary data and the estimation procedure, \u00a7 5.3 revisits the plausibility and testability of these assumptions. Appendix C discusses the analogous assumptions required to identify the target for measurement validity (Def. 2).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumption 2 (No selection bias). The selection is not based on an interaction between factors that affect coverage and demographics."
+        },
+        {
+            "text": "It is quite challenging to identify data sources for ground truth visits to POIs with corresponding demographic information [23] . Consider for instance large sporting events where stadium attendance is closely tracked. Can we leverage differences in audience\u02c6 X X Figure 2 : Our results assume the estimation of coverage and demographics such as age does not induce confounding. We describe a test for time-invariant confounding in \u00a7 5.3 and report results in \u00a7 6.2.1 demographics based on the event (e.g., international soccer game between two countries) in order to assess disparate coverage? Two major impediments are lack of access to precise demographic estimates as well as confounding factors such as tailgating that may vary with demographics, thereby violating Assumption 1.",
+            "cite_spans": [
+                {
+                    "start": 124,
+                    "end": 128,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 265,
+                    "end": 273,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Assumption 2 (No selection bias). The selection is not based on an interaction between factors that affect coverage and demographics."
+        },
+        {
+            "text": "We propose a solution using large-scale administrative data that records individual-level visits along with demographic information: voter turnout data. Such data has several unique advantages. First, because these stem from official certified records by election authorities, voter turnout information is of uniquely high fidelity. In an analysis of five voter file vendors, Pew Research, for instance, found that the vendors had 85% agreement about turnout in the 2018 election [30] . Second, numerous states break out voter turnout by in person, election day voting. This is critical, given the rise of absentee, mail, and early voting, enabling us to infer the exact count of individuals visiting a specific voting location on a specific day. Third, voter registration forms typically include fields for date of birth, gender, and often race. 4 When race is not provided, data vendors estimate race. The Pew study found race to be 79% accurate across the five vendors, with accuracies varying from 67% for African-Americans to 72% for Hispanics to 93% for non-Hispanics. 5 Fourth, voting (poll) locations provide many data samples across a wide geography with demographic variation, which is necessary given that SafeGraph POI visit information is necessarily aggregated. In short, this administrative data enables us to cleanly infer the demographics and number of visitors to polling locations on election day. We use individual voter records provided by L2 6 , a private voter file vendor which aggregates publicly available voter records from jurisdictions nationwide. Our analysis relies primarily on four fields from the voter files: age, race, precinct, and turnout. While this data is near ideal, it is missing one key piece of information: the poll location. We hence obtained a crosswalk of voting precinct to poll location from the North Carolina Secretary of State. This crosswalk enables us to map each voter via their voting precinct to a SafeGraph POI. We note that poll locations are often schools, community centers, religious institutions, and fire stations. These POIs may hence also have non-voter traffic on election day. We address this possible source of confounding in \u00a7 5.2. Overall, our data includes 595K voters who turned out to vote at 549 voting locations that could be matched. The disparate impact (Def. 3) question in this setting is does SafeGraph coverage of voters at different poll locations vary with voter demographics? We focus on two key demographic risk factors for COVID-19: age and race. We summarize the age distribution at a polling location by computing the proportion of voters over age 65, which we denote by . Let denote the proportion of voters whose ethnicity in L2 data is listed as Hispanic and Portuguese, Likely African-American, East and South Asian, or Other (all voters whose ethnicity was not listed as European). We will refer to as the proportion of non-white voters.",
+            "cite_spans": [
+                {
+                    "start": 480,
+                    "end": 484,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 847,
+                    "end": 848,
+                    "text": "4",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1075,
+                    "end": 1076,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Administrative data on voter turnout"
+        },
+        {
+            "text": "We briefly discuss issues of representativeness. Because the voting population is not a random sample of the population, the magnitude of an association between coverage and age/race among voters is likely different than the magnitude among the whole population. Since the voting population is older and more white than the general population [30] , the association among voters could very well underestimate the magnitude of the population association. However, our target measure of bias (Def. 3) does not depend on the magnitude of an association. Assuming Conditions 1 and 2 hold, evidence for any association on the voting population is indicative of an association (of perhaps different magnitude) on the full population.",
+            "cite_spans": [
+                {
+                    "start": 343,
+                    "end": 347,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Administrative data on voter turnout"
+        },
+        {
+            "text": "Non-voter traffic may be incorporated into SafeGraph measures and may confound our analysis if the magnitude of that non-voter traffic varies with the demographic attributes of the voters. For instance, if younger voting populations are more likely to vote at community centers which have large non-voter traffic and older voting populations are more likely to vote at churches which have small non-voter traffic, then even if SafeGraph has no disparate coverage, we would observe a negative relationship between coverage and age. 7 We control for this confounding by estimating non-voter traffic using mean imputation. In Appendix D, we provide similar results using a local linear regression type imputation procedure. We focus on two measures of demographics: , the proportion of voters over the age of 65, and , the proportion of voters who are an ethnic group besides white. 9 Let I denote the indicator function.",
+            "cite_spans": [
+                {
+                    "start": 531,
+                    "end": 532,
+                    "text": "7",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 880,
+                    "end": 881,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Adjustment for non-voter traffic"
+        },
+        {
+            "text": "Following our proposed audit in Def. 3, we test whether there is a rank correlation between ( * \u2212 * , * ) and demographic measure . If so, and if we believe Assumptions 1-2 hold, then we may conclude SafeGraph has disparate coverage. We next discuss how we can partially test Assumption 1 and how we can reason about the remaining assumptions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Testing disparate coverage among voters"
+        },
+        {
+            "text": "We can relax Assumption 1 that the estimation procedure does not induce confounding by decomposing confounding into timeinvariant and time-varying confounding. We can test for timeinvariant confounding, enabling us to make the weaker and more reasonable assumption of no time-varying confounding. A timeinvariant confounder is a confounder that affects our demographic estimate as well as traffic on election day and on nonelection days. This contrasts to a time-varying confounder that affects our demographic estimate and traffic on election day but does not affect traffic on non-election days. Examples of timeinvariant and time-varying confounding are given in Figure 3 . The assumption of no time-varying confounding is untestable but it is reasonable to believe this holds in our setting. Most voting places, 7 Non-voter traffic may affected by device attribution errors, in which device GPS locations are incorrectly assigned to one of two adjacent POIs. SafeGraph reports in its user documentation that \"[it] is more difficult to measure visits to a midtown Manhattan Starbucks than a visit to a suburban standalone Starbucks.\" If younger voting populations are more likely to vote in dense urban polling locations, then even if there isn't large non-voter traffic in the same facility, large traffic in an adjacent facility could still be incorrectly attributed to the polling location with greater likelihood than to a suburban polling location. However, this source of confounding can be controlled for using the same technique described. 8 The adjustment resulted in negative estimates of voter traffic for poll locations at schools. Because of the difficulties in estimating the baseline for schools, we have removed schools from our analysis. 9 In what follows we use the generic variable to indicate either measure of demographics. for instance, are public places making it unlikely that the non-voter traffic is affected differentially on election and non-election days. Another possible time-varying confounder would be if voting locations with older (or largely non-white) voters are more likely to be placed outside of the SafeGraph geometry for device attribution (e.g., parking lot). We do not believe this is likely because voting locations are typically indoors for security and climate reasons during a November election.",
+            "cite_spans": [
+                {
+                    "start": 816,
+                    "end": 817,
+                    "text": "7",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1551,
+                    "end": 1552,
+                    "text": "8",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1758,
+                    "end": 1759,
+                    "text": "9",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 666,
+                    "end": 674,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Testing disparate coverage among voters"
+        },
+        {
+            "text": "To test for any time-invariant confounding induced by the estimation procedure, we conduct a placebo test that repeats the disparate coverage audit (Def. 3) comparing marginal traffic on placebo (non-election) days to the election-day demographics. 10 Using 48 weekdays in October and November of 2018, we generate a placebo distribution of the estimated correlation coefficients for all placebo days against which we compare the election-day estimate. Algorithm 1 provides details. If the election-day correlation is unlikely under placebo distribution (i.e. small p-value), then we say the placebo test passes. If we additionally believe there is no time-varying confounding, then we can conclude that SafeGraph has disparate coverage of voters on election day. In order to generalize these findings to the broader population on non-election day, Assumption 2 (no selection bias) must hold. Examples of violations of this assumption might include: (i) The older (or non-white) population who doesn't vote is more likely to use smartphones than the older (or non-white) population who does vote; and (ii) Older (or non-white) voters leave their smartphones 10 This placebo test is similar to methods of randomization inference in the literature on treatment effects [27] . at home when they go vote but always carry their smartphones otherwise whereas younger (or white) voters bring their smartphones to the polls and elsewhere. We believe such mechanisms are unlikely. Testing this assumption would require the use of an additional auxiliary dataset which is outside the scope of this paper.",
+            "cite_spans": [
+                {
+                    "start": 249,
+                    "end": 251,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1158,
+                    "end": 1160,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1267,
+                    "end": 1271,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Placebo test for time-invariant confounding."
+        },
+        {
+            "text": "Election day brings a dramatic increase in traffic to polling locations relative to non-election days, and any valid measure of visits should detect this outlier. Figure 4 shows the daily aggregate traffic across poll locations for October and November of 2018, and as expected, we see a significant increase in both total traffic (top panel) and marginal traffic (bottom panel) on election day. To assess the strength of this signal using the framework described above (Def. 2), we present the correlation between marginal SafeGraph traffic on election day and actual voter turnout. The rank correlation test yields a positive correlation: cor ( * \u2212 * ), ( * ) = 0.445 with p-value < 0.001. 11 Figure 5 displays this relationship by comparing the marginal election traffic * \u2212 * on the -axis against actual voter counts * on the -axis for each polling location. This corroborates that SafeGraph data is able to detect broad patterns in movement and visits. That said, the estimates at the individual polling place location level are quite noisy: root meansquared error is 899 voters with a standard error of 45. For instance, amongst polling places that registered 20 marginal devices, roughly 250 to 1600 actual voters turned out. This significant noise is likely due to a combination of factors. First, SafeGraph may incorrectly attribute voters to nearby POIs because of incorrect building geometries. Second, we are not able to perfectly adjust for non-election traffic. Third, SafeGraph may have disparate coverage of voters by demographic attributes. This last factor is the focus of our analysis.",
+            "cite_spans": [
+                {
+                    "start": 692,
+                    "end": 694,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 163,
+                    "end": 171,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 695,
+                    "end": 703,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Measurement Validity"
+        },
+        {
+            "text": "We assess whether the demographic composition of voters who actually turned out to vote in person is correlated with coverage. First, we find a statistically significant negative correlation between q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q q We now examine the interaction between age and race, which is particularly important for two reasons. First, there are widespread concerns that disparate impact can be more pronounced at the \"intersection\" of protected groups [8, 9, 14] . Second, as we show in Appendix A, age and race are highly correlated in our sample. Polling locations with younger voters are also more likely to have higher proportions of minority voters. We hence fit simple linear regressions to model coverage as a function of the percentage over 65, percentage white, and the interaction between these demographic attributes. Appendix E presents fuller regression results, which demonstrate that once we control for age, the effect for race is more robust. Because the demographics have to be interpreted jointly, the top panel of Figure 7 presents a heat map of coverage with age bins (quartiles) on the -axis and race bins (quartiles) on the -axis. This bottom left cell, for instance, shows that precincts that are the most white and young have highest coverage rates. Conditional on a young precinct, a greater minority population decreases coverage. The lowest coverage is for older minority precincts. The lower panel of Figure 7 similarly plots race on the -axis against coverage on the -axis, separating older precincts (yellow) and younger precincts (blue). As can be seen from the regression lines, there is both an average difference between older and younger precincts and coverage declines as the minority population increases.",
+            "cite_spans": [
+                {
+                    "start": 559,
+                    "end": 562,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 563,
+                    "end": 565,
+                    "text": "9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 566,
+                    "end": 569,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1141,
+                    "end": 1149,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 1537,
+                    "end": 1545,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Demographic Bias"
+        },
+        {
+            "text": "In short, we have provided evidence that there is disparate Safe-Graph coverage by two protected attributes that are risk factors for COVID-19: age and race. We bolster this claim of disparate coverage by next showing that we pass the placebo test for time-invariant confounding.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Demographic Bias"
+        },
+        {
+            "text": "In this section we use the placebo test framework described in \u00a7 1 to support the assumption of no time-invariant confounding. We consider ( ( \u2212 , * )), ( * ) , the rank correlation between voter demographics and the ratio of SafeGraph marginal traffic on non-election days to voter turnout. Evidence of a non-zero correlation may suggest time-invariant confounding induced by our estimation procedure. Figure 8 shows that the election-day rank correlation is significantly outside the placebo distribution (empirical one-sided -values are 0 and 0.03 for age and race, respectively). Our second robustness check computes the coefficients for the linear regression of ( \u2212 , * ) \u223c * , * on all weekdays in October and November 2018. The coefficients for age and race are statistically outside the placebo distribution (empirical one-sided -values are 0 and 0.02 for age and race respectively). In Appendix C, we present results that show that placebo tests for measurement validity also pass.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 403,
+                    "end": 411,
+                    "text": "Figure 8",
+                    "ref_id": "FIGREF7"
+                }
+            ],
+            "section": "Placebo tests of Assumption 1."
+        },
+        {
+            "text": "We now examine the policy implications of disparate coverage in light of the widespread adoption of SafeGraph data in COVID-19 response. In particular, we show how disparate coverage may lead to under-allocation of important health resources to vulnerable populations. For instance, suppose the policy decision at hand is where to locate mobile pop-up COVID-19 testing sites, and suppose the aim is to place these sites in the most trafficked areas to encourage asymptomatic individuals to get tested. One approach would use SafeGraph traffic estimates to rank order POIs. How would this ordering compare to the optimal ordering by ground truth traffic? Using voter turnout as an approximation to ground truth traffic, we perform linear regression of the rank of voter turnout against rank according to SafeGraph traffic as well as age and race:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Policy implications"
+        },
+        {
+            "text": "( ) \u223c ( \u2212 ) + + . Table 2 presents results of this rank regression (where rank is in descending order), confirming that Age quartile (4 = oldest) Race quartile (4 = largest percent non\u2212white) 1 the SafeGraph rank is significantly correlated with ground truth rank. But the large coefficient on age indicates that each percentage point increase in voters over 65 is associated with a 4 point drop in rank relative to the optimal ranking. Similarly, the coefficient on race indicates that each point increase in percent non-white is associated with a one point drop in rank relative to the optimal ranking. This demonstrates that ranking by SafeGraph traffic may disproportionately harm older and minority populations by, for instance, failing to locate pop-up testing sites where needed the most. Table 2 : To evaluate a potential rank-based policy allocation, we compare the rank of voter turnout against rank by Safe-Graph traffic, controlling for age and race in a linear regression. Although SafeGraph rank is correlated with the optimal rank by voter turnout, the coefficients on age and race indicate that each demographic percentage point increase is associated with a 4-point and 1-point drop in rank for age and race, respectively. This indicates that significant adjustments based on demographic composition should be made to a SafeGraph ranking. Failure to do so may direct resources away from older and more minority populations.",
+            "cite_spans": [
+                {
+                    "start": 192,
+                    "end": 193,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 18,
+                    "end": 25,
+                    "text": "Table 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 796,
+                    "end": 803,
+                    "text": "Table 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Policy implications"
+        },
+        {
+            "text": "Voter turnout rank Note: * p<0.1; * * p<0.05; * * * p<0.01",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dependent variable:"
+        },
+        {
+            "text": "We also consider the implications of using SafeGraph to inform resource allocation decisions, such as provision of health care resources such as masks, decisions to open or close categories of businesses in public health orders, and whether to allocate investigations in failures to comply with social distancing. We compare two approaches to such resource allocation decisions as follows: We bin polling locations into terciles based on their age and race and calculate what the allocation would be under ground truth (from voter turnout data) and under the SafeGraph data. Table 3 presents results. Each cell presents the proportion of resources that would be allocated to that age-race tercile, demonstrating that strict reliance on SafeGraph would under-allocate resources by 35% to the oldest/most non-white category ( -value < 0.05) and over-allocate resources by 30% to the youngest/whitest category ( -value < 0.05). Table 3 : Allocation of resources for age-race tertiles by Safe-Graph versus by true voter counts (with standard errors). The SafeGraph allocation redirects over 30% of the optimal allocation from the oldest/most non-white tertile (3) to the youngest/whitest tertile (1) (p-value < 0.05).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 575,
+                    "end": 582,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 925,
+                    "end": 932,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Dependent variable:"
+        },
+        {
+            "text": "The clear policy implication here is that while SafeGraph information may aid in a policy decision, auxiliary information (including prior knowledge) should likely be combined to make final resource allocation decisions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dependent variable:"
+        },
+        {
+            "text": "We have provided the first independent audit of demographic bias of a smartphone-based mobility dataset that has been widely used in the policy response to COVID-19. Our audit indicates that the data underrepresents two high risk groups: older and more nonwhite populations. Our results suggest that policies made without adjustment for this sampling bias may disproportionately harm these high risk groups. However, we note a limitation to our analysis. Because SafeGraph information is aggregated for privacy reasons, we are not able to test coverage at the individual level. To avoid a potential ecological fallacy, our results should be interpreted as a statement about POIs rather than individuals. That is, POIs frequented by older (or minority) visitors have lower coverage than POIs frequented by younger (or whiter) populations. Of course, policy decisions are typically made at some level of aggregation, so the demographic bias we document at this level remains relevant for those decisions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "A key future research question is how to use the results of this audit to improve policy decisions. We suggest a few possible future directions. Our results can be used to inform a bias correction approach that would for instance construct weights to adjust estimates based on race and age. Such an approach crucially requires knowledge about the likely demographic composition, which may be difficult for many policy settings. Another further avenue to explore is the methodology for \"normalization factors. \" SafeGraph, for instance, suggests using census block group (CBG)-based normalization factors, essentially using known devices in a CBG against the CBG census population [44] . While this bias correction might help to estimate population parameters (e.g., percentage of CBG population not abiding by social distancing), it is unlikely to capture the kind of demographic interaction effects we document here. Much more work should be done to study disparate coverage and ideally provide e.g. a weighing correction to the normalization factors that properly accounts for the demographic disparities documented in this audit.",
+            "cite_spans": [
+                {
+                    "start": 680,
+                    "end": 684,
+                    "text": "[44]",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Another possible solution is increased transparency. Researchers do not know details about the source of SafeGraph's mobility data, namely which mobile apps feed into the SafeGraph ecosystem. Access to such information may make the bias correction approach more tractable. If for instance researchers could identify that a data point emanates from Snapchat, then they could use what is known about the Snapchat user base to make adjustments. Given its increasing importance for policy, SafeGraph should consider disclosing more details about which apps feed into their ecosystem.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Mobility data based on smartphones has been rapidly adopted in the COVID-19 response. As [23] note, one of the most profound challenges arising with such rapid adoption has been the need to assess the potential for demographic bias \"when there is no gold standard against which to validate mobile phone data.\" Our paper illustrates one potential path forward, by linking smartphonebased data to high-fidelity ground truth administrative data. Voter turnout records, which record at the individual level whether a registered voter traveled to a polling location on a specific day and describe the voter's demographic information, enable us to develop a straightforward audit test for disparate coverage. We find that coverage is notably skewed along race and age demographics, both of which are significant risk factors for COVID-19 related mortality. Without paying attention to such blind spots, we risk exacerbating serious existing inequities in the health care response to the pandemic.",
+            "cite_spans": [
+                {
+                    "start": 89,
+                    "end": 93,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "CONCLUSION"
+        },
+        {
+            "text": "Our mobility data comes from SafeGraph via its COVID-19 Data Consortium. Specifically, we rely on the SafeGraph Patterns data, which provides daily foot traffic estimates to individual POIs, and the Core Places data, which contains basic location information for POIs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX A DATA A.1 Mobility Data"
+        },
+        {
+            "text": "Our election data comes from certified turnout results of the 2018 North Carolina general election, as collected by L2. For each registered voter, L2 provides demographic data, such as name, age, ethnicity, and voting district/precinct, as well as their voter history.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A.2 Election Data"
+        },
+        {
+            "text": "We provide some additional descriptive information about the data here. First, Figure 10 shows the correlation between age and race across polling locations. This illustrates the importance of jointly interpreting how coverage varies by age and race. Second, the top panel of Figure 11 illustrates the density of locations by age quartile on the -axis and race quartile on the -axis. The two modal polling locations are for locations with white elderly populations and non-white young populations. The bottom panel displays average number of voters in these cells, showing that young, high-minority cells represent a particularly large number of voters.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 79,
+                    "end": 88,
+                    "text": "Figure 10",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 276,
+                    "end": 285,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "A.2 Election Data"
+        },
+        {
+            "text": "Our polling location and precinct data for North Carolina for Election Day 2018 was acquired from the North Carolina Secretary of State. This dataset contains the street address for each polling place, including location name, county, house number, street name, Age quartile (4 = oldest) Race quartile (4 = largest % non\u2212white) 20 Age quartile (4 = oldest) Race quartile (4 = largest % non\u2212white) 10 20 30 # Voters (1K) Figure 11 : Joint distribution polling locations and voters by age quartiles ( -axis) and race quartiles ( -axis).",
+            "cite_spans": [
+                {
+                    "start": 328,
+                    "end": 330,
+                    "text": "20",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 397,
+                    "end": 405,
+                    "text": "10 20 30",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 420,
+                    "end": 429,
+                    "text": "Figure 11",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "A.3 Poll Location Data"
+        },
+        {
+            "text": "city, state, and zip code, as well as the precinct associated with the polling location.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A.3 Poll Location Data"
+        },
+        {
+            "text": "This study required that we merge the points-of-interest (POIs) as defined by SafeGraph with the polling locations in North Carolina in 2018. To do so, we used SafeGraph's Match Service 12 , which takes in a POI dataset and using an undisclosed algorithm, matches it with its list of all POIs, appending the unique SafeGraph ID for all matched POIs. The service utilizes a variety of basic information 13 to determine matches; of these, we provided the location name (or polling place name), street address, city, state, and postal code for all polling locations in North Carolina in 2018. The match rate, i.e. the percentage of input polling locations SafeGraph could match with one of its POIs, was 77.6%. The polling location dataset, now having SafeGraph IDs for each matched location, was then joined with the SafeGraph Places dataset, which contains basic information like location name and address for the POI, for comparison between the matched POI and the polling location. The SafeGraph matching algorithm was at times too lenient, matching locations near each other but with different names or matching locations with different street addresses. To remedy this, we ran the dataset through a postprocessing script which removed matches where the addresses differed by three or more words to account for false positives. This resulted in a match rate of 47.7%. We then filtered out POIs where SafeGraph returned multiple candidate matches since we could not be confident the first match was the correct match. This resulted in a match rate of 42.2%.",
+            "cite_spans": [
+                {
+                    "start": 402,
+                    "end": 404,
+                    "text": "13",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B DETAILS ON DATA CLEANING AND MERGING"
+        },
+        {
+            "text": "Finally, we mapped voters from the L2 voter file to the appropriate polling location with SafeGraph ID. The L2 voter file contains the precinct for each voter, and the polling location data associates each precinct with a polling location, so by mapping voter to precinct and precinct to polling location (and SafeGraph ID) we could fetch the polling location for each voter for which there was a match with a SafeGraph POI. We observed differences in how the polling data and L2 named the same precinct. For instance, one source may using preceding zeros \"0003\" whereas another may not \"3\" or one source may use \"WASHINGTON WARD 1\" whereas the second uses \"WASHINGTON 1\".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B DETAILS ON DATA CLEANING AND MERGING"
+        },
+        {
+            "text": "While a key virtue of our approach is bringing in auxiliary ground truth data, the drawback is that this approach is not conducive to iterative audits over time (or geography) because of scalability challenges. Voter locations change with every election and there is no national database that collects voter location information over time. Creating the crosswalks between (a) SafeGraph POIs and voter locations and (b) voter locations and precincts in voter turnout files is a heavily manual process that differs for each jurisdiction, given the decentralized nature of election administration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B.1 Challenges for scalability"
+        },
+        {
+            "text": "In this section, we provide the analogue of \u00a7 4.3 and 6.2.1 for measurement validity. The assumptions required for our measurement validity analysis are much weaker than those discussed and evaluated in the main paper, but we provide the results here for completeness. To identify the relationship between ground truth visits and SafeGraph traffic, we need the following to hold:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C ASSUMPTIONS REQUIRED FOR MEASUREMENT VALIDITY"
+        },
+        {
+            "text": "Assumption 3 (No induced confounding (measurement validity)). The estimation procedure does not induce a confounding factor that affects both the estimates of ground truth visits and the estimated marginal SafeGraph traffic \u2212 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C ASSUMPTIONS REQUIRED FOR MEASUREMENT VALIDITY"
+        },
+        {
+            "text": "The selection is not based on an interaction between factors that affect ground truth visits and the estimated marginal SafeGraph traffic \u2212 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumption 4 (No selection bias (measurement validity))."
+        },
+        {
+            "text": "As we do above for disparate coverage, we can partially test Assumption 3 using placebo inference (see next section). While we can test for time-invariant confounding, we cannot test for time-varying confounding. Nonetheless it is difficult to postulate a reasonable mechanism for time-varying confounding in our measurement analysis. Assumption 4 would be violated if SafeGraph coverage is better for polling location POIs versus non-polling location POIs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Assumption 4 (No selection bias (measurement validity))."
+        },
+        {
+            "text": "To test for time-invariant confounding in our estimation of the correlation between ground truth visits and SafeGraph visits, we consider the rank correlation between voter turnout and SafeGraph marginal traffic on non-election days. We would not expect to find a non-zero such correlation, and indeed Figure 12 shows that the positive correlation on election day is significantly outside the distribution for placebo days (empirical one-sided -value = 0).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 302,
+                    "end": 311,
+                    "text": "Figure 12",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "C.1 Robustness test for time-invariant confounding"
+        },
+        {
+            "text": "To estimate voter traffic on election day, we estimate the amount of traffic on non-election day Tuesdays using SafeGraph Monthly Places Patterns data from January 2018 to April 2020 and subtract that estimate from the total recorded traffic on election days. In particular, to estimate the number of visits on a given non-election day Tuesday, we use the number of visits on adjacent weekdays to calculate that estimate. We took two approaches to making that calculation and selecting the optimal number of adjacent weekdays to base the estimate off.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D IMPUTATION OF NON-VOTER TRAFFIC"
+        },
+        {
+            "text": "In the first approach, we look at the adjacent weekdays before and after a given Tuesday and use the average of the traffic on all those weekdays to estimate the traffic on Tuesday. That is, for = 2, we calculate the estimate as the average of the traffic on the Friday and Monday before and Wednesday and Thursday after a given Tuesday. We performed this calculation for all North Carolina polling locations and all Tuesdays, excluding Election Days and the first and last Tuesdays from January 2018 to April 2020, with traffic data available from the SafeGraph Patterns data, which gave us 147,613 data points. We tested \u2208 [1, 4] as this considers all weekdays up to the next or previous Tuesday. The following are the evaluation metrics for this approach: Averaging the traffic on the two weekdays before and after a given Tuesday performs best by all three evaluation metrics.",
+            "cite_spans": [
+                {
+                    "start": 625,
+                    "end": 628,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 629,
+                    "end": 631,
+                    "text": "4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "D IMPUTATION OF NON-VOTER TRAFFIC"
+        },
+        {
+            "text": "In the second approach, we used the traffic on adjacent weekdays as features for a linear regression model, to account for the possibility that traffic on certain weekdays may be more impactful in calculating an accurate estimate. With the same dataset as the one described for the first approach we used 10-fold cross validation with 3 repeats, with the following results: The linear model using traffic from the four adjacent weekdays before and after the given Tuesday performed the best across both approaches, so we used this model to estimate non-voter traffic on Election Day. We used the model to predict the number of non-voter visits to each of 806 polling location POIs on Election Day (November 6 \u210e , 2018). 10 of the POIs did not have Patterns visit count data for 4 weekdays before Election Day (October 31 , 2018), so we imputed the traffic to be the traffic 3 weekdays before (November 1 , 2018) for those POIs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "D IMPUTATION OF NON-VOTER TRAFFIC"
+        },
+        {
+            "text": "The model was also used to impute the traffic at poll location POIs on the 48 weekdays between October 1 , 2018 and November 30 \u210e . These predictions were then used to repeat the data analyses on SafeGraph coverage as an additional robustness check, producing similar results to original analysis that relied on mean imputation to adjust for non-voter traffic. Figures 13 illustrates comparable results as before. Table 4 presents the full regression results for Section 6.2. The first column shows that the percent of the voting population over 65 is negatively associated with coverage. The second column shows that controlling for age, an increase in the percentage of the population that is white is associated with an increase in the coverage rate. The third column fits interaction terms, for which we present the substantive interpretation in Section 6.2. Note: * p<0.1; * * p<0.05; * * * p<0.01 Table 5 : Linear regression models of coverage rate by demographic attributes of polling locations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 414,
+                    "end": 421,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 903,
+                    "end": 910,
+                    "text": "Table 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "D IMPUTATION OF NON-VOTER TRAFFIC"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Polarization and public health: Partisan differences in social distancing during the Coronavirus pandemic",
+            "authors": [
+                {
+                    "first": "Hunt",
+                    "middle": [],
+                    "last": "Allcott",
+                    "suffix": ""
+                },
+                {
+                    "first": "Levi",
+                    "middle": [],
+                    "last": "Boxell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jacob",
+                    "middle": [],
+                    "last": "Conway",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Gentzkow",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Thaler",
+                    "suffix": ""
+                },
+                {
+                    "first": "David Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "National Bureau of Economic Research",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "When Algorithms Import Private Bias into Public Enforcement: The Promise and Limitations of Statistical Debiasing Solutions",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kristen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Altenburger",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Institutional and Theoretical Economics",
+            "volume": "174",
+            "issn": "",
+            "pages": "98--122",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "How Age and Gender Affect Smartphone Usage",
+            "authors": [
+                {
+                    "first": "Konrad",
+                    "middle": [],
+                    "last": "Ionut Andone",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "B\u0142aszkiewicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Boris",
+                    "middle": [],
+                    "last": "Eibes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christian",
+                    "middle": [],
+                    "last": "Trendafilov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexander",
+                    "middle": [],
+                    "last": "Montag",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Markowetz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "UbiComp '16",
+            "volume": "",
+            "issn": "",
+            "pages": "9--12",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2968219.2971451"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Rationing social contact during the COVID-19 pandemic: Transmission risk and social benefits of US locations",
+            "authors": [
+                {
+                    "first": "Seth",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Benzell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Avinash",
+                    "middle": [],
+                    "last": "Collis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christos",
+                    "middle": [],
+                    "last": "Nicolaides",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "117",
+            "issn": "",
+            "pages": "14642--14644",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.2008025117"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Are empirically supported treatments valid for ethnic minorities? Toward an alternative approach for treatment research",
+            "authors": [
+                {
+                    "first": "Guillermo",
+                    "middle": [],
+                    "last": "Bernal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mar\u00eda R Scharr\u00f3-Del",
+                    "middle": [],
+                    "last": "R\u00edo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Cultural Diversity and Ethnic Minority Psychology",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Requiring smartphone ownership for mHealth interventions: who could be left out?",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Krishna",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bommakanti",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Laramie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lin",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Diana",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jazmine",
+                    "middle": [],
+                    "last": "Do",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kelly",
+                    "middle": [],
+                    "last": "Cuevas-Mota",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fatima",
+                    "middle": [],
+                    "last": "Collins",
+                    "suffix": ""
+                },
+                {
+                    "first": "Timothy",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Munoz",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Rodwell",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Garfein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMC public health",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "The Cost of Staying Open: Voluntary Social Distancing and Lockdowns in the US",
+            "authors": [
+                {
+                    "first": "Adam",
+                    "middle": [],
+                    "last": "Brzezinski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Valentin",
+                    "middle": [],
+                    "last": "Kecht",
+                    "suffix": ""
+                },
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Van Dijcke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification",
+            "authors": [
+                {
+                    "first": "Joy",
+                    "middle": [],
+                    "last": "Buolamwini",
+                    "suffix": ""
+                },
+                {
+                    "first": "Timnit",
+                    "middle": [],
+                    "last": "Gebru",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Conference on Fairness, Accountability, and Transparency (Proceedings of Machine Learning Research",
+            "volume": "81",
+            "issn": "",
+            "pages": "77--91",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "FairVis: Visual analytics for discovering intersectional bias in machine learning",
+            "authors": [
+                {
+                    "first": "Alexander",
+                    "middle": [],
+                    "last": "\u00c1ngel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Will",
+                    "middle": [],
+                    "last": "Cabrera",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fred",
+                    "middle": [],
+                    "last": "Epperson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Minsuk",
+                    "middle": [],
+                    "last": "Hohman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jamie",
+                    "middle": [],
+                    "last": "Kahng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Duen Horng",
+                    "middle": [],
+                    "last": "Morgenstern",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chau",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "2019 IEEE Conference on Visual Analytics Science and Technology (VAST)",
+            "volume": "",
+            "issn": "",
+            "pages": "46--56",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Mobility network modeling explains higher SARS-CoV-2 infection rates among disadvantaged groups and informs reopening strategies",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Serina",
+                    "suffix": ""
+                },
+                {
+                    "first": "Emma",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pang",
+                    "middle": [],
+                    "last": "Pierson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jaline",
+                    "middle": [],
+                    "last": "Wei Koh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Beth",
+                    "middle": [],
+                    "last": "Gerardin",
+                    "suffix": ""
+                },
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Redbird",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jure",
+                    "middle": [],
+                    "last": "Grusky",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "A case study of algorithm-assisted decision making in child maltreatment hotline screening decisions",
+            "authors": [
+                {
+                    "first": "Alexandra",
+                    "middle": [],
+                    "last": "Chouldechova",
+                    "suffix": ""
+                },
+                {
+                    "first": "Diana",
+                    "middle": [],
+                    "last": "Benavides-Prado",
+                    "suffix": ""
+                },
+                {
+                    "first": "Oleksandr",
+                    "middle": [],
+                    "last": "Fialko",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rhema",
+                    "middle": [],
+                    "last": "Vaithianathan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Conference on Fairness, Accountability and Transparency (Proceedings of Machine Learning Research",
+            "volume": "81",
+            "issn": "",
+            "pages": "134--148",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The Frontiers of Fairness in Machine Learning",
+            "authors": [
+                {
+                    "first": "Alexandra",
+                    "middle": [],
+                    "last": "Chouldechova",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aaron",
+                    "middle": [],
+                    "last": "Roth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:arXiv:1810.08810"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The Measure and Mismeasure of Fairness: A Critical Review of Fair Machine Learning",
+            "authors": [
+                {
+                    "first": "Sam",
+                    "middle": [],
+                    "last": "Corbett",
+                    "suffix": ""
+                },
+                {
+                    "first": "-",
+                    "middle": [],
+                    "last": "Davies",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sharad",
+                    "middle": [],
+                    "last": "Goel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:arXiv:1808.00023"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Demarginalizing the intersection of race and sex: A black feminist critique of antidiscrimination doctrine, feminist theory and antiracist politics",
+            "authors": [
+                {
+                    "first": "Kimberl\u00e9",
+                    "middle": [],
+                    "last": "Crenshaw",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "University of Chicago Legal Forum",
+            "volume": "1",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Did President Trump's Tulsa Rally Reignite COVID-19? Indoor Events and Offsetting Community Effects",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dhaval",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dave",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyutaro",
+                    "middle": [],
+                    "last": "Andrew I Friedson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Drew",
+                    "middle": [],
+                    "last": "Matsuzawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Connor",
+                    "middle": [],
+                    "last": "Mcnichols",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joseph",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Redpath",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sabia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "The Contagion Externality of a Superspreading Event: The Sturgis Motorcycle Rally and COVID-19",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Dhaval",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Dave",
+                    "suffix": ""
+                },
+                {
+                    "first": "Drew",
+                    "middle": [],
+                    "last": "Friedson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joseph",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Mcnichols",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sabia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Wanted single, white male for medical research",
+            "authors": [
+                {
+                    "first": "Rebecca",
+                    "middle": [],
+                    "last": "Dresser",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "The Hastings Center Report",
+            "volume": "22",
+            "issn": "",
+            "pages": "24--29",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Bias from wireless substitution in surveys of Hispanics",
+            "authors": [
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Dutwin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Scott",
+                    "middle": [],
+                    "last": "Keeter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Courtney",
+                    "middle": [],
+                    "last": "Kennedy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Hispanic journal of behavioral sciences",
+            "volume": "32",
+            "issn": "",
+            "pages": "309--328",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Using Data to Govern Through a Crisis",
+            "authors": [
+                {
+                    "first": "Philip Mielke Eva",
+                    "middle": [],
+                    "last": "Pereira",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bryan",
+                    "middle": [],
+                    "last": "Bonack",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chelsea",
+                    "middle": [],
+                    "last": "Lawson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Internal and external effects of social distancing in a pandemic",
+            "authors": [
+                {
+                    "first": "Maryam",
+                    "middle": [],
+                    "last": "Farboodi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gregor",
+                    "middle": [],
+                    "last": "Jarosch",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Shimer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A Comparative Study of Fairness-Enhancing Interventions in Machine Learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sorelle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carlos",
+                    "middle": [],
+                    "last": "Friedler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Suresh",
+                    "middle": [],
+                    "last": "Scheidegger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sonam",
+                    "middle": [],
+                    "last": "Venkatasubramanian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Evan",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Choudhary",
+                    "suffix": ""
+                },
+                {
+                    "first": "Derek",
+                    "middle": [],
+                    "last": "Hamilton",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Roth",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the Conference on Fairness, Accountability, and Transparency",
+            "volume": "",
+            "issn": "",
+            "pages": "329--338",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3287560.3287589"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Mapping county-level mobility pattern changes in the United States in response to COVID-19",
+            "authors": [
+                {
+                    "first": "Song",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jinmeng",
+                    "middle": [],
+                    "last": "Rao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuhao",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yunlei",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jake",
+                    "middle": [],
+                    "last": "Kruse",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "SIGSPATIAL Special",
+            "volume": "12",
+            "issn": "",
+            "pages": "16--26",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "The use of mobile phone data to inform analysis of COVID-19 pandemic epidemiology",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kyra",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Grantz",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hannah",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Meredith",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Derek",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Metcalf",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Bryan",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Grenfell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shruti",
+                    "middle": [],
+                    "last": "Giles",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sunil",
+                    "middle": [],
+                    "last": "Mehta",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alain",
+                    "middle": [],
+                    "last": "Solomon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nishant",
+                    "middle": [],
+                    "last": "Labrique",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kishore",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Communications",
+            "volume": "11",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "COVID-19 and the other pandemic: populations made vulnerable by systemic inequity",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Darrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adjoa",
+                    "middle": [],
+                    "last": "Gray",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sophie",
+                    "middle": [],
+                    "last": "Anyane-Yeboa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rachel",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Balzora",
+                    "suffix": ""
+                },
+                {
+                    "first": "Folasade P",
+                    "middle": [],
+                    "last": "Issaka",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "May",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Reviews Gastroenterology & Hepatology",
+            "volume": "17",
+            "issn": "",
+            "pages": "520--522",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Fairness in machine learning",
+            "authors": [
+                {
+                    "first": "Moritz",
+                    "middle": [],
+                    "last": "Hardt",
+                    "suffix": ""
+                },
+                {
+                    "first": "Solon",
+                    "middle": [],
+                    "last": "Barocas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Stargazer: Well-formatted regression and summary statistics tables",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hlavac",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Randomization inference with natural experiments: An analysis of ballot effects in the 2003 California recall election",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Daniel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kosuke",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Imai",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Journal of the American statistical association",
+            "volume": "101",
+            "issn": "",
+            "pages": "888--900",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Statistics and Causal Inference",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Paul",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Holland",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "J. Amer. Statist. Assoc",
+            "volume": "81",
+            "issn": "",
+            "pages": "945--960",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Gender differences in privacy-related measures for young adult Facebook users",
+            "authors": [
+                {
+                    "first": "Grubbs",
+                    "middle": [],
+                    "last": "Mariea",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [],
+                    "last": "Hoy",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Milne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of Interactive Advertising",
+            "volume": "10",
+            "issn": "",
+            "pages": "28--45",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Commercial voter files and the study of US politics",
+            "authors": [
+                {
+                    "first": "Ruth",
+                    "middle": [],
+                    "last": "Igielnik",
+                    "suffix": ""
+                },
+                {
+                    "first": "Scott",
+                    "middle": [],
+                    "last": "Keeter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Courtney",
+                    "middle": [],
+                    "last": "Kennedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bradley",
+                    "middle": [],
+                    "last": "Spahn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Your Apps Know Where You Were Last Night, and They're Not Keeping It Secret",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jennifer",
+                    "middle": [],
+                    "last": "Keller",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natasha",
+                    "middle": [],
+                    "last": "Valentino-Devries",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aaron",
+                    "middle": [],
+                    "last": "Singer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Krolik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Assessing Algorithmic Fairness with Unobserved Protected Class Using Data Combination",
+            "authors": [
+                {
+                    "first": "Nathan",
+                    "middle": [],
+                    "last": "Kallus",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaojie",
+                    "middle": [],
+                    "last": "Mao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Angela",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the 2020 Conference on Fairness, Accountability, and Transparency (FAT* '20)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3351095.3373154"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Mareike Thies, and Mathias Unberath. 2020. A County-level Dataset for Informing the United States' Response to COVID-19",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Benjamin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jie",
+                    "middle": [
+                        "Ying"
+                    ],
+                    "last": "Killeen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kinjal",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Anna",
+                    "middle": [],
+                    "last": "Shah",
+                    "suffix": ""
+                },
+                {
+                    "first": "Philipp",
+                    "middle": [],
+                    "last": "Zapaishchykova",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aniruddha",
+                    "middle": [],
+                    "last": "Nikutta",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shreya",
+                    "middle": [],
+                    "last": "Tamhane",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jinchi",
+                    "middle": [],
+                    "last": "Chakraborty",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tiger",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:arXiv:2004.00756"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Auditing algorithms for discrimination",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Pauline",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "University of Pennsylvania Law Review Online",
+            "volume": "166",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "The parable of Google Flu: traps in big data analysis",
+            "authors": [
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Lazer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ryan",
+                    "middle": [],
+                    "last": "Kennedy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gary",
+                    "middle": [],
+                    "last": "King",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alessandro",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Science",
+            "volume": "343",
+            "issn": "",
+            "pages": "1203--1205",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Growing cell-phone population and noncoverage bias in traditional random digit dial telephone health surveys",
+            "authors": [
+                {
+                    "first": "Sunghee",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Brick",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "David",
+                    "middle": [],
+                    "last": "Grant",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Health services research",
+            "volume": "45",
+            "issn": "",
+            "pages": "1121--1139",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Timing of State and Territorial COVID-19 Stay-at-Home Orders and Changes in Population Movement-United States",
+            "authors": [
+                {
+                    "first": "Amanda",
+                    "middle": [],
+                    "last": "Moreland",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "MMWR. Morbidity and Mortality Weekly Report",
+            "volume": "69",
+            "issn": "",
+            "pages": "1198--1203",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Ethnic minority older adults participating in clinical research",
+            "authors": [
+                {
+                    "first": "Gina",
+                    "middle": [],
+                    "last": "Moreno-John",
+                    "suffix": ""
+                },
+                {
+                    "first": "Anthony",
+                    "middle": [],
+                    "last": "Gachie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Candace",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fleming",
+                    "suffix": ""
+                },
+                {
+                    "first": "Anna",
+                    "middle": [],
+                    "last": "Napoles-Springer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Elizabeth",
+                    "middle": [],
+                    "last": "Mutran",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Spero",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eliseo",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Manson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "P\u00e9rez-Stable",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Journal of Aging and Health",
+            "volume": "16",
+            "issn": "",
+            "pages": "93--123",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Dissecting racial bias in an algorithm used to manage the health of populations",
+            "authors": [
+                {
+                    "first": "Ziad",
+                    "middle": [],
+                    "last": "Obermeyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [],
+                    "last": "Powers",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christine",
+                    "middle": [],
+                    "last": "Vogeli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sendhil",
+                    "middle": [],
+                    "last": "Mullainathan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Science",
+            "volume": "366",
+            "issn": "",
+            "pages": "447--453",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Divided We Stay Home: Social Distancing and Ethnic Diversity",
+            "authors": [
+                {
+                    "first": "Maria",
+                    "middle": [],
+                    "last": "Petrova",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruben",
+                    "middle": [],
+                    "last": "Enikolopov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Georgy",
+                    "middle": [],
+                    "last": "Egorov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexey",
+                    "middle": [],
+                    "last": "Makarin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "National Bureau of Economic Research",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Why are African Americans under-represented in medical research studies? Impediments to participation",
+            "authors": [
+                {
+                    "first": "Charles",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Vickie L Shavers-Hornaday",
+                    "suffix": ""
+                },
+                {
+                    "first": "Leon",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Lynch",
+                    "suffix": ""
+                },
+                {
+                    "first": "James",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Burmeister",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Torner",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Ethnicity & health",
+            "volume": "2",
+            "issn": "",
+            "pages": "31--45",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Mobile Fact Sheet. 2019. Pew Research Center, Internet and Technology",
+            "authors": [],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Risk, race, and recidivism: Predictive bias and disparate impact",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Jennifer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christopher",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Skeem",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lowenkamp",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Criminology",
+            "volume": "54",
+            "issn": "",
+            "pages": "680--712",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Measuring and Correcting Sampling Bias in Safegraph Patterns for More Accurate Demographic Analysis",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Rf Squire",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "The Disproportionate Impact of COVID-19 on Racial and Ethnic Minorities in the United States",
+            "authors": [
+                {
+                    "first": "Don",
+                    "middle": [],
+                    "last": "Bambino",
+                    "suffix": ""
+                },
+                {
+                    "first": "Geno",
+                    "middle": [],
+                    "last": "Tai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aditya",
+                    "middle": [],
+                    "last": "Shah",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Chyke",
+                    "suffix": ""
+                },
+                {
+                    "first": "Irene",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Doubeni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Sia",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wieland",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clinical Infectious Diseases",
+            "volume": "2020",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/cid/ciaa815"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Americans are delaying medical care, and it's devastating health-care providers",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Minorities, women, and clinical cancer research: the charge, promise, and challenge",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sandra Millon Underwood",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Annals of Epidemiology",
+            "volume": "10",
+            "issn": "",
+            "pages": "3--12",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Hidden in plain sight-reconsidering the use of race correction in clinical algorithms",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Darshali",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Vyas",
+                    "suffix": ""
+                },
+                {
+                    "first": "David S Jones",
+                    "middle": [],
+                    "last": "Leo G Eisenstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Connecting mobility to infectious diseases: the promise and limits of mobile phone data",
+            "authors": [
+                {
+                    "first": "Amy",
+                    "middle": [],
+                    "last": "Wesolowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Caroline",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Buckee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kenth",
+                    "middle": [],
+                    "last": "Eng\u00f8-Monsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Charlotte Jessica Eland",
+                    "middle": [],
+                    "last": "Metcalf",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "The Journal of infectious diseases",
+            "volume": "214",
+            "issn": "",
+            "pages": "414--420",
+            "other_ids": {}
+        },
+        "BIBREF49": {
+            "ref_id": "b49",
+            "title": "Heterogeneous mobile phone ownership and usage patterns in Kenya",
+            "authors": [
+                {
+                    "first": "Amy",
+                    "middle": [],
+                    "last": "Wesolowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nathan",
+                    "middle": [],
+                    "last": "Eagle",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Abdisalan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Noor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Caroline",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Snow",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Buckee",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "PloS one",
+            "volume": "7",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF50": {
+            "ref_id": "b50",
+            "title": "Measures of human mobility using mobile phone records enhanced with GIS data",
+            "authors": [
+                {
+                    "first": "Nathalie",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Williams",
+                    "suffix": ""
+                },
+                {
+                    "first": "Timothy",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Dunbar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nathan",
+                    "middle": [],
+                    "last": "Eagle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adrian",
+                    "middle": [],
+                    "last": "Dobra",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PloS one",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF51": {
+            "ref_id": "b51",
+            "title": "Clinical course and risk factors for mortality of adult inpatients with COVID-19 in Wuhan, China: a retrospective cohort study",
+            "authors": [
+                {
+                    "first": "Fei",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ronghui",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guohui",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ying",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhibo",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jie",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yeming",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bin",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoying",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "1054--1062",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "notation. Letting * denote election day, we estimate the non-voter traffic at poll location on election day, * , by averaging SafeGraph traffic to on adjacent days: This adjustment enables us to compute the marginal traffic over the estimated baseline, which we term SafeGraph marginal traffic. 8 Definition 4 (Marginal traffic). SafeGraph marginal traffic denotes device counts above estimated baseline: number of voters at poll location as recorded by L2. With this, we refine our definition of coverage using the coverage function from Def. 1: Definition 5 (SafeGraph coverage). SafeGraph coverage is ( * \u2212 * , * ). Each element of this vector refers to the ratio of marginal traffic at POI to voter turnout at .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Example: Younger voting populations vote at places like community centers with large non-voter traffic whereas older populations vote at places like fire stations with little non-voter traffic. Younger voting populations vote at places that are open to non-voter traffic on election day whereas older populations vote at places that are closed to non-voter traffic on election day Untestable assumption We distinguish between two types of confounding: time-invariant versus time-varying confounding. We test for time-invariant confounding ( \u00a7 5.3) but we cannot test for time-varying confounding. Our results assume no time-varying confounding.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Placebo test of time-invariant confounding Input: Voter data ( * , * ) SafeGraph data {( , )} =1 Result: -value for the election-day correlation under the placebo distribution for = 1, 2, . . . do Compute = cor( ( ( \u2212 , * )), ( * )). end return = 1 \u2211\ufe01 \u2260 * I{( \u2264 * )}",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "SafeGraph traffic by weekday over October and November 2018 for all polling locations in North Carolina. The top panel shows all SafeGraph traffic and the bottom panel the marginal traffic computed using the method in \u00a7 5.2. In both total and marginal traffic, the election day (dotted) line shows a significant boost in traffic.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Election day traffic as observed by SafeGraph (axis) and actual voter turnout across polling locations (axis). Each dot represents a polling location in North Carolina in the 2018 general election. SafeGraph coverage and the primary risk factor of COVID-19: age. The top panel of Figure 6 shows how SafeGraph coverage ( \u2212 , ) varies with , the proportion of voters over age 65. The rank Estimated SafeGraph coverage rates against age and race for North Carolina 2018 general election for ventiles of poll location by age (top) and race (bottom). correlation test yields cor ( ( \u2212 , ), ( ) = \u22120.18 with pvalue < 0.001. We also find that coverage weakly decreases as the proportion of non-white voters increases (bottom panel). The rank correlation of race and coverage is cor ( ( \u2212 , ), ( ) = \u22120.076 with p-value = 0.073.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Intersectional coverage effects by race and age. The top panel presents the coverage rate by quartiles of age on the -axis and race on the -axis. The bottom panel plots the coverage rate on the -axis against percentage of non-white voters at the polling location on the -axis for older polling locations (yellow) versus younger polling locations (blue) for ventiles of poll location. Coverage is lowest among older minority populations and highest among younger whiter populations.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Distribution of placebo rank correlations between election-day demographics and marginal SafeGraph traffic on non-election days. Under the empirical placebo distribution, the election-day coverage's negative correlations with age (top panel) and race (bottom panel) are very unlikely (pvalue < 0.05). This placebo analysis supports the assumption of no time-invariant confounding. Placebo correlations computed for 48 weekdays in October and November 2018.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Placebo distribution of coefficients of the linear regression of marginal SafeGraph coverage on election-day age and race demographics. Under the empirical placebo distribution, the election-day's negative coefficients for age (top panel) and race (bottom panel) are very unlikely (pvalue < 0.05). This placebo analysis supports our conclusion that SafeGraph data has disparate coverage by age and race. Placebo regressions computed for 48 weekdays of October and November 2018.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Non-white voters are more likely to be young",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "13 https://docs.safegraph.com/v4.0/docs/places-schema Placebo distribution of rank correlation between voters and marginal SafeGraph traffic. As expected, voter turnout is positively correlated with SafeGraph marginal traffic only on election day (empirical p-value = 0).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "Estimated SafeGraph coverage rates against age and race for North Carolina 2018 general election for ventiles of poll location by age (top) and race (bottom).",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Table 1presents summary statistics on voters associated with polling locations that could be matched, showing that our data is highly representative of all voting locations. (Details on the data and preprocessing are provided in Appendices A and B.)Table 1: Demographics of all voters in North Carolina's 2018 general election compared to voters included in our analysis (\"matched voters\"). The matched voters are representative of the full voting population. Details of the matching procedure are given in Appendix B.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank SafeGraph for making their data available, answering our many questions, and providing helpful feedback. We are grateful to Stanford's Institute for Human-Centered Artificial Intelligence, the Stanford RISE initiative, the K&L Gates Presidential Fellowship, and the National Science Foundation for supporting this research. This material is based upon work supported by the the National Science Foundation Graduate Research Fellowship Program under Grant No. DGE1745016. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation. We thank Mark Krass for first suggesting voter turnout data and thank Angie Peng for providing helpful feedback.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "ACKNOWLEDGMENTS"
+        }
+    ]
+}

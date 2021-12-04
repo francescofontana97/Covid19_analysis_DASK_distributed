@@ -1,0 +1,122 @@
+{
+    "paper_id": "3e204fed8765652e8f90644e91d1d721bbabd2f9",
+    "metadata": {
+        "title": "PEPN-GRN: A Petri net-based approach for the inference of gene regulatory networks from noisy gene expression data",
+        "authors": []
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "In the experiment on the DREAM4 in silico networks, apart from the PEPN-GRN variant methods, other network inference methods used are Bayesianbased scanBMA, regression-based DBN inference model G1DBN, Random Forestbased dynGENIE3, and mutual information-based ARACNE, CLR, and MR-NET. Among these, mutual information-based methods, i.e., ARACNE, CLR, and MRNET, reconstruct networks using a steady-state data set. Therefore, we used a time-shift technique (as discussed in [1] ) on the DREAM4 time series data to generate the time-lagged time series data and then obtained results.",
+            "cite_spans": [
+                {
+                    "start": 473,
+                    "end": 476,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S1 Appendix. Application of other inference methods on the DREAM4 data sets"
+        },
+        {
+            "text": "The DynGenie3 method, on the other hand, works only on continuous time series data and can not work on discretized data sets. Thus, to evaluate its performance on discretized data, a little amount of white Gaussian noise is added to the discretized data to make it continuous, and then the experiment is performed. The procedure for the addition of noise is as follows: The noise N (0, s) with mean \u00b5 = 0 and standard deviation s is added to the discretized data set D of size m \u00d7 n. We have computed the standard deviation s as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S1 Appendix. Application of other inference methods on the DREAM4 data sets"
+        },
+        {
+            "text": "where signal-to-noise ratio SNR is taken to be 50 in our experiment. The noise is computed as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S1 Appendix. Application of other inference methods on the DREAM4 data sets"
+        },
+        {
+            "text": "where random(m,n) is a matrix of size m \u00d7 n of normally distributed random numbers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S1 Appendix. Application of other inference methods on the DREAM4 data sets"
+        },
+        {
+            "text": "The G1DBN method is a two-step approach that uses an auto-regressive model to estimate a score matrix of size p \u00d7 p using a time series data of p genes. The Step 1 infers a score matrix that describes first-order dependencies of gene pairs. A threshold \u03b11 is applied on the score matrix to select the gene pairs such that the density of target gene having 0 or 1 regulator genes is much larger than that of target genes with 2 or more regulators. On the score matrix of the selected gene pairs, Step 2 is applied, which generates a score matrix describing full-order dependencies of selected genes. Applying another threshold \u03b12 on the second score matrix returns the final set of edges. The threshold \u03b12 is chosen using the Benjamini-Hochberg approach [2] to select the significant edges such that they contain False Discovery Rate (FDR) \u2264 0.01. Thus, threshold \u03b11 helps in dimensionality reduction and is based on the assumption that in gene networks, most of the target genes contain only a few TFs. Threshold \u03b12 is then used to select the final set of significant edges. For the application of the G1DBN method on the DREAM4 data, threshold \u03b11 = 1 is used since the DREAM4 data sets contain a small number of genes (10 and 100), and thus no dimensionality reduction is required. Therefore all the edges except self-edges are considered here.",
+            "cite_spans": [
+                {
+                    "start": 753,
+                    "end": 756,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S1 Appendix. Application of other inference methods on the DREAM4 data sets"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Unraveling gene regulatory networks from time-resolved gene expression data -a measures comparison study",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hempel",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Koseska",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Nikoloski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kurths",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "BMC Bioinformatics",
+            "volume": "12",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/1471-2105-12-292"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Benjamini",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hochberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Journal of the Royal Statistical Society Series B (Methodological)",
+            "volume": "57",
+            "issn": "1",
+            "pages": "289--300",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {},
+    "back_matter": []
+}

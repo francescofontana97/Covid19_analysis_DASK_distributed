@@ -1,0 +1,2098 @@
+{
+    "paper_id": "3d958116dbbccec322b0a94f9e120cef3f8b1100",
+    "metadata": {
+        "title": "D-GaussianNet: Adaptive Distorted Gaussian Matched Filter with Convolutional Neural Network for Retinal Vessel Segmentation",
+        "authors": [
+            {
+                "first": "Dora",
+                "middle": [
+                    "E"
+                ],
+                "last": "Alvarado-Carrillo",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "GTO",
+                    "location": {
+                        "postCode": "36000",
+                        "settlement": "Guanajuato",
+                        "country": "Mexico"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Emmanuel",
+                "middle": [],
+                "last": "Ovalle-Magallanes",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Guanajuato",
+                    "location": {
+                        "postCode": "36885",
+                        "settlement": "Salamanca",
+                        "country": "Mexico"
+                    }
+                },
+                "email": "e.ovallemagallanes@ugto.mx"
+            },
+            {
+                "first": "Oscar",
+                "middle": [
+                    "S"
+                ],
+                "last": "Dalmau-Cede\u00f1o",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "GTO",
+                    "location": {
+                        "postCode": "36000",
+                        "settlement": "Guanajuato",
+                        "country": "Mexico"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Automating retinal vessel segmentation is a primary element of computer-aided diagnostic systems for many retinal diseases. It facilitates the inspection of shape, width, tortuosity, and other blood vessel characteristics. In this paper, a new method that incorporates Distorted Gaussian Matched Filters (D-GMFs) with adaptive parameters as part of a Deep Convolutional Architecture is proposed. The D-GaussianNet includes D-GMF units, a variant of the Gaussian Matched Filter that considers curvature, placed at the beginning and end of the network to implicitly indicate that spatial attention should focus on curvilinear structures in the image. Experimental results on datasets DRIVE, STARE, and CHASE show state-of-the-art performance with an accuracy of 0.9565, 0.9647, and 0.9609 and a F1-score of 0.8233, 0.8141, and 0.8077, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Fundus retinal imaging is a popular non-invasive technique for monitoring the retinal structure, which consists of obtaining a two-dimensional projection of the retinal semitransparent tissues, using specialized cameras with reflective light [1, 5] . Fundus images are highly important for the early diagnosis and tracking of various diseases related to vascular changes, such as diabetic retinopathy, age-related macular degeneration, and glaucoma, since the retina is the only structure that allows direct imaging of blood circulation [3, 22, 37] .",
+            "cite_spans": [
+                {
+                    "start": 242,
+                    "end": 245,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 246,
+                    "end": 248,
+                    "text": "5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 537,
+                    "end": 540,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 541,
+                    "end": 544,
+                    "text": "22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 545,
+                    "end": 548,
+                    "text": "37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The retinal vascular tree is a major structure to be studied in the analysis of fundus images. Inspection of shape, width, tortuosity, and other blood vessel characteristics contributes to identify many retinal diseases [4, 18] . Moreover, the detection and subtraction of the vascular tree facilitate the recognition of other lesions that appear in the retina, so a precise delineation of the vessels is required. However, fundus images are characterized by low contrast and notable illumination changes [32, 41] . In addition, blood vessels consist of a varied morphology: vessels are bifurcated, tortuous, and their width is reduced to extremely thin sections. Hence, blood vessel detection is a time-consuming task, its manual fulfillment is usually limited by the availability of ophthalmologists in the healthcare system, resulting in diagnosis delays and elevated treatment costs [5, 19] .",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 223,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 224,
+                    "end": 227,
+                    "text": "18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 505,
+                    "end": 509,
+                    "text": "[32,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 510,
+                    "end": 513,
+                    "text": "41]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 887,
+                    "end": 890,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 891,
+                    "end": 894,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As an alternative to contribute to the early diagnosis of eye diseases, several methods for automating blood vessel segmentation have been presented in recent years. Nevertheless, the task is considered a challenging problem up to date, since there are conditions-for instance, the similarity in color between vessels and microaneurysms, the central reflex in some vessels, the presence of multiple branching points and neovascularization, among others-where the state-of-the-art algorithms have difficulties to perform an accurate result. Furthermore, many recent deep learning methods use generic architectures for feature extraction, whose performance is strongly tied to the quantity and quality of the examples available in the training phase. Since in the area of biomedical image processing, it is common to work with a limited number of examples, different training strategies are required. Frequently, this issue is overcome by applying transferred learning [18, 25, 29] or using patches rather than full images for training [9, 11, 19, 23] , while a few papers have proposed hybrid techniques for feature extraction [12, 34] . In this paper, a new method that incorporates distorted Gaussian Matched Filters with adaptive parameters as part of a Deep Convolutional Architecture is proposed. The strategy aims to alleviate the traditional neural convolutional models' dependence on large datasets, by aggregating robustness through a hybrid design that considers both a priori information about the curvilinear shape of the vessels, as well as deep learning techniques. The contributions of this paper are as follows: first, a new technique for incorporating curvature into Gaussian Matched Filters, Distorted GMF (D-GMF), is presented. The approach intends to relax the strong assumption that blood vessels are piecewise linear; second, a preprocessing method based on random quantum circuits is integrated into a deep learning strategy for blood vessel segmentation. To the best of the authors' knowledge, this is the first time a quantum preprocessing has been applied for fundus images, although there are few related works in the area of biomedical imaging [2, 14] ; third, a novel neural convolutional architecture with adaptive units of distorted Gaussian Matched Filters is presented, the units are placed at the beginning and end of the network to implicitly indicate that spatial attention should focus on elongated structures in the image.",
+            "cite_spans": [
+                {
+                    "start": 967,
+                    "end": 971,
+                    "text": "[18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 972,
+                    "end": 975,
+                    "text": "25,",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 976,
+                    "end": 979,
+                    "text": "29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1034,
+                    "end": 1037,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1038,
+                    "end": 1041,
+                    "text": "11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1042,
+                    "end": 1045,
+                    "text": "19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1046,
+                    "end": 1049,
+                    "text": "23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1126,
+                    "end": 1130,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1131,
+                    "end": 1134,
+                    "text": "34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 2171,
+                    "end": 2174,
+                    "text": "[2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 2175,
+                    "end": 2178,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The rest of the paper is organized as follows. In Sect. 2, a brief review of the related work is presented. In Sect. 3, the key elements of the proposed methodquantum preprocessing, distorted Gaussian Matched Filters, and the Convolutional Neural architecture-are explained in detail. In Sect. 4, experimental results and comparison with state-of-the-art approaches are presented. In Sect. 5, a discussion on the proposed method is carried out.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Based on the type of information applied in the process, automatic blood vessel segmentation methods can be classified into two large groups: unsupervised and supervised methods. For both approaches, a brief review of related work is presented below.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Unsupervised methods purely use prior knowledge about vascular structuresuch as length, width, and grayscale intensity-to design strategies that highlight the vessels.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unsupervised Methods"
+        },
+        {
+            "text": "Template filtering methods use predefined templates to model the elongated shape of the vessels. Khan et al. [20] present generalized multiscale line detectors, by proposing adjustable window size in filters: the window and line sizes grow proportionally, instead of fixing one or both of them. Filter orientations are estimated locally. Line detectors perform well for detecting thin vessels, as the line template always maintains a width of one pixel. However, the resulting images often contain artifacts and require post-processing.",
+            "cite_spans": [
+                {
+                    "start": 109,
+                    "end": 113,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Unsupervised Methods"
+        },
+        {
+            "text": "Morphological methods use operations such as dilation and erosion to discard round structures and highlight curvilinear vessel alike elements. Sazak et al. [28] propose a method based on two banks of structuring elements at different scales. The first bank contains disks with varied diameters, the second bank contains lines of different thickness and orientation. For both banks, opening operations are performed with the input image. Then, difference images are computed between disk and line results, the maximum response is preserved. This combination of structuring elements produces better segmentation results in vessel bifurcations. Pal et al. [26] use morphological operations to improve image contrast and segment the vascular structure. First, a Top-Hat Transform is combined with the wavelet Transform to highlight the vessels, improve contrast, and eliminate the optic disc; then, the Hit-or-Miss Transform is applied with two structuring elements, one to highlight the background and the other to highlight vessels at different scales. For each scale, the difference between the two outputs is obtained, the final image is computed as the maximum of these differences.",
+            "cite_spans": [
+                {
+                    "start": 156,
+                    "end": 160,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 653,
+                    "end": 657,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Unsupervised Methods"
+        },
+        {
+            "text": "Tracking methods use vessel connectivity to distinguish the vascular region. Given an initial point and direction, the vessels' edges and their bifurcations are determined by exhaustive search using tracking strategies. Zhao et al. [40] propose an algorithm based on multiscale SLIC superpixels to reduce the number of possible paths to be traced. The multiscale is built by varying the superpixel size, then a filtering process is implemented to select the correct scale, considering intensity and variance.",
+            "cite_spans": [
+                {
+                    "start": 232,
+                    "end": 236,
+                    "text": "[40]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Unsupervised Methods"
+        },
+        {
+            "text": "The methods reviewed in this section do not need additional information to perform the segmentation task. However, their performance is moderate, as their ability to model the intricate vascular structure is limited, noise artifacts are created in the output image, and require meticulous selection of their parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Unsupervised Methods"
+        },
+        {
+            "text": "Supervised methods require manually labeled data. The segmentation task is approached as a classification problem: a classifier is trained-using labeled examples-to assign a class to each pixel in the input image, so that the pixels with the same label share certain features. In the case of blood vessel segmentation, the classification is binary, since the goal is to differentiate the region with blood vessels, i.e., class 1, from the rest of the image, i.e., class 0. Condurache et al. [7] propose to use different filters (Bothat transform, Hessian Matrix, Laplacian Pyramid) to obtain vascular maps that emphasize pixels belonging to elongated structures of a certain width. From these maps, feature vectors are created for each pixel, which feeds a classifier based on hysteresis. Wang et al. [36] present a different method with a divide and conquer strategy, which consists of clustering pixels according to the width of the blood vessel and its position in it (whether it is in the center or on the edge). The clusters are obtained using 2-D Gabor wavelet kernels, then a funnel architecture composed of SVM classifiers is used to classify the pixels, initially in three classes (vessel, no vessel, uncertain) and in a final stage in two classes. Liskowski et al. [23] propose a neural network for automatic blood vessel segmentation. The architecture consists of four convolutional layers with an increasing number of filters (64, 64, 128, and 128 filters, respectively) and three fully connected layers (521, 512, and 2 neurons, respectively). Feng et al. [9] , inspired by the design of the UNet [27] , propose a cross-architecture in which the most superficial layers are densely connected to the deepest layers of the network. The model does not use an encoder-decoder design, instead each block outputs an activation map of the same dimensions, which simplifies the fusion between maps from different levels in the network. Jin et al. [19] propose to replace traditional convolutions with deformable convolutions to overcome some of the limitations of the UNet model. Adaptive receptive fields are included in the network's design to capture the complicated structure of blood vessels. The architecture shows the ability to extract thin vessels, but the computational time increases considerably, compared to models on which it is based, UNet and Deformable-ConvNet. Li et al. [21] propose to take as a starting point an initial prediction obtained with a UNet architecture and to refine the result iteratively, using a simplified version of the UNet, called mini-unet. This approach allows the model to make corrections on the initial prediction, e.g., disconnected vessel segments that should be connected. The number of iterations of the mini-unet is a parameter that must be adjusted carefully, as a bad selection may cause overfitting.",
+            "cite_spans": [
+                {
+                    "start": 491,
+                    "end": 494,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 801,
+                    "end": 805,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1275,
+                    "end": 1279,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1569,
+                    "end": 1572,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1610,
+                    "end": 1614,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1952,
+                    "end": 1956,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 2394,
+                    "end": 2398,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Supervised Methods"
+        },
+        {
+            "text": "Manual feature extraction methods have a direct interpretation of the criteria used for segmentation and their performance is good when trained with a database of moderate size. However, in recent years these techniques have been surpassed by the ability of Deep Neural Networks for automatic feature extraction and model generalization. This last approach also has its limitations, it requires a greater number of examples in the training step, and like its handcrafted counterpart has difficulties detecting thin vessels, bifurcations, and central vessel regions with reflexes, among other cases.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supervised Methods"
+        },
+        {
+            "text": "In this paper, a new method that considers both a priori information on the vessels' geometry and automatic extraction of features is presented. The following section describes the algorithm in detail.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supervised Methods"
+        },
+        {
+            "text": "The proposed method consists of a Residual Network where Distorted Gaussian Matched Filters have been incorporated. In this section, we briefly cover the topics of Quantum Convolutional Layers for Image Preprocessing, Residual Networks, and Gaussian Matched Filters, since these elements are a fundamental part of the algorithm. Subsequently, the proposed strategy to incorporate a curvature component to GMFs and their incorporation into the neuronal architecture are described in detail.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods/Methodology"
+        },
+        {
+            "text": "Fundus images are affected by illumination, producing variations in background intensity. Some preprocessing techniques can be applied to improve the contrast of medical images, such as Contrast Limited Adaptive Histogram Equalization (CLAHE). In this work, a new type of preprocessing by leveraging certain promising quantum computation aspects was investigated. A so-called Quantum Convolutional Layer (QCL) [15] was applied to generate a multi-channel fundus image. Given a neighborhood \u03a9 x of size n \u00d7 n where n > 1, around a pixel position (u, v), an encoding function e, quantum circuit parameters q (e.g., a set of Pauli Gates), and a decoding measurement d, a Quantum Convolutional Layer transform the input data into different output channel pixel values at position (u, v), such as:",
+            "cite_spans": [
+                {
+                    "start": 410,
+                    "end": 414,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantum Preprocessing"
+        },
+        {
+            "text": "Furthermore, unlike the classical convolution, which convolves a filter through the image, a QCL transforms input data employing a quantum circuit. Figure 1 shows and example of a quantum circuit applied for each neighborhood \u03a9 x .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 148,
+                    "end": 156,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Quantum Preprocessing"
+        },
+        {
+            "text": "For this part, a new technique to incorporate curvature to the classic Gaussian Matched Filter (GMF) is presented. Fig. 1 . An example of a quantum circuit for a neighborhood of size n = 2. The quantum circuit gates are randomly generated. Finally, a Pauli-Z operation is performed to obtain the decoding measurements.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 115,
+                    "end": 121,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "The Distorted Gaussian Matched Filter (D-GMF)"
+        },
+        {
+            "text": "The GMF is a method for highlighting tubular structures in two-dimensional images [6] . It is motivated by the observation that a blood vessel's grayscale intensity profile resembles a onedimensional Gaussian distribution. Under the assumption that vessels are piecewise linear structures, the GMF can be used to simultaneously identify vessel sections with the same amplitude. It is defined as follows:",
+            "cite_spans": [
+                {
+                    "start": 82,
+                    "end": 85,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Gaussian Matched Filter (GMF)."
+        },
+        {
+            "text": "where \u03c3 is a parameter that controls the amplitude of the Gaussian profile, and its value is selected according to the width in pixels of the structures to be highlighted. L represents the length for which said structures are assumed to be linear, i.e., it corresponds to the filter's size. Multiple variants of the original GMF have been proposed, not only in the medical area, but in any field where the detection of curvilinear objects is required [8, 24, 35, 38] . However, GMF and its variants are based on a strong assumption about curvature, claiming that for an appropriate value of L curvilinear objects do not present a significant level of curvature and can be considered linear. Thus, parameters L and \u03c3 become fundamental for the method's good performance. Filter (D-GMF) . The D-GMF is inspired by techniques used to generate additional data in handwriting recognition: besides the distortions that can be applied to any image (such as translations, rotations, zooming and skewing), handwritten characters can also have variations related to physical factors such as hand movement, and which can be modeled through elastic deformations [30] . Analogously, blood vessels and other curvilinear structures are not completely straight but can have a degree of curvature that makes them difficult to detect with the original GMFs. To model this curvature, an elastic deformation transformation is applied to the original GMF filter.",
+            "cite_spans": [
+                {
+                    "start": 451,
+                    "end": 454,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 455,
+                    "end": 458,
+                    "text": "24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 459,
+                    "end": 462,
+                    "text": "35,",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 463,
+                    "end": 466,
+                    "text": "38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1150,
+                    "end": 1154,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 770,
+                    "end": 784,
+                    "text": "Filter (D-GMF)",
+                    "ref_id": null
+                }
+            ],
+            "section": "The Gaussian Matched Filter (GMF)."
+        },
+        {
+            "text": "Elastic deformations [30] can be modeled by generating random displacement fields, \u0394x and \u0394y for horizontal and vertical directions, respectively. First, random fields Rand x and Rand y are generated with uniform distribution in the interval [\u22121, 1]. Then, a two-dimensional Gaussian filter with a standard deviation of \u03b2, G(\u03b2), is convolved with said fields to ensure similar displacements around a neighborhood. Finally, a scale factor \u03b1 is applied to obtain the final displacement fields, as shown in Eq. (3) and (4).",
+            "cite_spans": [
+                {
+                    "start": 21,
+                    "end": 25,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Distorted Gaussian Matched"
+        },
+        {
+            "text": "where * denotes the operand of discrete convolution, and m and n are the displacement field's height and width, respectively. Then, each pixel with position (x, y) in the GMF filter, i.e., k(x, y), is mapped to a new position (u, v), determined by its displacement components \u0394x(x, y) and \u0394y(x, y), as specified in the following equation:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Distorted Gaussian Matched"
+        },
+        {
+            "text": "The Gaussian filter G(\u03b2) locally averages the uniform random fields: if \u03b2 is very small, then Rand x and Rand y are practically not affected by the filter and keep their random appearance; In contrast, if \u03b2 is very large, the displacements are very small (their average being close to zero), and the deformations are imperceptible; Intermediate values in the range [4, 8] are recommended to obtain the appearance of elastic deformation. The value of \u03b1 determines the intensity of the distortion, i.e., the curvature level in the Gaussian Matched Filter. Figure 2 illustrates a GMF filter and its distorted versions using uniform random displacements and elastic deformations. By integrating a curvature level, the Distorted Gaussian Matched Filter (D-GMF) aims to overcome some limitations that classical GMFs have in modeling complicated shapes. In the following sections, an end-to-end convolutional neural network incorporating D-GMF filters is presented, so that amplitude and curvature can be automatically adjusted in the training phase while guiding the network's spatial attention to highlight blood vessels -or curvilinear elements in general-of the input images.",
+            "cite_spans": [
+                {
+                    "start": 365,
+                    "end": 368,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 369,
+                    "end": 371,
+                    "text": "8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 554,
+                    "end": 562,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "The Distorted Gaussian Matched"
+        },
+        {
+            "text": "The overall D-GaussianNet architecture is presented in Fig. 3 . The structure is based on the UNet [27] , formed by three main parts-encoder, bottleneck, and decoder-and skip-connections between feature maps from the encoder path to the decoder path. The model proposed in this study differs from the original UNet in various aspects. First, stem blocks-formed by a D-GMF layer and two convolutional layers-have been added at the beginning and end of the network, in order to implicitly indicate that the spatial attention of the network must be focus on the curvilinear structures of the image. The D-GMFs have not been placed in levels with less dimensionality than the original image to maintain the interpretation, so the input map has the same dimensions of the original image and its spatial characteristics are mostly preserved, therefore it seems reasonable to apply the proposed filters. Besides, the conventional convolutional blocks of each level have been replaced with residual convolutional blocks, similarly to previous works presented for segmentation of curvilinear objects in [17, 39] . This modification is motivated by the nature of the model, which incorporates D-GMF blocks to perform adaptive curvilinear structures enhancement on the same neuronal architecture. This could lead to problems such as premature convergence or degradation of training accuracy. However, residual models alleviate this problem by proposing a mechanism that includes a reformulation of the convolutional block mapping function, so that they also learn a residual component between the desired transformation and the input of the block. Residual networks are concisely explained in the following paragraphs. [13] , or ResNet, is an architecture that simulates identity mapping functions inside its blocks of convolutional layers, by using shortcut connections that skip intermediate layers and directly add the input feature map of each block to its last layer.",
+            "cite_spans": [
+                {
+                    "start": 99,
+                    "end": 103,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1094,
+                    "end": 1098,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1099,
+                    "end": 1102,
+                    "text": "39]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1708,
+                    "end": 1712,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 55,
+                    "end": 61,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Adaptive Distorted Gaussian Matched Filters with Convolutional Neural Network"
+        },
+        {
+            "text": "A difficulty encountered by Deep Neural Networks is the degradation of training accuracy, which occurs when-by increasing the depth of a networkaccuracy becomes saturated and degrades rapidly.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "The ResNet focuses on solving this problem by explicitly posing a residual mapping layer. For a certain block of layers in the network, let x be the input feature map, {W i } the weights of the i-th layer and H(x) the desired mapping to learn, the residual between both is given by the expression: Assuming that it is easier to optimize the residual mapping F(x) than the original H(x)-since intuitively it is simpler for a layer to learn a mapping to zero than to learn the identity function, it is proposed to reorder the above equation as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "This change preserves the main objective of learning the desired mapping H(x), with the difference that at the same time, the network also learns the residual",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "The residual Eq. (7) is achieved by incorporating shortcut connections that link the input feature map of a block with its output, so that both can be added. Taking advantage of this design, a Residual Architecture with adaptive D-GMFs is proposed in this study. The residual mechanism proposed for the adaptive incorporation of D-GMFs over a Deep Neural Network is described.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "The Adaptive D-GMF Unit. The D-GMF Adaptive Unit consists of a convolutional layer of D-GMF filters, followed by two conventional convolutional layers, between which Batch-Normalization and ReLu-Activation are applied. The block incorporates a residual connection that connects the input of the block with the second convolution output in an Addition layer, where both feature maps are merged.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "The D-GMF convolutional layer only requires the configuration of a number of filters N , while the amplitudes and curvature levels of each filter are automatically adjusted in the training phase of the neural network. The behavior of the layer is as follows, let {\u03c3 j } and {\u03b1 j } be two parameters sets that specify amplitude and curvature level of N filters in a D-GMF layer, with 1 \u2264 j \u2264 N .S ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "where (x,y) is a position in the input feature map domain. d. The set of filter outputs {O j } constitutes the output feature map of the layer.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Residual Model. A Residual Neural Network"
+        },
+        {
+            "text": "The proposed model was evaluated with three public datasets: DRIVE, STARE and CHASE. The dataset DRIVE [33] consists of 40 images of 565 \u00d7 584 pixels, which are divided into a training set and a test set, of 20 images each; There are two sets of manually segmented images available, created by observers instructed by an expert. The dataset STARE [16] consist of 20 images of 700 \u00d7 605 pixels, which were manually labeled to produce ground-truth vessel segmentation images; The set contains 10 images without pathologies and 10 images with pathologies that obscure the image. The dataset CHASE [10] consist of 28 images of 999 \u00d7 960 pixels, acquired from 14 children from multi-ethnic schools in England; the images were manually labeled by two different observers. For STARE and CHASE datasets, training and test partitions are not provided, therefore sets of 10 and 14 images were used for training, and sets of 10 and 14 images for testing, respectively.",
+            "cite_spans": [
+                {
+                    "start": 103,
+                    "end": 107,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 347,
+                    "end": 351,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 594,
+                    "end": 598,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "The metrics considered for the evaluation of the method are Sensitivity (TPR), Specificity (TNR), Precision (PPV), Accuracy (ACC) and F1-Score (F1). TPR refers to the proportion of pixels that are correctly classified as positive, among the total number of positive pixels. TNR measures the proportion of pixels that are correctly classified as negative, among the total number of negative pixels. PPV refers to the proportion of pixels that are correctly classified as positive, among the total number of pixels examined. ACC indicates the proportion of pixels correctly classified, both positives and negatives, among the total number of pixels examined. The F1 score is the harmonic average of the PPV and the TPR. These metrics have the following expressions. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance Evaluation Metrics"
+        },
+        {
+            "text": "Where TP represents the number of true positive pixels, TN represents the number of true negative pixels, FP represents the number false positive pixels and FN represents the number of false positive pixels. Additionally, the performance was evaluated with the Area Under the ROC Curve (AUC), which refers to the area under a curve that allows evaluating the quality of a result by calculating the rate of change of Sensitivity (TPR) versus Specificity (TNR).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance Evaluation Metrics"
+        },
+        {
+            "text": "The model was trained from scratch on random patches, extracted from the preprocessed images. As described in Sect. 3.4, each dataset was divided in training and test sets. Additionally, a 10% percentage of the training set was used as a validation set for the parameter selection. Only pixels within the Field of View (FOV) were considered in the evaluation. For the STARE and CHASE datasets, which do not provide a binary mask to identify the FOV, they were created using a manually chosen global threshold.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Results"
+        },
+        {
+            "text": "The patch size was modified during the training process, using a progressive resizing strategy as follows. For a total of 90 epochs, the training process was divided into three parts of 30 epoch each: first, a patch size of 24 \u00d7 24 pixels was used; then, a patch size of 32 \u00d7 32 pixels was used; finally, a patch size of 48 \u00d7 48 pixels was used. As the patch size changed, the best weights from the previous part were used to initialize the model weights. For the evaluation, ordered patches extracted from the preprocessed images, of size 48 \u00d7 48 with an overlapping of 10 pixels were used. The optimization configuration consist of the Adam optimizer with a cyclical learning rate strategy as described in [31] with an initial learning rate set to 0.005. Binary cross-entropy was used as loss function. All experiments were implemented using the Pytorch framework and an NVIDIA Tesla K80 GPU.",
+            "cite_spans": [
+                {
+                    "start": 708,
+                    "end": 712,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Results"
+        },
+        {
+            "text": "The proposed method was compared with various state-of-the-art methods, including methods based on complete image prediction, patch-based prediction, and pixel-based prediction (from a patch neighborhood). The evaluation was performed using the metrics presented in Sect. 3.5. From the Table 1 , it is shown that the proposed method is competitive with state-of-the-art methods: for CHASEDB and DRIVE databases, it obtains the highest and second highest score in the F1 metric, respectively; for STARE and DRIVE databases, it obtains the highest and second highest value in TPR, respectively, and the second-best value in ACC for both cases. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 286,
+                    "end": 293,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Experimental Results"
+        },
+        {
+            "text": "In this paper, a novel end-to-end convolutional neural network for the automatic retinal vessel segmentation was proposed. Herein, a new variant of the Gaussian Matched Filters that incorporates curvature to the filter was presented. It improves the modeling of curvilinear structures, detecting tortuosity and other intricate shapes in vessels. The incorporation of distorted Gaussian Matched filters on a residual convolutional architecture allowed the amplitude and curvature parameters to be adjusted automatically, based on the input images. Additionally, a Quantum Convolutional Layer was incorporated as a new type of preprocessing. The experimental results show that the proposed method has a competitive performance with the state-of-the-art methods, and even surpasses in terms of sensitivity to the state-of-the-art methods for the STARE database, and in terms of F1-score for the CHASE database.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Retinal imaging and image analysis",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Abramoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Garvin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Sonka",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "IEEE Rev. Biomed. Eng",
+            "volume": "3",
+            "issn": "",
+            "pages": "169--208",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Covid-19 detection on IBM quantum computer with classicalquantum transfer learning",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Acar",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Yilmaz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Network-based features for retinal fundus vessel structure analysis",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Amil",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Reyes-Manzano",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Guzm\u00e1n-Vargas",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Sendi\u00f1a-Nadal",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Masoller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PloS one",
+            "volume": "14",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Optimizing the trainable B-COSFIRE filter for retinal blood vessel segmentation",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Badawi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fraz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "PeerJ",
+            "volume": "6",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Fundus retinal image analyses for screening and diagnosing diabetic retinopathy, macular edema, and glaucoma disorders. Diabetes and Fundus OCT",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Chalakkala",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Abdullaa",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hongb",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Detection of blood vessels in retinal images using two-dimensional matched filters",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chaudhuri",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Katz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goldbaum",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "IEEE Transactions on medical imaging",
+            "volume": "8",
+            "issn": "3",
+            "pages": "263--269",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Segmentation of retinal vessels with a hysteresis binary-classification paradigm",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Condurache",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Mertins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Comput. Medi. Imaging Graph",
+            "volume": "36",
+            "issn": "4",
+            "pages": "325--335",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "A novel multiscale gaussian-matched filter using neural networks for the segmentation of x-ray coronary angiograms",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Cruz-Aceves",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Cervantes-Sanchez",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Avila-Garcia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "J. Healthcare Eng",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1155/2018/5812059"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "CcNet: a cross-connected convolutional network for segmenting retinal vessels using multi-scale features",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Pan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Neurocomputing",
+            "volume": "392",
+            "issn": "",
+            "pages": "268--276",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Ensemble classification system applied for retinal vessel segmentation on child images containing various vessel profiles",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Fraz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Image Analysis and Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "380--389",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "MSCNN-AM:: a multi-scale convolutional neural network with attention mechanisms for retinal vessel segmentation",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Access",
+            "volume": "8",
+            "issn": "",
+            "pages": "163926--163936",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "M2E-Net: multiscale morphological enhancement network for retinal vessel segmentation",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Geng",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "PRCV 2020, Part. LNCS",
+            "volume": "12305",
+            "issn": "",
+            "pages": "493--502",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-030-60633-6_41"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Quantum selective encryption for medical images",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Heidari",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Naseri",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nagata",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Int. J. Theor. Phys",
+            "volume": "58",
+            "issn": "11",
+            "pages": "3908--3926",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Quanvolutional neural networks: powering image recognition with quantum circuits",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Henderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Shakya",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pradhan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cook",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Quant. Mach. Intell",
+            "volume": "2",
+            "issn": "1",
+            "pages": "1--9",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s42484-020-00012-y"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Locating blood vessels in retinal images by piecewise threshold probing of a matched filter response",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Hoover",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Kouznetsova",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goldbaum",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "19",
+            "issn": "3",
+            "pages": "203--210",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Densely connected convolutional networks",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Van Der Maaten",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Weinberger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "4700--4708",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Retinal blood vessel segmentation using fully convolutional network with transfer learning",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Ko",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Comput. Med. Imaging Graph",
+            "volume": "68",
+            "issn": "",
+            "pages": "1--15",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "DUNet: a deformable network for retinal vessel segmentation",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Pham",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Knowl.-Based Syst",
+            "volume": "178",
+            "issn": "",
+            "pages": "149--162",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "A generalized multiscale line-detection method to boost retinal vessel segmentation sensitivity",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A U"
+                    ],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Bailey",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Soomro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Pattern Anal. Appl",
+            "volume": "22",
+            "issn": "3",
+            "pages": "1177--1196",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10044-018-0696-1"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Iternet: retinal image segmentation utilizing structural redundancy in vessel networks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Verma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Nakashima",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nagahara",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Kawasaki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The IEEE Winter Conference on Applications of Computer Vision",
+            "volume": "",
+            "issn": "",
+            "pages": "3656--3665",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Retinal vascular signs: a window to the heart?",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Liew",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Revista Espa\u00f1ola de Cardiologia",
+            "volume": "64",
+            "issn": "6",
+            "pages": "515--521",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Segmenting retinal blood vessels with deep neural networks",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Liskowski",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Krawiec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "35",
+            "issn": "11",
+            "pages": "2369--2380",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Automatic extraction of vessels from newly accessible dataset",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Maharana",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Das",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Soft Computing: Theories and Applications",
+            "volume": "",
+            "issn": "",
+            "pages": "1139--1150",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-981-15-0751-9_105"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Multi-level deep supervised networks for retinal vessel segmentation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Int. J. Comput. Assist. Radiol. Surg",
+            "volume": "12",
+            "issn": "12",
+            "pages": "2181--2193",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11548-017-1619-0"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Morphological operations with iterative rotation of structuring elements for segmentation of retinal vessel structures",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pal",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chatterjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Dey",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Munshi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Multidimens. Syst. Signal Process",
+            "volume": "30",
+            "issn": "1",
+            "pages": "373--389",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s11045-018-0561-9"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "U-Net: convolutional networks for biomedical image segmentation",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Ronneberger",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Fischer",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Brox",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "MICCAI 2015 Part III",
+            "volume": "9351",
+            "issn": "",
+            "pages": "234--241",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-319-24574-4_28"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "The multiscale bowler-hat transform for blood vessel enhancement in retinal images",
+            "authors": [
+                {
+                    "first": "\u00c7",
+                    "middle": [],
+                    "last": "Sazak",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Nelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Obara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Pattern Recognit",
+            "volume": "88",
+            "issn": "",
+            "pages": "739--750",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Retinal blood vessel segmentation using a fully convolutional network -transfer learning from patch-to imagelevel",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Birgui Sekou",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hidane",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Olivier",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Cardot",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "MLMI 2018",
+            "volume": "11046",
+            "issn": "",
+            "pages": "170--178",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-030-00919-9_20"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Best practices for convolutional neural networks applied to visual document analysis",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Simard",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Steinkraus",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Platt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "In: ICDAR",
+            "volume": "3",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Cyclical learning rates for training neural networks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 IEEE Winter Conference on Applications of Computer Vision (WACV)",
+            "volume": "",
+            "issn": "",
+            "pages": "464--472",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Impact of ICA-based image enhancement technique on retinal blood vessels segmentation",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Soomro",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Khan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Paul",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Access",
+            "volume": "6",
+            "issn": "",
+            "pages": "3524--3538",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Ridge based vessel segmentation in color images of the retina",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Staal",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Abramoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Niemeijer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Viergever",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Van Ginneken",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "23",
+            "issn": "4",
+            "pages": "501--509",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Retinal blood vessel segmentation using hybrid features and multi-layer perceptron neural networks",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Tamim",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Elshrkawey",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Azim",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nassar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Symmetry",
+            "volume": "12",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Segmentation of carbon nanotube images through an artificial neural network",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "C R"
+                    ],
+                    "last": "Trujillo",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Alarc\u00f3n",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Dalmau",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Ojeda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Soft Comput",
+            "volume": "21",
+            "issn": "3",
+            "pages": "611--625",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Retinal vessel segmentation by a divide-and-conquer funnelstructured classification framework. Signal Process",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "165",
+            "issn": "",
+            "pages": "104--114",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Artificial intelligence to identify retinal fundus images, quality validation, laterality evaluation, macular degeneration, and suspected glaucoma",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Zapata",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clin. Ophthalmol",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Pavement lane marking detection using matched filter",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Qiu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Measurement",
+            "volume": "130",
+            "issn": "",
+            "pages": "105--117",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Road extraction by deep residual u-net",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Geosci. Remote Sens. Lett",
+            "volume": "15",
+            "issn": "5",
+            "pages": "749--753",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Automatic retinal vessel segmentation using multi-scale superpixel chain tracking",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhaozhao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Digit. Signal Process",
+            "volume": "81",
+            "issn": "",
+            "pages": "26--42",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Color retinal image enhancement based on luminosity and contrast adjustment",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Qian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "IEEE Trans. Biomed. Eng",
+            "volume": "65",
+            "issn": "3",
+            "pages": "521--527",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "(a) Original GMF filter with parameters (\u03c3 = 1, L = 21), (b) Distorted GMF filter using uniform random displacements in the interval (\u22121, 1), (c) Distorted GMF filter using elastic deformations with parameters (\u03b2 = 4, \u03b1 = 30). The green arrows represent the pixel displacement vectors.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "D-GaussianNet overall architecture: (a) The proposed architecture with D-GMF Blocks at the beginning and end of the network; (b) Encoder Block; (c) Decoder Block; (d) Residual D-GMF block used in the proposed architecture",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Filter parameters {\u03c3 j } and {\u03b1 j } are randomly initialized, a. Values in {\u03c3 j } are initialized using a continuous uniform distribution in the interval (a, b), i.e., \u03c3 j \u223c U(a, b), b. Values in {\u03b1 j } are initialized using a continuous uniform distribution in the interval (c, d), i.e., \u03b1 j \u223c U(c, d). where tuple (a, b) corresponds to the lower and upper boundaries for the initial amplitude values, and tuple (c, d) corresponds to the lower and upper values for the initial curvature values. 2. For each filter f j , a. a set {f (\u03b8) j } composed of rotated versions of f j is constructed, where \u03b8 is the rotation angle, which takes evenly spaced values in the interval [0, 2\u03c0); b. the filters in set {f (\u03b8) j } are applied to the layer's input feature map I, obtaining responses {R (\u03b8) j }; c. the filter's output O j is computed by keeping the maximum response at element level among the set of responses {R (\u03b8) j }, i.e., :",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Performance comparison against state-of-the-art methods on DRIVE, STARE and CHASE datasets. DRIVE DNN/Liskowski et al. [23] 0.7811 0.9807 0.9790 0.9535 \u2212 CcNet/Feng et al. [9] 0.7625 0.9809 0.9678 0.9528 \u2212 DUNet/Jin et al. [19] 0.7595 0.9878 0.9832 0.9641 0.8143",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

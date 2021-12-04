@@ -1,0 +1,997 @@
+{
+    "paper_id": "3e46bb41eef0eee6a4bed77811a33eee2abdb468",
+    "metadata": {
+        "title": "Modelled Optimization of SARS-Cov-2 Vaccine Distribution: an Evaluation of Second Dose Deferral Spacing of 6, 12, and 24 weeks",
+        "authors": []
+    },
+    "abstract": [
+        {
+            "text": "Multiple recent studies have shown strong first dose vaccine efficacy for both Moderna mRNA-1273 and Pfizer/BioNTech BNT 162b2, which has stimulated discussion of maximizing initial population immunity during a time of vaccine shortage by using a deferred second dose strategy for these vaccines.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Our model examines the size of the effect of spacing of the second dose with 6, 12, and 24 week deferred spacing regimens relative to 3 week spacing.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Deferring the second dose from 3 weeks to 6 weeks, 12 weeks, and 24 weeks shows progressive benefit to population immunity for any given time period, even with significant one dose efficacy decay. The benefits are influenced by vaccine supply per capita.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The longer the second dose is deferred the larger the benefit in initial population immunity, provided one dose efficacy does not significantly wane. Monitoring one dose efficacy duration from the UK or Quebec minimizes this risk, as the gathered data will help ensure the second dose is given at an optimal time. How this information is implemented should vary depending on the population and whether the goal is to optimally protect high risk groups or to increase total population immunity as quickly as possible. Benefits to deferring the second dose are influenced by the length of deferral, one dose efficacy, and vaccine supply per capita. The time to herd immunity could be shortened by 4 weeks with the implementation of a 12 week spacing regimen or 10 weeks with a 24 week spacing regimen.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The SARS-Cov-2 pandemic has inspired the creation of multiple effective vaccines, including a new type of vaccine using mRNA by Moderna (mRNA-1273) and Pfizer/BioNTech (BNT 162b2). Given the urgency of the pandemic and unknown immunogenicity of this new vaccine type, the manufacturers appeared to select doses at the highest tolerated level and spaced them with a short time frame to achieve a quick restimulation of the immune response. This sensible approach worked better than most would have anticipated, with a two dose efficacy rate of stopping symptomatic COVID at 94-95% in trial data (1, 2) , with reports from Israeli health agencies Maccabi and Cialit reporting similar figures in Israel's population (3) . Surprisingly, one dose efficacy against symptomatic disease was also very high 93-94% in trial data (2, 4) with multiple sources of data around the world confirming a 80% to 90% one dose efficacy once sufficient time is given for the immune system to mount a response (5, 6, 7) . Lower viral titres in those who had received one dose that do get infected would point to decreased transmission of virus even without the second dose (8) and asymptomatic infections also appear to be reduced by 4 fold (9) . Our previous model showed that even high estimates of decay rates for one dose efficacy were highly unlikely to nullify the benefit to population immunity that was gained by deferring the second dose (10) . To the best of the authors' knowledge, how this benefit changes with different spacing regimens as well as how it changes with vaccine availability has not yet been evaluated.",
+            "cite_spans": [
+                {
+                    "start": 594,
+                    "end": 597,
+                    "text": "(1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 598,
+                    "end": 600,
+                    "text": "2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 713,
+                    "end": 716,
+                    "text": "(3)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 819,
+                    "end": 822,
+                    "text": "(2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 823,
+                    "end": 825,
+                    "text": "4)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 987,
+                    "end": 990,
+                    "text": "(5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 991,
+                    "end": 993,
+                    "text": "6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 994,
+                    "end": 996,
+                    "text": "7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1150,
+                    "end": 1153,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1218,
+                    "end": 1221,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1424,
+                    "end": 1428,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Background:"
+        },
+        {
+            "text": "We developed a model using a Python script to estimate the benefits to increased population immunity of deferring the second dose of the mRNA vaccines from 3 weeks to 6, 12, and 24 weeks. This modelling evaluates a population receiving vaccine shipments increasing by 10% per week such that the entire population can be fully immunized in 14 months. We also evaluated how to adjust these results for regions with higher or lower available vaccine supply per capita, given the size of the population and the available vaccine will vary by region. Decay rate of efficacy after 2 doses of the vaccine is set at 1% per month, and for one dose the decay rate is set at 2.5% per month, unless otherwise noted. A one dose efficacy of 93% and a two dose efficacy of 95% were used in our modelling, based on the trial data seen in Pfizer/BioNTech's phase 3 data (1, 2). The total average population immunity was determined by calculating the area under the curve (unpublished data). Growth of the vaccine shipments were modelled at 10% increase per month. Immunity effects were realized two weeks after the respective doses were given.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods:"
+        },
+        {
+            "text": "A simple formula was developed to adjust for different observed efficacies as well as for populations that have partial natural immunity from COVID-19 infections.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods:"
+        },
+        {
+            "text": "Benefit to population immunity was seen in all spacing regimens longer than 3 weeks, whether examining a subset of the population (Fig. 1 ) or the entire population (Fig. 2) . The benefits were proportionate to time the second dose was delayed; deferring the second dose to 12 weeks had approximately twice the benefit as deferring to 6 weeks, but only half the benefit of the 24 week regimen (Fig. 3, Fig. 4 ). Absolute population immunity gains of 2-20 percentage points were seen. These gains are increased significantly if the vaccine supply is more robust, see . Viewed from another angle, a given population immunity level was reached from 1.5 to 10.5 weeks quicker by deferring the second dose. This benefit was diminished, but still present, even when using a high one dose decay estimation of 10% per month (Fig. 5) .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 130,
+                    "end": 137,
+                    "text": "(Fig. 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 165,
+                    "end": 173,
+                    "text": "(Fig. 2)",
+                    "ref_id": null
+                },
+                {
+                    "start": 393,
+                    "end": 408,
+                    "text": "(Fig. 3, Fig. 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 816,
+                    "end": 824,
+                    "text": "(Fig. 5)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results:"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review) The estimated gains as modelled above are for a supply chain that can supply enough doses to fully vaccinate the population in about 60 weeks. That is a conservative estimate of some regions' supply chains, and examining how supply will change these benefits can be useful in adapting this modelling to a region of interest. Changing the vaccine supply per . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results:"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted March 2, 2021. ; https://doi.org/10.1101/2021.02.28.21252638 doi: medRxiv preprint capita does change the benefit of increased population immunity at a given time differently than the benefit of reaching a set population immunity sooner, see Table 1 and Fig. 6 . If a region has a more robust vaccine supply per capita so that they can fully vaccinate their population within 40 weeks, that will modify the magnitude of benefit modelled. Namely, this increases the gain in population immunity, but the gain in time to reach a set immunity is relatively unchanged. Alternatively, for regions expecting to take longer than a year to vaccinate their population, lower gains with population immunity would be expected if the same spacing regimen was used. The influence of vaccine supply can be illustrated by comparing the 24 week spacing gains shown in Figure 7 , which shows a population with robust vaccine supply per capita, as well as medium supply, and low supply. The more robust the vaccine supply, the greater the increase of population immunity for a 12 week spacing compared to a 3 week spacing regimen. The 24 week spacing compared to the 3 week spacing regimen illustrates a gain of 78% for robust vaccine supply, 58% for medium vaccine supply, and 26% for low supply. These correspond to absolute population immunity percentage point increases of 32, 19, and 15, respectively. With a very robust vaccine supply, a 24 week spacing regimen is not needed as the entire population will be able to receive their first dose 24 weeks has passed, see Figure 8 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 301,
+                    "end": 308,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 313,
+                    "end": 319,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 910,
+                    "end": 918,
+                    "text": "Figure 7",
+                    "ref_id": null
+                },
+                {
+                    "start": 1613,
+                    "end": 1621,
+                    "text": "Figure 8",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Gain in immunity is a function of the spacing used relative to the total roll out time. 24 week spacing makes up a much larger share of a 40 week total timeline than it does of an 80 week total timeline and thus results in higher relative immunity gains. If a longer roll out is required due to less robust vaccine supply, a longer spacing protocol proportionate to the roll-out time period would increase the relative gains. Of course, such longer spacing would come with the appropriate caveats of waning one dose efficacy considered in this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Conversely, notice that the gain in time to reach a set immunity level appears only minimally affected by vaccine supply, if at all. How much faster a set immunity can be reached compared to 3 week spacing is primarily determined on the spacing regimen used: 24 week spacing gains ~10.5 weeks, 12 week spacing gains ~4.5 weeks, and 6 week spacing gains ~1.5 weeks. The longer that the second dose is deferred, the greater the time saved before reaching a set immunity point.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted March 2, 2021. ;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "As one would expect, the benefit observed in the model decreased proportionately with decreased one dose efficacy, such that no benefit is seen in deferring the second dose when the first dose efficacy is half of two dose efficacy. Our model uses the trial data of 93% efficacy after one dose and 95% after two doses, thus the net benefit to diverting a second dose to use as a first dose instead is 91 percentage points (93-(95-93)= 91). The modelled gains can also be adjusted for differing one dose and two dose efficacy rates for the population of interest using the following formula:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "For example, with 72% one dose efficacy and 86% two dose efficacy against symptomatic and asymptomatic infection as reported in the SIREN study (11), the above formula gives an adjustment factor of 0.64, meaning the benefits to deferring the second dose would be about a third less than currently modelled.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Adjusted gains= (Adjustment factor)(modelled gains) Adjustment factor= (observed first dose net immunity benefit) -(observed second dose net immunity benefit)/ (modelled first dose net benefit -modelled second dose net benefit) =(observed one dose efficacy -(observed two dose efficacy -observed one dose efficacy)) / (93 -(95 -93))"
+        },
+        {
+            "text": "The above formula can also be used to adjust for vaccinating the cohort who have recovered from COVID-19. Previous infection has been estimated to reduce risk of a subsequent infection by 94% for a period of at least 5 months (12) . Vaccinating these recovered individuals only increases population immunity by likely 2 or 3 percentage points (to a maximum of 6 percentage points), which is a small gain in immunity compared to the 93 percentage points gained by vaccinating a naive individual. For each x % of the doses going to the COVID-19 recovered cohort (rather than naive individuals), the expected benefit of the first dose falls by nearly x % as well. If 10% of the population being vaccinated already has immunity, the expected gains as modelled would decrease by nearly 10%.",
+            "cite_spans": [
+                {
+                    "start": 226,
+                    "end": 230,
+                    "text": "(12)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Adjusted gains= (Adjustment factor)(modelled gains) Adjustment factor= (observed first dose net immunity benefit) -(observed second dose net immunity benefit)/ (modelled first dose net benefit -modelled second dose net benefit) =(observed one dose efficacy -(observed two dose efficacy -observed one dose efficacy)) / (93 -(95 -93))"
+        },
+        {
+            "text": "The modelling above demonstrates a clear benefit to population immunity with all second dose deferred regimens, and second dose deferral maintains this advantage even when one dose decay is an order of magnitude larger than two dose efficacy decay, as our previous paper also showed (10) . By evaluating the time to reach a set immunity level within the entire population (rather than solely focusing on the population immunity gains at a set time), the above modelling shows that time to reach herd immunity could be shortened by 1.5 weeks with a 6 week spacing regime, 4.5 weeks with 12 week spacing, and 10.5 weeks with 24 week spacing, independent of vaccine supply.",
+            "cite_spans": [
+                {
+                    "start": 283,
+                    "end": 287,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "A few additional insights have been illustrated by modelling different spacing regimens and varying vaccine supply scenarios. First, the longer the spacing regimen is used, the more benefit is seen in population immunity and in shortening the time needed to reach a given set immunity point. This benefit is proportionate, with a 12 week spacing conferring twice the benefit of a 6 week spacing regimen relative to the standard 3 weeks. Furthermore, the gains for the deferred second dose accumulate throughout the roll out period -resulting in a higher overall average population immunity week by week for every deferral.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Second, vaccine supply does not impact the gains made in shortening the time to reach a certain set point, but it does impact population immunity levels, with more robust vaccine supply leading to increased population immunity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Third, vaccinating previously recovered individuals who have a high natural immunity to COVID-19 is inefficient. There are multiple reasons why the COVID-19 recovered cohort might get vaccinated, including maximizing individual immunity for those at high risk and inadvertently vaccinating those who had asymptomatic infections. However, deferring the first dose of vaccine for this cohort until everyone else has received their first dose is optimal from a population immunity perspective, a factor that public health organizations should consider when implementing a distribution plan.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "Fourth, as increased benefits were noted with increased spacing, the optimal way to increase population immunity is to defer the second dose until everyone has received their first, as long as one dose efficacy does not rapidly wane.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "A common concern about implementing the deferred second dose strategy is that the one dose efficacy duration is unknown for now. AstraZeneca's one dose trial data showed sustained one dose immunity for at least 12 weeks (13), but given that it did not use the novel mRNA vaccine technology, the concern around one dose duration was still valid. However, with multiple ongoing studies evaluating one dose efficacy duration of the mRNA vaccines (such as in Quebec and the UK), this risk has greatly been diminished. Any region that now implements a second dose deferred strategy -weeks after these other trials have started -will have sufficient notice of when one dose efficacy decays, as long as they monitor these other public health authorities' data. In other words, the duration of one dose efficacy for the mRNA vaccines is still not known, but it will be known soon, and should give ample leeway to inform the optimal time to give the second dose for this new mRNA vaccine technology.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "How dose deferral is implemented will depend on the characteristics of the population in question. One strategy would be to defer the second dose only until all high risk individuals have first received their first dose, and then the second dose is given as vaccine supply allows. Once the high risk group has received both doses, the same distribution strategy is implemented for the medium and low risk groups, respectively. Given that the elderly may have a level of immune senescence leading to a delayed response to the vaccine (14) , with possibly a lower one dose efficacy than the initial trial data suggested (15) , this may be a prudent option. This appears to be the strategy Quebec is taking, as it optimizes immunity for the most vulnerable (6) , and focusing vaccination on the elderly appears to prevent the most deaths as well as minimizing total expected years lost (16) .",
+            "cite_spans": [
+                {
+                    "start": 533,
+                    "end": 537,
+                    "text": "(14)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 618,
+                    "end": 622,
+                    "text": "(15)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 754,
+                    "end": 757,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 883,
+                    "end": 887,
+                    "text": "(16)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "An alternate strategy may be to defer the second dose as long as one dose efficacy does not appear to significantly wane, in such a way that the entire population would receive . CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted March 2, 2021. their first dose before anyone gets a booster. This strategy would lead to an optimal increase in population immunity but may leave the highest risk groups vulnerable with lower one dose efficacy levels.",
+            "cite_spans": [
+                {
+                    "start": 59,
+                    "end": 73,
+                    "text": "March 2, 2021.",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Another valid concern with deferred second dosing is that very prolonged immune spacing might also diminish the booster effect of a second dose. Individuals who have been infected with COVID-19 have shown dramatic and robust responses to a single dose of a mRNA vaccine even 10 months after recovery, even in people whose antibodies have waned to unmeasurable levels (17) . Furthermore, AstraZeneca's data showed improved immunity with a 12 week spacing window compared to less than 6 week spacing (13) . This helps allay this concern to a certain degree, but the optimal spacing for a booster dose may differ after infection or based on using different vaccine technology. A reasonable way to evaluate this might be to give a second dose to a small sample of the population every week during the deferral period and ensure they have large increases in their immune markers consistent with a boost response. When (or if) the immune markers stop having a robust increase as expected, then that would help determine the maximal spacing to optimally restimulate the immune system.",
+            "cite_spans": [
+                {
+                    "start": 367,
+                    "end": 371,
+                    "text": "(17)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 498,
+                    "end": 502,
+                    "text": "(13)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "With studies from multiple sources now confirming strong one dose efficacy, and with studies in progress of one dose efficacy duration underway, the risk to implementing a second dose deferral strategy has been minimized. Multiple previous models have shown benefit to deferring the second dose (10, 18, 19) . The modelling done here helps characterize the benefits to deferring the second dose, adding to the growing evidence that continuing with the standard 3 week spacing regimen will likely result in preventable mortality and morbidity.",
+            "cite_spans": [
+                {
+                    "start": 295,
+                    "end": 299,
+                    "text": "(10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 300,
+                    "end": 303,
+                    "text": "18,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 304,
+                    "end": 307,
+                    "text": "19)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY-NC 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted March 2, 2021. ; https://doi.org/10.1101/2021.02.28.21252638 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Safety and efficacy of the BNT162b2 mRNA Covid-19 vaccine",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Polack",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Kitchin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "383",
+            "issn": "",
+            "pages": "2603--2615",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Efficacy and safety of the mRNA-1273 SARS-CoV-2 Vaccine",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Baden",
+                    "suffix": ""
+                },
+                {
+                    "first": "El",
+                    "middle": [],
+                    "last": "Sahly",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Essink",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "N Engl J Med",
+            "volume": "384",
+            "issn": "",
+            "pages": "403--416",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Israeli study finds Pfizer vaccine 95% effective against COVID-19",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Safety and Efficacy of the BNT162b2 mRNA Covid-19 Vaccine",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Skowronski",
+                    "suffix": ""
+                },
+                {
+                    "first": "De",
+                    "middle": [],
+                    "last": "Serres",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Estimating the effectiveness of the Pfizer COVID-19 BNT162b2 vaccine after a single dose. A reanalysis of a study of 'real-world' vaccination outcomes from Israel",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hunter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Brainard",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Donn\u00e9es pr\u00e9liminaires sur l'efficacit\u00e9 vaccinale et avis compl\u00e9mentaire sur la strat\u00e9gie de vaccination contre la COVID-19 au Qu\u00e9bec en contexte de p\u00e9nurie",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Early rate reductions of SARS-CoV-2 infection and COVID-19 in BNT162b2 vaccine recipients. The Lancet",
+            "authors": [
+                {
+                    "first": "Sharon",
+                    "middle": [],
+                    "last": "Amit",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "448--455",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(21)00448-7"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Decreased SARS-CoV-2 viral load following vaccination",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Levine-Tiefenbrun",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Yelin",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Katz",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2021.02.06.21251283"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Single-dose BNT162b2 vaccine protects against asymptomatic SARS-CoV-2 infection. Authorea",
+            "authors": [
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Weekes",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Nick",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lucy",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Rivett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.22541/au.161420511.12987747/v1"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Modelling decay of population immunity with proposed second dose deferral strategy",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Jurgens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Effectiveness of BNT162b2 mRNA Vaccine Against Infection and COVID-19 Vaccine Coverage in Healthcare Workers in England, Multicentre Prospective Cohort Study (the SIREN Study)",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hall",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Foulkes",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Saei",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2139/ssrn.3790399"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Do antibody positive healthcare workers have lower SARS-CoV-2 infection rates than antibody negative healthcare workers? Large multi-centre prospective cohort study (the SIREN study",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Hall",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Foulkes",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Charlett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2021.01.13.21249642"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Single-dose administration and the influence of the timing of the booster dose on immunogenicity and efficacy of ChAdOx1 nCoV-19 (AZD1222) vaccine: a pooled analysis of four randomised trials",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Voysey",
+                    "suffix": ""
+                },
+                {
+                    "first": "Costa",
+                    "middle": [],
+                    "last": "Clemens",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Madhi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Lancet",
+            "volume": "",
+            "issn": "21",
+            "pages": "432--435",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(21)00432-3"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "The effectiveness of the first dose of BNT162b2 vaccine in reducing SARS-CoV-2 infection 13-24 days after immunization: real-world evidence",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chodick",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tene",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Patalon",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gazit",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Tov",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "https:/www.medrxiv.org/content/10.1101/2021.01.27.21250612v1"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Public Health England: PHE monitoring of the early impact and effectiveness of COVID-19 vaccination in England",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Vaccinating the oldest against COVID-19 saves both the most lives and most years of life",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Goldstein",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cassidy",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Wachter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Proc Natl Acad Sci",
+            "volume": "118",
+            "issn": "11",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1073/pnas.2026322118"
+                ],
+                "PMID": [
+                    "33632802"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Impact of age, ethnicity, sex and prior infection status on immunogenicity following a single dose of the BNT162b2 mRNA COVID-19 vaccine: real-world evidence from healthcare workers, Israel",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kamal",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hila",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Karine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Euro Surveill",
+            "volume": "26",
+            "issn": "6",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2807/1560-7917.ES.2021.26.6.2100096"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "The Public Health Impact of Delaying a Second Dose of the BNT162b2 or mRNA-1273 COVID-19 Vaccine (preprint) medRxiv",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Romero-Brufau",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Chopra",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ryu",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1101/2021.02.23.21252299"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Speed Versus Efficacy: Quantifying Potential Tradeoffs in COVID-19 Vaccine Deployment",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Paltiel",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Schwartz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Epub ahead of print",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7326/M20-7866"
+                ],
+                "PMID": [
+                    "33395345"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "TABREF1": {
+            "text": "Magnitude of Benefits Depend on Vaccine Supply Per Capitais the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

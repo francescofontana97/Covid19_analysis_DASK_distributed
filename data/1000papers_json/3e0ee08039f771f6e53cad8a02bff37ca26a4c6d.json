@@ -1,0 +1,2039 @@
+{
+    "paper_id": "3e0ee08039f771f6e53cad8a02bff37ca26a4c6d",
+    "metadata": {
+        "title": "C-Watcher: A Framework for Early Detection of High-Risk Neighborhoods Ahead of COVID-19 Outbreak",
+        "authors": [
+            {
+                "first": "Congxi",
+                "middle": [],
+                "last": "Xiao",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Science and Technology of China",
+                    "location": {}
+                },
+                "email": "vxiaocongxi@baidu.com"
+            },
+            {
+                "first": "Jingbo",
+                "middle": [],
+                "last": "Zhou",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Baidu Inc",
+                    "location": {
+                        "country": "China"
+                    }
+                },
+                "email": "zhoujingbo@baidu.com"
+            },
+            {
+                "first": "Jizhou",
+                "middle": [],
+                "last": "Huang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Baidu Inc",
+                    "location": {
+                        "country": "China"
+                    }
+                },
+                "email": "huangjizhou01@baidu.com"
+            },
+            {
+                "first": "An",
+                "middle": [],
+                "last": "Zhuo",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Baidu Inc",
+                    "location": {
+                        "country": "China"
+                    }
+                },
+                "email": "zhuoan@baidu.com"
+            },
+            {
+                "first": "Ji",
+                "middle": [],
+                "last": "Liu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Baidu Inc",
+                    "location": {
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Haoyi",
+                "middle": [],
+                "last": "Xiong",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Baidu Inc",
+                    "location": {
+                        "country": "China"
+                    }
+                },
+                "email": "xionghaoyi@baidu.com"
+            },
+            {
+                "first": "Dejing",
+                "middle": [],
+                "last": "Dou",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Baidu Inc",
+                    "location": {
+                        "country": "China"
+                    }
+                },
+                "email": "doudejing@baidu.com"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The novel coronavirus disease has crushed daily routines and is still rampaging through the world. Existing solution for nonpharmaceutical interventions usually needs to timely and precisely select a subset of residential urban areas for containment or even quarantine, where the spatial distribution of confirmed cases has been considered as a key criterion for the subset selection. While such containment measure has successfully stopped or slowed down the spread of COVID-19 in some countries, it is criticized for being inefficient or ineffective, as the statistics of confirmed cases are usually time-delayed and coarse-grained. To tackle the issues, we propose C-Watcher, a novel data-driven framework that aims at screening every neighborhood in a target city and predicting infection risks, prior to the spread of COVID-19 from epicenters to the city. In terms of design, C-Watcher collects large-scale long-term human mobility data from Baidu Maps, then characterizes every residential neighborhood in the city using a set of features based on urban mobility patterns. Furthermore, to transfer the firsthand knowledge (witted in epicenters) to the target city before local outbreaks, we adopt a novel adversarial encoder framework to learn \"city-invariant\" representations from the mobility-related features for precise early detection of high-risk neighborhoods, even before any confirmed cases known, in the target city. We carried out extensive experiments on C-Watcher using the real-data records in the early stage of COVID-19 outbreaks, where the results demonstrate the efficiency and effectiveness of C-Watcher for early detection of high-risk neighborhoods from a large number of cities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The novel coronavirus disease , which has been officially announced as a pandemic by the World Health Organization (WHO), is perhaps the most serious public health emergency over the past decades. The coronavirus continues to spread around the globe, which challenges the governments and medical systems all over the world.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "While metropolitan-wide lockdown has demonstrated its effectiveness as a nonpharmaceutical intervention in several countries, the cost of such measures, including unemployment, economic crash, and social anxiety, makes it a tough decision on behalf of administrators. A compromised solution is to place containment measures onto a subset of areas in a city to stop or slow down the spread of COVID-19 while minimizing the social and economic cost. To precisely distinguish the high-risk areas from the city, the spatial distribution of confirmed cases has been used as the key criterion for the potential containment measures in a data-driven fashion.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "While the spatial statistics of confirmed cases work, the time consumption and the granularity of data acquisition significantly lower the efficiency and effectiveness of such methods. For example, the incubation period of COVID-19 is around 5-6 days on average, but it could last as long as 14 days. During such a period, a community or neighborhood would have been already invaded by a small number of asymptotic carriers who might not be with any clinical symptoms. When a small number of cases being confirmed, the community and its surrounding neighborhoods may have fallen into COVID-19 for a long time. Furthermore, though the mobility of confirmed patients is usually well restricted, the asymptomatic carriers with no symptoms would still spread the virus to where he/she has gone. When fine-grained mobility traces are not available, the administrators can only place containment measures to places in coarse-grained.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To tackle the technical issues, in this paper, we propose C(OVID)-Watcher, a novel framework to support early detection of high-risk residential neighborhoods for fighting against the spread of COVID-19. Our intuition is to incorporate human mobility data, so as to (1) characterize the socioeconomic and demographic status of every neighborhood (Borjas 2020; Huang et al. 2020b ) based on \"how residents move\" (Renso et al. 2013 ) and (2) unfold the spatial interactions (Jiang et al. 2020 ) and potential influences on COVID-19 caused by the mobility of massive asymptotic carriers. Specifically, C-Watcher includes a mobility datadriven machine learning model that screens every neighborhood in a target city and predicts the infection risks, prior to the spread of COVID-19 from epicenters to the city.",
+            "cite_spans": [
+                {
+                    "start": 346,
+                    "end": 359,
+                    "text": "(Borjas 2020;",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 360,
+                    "end": 378,
+                    "text": "Huang et al. 2020b",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 411,
+                    "end": 429,
+                    "text": "(Renso et al. 2013",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 472,
+                    "end": 490,
+                    "text": "(Jiang et al. 2020",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In addition to the use of mobility-related features, we also hope to generalize the evidence already witted in the epicenter for screening the risk of neighborhoods in the target city, prior to or in the early stage of local outbreaks. To achieve the goal, a core component of C-Watcher is a novel crosscity transfer learning model that transfers knowledge about COVID-19 infections from the epicenter to the target city, while cities are quite different in a large number of domains, ranging from living, foods, transportation, and residences.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "All in all, we have made three contributions as follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "\u2022 Through extensive data analytics, we explore a set of empirical features related to long-term/regular human mobility patterns (before the . With such long-term mobility features, the socioeconomic and demographic status, as well as the spatial interactions among neighborhoods could be well characterized. In this way, one can easily distinguish high-risk neighborhoods from the urban area and predict the potential risks for infection, with respect to the two factors.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "\u2022 While these features are with certain discriminative information for risk prediction, they also involve some cityspecific characteristics. For example, the popular choices for transport modes in different cities vary. Such cityspecific characteristics burden the use of mobility-related features to transfer the knowledge obtained in the epicenter to the target city. To generalize the knowledge transfer, C-Watcher adopts a novel adversarial encoderdecoder framework to learn the \"city-invariant\" representations from the mobility-related features for prediction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "\u2022 To validate C-Watcher, we collect and construct realworld datasets for high-risk neighborhood detection based on the publicly available information from the web and human mobility traces from the largest online map service in China. We conduct extensive experiments for evaluation. The results demonstrate that C-Watcher can accurately predict the potential risk of massive residential neighborhoods in a large number of Chinese cities. With large datasets, C-Watcher makes insightful suggestions on preventing the epidemic of COVID-19 alike for different residential neighborhoods via feature importance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this section, we first introduce the basic notations used throughout this paper, and then we formally formulate the research problem for early detection of high-risk neighborhoods. Last, we review the studies that are relevant to our work with the most related work discussed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "Notations and Formulation. We use n to denote the features of a residential neighborhood which will be presented in Section 3, and use y to denote the binary label meaning whether the neighborhood is high risky (y = 1) or not (y = 0). The detection problem can be defined as: f (n) \u2192 y where the function f (\u00b7) can be any machine learning model like Multi-Layer Perceptron (MLP).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "The objective of C-Watcher is to make early detection of high-risk neighborhoods without epidemic outbreaks. Instead of relying on the confirmed infection cases to make a prediction which deemed to be time-delayed like , we assume that the COVID-19 epidemic only outbroke in epicenter cities (such as Wuhan in China) and no prior knowledge of confirmed cases, spreading trend or known hazard neighborhoods in target cities can be referred to. Such a cross-city prediction problem of latent high risky residential neighborhoods can be formulated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "where n T and y T denote the features and binary label of a residential neighborhood in the target city. n E i and y E i denote the features and label of a neighborhood from epicenter cities set. Hereafter, we omit subscript i for simplicity. The f cross (\u00b7) is a cross-city transfer learning model which is trained without ground-truth information in the target city.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "Related Work. Aiming to fight against the COVID-19 pandemic, researchers in the computer science community carried out many studies from several perspectives recently. For instance, Huang et al. (2020b) exhibit that user transportation-related behaviors in China have indeed been impacted by the containment measures during the COVID-19 pandemic. There are also a few studies (Huang et al. 2020c; Xiong et al. 2020; Liu et al. 2020b ) investigating the human mobility, the local economy, and the information acquisition during the COVID-19 outbreak in China while most of these studies remain at city level.",
+            "cite_spans": [
+                {
+                    "start": 182,
+                    "end": 202,
+                    "text": "Huang et al. (2020b)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 376,
+                    "end": 396,
+                    "text": "(Huang et al. 2020c;",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 397,
+                    "end": 415,
+                    "text": "Xiong et al. 2020;",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 416,
+                    "end": 432,
+                    "text": "Liu et al. 2020b",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "Some studies also demonstrate the effectiveness of mobility data for controlling the spread of COVID-19. Vollmer et al. (2020) exploit a Bayesian semi-mechanism model with mobility data to show the effectiveness to slow down the spread of the virus by constraints on individual movements and social interactions. Based on the integration of mobility data and the global epidemic model (Balcan et al. 2009 ), a study also reveals the effectiveness of fine-grained targeted mobility control policies towards the COVID-19 pandemic (Hao et al. 2020) . The mobility data can also be integrated with compartmental models in epidemiology (like Susceptible-Exposed-Infected-Recovered (SEIR) model) (Ghamizi et al. 2020) to better predict the epidemic dynamics.",
+            "cite_spans": [
+                {
+                    "start": 105,
+                    "end": 126,
+                    "text": "Vollmer et al. (2020)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 385,
+                    "end": 404,
+                    "text": "(Balcan et al. 2009",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 528,
+                    "end": 545,
+                    "text": "(Hao et al. 2020)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 690,
+                    "end": 711,
+                    "text": "(Ghamizi et al. 2020)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "Discussion. From the problems and methodologies perspectives, the most relevant work to our study includes and (Xu et al. 2019; Peng and Qi 2019; Mai, Hu, and Xing 2020) . Compared to , which smooths the confirmed cases of infections over spatial domains and predicts hazard areas during the COVID-19 outbreaks using simple spatial features like distance, C-Watcher system tackles the time delay and coarse-grained granularity issues and can early detect the high-risk residential neighborhoods even before the outbreaks, through leveraging features derived from long-term/regular human mobility patterns. In terms of methodologies, though a great number of algorithms have been proposed for adversarial representation learning Makhzani et al. (2015) , adversarial metric learning (Xu et al. 2019 ) and cross-modalities (Mai, Hu, and Xing 2020), our work is the first to study the city-invariant representation learning through Generative Adversarial Networks (Goodfellow et al. 2014) in the context of urban computing and COVID-19 prediction.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 127,
+                    "text": "(Xu et al. 2019;",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 128,
+                    "end": 145,
+                    "text": "Peng and Qi 2019;",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 146,
+                    "end": 169,
+                    "text": "Mai, Hu, and Xing 2020)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 728,
+                    "end": 750,
+                    "text": "Makhzani et al. (2015)",
+                    "ref_id": null
+                },
+                {
+                    "start": 781,
+                    "end": 796,
+                    "text": "(Xu et al. 2019",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 820,
+                    "end": 833,
+                    "text": "(Mai, Hu, and",
+                    "ref_id": null
+                },
+                {
+                    "start": 960,
+                    "end": 984,
+                    "text": "(Goodfellow et al. 2014)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "In this section, we present how to construct features from mobility data to characterize a residential neighborhood for early risk detection. We first introduce the data source used in our framework, and then three groups of constructed features are briefly discussed which are Point of Interest (POI) radius features (see Section 3.1), demographic features (see Section 3.2) and transportation-related features (see Section 3.3), respectively. More details about the feature construction can be found in the Appendix A.1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "The feature construction is mainly based on three data sources: POI basic property data, user profile data and human mobility data. POI basic property data contains the basic information of a POI, such as name, coordinates and types, which provides many semantic information for a POI (Huang et al. 2020a; Yuan et al. 2020; Hu et al. 2020) . This data enable us to analyze the spatial relationship between neighborhoods and different types of POIs, such as hospitals, schools and bus stops ). The user profile data are obtained from a user profile platform of Baidu which can return profile features for almost all internet users in China, such as gender, age and educational level. Human mobility data, collected from Baidu Maps in China, record search and transportation behaviors of the map users.",
+            "cite_spans": [
+                {
+                    "start": 285,
+                    "end": 305,
+                    "text": "(Huang et al. 2020a;",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 306,
+                    "end": 323,
+                    "text": "Yuan et al. 2020;",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 324,
+                    "end": 339,
+                    "text": "Hu et al. 2020)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Notations and Related Work"
+        },
+        {
+            "text": "Here we introduce how to compute a group of POI radius features for a residential neighborhood based on POI basic property data. The intuition for this feature group is that basic living facilities around a residential neighborhood may have a correlation with the probability of its residents being infected by COVID-19. For example, a neighborhood lacking basic living facilities may face a high risk, for the residents may passively go further away for basic living needs and face greater infection risks. Moreover, neighborhoods with poor living facilities often lack good property management, which may also lead to high infection risks. To describe these living facilities related characteristics, we construct 15 POI radius features. Each of them is defined as the shortest distance between the neighborhood and one certain type of POIs. All the used types of POIs are listed in the Appendix A.1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "POI Radius Features"
+        },
+        {
+            "text": "Meanwhile, we define an additional binary feature to directly represent the perfect degree of living facilities. The value of this feature will be assigned as \"perfect\" if a set of basic living facilities (e.g. hospital, bus stop and so on) are all within 1km of the given neighborhood. Otherwise, it is assigned \"poor\". The list of basic living facilities is also shown in the Appendix A.1. We collect the high-risk and low-risk neighborhoods data in Wuhan city in China which is officially announced by the local government. Figure 1(a) presents the ratio distribution of high-risk and lowrisk neighborhoods grouping by this \"perfect-poor\" facility label in Wuhan data. As we can see from Figure 1 (a), for the neighborhoods with feature value as \"perfect\", the ratio of low-risk neighborhoods and high-risk ones is 0.57 : 0.44; whereas the ratio of them for \"poor\" ones is 0.43 : 0.56. It indicates that more high-risk neighborhoods have poor liv- ing facilities, while the low-risk neighborhoods are just the opposite.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 691,
+                    "end": 699,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "POI Radius Features"
+        },
+        {
+            "text": "Next, we present the demographic features of a residential neighborhood. At first, given that the COVID-19 is easy to transmit in a person-to-person way (Liu et al. 2020c) , it is necessary to take into account population density for infection risks prediction. As Figure 1 (b) illustrates, on average high-risk neighborhoods do have a higher population density than low-risk neighborhoods in Wuhan city. We also compute average commute distance as a feature for each neighborhood since residents with long commutes have high infection risks.",
+            "cite_spans": [
+                {
+                    "start": 153,
+                    "end": 171,
+                    "text": "(Liu et al. 2020c)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 265,
+                    "end": 273,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Demographic Features"
+        },
+        {
+            "text": "Moreover, different groups of residents may face different risk levels in a neighborhood. For example, old people and children are easier to be infected. And residents with higher educational levels may pay more attention to scientific prevention. Hence, we construct 11 features based on the distribution of residents according to different human attributes. We present each of these features as a vector of histogram statistics of residents' distribution. The full list of such attributes is provided in the Appendix A.1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Demographic Features"
+        },
+        {
+            "text": "We also extract features of transportation-related behaviors from human mobility data to help predict infection risks. There have been some studies to prove that transportation-related behaviors have a close relationship with COVID-19 contagion spreading ). The transportation-related behaviors typically are recognized as the origin-transportation-destination (OTD) information Xu et al. 2016; Liu et al. 2020a ). Thus, we consider detailed features from the perspectives of T (transportation), OD (origin & destination venues) and OTD (origin-transportation-destination pattern). All the features are extracted from the search and transportation data of Baidu Maps in a certain time period. Previous studies have shown that map search behavior is a leading indicator and predictor for crowd dynamics (Zhou, Pei, and Wu 2018) .",
+            "cite_spans": [
+                {
+                    "start": 379,
+                    "end": 394,
+                    "text": "Xu et al. 2016;",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 395,
+                    "end": 411,
+                    "text": "Liu et al. 2020a",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 802,
+                    "end": 826,
+                    "text": "(Zhou, Pei, and Wu 2018)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Transportation-Related Features"
+        },
+        {
+            "text": "A vector in which the value of each element equals the corresponding ratio of transportation means, mainly including walk, bicycle, public transit and private vehicle, is used to depict the \"T feature\" for a residential neighborhood. The \"OD feature\" consists of types of visit venues and the distance between origin and destination venues. We classify the destination venues according to their types (e.g. hospital, restaurant, hotel, and school) and compute the proportion of each type. We also extract origin-destination distance and categorize it into different distance buckets. The proportions of different distance buckets for the neighborhood are also formed as a feature vector. Moreover, since the OTD (origin-transportation-destination) patterns most directly reflect human mobility, we collect the top-20 hottest travel patterns from all the cities in our dataset, which is a triplet tuple composed of the type of origin venue (residential area), means of transportation and type of destination venue. The histogram distribution of these top-20 OTD travel patterns of each neighborhood is treated as \"OTD\" features. More details about the transportation-related features can be found in the Appendix A.1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Transportation-Related Features"
+        },
+        {
+            "text": "In this section, we present the cross-city transfer learning model, which is a core component of C-Watcher, to improve the performance of early detection of high-risk neighborhoods via transferring the knowledge about COVID-19 infection from the epicenter to the target city. Usually, discrepancies always exist between different cities. Thus, we intend to learn city-invariant knowledge applicable to both epicenters and target cities, instead of those characteristics unique to epicenter cities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cross-City Transfer Learning"
+        },
+        {
+            "text": "An overview of our proposed cross-city transfer learning model with four components is given in Figure 2 . The first component is a neural network encoder used to learn the representation of a neighborhood on the basis of three groups of features introduced in Section 3. However, the discrepancy of input distributions in different cities may lead to the gap between encoded representations of epicenter cities and target cities, which may severely disrupt the detection ability in target cities. Thus, we adopt adversarial learning by adding a discriminator component to identify whether the output of the encoder belongs to the target city or not. In addition, to ensure that the embedded feature of the encoder still keeps the ability to depict the residential neighborhoods, we exert two decoders which recover features of epicenter cities and target city respectively from the output of the encoder. Moreover, to achieve the prediction goal of C-Watcher, a classifier is also added to optimize the learned representations space and make it more related to the prediction of COVID-19 infection risks.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 96,
+                    "end": 104,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Overview"
+        },
+        {
+            "text": "In the following sections, we present our cross-city transfer learning model in detail by introducing how each component works. Here comes the notation of model input first. For both residential neighborhoods in epicenter cities and target cities, we have a feature vector consist of three groups:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview"
+        },
+        {
+            "text": "where n E denotes all of the features of a residential neighborhood in epicenter cities. n E r , n E h and n E t respectively denote the POI radius features, demographic features and transportation-related features of that residential neighborhood in epicenter cities. n T , n T r , n T h and n T t similarly denote the corresponding features of residential ones in target city. The function cat(\u00b7) is the concatenating operation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Overview"
+        },
+        {
+            "text": "Since learning unique characteristics of neighborhoods in epicenter cities brings little benefit for early risk detection in target cities, we propose a city-invariant representation learning method, which is inspired by the multi-mode adversarial representation learning methods (Mai, Hu, and Xing 2020; Makhzani et al. 2015) . Here the encoder is a transformer of data distribution. Given the input vectors n E and n T , we use n E and n T to denote the outputs of the encoder. Similar to (Mai, Hu, and Xing 2020) and (Makhzani et al. 2015) , the distributions transformation from the inputs to encoded representations can be presented as:",
+            "cite_spans": [
+                {
+                    "start": 280,
+                    "end": 304,
+                    "text": "(Mai, Hu, and Xing 2020;",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 305,
+                    "end": 326,
+                    "text": "Makhzani et al. 2015)",
+                    "ref_id": null
+                },
+                {
+                    "start": 491,
+                    "end": 515,
+                    "text": "(Mai, Hu, and Xing 2020)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 520,
+                    "end": 542,
+                    "text": "(Makhzani et al. 2015)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "City-Invariant Representation Learning"
+        },
+        {
+            "text": "where p(\u00b7) denotes the data distribution and e(\u00b7 , \u03a6 e ) represents the encoding distribution. \u03a6 e are parameters of the encoder, determining the projection space where the distributions of input data p(n E ) and p(n T ) are transformed into that of encoded representations p( n E , \u03a6 e ) and p( n T , \u03a6 e ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "City-Invariant Representation Learning"
+        },
+        {
+            "text": "In general, p( n E , \u03a6 e ) and p( n T , \u03a6 e ) are different distributions characterizing different cities. It means that some features helpful in predicting COVID-19 infection risk may be unique to neighborhoods in epicenter cities unless we impose constraints on the encoder. To this end, we use adversarial learning to narrow the discrepancies between distributions p( n E , \u03a6 e ) and p( n T , \u03a6 e ) by adding a discriminator to distinguish whether the neighborhood comes from epicenter cities or the target city. In this way, the discriminator needs to do a binary classification task, in which it takes the encoded representations as inputs and aims to identify the inputs n E from epicenter cities as true but the inputs n T from target cities as false, while the encoder tries its best to confuse the discriminator to classify both of them as true. We can formulate the function of discriminator as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "City-Invariant Representation Learning"
+        },
+        {
+            "text": "where D( \u00b7, \u03a6 D ) denotes the function of the discriminator which can be an MLP model that outputs the probability from 0 to 1. On the contrary, the encoder competes against the discriminator by:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "City-Invariant Representation Learning"
+        },
+        {
+            "text": "For this adversarial learning procedure, we use binary cross entropy (BCE) to define the loss function:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "City-Invariant Representation Learning"
+        },
+        {
+            "text": "where D( n E ) is used to represent D( n E , \u03a6 D ) in simplicity and so does D( n T ). The differentiation loss L dif f guides discriminator to predict n E as true (epicenter cities) but n T as false (target city), while the encoder tries to learn features that are common between epicenter cities and target city to hinder discriminator from distinguishing successfully, under the effects of cheat loss L ch . The adversarial procedure will finally reach an equilibrium situation where the discriminator could no longer distinguish whether the encoded representations come from epicenter cities or target city, then the encoder is able to extract \"city-invariant\" features from raw inputs n E and n T . In this case, discrepancies between cities decrease and the experience which helps predict infection risks in epicenter cities can make more sense in target cities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "City-Invariant Representation Learning"
+        },
+        {
+            "text": "A problem about city-invariant representation learning is that, if no regulations and restrictions are imposed on the embedding space of the encoder, the encoded representations of epicenter cities and target cities may only be similar in distribution but fail to retain useful information for identifying high-risk neighborhoods. We solve this problem with multi-task learning strategy by additionally exerting an auto encoder-decoder features reconstruction component, as well as a COVID-19 infection risks prediction component. The reconstruction component consists of two decoders (one for residential neighborhoods in epicenter cities and another one for residential neighborhoods in the target city) which take the encoded representations as inputs. The decoding operation can also be considered as a distribution transformation like encoding:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Embedding Space Constraints"
+        },
+        {
+            "text": "where n E , n T denote the reconstructed outputs of decoders from n E and n T respectively, and d E ( n E | n E , \u03a6 E d ) represents the epicenter cities decoder function with parameters \u03a6 E d , while d T ( n T | n T , \u03a6 T d ) is similar but for the target city. Aiming to approximate decoded representations to the original inputs ( n E \u2192 n E and n T \u2192 n T ), we use mean square error to define reconstruction loss function:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Embedding Space Constraints"
+        },
+        {
+            "text": "Optimized by the reconstruction loss above, the encoderdecoder framework ensures that the embedding space is still characterizing a residential neighborhood. Moreover, considering that our ultimate objective is to detect latent high-risk neighborhoods, we add a classifier to identify COVID-19 infection risks in epicenter cities upon the learned encoded representations. The classification problem can be defined as :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Embedding Space Constraints"
+        },
+        {
+            "text": "where C(\u00b7, \u03a6 c ) denotes the function of MLP classifier with parameter \u03a6 c . This is also a binary classification task and we use BCE to define the classification loss function:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Embedding Space Constraints"
+        },
+        {
+            "text": "The classification loss transmits the known information carried by label y E to encoder and classifier, which is COVID-19 infection risks of neighborhoods in epicenter cities. It achieves the goals to restrict the encoded representations to be instructive in high-risk neighborhood identification. All in all, loss functions generated from all the three components of discriminator, decoders and classifier will act on the encoder and optimize the embedding space in our proposed cross-city transfer model. The total loss function can be expressed qualitatively as: (14) In model training, the adversarial model is optimized in an alternate mode. We use differentiation loss L dif f to optimize the discriminator first to improve its discriminatory ability to neighborhoods in both epicenter cities and that target city, which also leads to the rise of cheat loss. Then we apply cheat loss L ch combined with L rec and L cl , to guide the encoder to optimize its parameters in a direction where demands to learn city-invariant, informative and riskdiscriminative features are all taken into consideration. Together with the encoder, the decoders and classifier update themselves based on L rec and L cl , respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Embedding Space Constraints"
+        },
+        {
+            "text": "Reference City Validation Mechanism. Another problem of C-Watcher is how to select the best hyperparameters to train the model. Here we build a reference city validation mechanism to tune hyperparameters. The illustrated diagram is shown in Figure 3 . Reference city in our paper can be epicenter cities, and can also be some cities with COVID-19 outbreak but not so serious as epicenters. We train the C-Watcher model on epicenter cities set, and use ground truth data of the reference city as validation data to choose the hyperparameters. Then we evaluate the early detection performance in target cities geographically close to that reference city. In this case, we ensure that our trained model to detect latent high-risk neighborhoods in a target city with best hyperparameters, without any prior information related to COVID-19 confirmed cases and spreading trend.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 241,
+                    "end": 249,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Embedding Space Constraints"
+        },
+        {
+            "text": "Dataset construction. The constructed datasets simulate a common outbreak pattern in a country. In the scenarios, there is a set of epicenter cities in the country (like Wuhan in China), and a few reference cities (see Section 4.3) which have some confirmed cases. The C-Watcher can be trained on the epicenter cities and reference cities datasets, and then be used to make early detection of high-risk residential neighborhoods in the rest of cities in the country. 1 In this evaluation, all the datasets are built based on 16 cities in China which consists of one dataset from epicenter city, 5 evaluation datasets from selected reference cities, and 10 test datasets from other cities. The epicenter city dataset is constructed based on Wuhan, which has the largest number of confirmed cases in China and is well-recognized as the epicenter of the COVID-19 outbreak in China. The five selected reference cities, Shenzhen, Changsha, Chengdu, Shanghai and Zhengzhou, are key cities in their provinces and they are also evenly situated in different geographical regions of China. For each reference city, we also construct two test datasets from two cities geographically closed to them. The full list of test cities is in the Appendix A.2. The POI data and user profile data of all the cities are both collected by the first week of March 2020. The human mobility data are collected from January 1, 2020 to March 3, 2020.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "We also make a great effort to build the ground-truth dataset. For the Wuhan dataset, we manually collected all the high-risk residential neighborhoods (released on February 24, 2020) and low-risk residential neighborhoods (released on March 6, 2020) which are officially published by the local government. After data cleaning and feature alignment, there are 336 high-risk neighborhoods and 715 low-risk neighborhoods. The statistics of high-risk neighborhoods in other cities datasets are listed in Appendix A.2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "For datasets of other cities, we label the neighborhoods with at least one confirmed case as high-risk while others as lowrisk, based on the public COVID-19 patients dataset by .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "In order to tune hyperparameters for baselines, we split Wuhan dataset into three folds as train, validation and test data by a 0.7:0.15:0.15 ratio. The hyperparameters tuning for C-Watcher is done by reference city validation mechanism (see Section 4.3).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "Baselines. Since we are the first to study the COVID-19 high-risk neighborhoods early detection problem, there is no direct competitor of C-Watcher. Thus, we compare C-Watcher with classical machine learning methods of Multi-Layer Perceptron (MLP), Support Vector Machine (SVM), XGBoost (XGB) and Lasso Logistic Regression (Lasso-R). We use the dataset from epicenter city to train the baselines, and make a prediction on the datasets of test cities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "Metrics. Since the detection of high-risk neighborhoods is an imbalance binary classification task (high-risk neighborhoods are much less than low-risk ones), we mainly evaluate the performance by AUC (Area under the ROC Curve), which reflects model performance within different discrimination thresholds (Manning, Sch\u00fctze, and Raghavan 2008; Fu et al. 2020 ). In addition, we also calculate the p-value by pairwise t-test between baselines and C-Watcher to show the statistical significance of the evaluation results.",
+            "cite_spans": [
+                {
+                    "start": 305,
+                    "end": 342,
+                    "text": "(Manning, Sch\u00fctze, and Raghavan 2008;",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 343,
+                    "end": 357,
+                    "text": "Fu et al. 2020",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "Optimization and hyperparameters tuning. We optimize C-Watcher by Adam optimizer. The main hyperparameters of C-Watcher, including weights of the loss function (\u03bb ch , \u03bb dif f , \u03bb rec and \u03bb cl ), learning rate and hidden size of the neural network of each component are determined by grid search method, with batch size fixed as 64. The values of hyperparameters are listed in the Appendix A.3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets and Settings"
+        },
+        {
+            "text": "We evaluate the performance of C-Watcher and its baselines for early detection of high-risk neighborhoods on test datasets of the 10 target cities. In Table 1 , the overall column shows the average AUC of the 10 cities. We can see that C-Watcher can improve the AUC by 8.18% over the best baseline (SVM and MLP). We also conduct pairwise ttest between the C-Watcher and each baseline. The p-values in Table 1 demonstrate that C-Watcher can achieve significantly better performance than other baselines.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 151,
+                    "end": 158,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 401,
+                    "end": 408,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Performance Evaluation of Early Detection"
+        },
+        {
+            "text": "We also show the prediction performance on test datasets of five target cities in Table 1 . Each target city corresponds to one reference city. We can see that the improvement by C-Watcher over baselines in different cities is different. For example, the improvement by C-Watcher over the best baseline on Shaoyang is 14.57% (i.e., C-Watcher (0.6433) vs. SVM (0.5615)); but the one by C-Watcher over the best baseline on Xuchang is about 0% (the AUC of C-Watcher is almost the same with other baselines). It is an interesting problem to investigate what factors impact the performance of transfer learning of C-Watcher. A possible reason is that some geographically closed cities are not similar, thus the reference Table 1 : Early detection performance comparison between C-Watcher and baselines on cross-city datasets. The \"target city -reference city\" relationship are \"Huizhou -Shenzhen\", \"Shaoyang -Changsha\", \"Lianyungang -Shanghai\", \"Xuchang -Zhengzhou\" and \" Chongqing -Chengdu\".",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 82,
+                    "end": 89,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 716,
+                    "end": 723,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Performance Evaluation of Early Detection"
+        },
+        {
+            "text": "city cannot help to select the best hyperparameters for transfer learning. We leave this problem as a further research investigation. We put the prediction performance of all the ten cities in the Appendix A.4.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Performance Evaluation of Early Detection"
+        },
+        {
+            "text": "Here we conduct a feature importance analysis to discuss possible characteristics of neighborhoods leading to the high risk for infection. We use Lasso Logistic Regression (Lasso-R) on epicenter Wuhan dataset to select the top-20 important features according to the absolute coefficient value, which is illustrated in Figure 4 . The full name of each feature is listed in the Appendix A.5. The feature importance analysis reveals several insightful and interesting points for preventing the epidemic. For POI radius features, except the effect of perfect and poor living facility of a neighborhood (which are denoted by \"P:PFLF\" and \"P:PRLF\" in Figure 4 ), the coefficient of \"P:RTS\" indicates that the long distance to a train station can reduce the risk of the neighborhood. For the demographic features, except the high population density (denoted by \"D:PD\"), the long average commute distance (denoted by \"D:ACD\") also increases the risk of the neighborhood. For the transportation-related features, we find that the percentage of travelling on walk (denoted by \"T:TW\") can reduce the risk of the neighborhood by a large margin. We believe such analysis can help us identify factors for high- ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 318,
+                    "end": 326,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 645,
+                    "end": 653,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Feature Importance"
+        },
+        {
+            "text": "In this section, we verify the effectiveness of 3 groups of hand-crafted features. In specific, we separately evaluate the performance of each group of features in detecting high/lowrisk neighborhoods, then we compare them with the performance of taking all 3 groups of features together as inputs. All the comparative experiments for feature effectiveness are conducted by MLP on the epicenter Wuhan dataset. As we can see from Table 2 , all the three groups of features can positively classify the high-risk and low-risk neighborhoods. More importantly, the combination of these three groups certainly improves the model's overall performance, which proves complementary among the three groups of features. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 429,
+                    "end": 436,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Effectiveness of Feature Groups"
+        },
+        {
+            "text": "In this paper, we study the problem of predicting infection risks of COVID-19 in urban neighborhoods. We first construct a set of features incorporating human mobility data to characterize the demographic/socioeconomic status and spatial interactions of a residential neighborhood, then propose C-Watcher, a data-driven framework based on these features to early detect high-risk neighborhoods in a city ahead of local COVID-19 outbreaks. To improve infection risks identification in target cities, C-Watcher adopts adversarial learning algorithms that learn \"city-invariant\" features to boost generalizing knowledge witted in epicenter and build a reference city validation mechanism for hyperparameters selection. We conduct extensive experiments upon real-world data in the early stage of COVID-19 outbreaks from China to demonstrate the advantages of C-Watcher to early detect high-risk neighborhoods across cities and analyze the importance and effectiveness of explored features. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "We evaluate cross-city early detection performance of our C-Watcher and baselines in section 5.1. Table 8 presents 5 groups of hyperparameteries (corresponding to 5 reference cities) of C-Watcher. And hyperparameters of baselins are shown in Table 9 . Table 7 shows the high-risk neighborhoods detecting performance our C-Watcher and baselines. The \"target city -reference city\" relationship are \"Huizhou & Guangzhou -Shenzhen\", \"Shaoyang & Yiyang -Changsha\", \"Lianyungang & Nanjing -Shanghai\", \"Xuchang & Anyang -Zhengzhou\" and \" Chongqing & Kunming -Chengdu\".",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 98,
+                    "end": 105,
+                    "text": "Table 8",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 242,
+                    "end": 249,
+                    "text": "Table 9",
+                    "ref_id": "TABREF7"
+                },
+                {
+                    "start": 252,
+                    "end": 259,
+                    "text": "Table 7",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "A.3 Hyperparameters"
+        },
+        {
+            "text": "In the analysis of features importance in section 4, we use abbreviation to name our constructed features (see section 3) for simplicity. The abbreviation -full name matches are presented in Table 10 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 191,
+                    "end": 199,
+                    "text": "Table 10",
+                    "ref_id": "TABREF8"
+                }
+            ],
+            "section": "A.5 Features Abbreviation and Full Name"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Multiscale mobility networks and the spatial spreading of infectious diseases",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Balcan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Colizza",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Gon\u00e7alves",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Ramasco",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vespignani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "PNAS",
+            "volume": "106",
+            "issn": "51",
+            "pages": "21484--21489",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Demographic determinants of testing incidence and COVID-19 infections in New York City neighborhoods",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Borjas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Be Aware of the Hot Zone: A Warning System of Hazard Area Prediction to Intervene Novel Coronavirus COVID-19 Outbreak",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "SIGIR",
+            "volume": "",
+            "issn": "",
+            "pages": "2241--2250",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Data-driven Simulation and Optimization for Covid-19 Exit Strategies",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ghamizi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rwemalika",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cordy",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Veiber",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Bissyand\u00e9",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Papadakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                },
+                {
+                    "first": "Le",
+                    "middle": [],
+                    "last": "Traon",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "3434--3442",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Generative adversarial nets",
+            "authors": [],
+            "year": null,
+            "venue": "NIPS",
+            "volume": "",
+            "issn": "",
+            "pages": "2672--2680",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Understanding the Urban Pandemic Spreading of COVID-19 with Real World Mobility Data",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "3485--3492",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Why we go where we go: Profiling user decisions on choosing POIs",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IJCAI",
+            "volume": "",
+            "issn": "",
+            "pages": "3459--3465",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Personalized Prefix Embedding for POI Auto-Completion in the Search Engine of Baidu Maps",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "2677--2685",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Understanding the Impact of the COVID-19 Pandemic on Transportation-Related Behaviors with Human Mobility Data",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "3443--3450",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Quantifying the economic impact of COVID-19 in Mainland China using human mobility data",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Dou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2005.03010"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Spatial-temporal potential exposure risk analytics and urban sustainability impacts related to COVID-19 mitigation: A perspective from car mobility behaviour",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Van Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kleme\u0161",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Cleaner Production",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Competitive Analysis for Points of Interest",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "1265--1274",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Polestar: An Intelligent, Efficient and National-Wide Public Transportation Routing Engine",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "2321--2329",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "An Investigation of Containment Measures Against the COVID-19 Pandemic in Mainland China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "An",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Dou",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2007.08254"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Aerodynamic analysis of SARS-CoV-2 in two Wuhan hospitals",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ning",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Gali",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Westerdahl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "582",
+            "issn": "7813",
+            "pages": "557--560",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Modality to Modality Translation: An Adversarial Representation Learning and Graph Fusion Network for Multimodal Fusion",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mai",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "AAAI",
+            "volume": "",
+            "issn": "",
+            "pages": "164--172",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "troduction to information retrieval",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sch\u00fctze",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Raghavan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "CM-GANs: Cross-modal generative adversarial networks for common representation learning",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Qi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "TOMM",
+            "volume": "15",
+            "issn": "1",
+            "pages": "1--24",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "How you move reveals who you are: understanding human behavior by analyzing trajectory data",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Renso",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Baglioni",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A F"
+                    ],
+                    "last": "De Macedo",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Trasarti",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wachowicz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "KAIS",
+            "volume": "37",
+            "issn": "2",
+            "pages": "331--362",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Using mobility to estimate the transmission intensity of COVID-19 in Italy: a subnational analysis with future scenarios",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Vollmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mishra",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Juliette",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Understanding the collective responses of populations to the COVID-19 pandemic in Mainland China",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "An",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Dou",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Exploring the Social Learning of Taxi Drivers in Latent Vehicle-to-Vehicle Networks",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "TMC",
+            "volume": "19",
+            "issn": "8",
+            "pages": "1804--1817",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Taxi driving behavior analysis in latent vehicle-to-vehicle networks: A social influence perspective",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "KDD",
+            "volume": "",
+            "issn": "",
+            "pages": "1285--1294",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Deep adversarial metric learning for cross-modal retrieval",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ji",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "World Wide Web Journal",
+            "volume": "22",
+            "issn": "2",
+            "pages": "657--672",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Spatio-Temporal Dual Graph Attention Network for Query-POI Matching",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Yi",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "SIGIR",
+            "volume": "",
+            "issn": "",
+            "pages": "629--638",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Early warning of human crowds based on query data from baidu maps: Analysis based on shanghai stampede",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Pei",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Big data support of urban planning and management",
+            "volume": "",
+            "issn": "",
+            "pages": "19--41",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Features of living facilities and population density visual analysis.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Illustration of cross-city transfer learning model of C-Watcher.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Diagram of reference city validation mechanism.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The top-20 most important features for high-risk neighborhoods detection. risk neighborhoods, and provide insightful suggestions on preventing the epidemic of COVID-19 in future.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Detection performance comparison of MLP with different feature groups on Wuhan dataset.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Statistics of high-risk neighborhoods of datasets.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Types of Living Facilities Types of POIs Medical Institutions Comprehensive Hospital | Special Hospital | Clinic Shopping Places Shopping mall | Supermarket | Market | Shop Sports Venues Gymnasium | Fitting Center | Extreme sports venues | Others",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Types of basic living facilities and corresponding types of POIs. \"&\" represents that a neighborhood equips such type of living facility when all the types of POIs connected by \"&\" should be within 1km, while \"|\" represents that a neighborhood equips such type of living facility as long as one of the types of POIs connected by \"|\" is within 1km. NeighborhoodTop-20 hottest Origin -Walk -Destination Patterns Neighborhood -Food ... Neighborhood -Neighborhood Top-20 hottest Origin -Bicycle -Destination Patterns Neighborhood -Shopping OTD ... Neighborhood -Neighborhood Top-20 hottest Origin -Public Transmit -Destination Patterns Neighborhood -Shopping ... Neighborhood -Neighborhood Top-20 hottest Origin -Private Vehicle -Destination Patterns Neighborhood -Company ... Table 6: Transportation-related features.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Early detection performance comparison between C-Watcher and baselines on 10 cross-city datasets. Dense Layer 16 Dense Layer 32 Dense Layer 128 Dense Layer 236 Dense Layer 236",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Hyperparameters of C-Watcher. The following hyperparameters are selected as the same values: \u03bb ch = 0.35, \u03bb dif f = 0.5, \u03bb rec = 0.1, \u03bb cl = 0.2. The learning rate is set as 0.0001 for all groups with the exception of Chengdu group using 0.00005. In all groups, the random seeds are set to 2. We conduct above experiments with Python 3.8.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Types of baselines MLP, SVM, XGB and Lasso-R. In all the different baselines, random seeds are set to 2. We conduct baseline experiments with Python 3.8 except XGB using Python 2.7.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Abbreviation and corresponding full name of Features.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank all reviewers for insightful comments. This work is supported in part by National Key R&D Program of China (No. 2018YFB1402600), and in part by grant from the National Natural Science Foundation of China (Grant No. 91746301). Part of experiments in this paper was carried out using anonymous data and secure data analytics provided by Baidu Data Federation Platform (Baidu FedCube). For data accesses and usages, check http://fedcube.baidu.com/page en.html.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgment"
+        },
+        {
+            "text": "A.1 Feature Constructions Types of POIs As mention in section 3.1, we construct 15 POI radius features defined as the shortest distance between a neighborhood and one certain type POIs. The 15 types of POIs are as follows: hospital, clinic, campus, kindergarten & primary school & secondary school (we see these three types as a whole), bus stop, subway station, airport , train station, coach station, shopping mall, supermarket, market, shop, police station, scenic spots.We also define another binary feature to directly reflect the perfect degree of basic living facilities and it will be assign \"perfect\" if there are all the following types of living facilities shown in Table 5 within 1 km of the given neighborhood. The types of living facilities within 1 km are mainly selected according to a official document released by Ministry of Housing and Urban-Rural Development of China 2 .Human Attributes Features In section 3.2, we introduce 11 demographic features of a neighborhood based on distributions of residents according to the attributes shown in Table 3 Transportation-Related Features In section 3.3, we discuss transportation-related features from the perspectives of T (means of transportation) features, OD (types of visit venues and the distance between origin and destination venues) features and OTD (origin-transportation-destination pattern) features. The details of them are shown in Table 6 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 677,
+                    "end": 684,
+                    "text": "Table 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 1062,
+                    "end": 1069,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1410,
+                    "end": 1417,
+                    "text": "Table 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "A Appendix"
+        }
+    ]
+}

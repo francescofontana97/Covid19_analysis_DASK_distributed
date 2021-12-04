@@ -1,0 +1,2773 @@
+{
+    "paper_id": "3e97d0db36033cf92ee7b75cd3680740968ab2bc",
+    "metadata": {
+        "title": "Multi-Robot Deep Reinforcement Learning for Mobile Navigation",
+        "authors": [
+            {
+                "first": "Katie",
+                "middle": [],
+                "last": "Kang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California",
+                    "location": {
+                        "settlement": "Berkeley"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Gregory",
+                "middle": [],
+                "last": "Kahn",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California",
+                    "location": {
+                        "settlement": "Berkeley"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Sergey",
+                "middle": [],
+                "last": "Levine",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California",
+                    "location": {
+                        "settlement": "Berkeley"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Deep reinforcement learning algorithms require large and diverse datasets in order to learn successful policies for perception-based mobile navigation. However, gathering such datasets with a single robot can be prohibitively expensive. Collecting data with multiple different robotic platforms with possibly different dynamics is a more scalable approach to large-scale data collection. But how can deep reinforcement learning algorithms leverage such heterogeneous datasets? In this work, we propose a deep reinforcement learning algorithm with hierarchically integrated models (HInt). At training time, HInt learns separate perception and dynamics models, and at test time, HInt integrates the two models in a hierarchical manner and plans actions with the integrated model. This method of planning with hierarchically integrated models allows the algorithm to train on datasets gathered by a variety of different platforms, while respecting the physical capabilities of the deployment robot at test time. Our mobile navigation experiments show that HInt outperforms conventional hierarchical policies and single-source approaches. Figure 1 : Overview of our hierarchically integrated models (HInt) algorithm. At training time, HInt separately trains a perception model and a dynamics model, then at test time, HInt combines the perception and dynamics model into a single model for integrated planning and execution. Our modular training procedure enables HInt to train the perception model using data gathered by multiple platforms, such as ground robots and even people recording video with a hand-held camera, while our integrated model at test time ensures the perception model only considers trajectories which are dynamically feasible.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1135,
+                    "end": 1143,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Machine learning provides a powerful tool for enabling robots to acquire control policies by learning directly from experience. One of the key guiding principles behind recent advances in machine learning is to leverage large datasets. In previous works in deep reinforcement learning for robotic control, the most common approach is to collect data from a single robot, train a policy in an end-toend fashion, and deploy the policy on the same data-collection platform. This approach necessitates collecting a large and diverse dataset for every model of robot we wish to deploy on, which can present a significant practical obstacle, since there exists a plethora of different platforms in the real world. What if we could instead leverage datasets collected by a variety of different robots in our training procedure? An ideal method could use data from any platform that provides useful knowledge about the problem. As an example, it is expensive and time-consuming to gather a large dataset for visual navigation on a drone, due to on-board battery constraints. In comparison, it is much easier to collect data on a robot car. Because knowledge about the visual features of obstacles can be shared across vision-based mobile robots, making use of visual data collected by a car to train a control policy for a drone could significantly reduce the amount of data needed from the drone. Unfortunately, data from such heterogeneous platforms presents a challenge: different platforms have different physical capabilities and action spaces. In order to leverage such heterogeneous data, we must properly account for the underlying dynamics of the data collection platform.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To learn from multiple sources of data, previous works have utilized hierarchical policies [1, 2, 3] . In this type of method, a high-level and a low-level policy are trained separately. At test time, the actions generated by the high-level policy are used as waypoints for the low-level policy. By separating the policy into two parts, these algorithm are able to utilize data from multiple sources in the high-level policy, while representing robot-specific information such as the dynamics in the low-level policy. One drawback of these methods, however, is that the low-level policy is unable to communicate any robot-specific information to the high-level policy. This makes it possible for the high-level policy to command waypoints that are impossible for the robot to physically achieve, leading to poor performance and possibly dangerous outcomes.",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 94,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 95,
+                    "end": 97,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 98,
+                    "end": 100,
+                    "text": "3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The key idea in our approach, illustrated in Fig. 1 , is to instead learn hierarchical models, and to integrate the hierarchical models for planning. At training time, we learn a perception model that reasons about interactions with the world, using our entire multi-robot dataset, and a dynamics model specific to the deployment robot, using only data from that robot. At test time, the perception and dynamics models are combined to form a single integrated model, which a planner uses to choose the actions. Such hierarchically integrated models can leverage data from multiple robots for the perception layer, while also reasoning about the physical capabilities of the deployment robot during planning. This is because when the algorithm uses the hierarchically integrated model to plan, the dynamics model can \"hint\" to the perception model about the robot-specific physical capabilities of the deployment robot, and the planner can only select behaviors that the deployment robot can actually execute (according to the dynamics model). In contrast to hierarchical policies, which may produce waypoint commands that are dynamically infeasible for the deployment robot to achieve, our hierarchically integrated models take the robot's physical capabilities into account, and only permit physically feasible plans.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 45,
+                    "end": 51,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "The primary contribution of this work is HInt-hierarchically integrated models for acquiring image-based control policies from heterogeneous datasets. We demonstrate that HInt successfully learns policies from heterogeneous datasets in real-world navigation tasks, and outperforms methods that use only one data source or use conventional hierarchical policies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Prior work demonstrated end-to-end learning for vision-based control for a wide variety of applications, from video games [4, 5] and manipulation [6, 7] to navigation [8, 9] . However, these approaches typically require a large amount of diverse data [10] , which hinders the adoption of these algorithms for real-world robot learning. One approach for overcoming these data constraints is to combine data from multiple robots; While prior methods have addressed collective learning, they typically assume that the robots are the same [11] , have similar underlying dynamics [12] , or the data is from expert demonstrations [13, 14, 15] . Our approach learns from off-policy data gathered by robots with a variety of underlying dynamics. Prior methods have also transferred skills from simulation, where data is more plentiful [16, 17, 18, 19, 20, 21, 22] . In contrast, our method does not require any simulation, and instead is aimed at leveraging heterogeneous real-world data sources, though it could be extended to incorporate simulated data as well.",
+            "cite_spans": [
+                {
+                    "start": 122,
+                    "end": 125,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 126,
+                    "end": 128,
+                    "text": "5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 146,
+                    "end": 149,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 150,
+                    "end": 152,
+                    "text": "7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 167,
+                    "end": 170,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 171,
+                    "end": 173,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 251,
+                    "end": 255,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 535,
+                    "end": 539,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 575,
+                    "end": 579,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 624,
+                    "end": 628,
+                    "text": "[13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 629,
+                    "end": 632,
+                    "text": "14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 633,
+                    "end": 636,
+                    "text": "15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 827,
+                    "end": 831,
+                    "text": "[16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 832,
+                    "end": 835,
+                    "text": "17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 836,
+                    "end": 839,
+                    "text": "18,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 840,
+                    "end": 843,
+                    "text": "19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 844,
+                    "end": 847,
+                    "text": "20,",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 848,
+                    "end": 851,
+                    "text": "21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 852,
+                    "end": 855,
+                    "text": "22]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Prior work has also investigated learning hierarchical vision-based control policies for applications such as autonomous flight [23, 2] and driving [1, 24, 3, 25] . One advantage of these conventional hierarchy approaches is that many can leverage heterogeneous datasets [26, 12, 23] . However, even if each module is perfectly accurate, these conventional hierarchy approaches can still fail because the low-level policy cannot communicate the robot's capabilities and limitations to the high-level policy. In contrast, because HInt learns hierarchical models, and performs planning on the integrated models at test time, HInt is able to jointly reason about the capabilities of the robot and the perceptual features of the environment.",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 132,
+                    "text": "[23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 133,
+                    "end": 135,
+                    "text": "2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 148,
+                    "end": 151,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 152,
+                    "end": 155,
+                    "text": "24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 156,
+                    "end": 158,
+                    "text": "3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 159,
+                    "end": 162,
+                    "text": "25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 271,
+                    "end": 275,
+                    "text": "[26,",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 276,
+                    "end": 279,
+                    "text": "12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 280,
+                    "end": 283,
+                    "text": "23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "End-to-end algorithms that can leverage datasets from heterogeneous platforms have also been investigated by prior work; however, these methods typically require on-policy data, are evaluated in visually simplistic domains, or have only been demonstrated in simulation [27, 28, 29] . In contrast, HInt works with real-world off-policy datasets because at the core of HInt are predictive models, which can be trained using standard supervised learning.",
+            "cite_spans": [
+                {
+                    "start": 269,
+                    "end": 273,
+                    "text": "[27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 274,
+                    "end": 277,
+                    "text": "28,",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 278,
+                    "end": 281,
+                    "text": "29]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Our goal is to learn image-based mobile navigation policies that can leverage data from heterogeneous robotic platforms. The key contribution of our approach, shown in Fig. 2 , is to learn separate hierarchical models at training time, and combine these models into a single integrated model for planning at test time. The two hierarchical models include a high-level, shared perception model, and a low-level, robot-specific dynamics model. The perception model can be trained using data gathered by a variety of different robots, all with possibly different dynamics, while the robotspecific dynamics model is trained only using data from the deployment robot. At test time, because the output predictions of the dynamics model -which are kinematic poses -are the input actions for the perception model, the dynamics and perception models can be combined into a single integrated model. The separate hierarchical model training allows our method to leverage datasets gathered by heterogeneous platforms, while the integrated planning enables our approach to directly map raw sensory inputs to robot actions that are dynamically feasible for the deployment robot. In the following sections, we will describe how HInt trains a perception model and a dynamics model, combines these models into a single integrated model in order to perform planning, and conclude with an algorithm summary.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 168,
+                    "end": 174,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "HInt: Hierarchically Integrated Models"
+        },
+        {
+            "text": "The perception model is a neural network predictive model f PER \u03b8 (o t , \u03b4p t:t+H ) \u2192r t:t+H -shown in Fig. 2 -parameterized by model parameters \u03b8. f PER \u03b8 takes as input the current image observation o t and a sequence of H future changes in poses \u03b4p t:t+H = (\u03b4p t , \u03b4p t+1 , ..., \u03b4p t+H\u22121 ), and predicts H future rewardsr t:t+H = (r t ,r t+1 , ...,r t+H\u22121 ). The pose p characterizes the kinematic configuration of the robot. In our experiments, we used the robot's x position, y position, and yaw orientation as the pose, though 3D configurations that include height, roll, and pitch are also possible. This kinematic configuration provides a dynamics-agnostic interface between the perception model and the dynamics model. The perception model is trained using the heterogeneous dataset D PER by minimizing the objective:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 103,
+                    "end": 109,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Perception Model"
+        },
+        {
+            "text": "L PER (\u03b8, D PER ) = (ot,\u03b4p t:t+H ,r t:t+H ) r t:t+H \u2212 r t:t+H (1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Perception Model"
+        },
+        {
+            "text": "t+H ) The perception model can be trained with a heterogeneous dataset consisting of data gathered by a variety of robots, all with possibly different underlying dynamics. The only requirement for the data Figure 2 : During training, we learn two separate neural network models. The dynamics model takes as input the current robot state and a sequence of future actions, and predicts future changes in poses. This model is trained using data gathered by a single robot. The perception model takes as input the current image observation and a sequence of future changes in poses, and predicts future rewards. This model is trained using data gathered by a variety of robots that have the same image observations, but potentially different dynamics. When deploying, the dynamics and perception models are combined into a single integrated model that is used for planning and executing actions that maximize reward. is that the recorded sensors (e.g., camera) are approximately the same, and that we can calculate the change in pose-position and orientation-between each sequential datapoint, which could be done using visual or mechanical odometry. This ability to train using datasets gathered by heterogeneous platforms is crucial because the perception model is an image-based neural network, which requires large amounts of data in order to effectively generalize.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 206,
+                    "end": 214,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Perception Model"
+        },
+        {
+            "text": "The dynamics model is a neural network predictive model f DYN \u03c6 (s t , a t:t+H ) \u2192\u03b4p t:t+H -shown in Fig. 2 -parameterized by model parameters \u03c6. f DYN \u03c6 takes as input the current robot state s t and a sequence of H future actions a t:t+H = (a t , a t+1 , ..., a t+H\u22121 ), and predicts H future changes in poses\u03b4p t:t+H = (\u03b4p t ,\u03b4p t+1 , ...,\u03b4p t+H\u22121 ). The state s can include any sensor information, such as the robot's battery charge or velocity, that may help the model to make more accurate predictions of future poses. The dynamics model is trained using the respective robot-specific dataset D DYN by minimizing the objective:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 101,
+                    "end": 107,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Dynamics Models"
+        },
+        {
+            "text": ". Although the dynamics model must only be trained using data collected by the deployment robot, the dynamics model dataset can be significantly smaller compared to the perception model dataset, because the dynamics model inputs are lower dimensional by orders of magnitude. Furthermore, the dynamics model dataset does not need a reward signal, allowing for easier data collection.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dynamics Models"
+        },
+        {
+            "text": "In order to perform planning and control at test time, we first combine the perception and dynamics models into a single integrated model",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Planning and Control"
+        },
+        {
+            "text": "a t:t+H )) \u2192r t:t+H , shown in Fig. 2 . These models can be combined without any additional training because the output of the dynamics model-changes in kinematic poses-is also the input to the perception model. This integrated model is essential because it enables the planner to holistically reason about the entire system. In contrast, in conventional hierarchical control methods, where the high-level policy outputs a goal for the low-level policy, the high-level policy could output a dynamically infeasible reference trajectory for the low-level controller. Our approach would not suffer from this failure case because, with integrated planning, the perception model can only take as input dynamically-feasible trajectories that are output by the dynamics model.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 31,
+                    "end": 37,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Planning and Control"
+        },
+        {
+            "text": "We then plan at each time step for the action sequence that maximizes reward according to the integrated model by solving the following optimization:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Planning and Control"
+        },
+        {
+            "text": "Here, R is a user-defined task-specific reward function, and g t is a user-specified goal. We follow the framework of model predictive control, where at each time step, the robot calculates the best sequence of actions for the next H steps, executes the first action in the sequence, and then repeats the process at the next time step. The action sequence that approximately maximizes the objective in Eqn. 3 can be computed using any optimization method. In our implementation, we employ stochastic zeroth-order optimization, as is common in model-based RL [30, 31] . Specifically, we used either the cross-entropy method (CEM) [32] or MPPI [33] , depending on the computational constraints of the platform.",
+            "cite_spans": [
+                {
+                    "start": 558,
+                    "end": 562,
+                    "text": "[30,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 563,
+                    "end": 566,
+                    "text": "31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 629,
+                    "end": 633,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 642,
+                    "end": 646,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Planning and Control"
+        },
+        {
+            "text": "We now briefly summarize how our HInt system operates during training and deployment, as shown in Fig. 1 and Fig. 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 98,
+                    "end": 104,
+                    "text": "Fig. 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 109,
+                    "end": 115,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Algorithm Summary"
+        },
+        {
+            "text": "During training, we first gather perception data using a number of platforms. For each of these platforms, we save the onboard observations o, change in poses \u03b4p, and rewards r into a shared dataset D PER (see \u00a7B.1), and use this dataset to train the perception model f PER \u03b8 (Eqn. 1) (see \u00a7B.2). Then, using the robot we will deploy at test time, we gather dynamics data by having the robot act in the real world and recording the robot's onboard states s, actions a, and change in poses \u03b4p into the dataset D DYN (see \u00a7C.1); we use this dataset to train the dynamics model f DYN \u03c6 (Eqn. 2) (see \u00a7C.2).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm Summary"
+        },
+        {
+            "text": "When deploying HInt, we first combine the perception model f PER \u03b8 and dynamics model f DYN \u03c6 into a single model f COM \u03b8,\u03c6 . The robot then plans a sequence of actions that maximizes reward (Eqn. 3), executes the first action, and repeat this planning process at each time step until the task is complete, as is standard in model-based RL with model-predictive control [30, 31] (see \u00a7D).",
+            "cite_spans": [
+                {
+                    "start": 370,
+                    "end": 374,
+                    "text": "[30,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 375,
+                    "end": 378,
+                    "text": "31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Algorithm Summary"
+        },
+        {
+            "text": "We now present an experimental evaluation of our hierarchically integrated models algorithm in the context of real world mobile robot navigation tasks. Videos and additional details about the data sources, models, training procedures, and planning can be found in the Appendix section or on the project website: https://sites.google.com/berkeley.edu/hint-public",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "In our experiments, we aim to answer the following questions: Q1: Does leveraging data collected by other robots, in addition to data from the deployment robot, improve performance compared to only learning from data collected by the deployment robot?",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "Q2: Does HInt's integrated model planning approach result in better performance compared to conventional hierarchy approaches?",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "In order to separately examine these questions, we investigate Q1 by training the perception module with multiple different real-world data sources, including data from different environments and different platforms, and evaluating on a single real-world robot. To examine Q2, we deploy a shared perception module to systems with different low-level dynamics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experiments"
+        },
+        {
+            "text": "In this experiment, we deployed a robot in a number of visually diverse environments, including ones in which that robot itself has not collected any data. Our hypothesis is that HInt, which can make use of heterogeneous datasets gathered by multiple robots, will outperform methods that can only train using data gathered by the deployment robot.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Q1: Comparison to Single-Source Models"
+        },
+        {
+            "text": "Perception data was collected in three different environments using three different platforms (Fig. 3) : a Yujin Kobuki robot in an indoor office environment (3.7 hours), a Clearpath Jackal in an outdoor urban environment (3.5 hours), and a person recording video with a hand-held camera in an industrial environment (1.2 hours). The deployment robot is the Clearpath Jackal. The same dataset that provided the Jackal perception data as described above was also used for the Jackal dynamics data.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 94,
+                    "end": 102,
+                    "text": "(Fig. 3)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q1: Comparison to Single-Source Models"
+        },
+        {
+            "text": "The robot's objective is to drive towards a goal location while avoiding collisions and minimizing action magnitudes. More specifically, the reward r is \u22121 for a collision and 0 otherwise, the goal g specifies a GPS location, and the reward function used for planning is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Q1: Comparison to Single-Source Models"
+        },
+        {
+            "text": "We compared HInt, which learns from all the data sources, with the single data source approach from Kahn et al [34] . Similar to HInt, this method also uses a vision-based predictive model to perform planning, but differs from HInt in the following ways: (i) only data gathered by the deployment robot can be used for training and (ii) the integrated perception and dynamics model is trained end-to-end. In our implementation, HInt and the single data source approach use the same training parameters and neural network architecture for the integrated model in order to make the most fair comparison. Fig. 4 shows the results comparing HInt to the single data source approach. In all environments 1 , our approach is more successful in reaching the goal. Note that even when the single data source method 1 We could not run experiments in the office environment due to COVID-related closures.",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 115,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 805,
+                    "end": 806,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 601,
+                    "end": 607,
+                    "text": "Fig. 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q1: Comparison to Single-Source Models"
+        },
+        {
+            "text": "Outdoor Robot in Urban Person in Industrial Drone in Urban Figure 3 : Training data was gathered by an indoor Yujin Kobuki robot in an office, an outdoor Clearpath Jackal robot in an urban environment, and a person with a video camera in an industrial area. HInt is able to jointly train on this heterogeneous data, which leads to improved navigation performance. HInt was deployed on the ourdoor Jackal robot as well as a Parrot Bebop drone in the urban environment. Because HInt is able to reason about the dynamics of the deployment robot during planning, it is able to successfully control robots that are not included in the perception dataset, such as the drone. Perception Data Sources Single-Source [34] HInt ( Figure 4 : Comparison of single data source models [34] versus our HInt approach in an urban and industrial environment for the task of reaching a goal location while avoiding collisions using the Clearpath Jackal robot. Note that HInt was trained with more datapoints than the single source approach, because HInt is able to learn from data collected by other platforms in addition to the Jackal deployment robot. Each approach was evaluated from the 3 same start locations in each environment (corresponding to the red, green, and blue lines), and was ran 5 times from each start location. The quantitative results show what percentage of the 15 trials successfully reached the goal.",
+            "cite_spans": [
+                {
+                    "start": 707,
+                    "end": 711,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 770,
+                    "end": 774,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 59,
+                    "end": 67,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 719,
+                    "end": 727,
+                    "text": "Figure 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Indoor Robot in Office"
+        },
+        {
+            "text": "is trained and deployed in the same environment, HInt still performs better, because learning-based methods benefit from large and diverse datasets. Furthermore, the row labeled \"Industrial\" illustrates well how HInt can benefit from data collected with other platforms: although the Jackal robot had never seen the industrial setting during training, the training set did include data collected by a person with a video camera in this setting. The increase in performance from including this data (\"Kobuki + Jackal + Human\") shows that the Jackal robot was able to effectively integrate this data into its visual navigation strategy. Fig. 5 shows first-person images of HInt successfully navigating in both the urban and industrial environments.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 635,
+                    "end": 641,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Indoor Robot in Office"
+        },
+        {
+            "text": "In this experiment, we deployed the perception module onto robots with different low-level dynamics, including ones that were not seen during the collection of the perception data. Our hypothesis is that our integrated HInt approach will outperform conventional hierarchy approaches, because it is able to jointly reason about perception and dynamics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "We compared our integrated approach with the most commonly used hierarchical approach, in which the perception model is used to output desired waypoints that are then passed to a low-level con-Urban Industrial Figure troller [1, 23, 24, 2, 3] . In our prediction-and planning-based framework, this modular approach is implemented by first planning over a sequence of positions \u03b4p * t:t+H by using a kinematic visionbased model, and then planning over a sequence of actions a * t:t+H so as to minimize the tracking error against these planned positions using a robot-specific dynamics model. This baseline represents a clean \"apples-to-apples\" comparison between our approach -which directly combines both the dynamic and kinematic models into a single model -and a conventional pipelined approach that separates vision-based kinematic planning with low-level trajectory tracking. Both our method and this baseline employ the same neural network architectures for the vision and dynamics models, and train them on the same data, thus providing for a controlled comparison that isolates the question of whether our end-to-end approach improves over a conventional pipelined hierarchical approach. The planning process for the hierarchical baseline can be expressed as the following two-step optimization: ",
+            "cite_spans": [
+                {
+                    "start": 225,
+                    "end": 228,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 229,
+                    "end": 232,
+                    "text": "23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 233,
+                    "end": 236,
+                    "text": "24,",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 237,
+                    "end": 239,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 240,
+                    "end": 242,
+                    "text": "3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 210,
+                    "end": 216,
+                    "text": "Figure",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "\u03b4p t:t+H = f DYN \u03c6 (s t , a t:t+H ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "We trained the perception model with three data sources from different robots (\"Kobuki + Jackal + Human\" in Fig. 4) , one of which is a Clearpath Jackal robot. We then deployed this perception model on the Jackal robot. The robot's objective is to go towards a goal location while avoiding collisions, using the same reward function for planning as Eqn. 5.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 108,
+                    "end": 115,
+                    "text": "Fig. 4)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "We also evaluated our method on a Parrot Bebop drone, shown in Fig. 3 , which was not included in the data collection process for the perception model. The drone's objective is to avoid collisions with minimal turning. The reward function for planning is R(r t:t+H ,\u03b4p t:t+H , a t:t+H , g t )",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 63,
+                    "end": 69,
+                    "text": "Fig. 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "= H\u22121 h=0r t+h \u2212 \u03b4 p t+h 1 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "The results in Fig. 6 compare HInt against the conventional hierarchy approach on a Jackal robot with its normal dynamics and with its steering limited to 40% of its full steering range, as well as on a Bebop drone flying at low speed (8 degrees forward tilt) and high speed (16 degrees forward tilt). While the two approaches were able to achieve similar performance when evaluated on the normal Jackal and the low speed drone, our approach outperformed conventional hierarchy on the limited steering Jackal and on the high speed drone drone. The poor performance of the conventional hierarchy baseline in these experiments can be explained by the inability of the conventional higher-level planner -which plans kinematic paths based on visual observations -to account for the different dynamics limitations of each platform. This can be particularly problematic near obstacles, where the kinematic model might decide that a last-minute turn to avoid an obstacle may be feasible, when in fact the dynamics of the current robot make it impossible. This is not an issue for the standard Normal Jackal Limited Steering Jackal Low Speed Drone High Speed Drone Conventional Hierarchy 80% 0% 100% 20% HInt (ours) 80% 100% 100% 100% Figure 6 : Comparison of conventional hierarchy vs. HInt (ours) approaches in a real world experiment, on Jackal with normal dynamics and with its steering limited to 40%, as well as on a drone with low speed (8 degrees forward tilt) and high speed (16 degrees forward tilt). Both approaches were evaluated with 5 trials each from the same starting position. Our approach is able to achieve higher success rates for reaching the goal region when deployed on the limited steering Jackal and the drone, because the perception model was able to reason about its dynamical limitations.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 15,
+                    "end": 21,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 1227,
+                    "end": 1235,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "Jackal robot and the low speed drone, which are both able to make sharp turns. However, the limited steering Jackal was unable to physically achieve the sharp turns commanded by the higher-level model in the baseline method. Similarly, due to the aerodynamics of high-speed flight, the Bebop drone was also unable to achieve the sharp turns commanded by the baseline higher-level planner, leading to collision (see, e.g., the lower-right plot in Fig. 6 ). In contrast, in HInt, because the lowlevel model is able to inform the high-level model about the physical capabilities of the robot, the integrated model could correctly deduce that avoiding the obstacles required starting the turn earlier when controlling a less maneuverable robot, which allowed for successful collision avoidance.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 446,
+                    "end": 452,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "We also evaluated HInt and conventional hierarchy on a visual navigation task in simulation involving robot cars with more drastic dynamical differences, such as limited steering, right turn only, and 0.25 seconds lag. More details can be found in the Appendix (see \u00a7E). In both the real world and simulation, we showed that conventional hierarchy can fail when deployed on dynamical systems that are not a part of the perception dataset. This is because the higher level perception-based policy can set waypoints for the lower level dynamics-based policy that are outside the physical capabilities of the robot. In contrast, HInt's integrated planning approach enables the dynamics model to inform the perception model about which maneuvers are feasible.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Q2: Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "We presented HInt, a deep reinforcement learning algorithm with hierarchically integrated models. The hierarchical training procedure enables the perception model to be trained on heterogeneous datasets, which is crucial for learning image-based neural network control policies, while the integrated model at test time ensures the perception model only considers trajectories that are dynamically feasible. Our experiments show that HInt can outperform both single-source and conventional hierarchy methods on real-world navigation tasks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "One of the key algorithmic ideas of HInt is that planning at test time enables us to directly use the integrated model without any additional training. However, one of the main limitations is that our approach can still suffer if the outputs of one model are out-of-distribution for the inputs of the subsequent model. Bayesian neural networks and other approaches could provide a principled way to cope with these intermediate out-of-distribution activations. We believe that solving these and other challenges is crucial for enabling robot learning platforms to learn from large visual datasets while still combining perception and control, and that HInt is a promising step towards this goal.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "First, we introduce the environments and robots we used for our experiments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Experiment Evaluation Environments"
+        },
+        {
+            "text": "The real world evaluation environments used in the comparison to single-source models ( \u00a74.1) consisted of an urban and an industrial environment. The robot is a Clearpath Jackal with a monocular RGB camera sensor. The robot's task is to drive towards a goal GPS location while avoiding collisions. We note that this single GPS coordinate is insufficient for successful navigation, and therefore the robot must use the camera sensor in order to accomplish the task. Further details are provided in Tab. S1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A Experiment Evaluation Environments"
+        },
+        {
+            "text": "Dimension Description o t 15,552 Image at time t, shape 54 \u00d7 96 \u00d7 3. \u03b4p t 3",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "Change in x position, y position, and yaw orientation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "There is no inputted state. a t 2 Linear and angular velocity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "r t 1 r = \u22121 if the robot collides, otherwise r = 0. The reward is calculated using the onboard collision detection sensors. g t 2 GPS coordinate of goal location. The real world evaluation environments used in the comparison to conventional hierarchy ( \u00a74.2) consisted of an urban environment. The robots used in this experiment include the Clearpath Jackal and a Parrot Bebop drone. The settings used for the Jackal experiment are the same as the ones in the comparison to single-source models (Tab. S1). The Parrot Bebop drone also has a monocular RGB camera, and it's task is to avoid collisions while minimizing unnecessary maneuvers. Further details are provided in Tab. S2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "Dimension Description o t 15,552 Image at time t, shape 54 \u00d7 96 \u00d7 3. \u03b4p t 3",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "Change in x position, y position, and yaw orientation. s t 0 There is no inputted state. a t 1 Angular velocity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "r t 1 r = \u22121 if the robot collides, otherwise r = 0. The reward is calculated using the onboard collision detection sensors. g t 0 There is no inputted goal. The simulated evaluation environment used in the comparison to conventional hierarchy ( \u00a7E) was created using Panda3d [35] . The environment is a cluttered enclosed room consisting of randomly textured objects randomly placed in a semi-uniform grid. The robot is a car with a monocular RGB camera sensor. The robot's task is to drive towards a goal region while avoiding collisions. Further details are provided in Tab. S3. \u2020 For the lag experiment only, the state consisted of the past 0.25 seconds of executed actions at\u22121.",
+            "cite_spans": [
+                {
+                    "start": 276,
+                    "end": 280,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "Dimension Description o t 31,104 Images at time t and t \u2212 1, each of shape 54 \u00d7 96 \u00d7 3.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "The robot is at a fixed height and travels at a constant speed. Therefore, the change in pose only includes the change in yaw orientation. s t 0 \u2020 There is no inputted state. a t 1 Angular velocity (the robot travels at a constant speed).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "r t 1 r = \u22121 if the robot collides, otherwise r = 0. The reward is calculated using the onboard collision detection sensors. g t 1 Relative angle to goal region. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Variable"
+        },
+        {
+            "text": "The perception model, as discussed in Sec. 3.1, takes as input an image observation and a sequence of future changes in poses, and predicts future rewards. Here, we discuss the perception model training data and training procedure in more detail.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B Training the Perception Model"
+        },
+        {
+            "text": "In order to train the perception model, perception data must be collected. For our simulated experiments ( \u00a7E), perception data was collected by running the reinforcement learning algorithm from [34] in the simulated cluttered environment.",
+            "cite_spans": [
+                {
+                    "start": 195,
+                    "end": 199,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B.1 Training Data"
+        },
+        {
+            "text": "For our real world experiments ( \u00a74.1), perception datasets were collected by a Yujin Kobuki robot in an office environment, a Clearpath Jackal in an urban environment, and a person recording video with a GoPro camera in an industrial environment using correlated random walk control policies.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B.1 Training Data"
+        },
+        {
+            "text": "Additional details of the perception data sources is provided in Tab ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 65,
+                    "end": 68,
+                    "text": "Tab",
+                    "ref_id": null
+                }
+            ],
+            "section": "B.1 Training Data"
+        },
+        {
+            "text": "The perception model is represented by a deep neural network, with architecture depicted in Fig.  S7 . It is trained by minimizing the loss in Eqn. 1 using minibatch gradient descent. In Tab. S5, we provide the training and model parameters. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 92,
+                    "end": 100,
+                    "text": "Fig.  S7",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "B.2 Neural Network Training"
+        },
+        {
+            "text": "The dynamics model, as discussed in Sec. 3.2, takes as input the robot state and future actions, and predicts future changes in poses. Here, we discuss the dynamics model training data and training procedure in more detail.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C Training the Dynamics Model"
+        },
+        {
+            "text": "In order to train the dynamics model, dynamics data must be collected. For our simulated experiments, the basic simulated car dynamics are based on a single integrator model:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.1 Training Data"
+        },
+        {
+            "text": ".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.1 Training Data"
+        },
+        {
+            "text": "However, we note that this dynamics model was never provided to the learning algorithm; the learning algorithm only ever received samples from the dynamics model. Dynamics data was collected using a random walk control policy for each robot dynamics variation-normal, limited steering, right turn only, and 0.25 second lag.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.1 Training Data"
+        },
+        {
+            "text": "For our real world experiments ( \u00a74.1), the both the Clearpath Jackal and the Parrot Bebop drone collected dynamics data in the urban environment using a correlated random walk control policy.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.1 Training Data"
+        },
+        {
+            "text": "Additional details of the dynamics data sources is provided in Tab ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 63,
+                    "end": 66,
+                    "text": "Tab",
+                    "ref_id": null
+                }
+            ],
+            "section": "C.1 Training Data"
+        },
+        {
+            "text": "The dynamics model is represented by a deep neural network, with architecture depicted in Fig. S8 . It is trained by minimizing the loss in Eqn. 2 using minibatch gradient descent. In Tab. S7, we provide the training and model parameters. At test time, we perform planning and control using the integrated model ( \u00a73.3). The neural network architecture of the integrated model is shown in Fig. S9 . At each time step, we plan for the action sequence that maximizes Eqn. 3 using a stochastic zeroth-order optimizer, execute the first action, and continue planning and executing following the framework of model predictive control.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 90,
+                    "end": 97,
+                    "text": "Fig. S8",
+                    "ref_id": null
+                },
+                {
+                    "start": 389,
+                    "end": 396,
+                    "text": "Fig. S9",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "C.2 Neural Network Training"
+        },
+        {
+            "text": "For the simulated experiments ( \u00a7E), the reward function used for planning is R(r t:t+H ,\u03b4p t:t+H , a t:t+H , g t ) =",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.2 Neural Network Training"
+        },
+        {
+            "text": "which encourages the robot to drive in the direction of the goal while avoiding collisions. We solve Eqn. 3 using the Cross-Entropy Method (CEM) [32] , and replan at a rate of 4 Hz.",
+            "cite_spans": [
+                {
+                    "start": 145,
+                    "end": 149,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C.2 Neural Network Training"
+        },
+        {
+            "text": "For the real world Jackal experiments ( \u00a74.1), the reward function used for planning is R(r t:t+H ,\u03b4p t:t+H , a t:t+H , g t ) =",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.2 Neural Network Training"
+        },
+        {
+            "text": "which encourages the robot to avoid collisions, drive towards the goal, and minimize action magnitudes. For the real world drone experiments, the reward function used for planning is R(r t:t+H ,\u03b4p t:t+H , a t:t+H , g t ) =",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "C.2 Neural Network Training"
+        },
+        {
+            "text": "which encourages the robot to avoid collisions and minimize action magnitudes. We solve Eqn. 3 using the MPPI [33] , and replan at a rate of 6 Hz.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 114,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C.2 Neural Network Training"
+        },
+        {
+            "text": "In addition to the real world experiments in Sec. 4.2, we also performed experiments in simulation to further evaluate the performance of HInt in comparison to conventional hierarchy. We trained a perception model using data collected by a simulated car with a monocular RGB camera. The data was collected by running an on-policy reinforcement learning algorithm inside a cluttered room environment using the Panda3D simulator. Similar to the real world experiments, the rewards here also denote collision, where r = \u22121 if collision and r = 0 otherwise.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "We deployed the perception model onto variants of the base car's dynamics model, in which the dynamics are modified by: constraining the angular velocity control limits, only allowing the robot to turn right, or inducing a 0.25 second control execution lag. These modifications are very drastic and correspond to extreme versions of the kinds of dynamical variations exhibited by real-world robots.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "The robot's objective is to drive to a goal region while avoiding collisions. More specifically, the reward function used for planning is R(r t:t+H ,\u03b4p t:t+H , a t:t+H , g t ) which encourages the robot to drive in the direction of the goal while avoiding collisions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "Tab. S8 and Fig. S10 show the results comparing HInt versus the conventional hierarchy approach. While HInt and conventional hierarchy achieved similar performance when deployed on the platform that gathered the perception training data, HInt greatly outperformed the conventional hierarchy approach when deployed on dynamical systems that were not present in the perception training data.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 20,
+                    "text": "Fig. S10",
+                    "ref_id": null
+                }
+            ],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "Normal Limited Steering Right Turn Only 0.25 second lag Figure S10 : Top down view of example trajectories of both the conventional hierarchy (blue) and our HInt (green) approaches in a simulated environment for the task of driving towards a goal region (yellow) while avoiding collisions. The visualized trajectories are the median performing trajectory of the conventional hierarchy and our HInt approaches for one example starting position. The red diamond indicates a collision. Our integrated approach is able to reach the goal region at a higher rate compared to the modular approach.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 56,
+                    "end": 66,
+                    "text": "Figure S10",
+                    "ref_id": null
+                }
+            ],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "Normal Limited Steering Right turn only 0.25 second lag Conventional Hierarchy 96% 68% 0% 0% HInt (ours) 96% 84% 56% 40% Table S8 : Comparison of conventional hierarchy (e.g., [1, 2, 3] ) versus HInt (ours) at deployment time in a simulated environment for the task of driving towards a goal region while avoiding collisions. Four different dynamics models were evaluated-normal, limited steering, right turn only, and 0.25 second lag. Both approaches were evaluated from the same 5 starting positions, with 5 trials for each starting position. Our approach is able to achieve higher success rates for reaching the goal region because the perception model is only able to consider trajectories that are dynamically feasible. Figure S11 : FPV visualization of the right turn only simulated experiment. Here, HInt (purple) successfully avoided the obstacle, while the conventional hierarchy approach failed, because the high-level policy outputted waypoints that avoided the obstacle by turning left (blue), but the dynamics model is unable to turn left, and therefore drove straight into the obstacle (red).",
+            "cite_spans": [
+                {
+                    "start": 176,
+                    "end": 179,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 180,
+                    "end": 182,
+                    "text": "2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 183,
+                    "end": 185,
+                    "text": "3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 121,
+                    "end": 129,
+                    "text": "Table S8",
+                    "ref_id": null
+                },
+                {
+                    "start": 725,
+                    "end": 735,
+                    "text": "Figure S11",
+                    "ref_id": null
+                }
+            ],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        },
+        {
+            "text": "An illustrating example of why hierarchical models are advantageous is shown in Fig. S11 . Here, the robot can only turn right, and cannot make left turns. For conventional hierarchical policies, the high-level perception policy-which is unaware of the robot's dynamics-outputs desired waypoints that attempts to avoid the obstacle by turning left. The low-level controller then attempts to follow these left-turning waypoints, but because the robot can only turn right, the best the controller can do is drive straight, which causes the robot to collide with the obstacle. In contrast, our integrated models approach knows that turning right is correct because the dynamics model is able to convey to the perception model that the robot can only turn right, while the perception model is able to confirm that turning right does indeed avoid a collision.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 80,
+                    "end": 88,
+                    "text": "Fig. S11",
+                    "ref_id": null
+                }
+            ],
+            "section": "E Simulation Experiments in Comparison to Conventional Hierarchy"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Intention-net: Integrating planning and deep learning for goal-directed autonomous navigation",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hsu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Subramanian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Beauty and the beast: Optimal methods meet learning for drone racing",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Kaufmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Gehrig",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Foehn",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ranftl",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dosovitskiy",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Koltun",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Scaramuzza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ICRA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Combining optimal control and learning for visual navigation in novel environments",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bansal",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Tolani",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Malik",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tomlin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Playing atari with deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Mnih",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kavukcuoglu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Silver",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Graves",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Antonoglou",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wierstra",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Riedmiller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1312.5602"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Dota 2 with large scale deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Berner",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Brockman",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Cheung",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Debiak",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Dennison",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Farhi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fischer",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hashme",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hesse",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1912.06680"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "End-to-end training of deep visuomotor policies",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Finn",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Darrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Abbeel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Qt-opt: Scalable deep reinforcement learning for visionbased robotic manipulation",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kalashnikov",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Irpan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pastor",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ibarz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Herzog",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Jang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Quillen",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Holly",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kalakrishnan",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vanhoucke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "CoRL",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Learning monocular reactive uav control in cluttered natural environments",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ross",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Melik-Barkhudarov",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Shankar",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wendel",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Dey",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Bagnell",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hebert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "ICRA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Learning to drive in a day",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kendall",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hawke",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Janz",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Mazur",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Reda",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-M",
+                    "middle": [],
+                    "last": "Allen",
+                    "suffix": ""
+                },
+                {
+                    "first": "V.-D",
+                    "middle": [],
+                    "last": "Lam",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bewley",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Shah",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ICRA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Rainbow: Combining improvements in deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hessel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Modayil",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Van Hasselt",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Schaul",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Ostrovski",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Dabney",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Horgan",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Piot",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Azar",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Silver",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "AAAI",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Learning hand-eye coordination for robotic grasping with deep learning and large-scale data collection",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pastor",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Krizhevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ibarz",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Quillen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "RoboNet: Large-scale multi-robot learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Dasari",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ebert",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Nair",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Bucher",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Schmeckpeper",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Finn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Imitating latent policies from observation",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Edwards",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sahni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Schroecker",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Isbell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ICML",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Generative adversarial imitation from observation",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Torabi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Warnell",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Stone",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "ICML Workshop on Imitation and Intent",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Provably efficient imitation learning from observation alone",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Vemula",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Boots",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Bagnell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ICML",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "CAD)2 RL: Real Single-Image Flight without a Single Real Image",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Sadeghi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "RSS",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Sim-to-real robot learning from pixels with progressive nets",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Rusu",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ve\u010der\u00edk",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Roth\u00f6rl",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Heess",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Pascanu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hadsell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Modular deep q networks for sim-to-real transfer of visuo-motor policies",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Leitner",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Milford",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Corke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Using simulation and domain adaptation to improve efficiency of deep robotic grasping",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Bousmalis",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Irpan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wohlhart",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kelcey",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kalakrishnan",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Downs",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ibarz",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Pastor",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Konolige",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "ICRA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Neural Autonomous Navigation with Riemannian Motion Policy",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ratliff",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fox",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "ICRA",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Learning navigation behaviors end-to-end with autorl",
+            "authors": [
+                {
+                    "first": "H.-T",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Chiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Faust",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Francis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "VR-goggles for robots: Real-to-sim domain adaptation for visual control",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tai",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Yun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Boedecker",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Burgard",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Dronet: Learning to fly by driving",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Loquercio",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Maqueda",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Del-Blanco",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Scaramuzza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Driving policy transfer via modularity and abstraction",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "M\u00fcller",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dosovitskiy",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Ghanem",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Koltun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Scaling Local Control to Large-Scale Topological Navigation",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Ratliff",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fox",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1909.12329"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Hierarchically decoupled imitation for morphological transfer",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hejna",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Abbeel",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Pinto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ICML",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Learning modular neural network policies for multi-task and multi-robot transfer",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Devin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Darrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Abbeel",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Data-efficient hierarchical reinforcement learning",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Nachum",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Gu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "In NeurIPS",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Compositional Transfer in Hierarchical Reinforcement Learning",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wulfmeier",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Abdolmaleki",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hafner",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Springenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Neunert",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Hertweck",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Lampe",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Siegel",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Heess",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Riedmiller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "RSS",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Neural network dynamics for modelbased deep reinforcement learning with model-free fine-tuning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Nagabandi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Fearing",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE International Conference on Robotics and Automation (ICRA)",
+            "volume": "",
+            "issn": "",
+            "pages": "7559--7566",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Deep reinforcement learning in a handful of trials using probabilistic dynamics models",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Chua",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Calandra",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mcallister",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1805.12114"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "The cross-entropy method for combinatorial and continuous optimization. Methodology and computing in applied probability",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Rubinstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Model predictive path integral control using covariance variable importance sampling",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Williams",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Aldrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Theodorou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1509.01149"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "BADGR: An autonomous self-supervised learning-based navigation system",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Kahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Abbeel",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.05700"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "The panda3d graphics engine",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goslin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "IEEE Computer",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Adam: A method for stochastic optimization",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Kingma",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "ICLR",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Visualization of HInt at test time successfully reaching the goal location while avoiding collisions in urban (top) and industrial (bottom) environments.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The neural network perception model takes as input the current image observation ot and a sequence of H future changes in poses \u03b4pt:t+H , and predicts H future rewardsrt:t+H . This model is trained using data gathered by a variety of robots that have the same image observations, but different dynamics.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "The combined neural network model is a concatenation of the dynamics model (a) and perception model (b",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Clearpath Jackal and task.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Parrot Bebop drone and task.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Simulated robot and task.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": ". S4.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Perception model data sources.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Perception model parameters.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": ". S6.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF9": {
+            "text": "Dynamics model data sources.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF10": {
+            "text": "Figure S8: The neural network dynamics model takes as input the current robot state st and a sequence of H future actions at:t+H , and predicts H future changes in poses\u03b4p t:t+H . This model is trained using data gathered by a single robot.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF11": {
+            "text": "Dynamics model parameters.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF12": {
+            "text": "). The model takes as input the current image observation ot, robot state st, and a sequence of H future actions at:t+H , and predicts H future rewardsrt:t+H . This integrated model can then be used for planning and executing actions that maximize reward.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We thank Anusha Nagabandi and Simin Liu for insightful discussions, and anonymous reviewers at RAIL for feedback on early drafts on the paper. This research was supported by DARPA Assured Autonomy and ARL DCIST CRA W911NF-17-2-0181. KK and GK are supported by the NSF GRFP.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

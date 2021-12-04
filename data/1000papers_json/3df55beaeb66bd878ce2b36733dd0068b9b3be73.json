@@ -1,0 +1,2153 @@
+{
+    "paper_id": "3df55beaeb66bd878ce2b36733dd0068b9b3be73",
+    "metadata": {
+        "title": "Graphical Gaussian Process Models for Highly Multivariate Spatial Data",
+        "authors": [
+            {
+                "first": "Debangan",
+                "middle": [],
+                "last": "Dey",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johns Hopkins Bloomberg School of Public Health",
+                    "location": {
+                        "addrLine": "615 N Wolfe St",
+                        "postCode": "21205",
+                        "settlement": "Baltimore",
+                        "region": "MD",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Abhirup",
+                "middle": [],
+                "last": "Datta",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of California Los Angeles",
+                    "location": {}
+                },
+                "email": "abhidatta@jhu.edu"
+            },
+            {
+                "first": "Sudipto",
+                "middle": [],
+                "last": "Banerjee",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "For multivariate spatial (Gaussian) process models, common cross-covariance functions do not exploit graphical models to ensure process-level conditional independence among the variables. This is undesirable, especially for highly multivariate settings, where popular cross-covariance functions such as the multivariate Mat\u00e9rn suffer from a \"curse of dimensionality\" as the number of parameters and floating point operations scale up in quadratic and cubic order, respectively, in the number of variables. We propose a class of multivariate \"graphical Gaussian Processes\" using a general construction called \"stitching\" that crafts cross-covariance functions from graphs and ensure process-level conditional independence among variables. For the Mat\u00e9rn family of functions, stitching yields a multivariate GP whose univariate components are exactly Mat\u00e9rn GPs, and conforms to process-level conditional independence as specified by the graphical model. For highly multivariate settings and decomposable graphical models, stitching offers massive computational gains and parameter dimension reduction. We demonstrate the utility of the graphical Mat\u00e9rn GP to jointly model highly multivariate spatial data using simulation examples and an application to air-pollution modelling.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Multivariate spatial data abound in the natural and environmental sciences for studying features of the joint distribution of multiple spatially dependent variables (see, for example, Wackernagel, 2013; Cressie and Wikle, 2011; Banerjee et al., 2014) . The objectives are to estimate spatial associations for each variable and associations among the variables. Let y(s) be a q \u00d7 1 vector of spatially-indexed dependent outcomes within any location. A multivariate spatial regression model specifies the marginal distribution for each outcome as y j (s) = x j (s) T \u03b2 j + w j (s) + j (s) , j = 1, 2, . . . , q",
+            "cite_spans": [
+                {
+                    "start": 184,
+                    "end": 202,
+                    "text": "Wackernagel, 2013;",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 203,
+                    "end": 227,
+                    "text": "Cressie and Wikle, 2011;",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 228,
+                    "end": 250,
+                    "text": "Banerjee et al., 2014)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where y j (s) is the j-th element in y(s), x j (s) and \u03b2 j are the predictors and slopes, w j (s) is a zero-centred spatial process and j (s) ind \u223c N (0, \u03c4 2 j ) is random noise corresponding to outcome j. We focus upon the zero-centred multivariate Gaussian process (random field) w(s) = (w 1 (s), w 2 (s), . . . , w q (s)) T with special attention to large q. The cross-covariance function of w(s) which is a matrix-valued function on D \u00d7 D that maps any pair of locations (s, s ) to the q \u00d7 q matrix C(s, s ) = (C ij (s, s )) with (i, j)-th element C ij (s, s ) = Cov(w i (s), w j (s )).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Cross-covariance functions must ensure that for any finite set of locations S = {s 1 , . . . , s n }, the nq \u00d7 nq matrix C(S, S) = (C(s i , s j )) is positive definite (p.d.) . Valid classes of crosscovariance functions have been comprehensively reviewed in Genton and Kleiber (2015) .",
+            "cite_spans": [
+                {
+                    "start": 168,
+                    "end": 174,
+                    "text": "(p.d.)",
+                    "ref_id": null
+                },
+                {
+                    "start": 258,
+                    "end": 283,
+                    "text": "Genton and Kleiber (2015)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We build upon Gneiting et al. (2010) and Apanasovich et al. (2012) who introduced multivariate Mat\u00e9rn cross-covariance functions, where the marginal covariance functions for each variable and the cross-covariance functions between each pair of variables are members of the Mat\u00e9rn family. In its most general form, the multivariate Mat\u00e9rn is appealing as it ensures that each univariate process is a Mat\u00e9rn GP with its own range, smoothness and spatial variance.",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 36,
+                    "text": "Gneiting et al. (2010)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 41,
+                    "end": 66,
+                    "text": "Apanasovich et al. (2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Constraints on the parameters are needed to ensure positive-definiteness. The parsimonious",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Mat\u00e9rn (Gneiting et al., 2010) imposes equality of the spatial range for all variables. Apanasovich et al. (2012) laid out more general sufficient conditions for the parameters, yielding a very broad class of multivariate Mat\u00e9rn covariances. However, all current multivariate Mat\u00e9rn models require estimating O(q 2 ) cross-covariance parameters and the multivariate Gaussian likeli-hood involves the inverse and determinant of the dense nq \u00d7 nq covariance matrix, which is prohibitive if n or q is large. Indeed, illustrations of multivariate Mat\u00e9rn have mostly restricted to applications with q \u2264 5. Our work is also related to a conditional approach developed in Cressie and Zammit-Mangion (2016) , where the univariate GPs are specified sequentially, conditional on the previous GPs assuming some ordering of the q variables. However, this approach requires an ordering of the q variables, and does not attempt to retain conditional dependence relations from an inter-variable graph over a continuous domain, which we seek here.",
+            "cite_spans": [
+                {
+                    "start": 7,
+                    "end": 30,
+                    "text": "(Gneiting et al., 2010)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 88,
+                    "end": 113,
+                    "text": "Apanasovich et al. (2012)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 665,
+                    "end": 698,
+                    "text": "Cressie and Zammit-Mangion (2016)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We address the highly-multivariate setting with tens to hundreds of variables measured at each spatial location, which is becoming increasingly commonplace in the environmental and physical sciences. We specifically address some key properties of multivariate GPs that are deemed critical for handling highly multivariate data. First, we retain the flexibility to model and interpret spatial properties of each surface separately. Except for the multivariate Mat\u00e9rn, most other multivariate covariance functions fail to retain this property. Next, we construct the highly multivariate model by adapting graphical models to process-based settings. While graphical models are extensively used to model multivariate dependencies in non-spatial settings, their use in spatial process modeling has primarily been to achieving scalability with respect to the number of locations (n). Multivariate covariance functions do not, in general, exploit an inter-variable graph to build a multivariate GP that conforms to process-level conditional independence among the variables. We introduce a method of stitching GPs together such that: (i) the marginal GP for each outcome agrees with the original process; and (ii) we retain the conditional independence of the processes implied by the inter-variable graph. Third, we focus on computational scalability with respect to the number of variables q. While substantial attention has been accorded to settings with massive number of locations (n) (see Heaton et al., 2019 , for a very recent review), the highly multivariate setting with large q fosters rather different computational issues. Likelihoods for popular covariance functions like the multivariate Mat\u00e9rn involve an O(q 2 ) parameter set, and O(q 3 ) computations. Hence, even for a small number of locations n, most methods suffer from the curse of dimensionality stemming from optimizing in or sampling from such a high-dimensional space.",
+            "cite_spans": [
+                {
+                    "start": 1488,
+                    "end": 1507,
+                    "text": "Heaton et al., 2019",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "where V is the set of indices for the variables and E V is the set of edges. We will first define and derive a Graphical Gaussian Process (GGP) from a given cross-covariance function such that the same marginal spatial covariance functions for each variable and the same cross-covariance functions for pairs of variables (i, j) \u2208 E V are retained.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Following the development in Dahlhaus (2000) for multivariate discrete time-series, we define process-level conditional independence of multivariate continuous-space GPs. Let B \u2282 V and",
+            "cite_spans": [
+                {
+                    "start": 29,
+                    "end": 44,
+                    "text": "Dahlhaus (2000)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "where each w k (s) is a spatial process over domain D.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "We define two processes w i (\u00b7) and w j (\u00b7) to be conditionally independent given the processes",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "denotes the \"residual\" process.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Conditional independence boils down to zeros in the spectral density matrix for stationary processes (see, e.g., Theorem 2.4 in Dahlhaus (2000)). If F (\u03c9) = (f ij (\u03c9)) is the q \u00d7 q spectral density matrix corresponding to the cross-covariance functions C ij of a q \u00d7 1 stationary Gaussian process on some domain D, then two processes w i (\u00b7) and w j (\u00b7) are conditionally independent if and only if f ij (\u03c9) = 0 for almost all \u03c9, where F (\u03c9) \u22121 = (f ij (\u03c9)). The result is analogous to graphical Gaussian models, where the absence of an edge between two variables implies a zero in the corresponding entry in the precision matrix. We now define a Graphical",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Gaussian Process (GGP) as follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Clearly any collection of q independent GPs will trivially constitute a GGP with respect to the graph G V . Our first key result (Theorem 2.2) shows that there exists a unique GGP corresponding to G V from any given cross-covariance function. To prove this, we use the following Lemma.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Lemma 2.1 (Covariance selection (Dempster, 1972) ). Given G V = (V, E V ) and any positive definite matrix F = (F ij ) indexed by V \u00d7 V, there exists a unique positive definite matrix",
+            "cite_spans": [
+                {
+                    "start": 32,
+                    "end": 48,
+                    "text": "(Dempster, 1972)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Proof. This is the main result developed in Dempster (1972) .",
+            "cite_spans": [
+                {
+                    "start": 44,
+                    "end": 59,
+                    "text": "Dempster (1972)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "The above is a seminal result on covariance selection that we use recurrently in this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Theorem 2.2. Let C(h) = (C ij (h)) be a q \u00d7 q stationary cross-covariance function and let F ij (\u03c9) = (f ij (\u03c9)) be the spectral density matrix corresponding to C(h). If f ii (\u03c9) are squareintegrable for all i, then given any graph G V = (V, E V ), there exists a unique q \u00d7 1 GGP (see",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Proof. See Supplementary Materials.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Applying Theorem 2.2 to a multivariate Mat\u00e9rn GP with isotropic cross-covariance C(h) = (C ij (h)), we obtain a GGP w(s) such that each univariate process w i (s) is a GP with its Mat\u00e9rn covariance function C ii (h). Furthermore, for each edge (i, j) \u2208 E V , the cross-covariance function between w i (s) and w j (s + h) also remains C ij (h), i.e., also Mat\u00e9rn, and for edges (i, j) / \u2208 E V the processes w i (s) and w j (s ) are conditionally independent for all s, s \u2208 D.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "Theorem 2.2, while of theoretical interest, is of limited practical value. For multivariate spatial data observed over a (possibly irregular) set of locations, the likelihood is specified by the cross-covariance function and Theorem 2.2 does not offer a convenient way to generate cross-covariances in closed form. One could apply the iterative proportional scaling (IPS) algorithm (Speed et al., 1986) for covariance selection and obtain F (\u03c9) for a large set of \u03c9's by numerical integration. The cross-covariance function is then obtained by inverting the crossspectral densities f ij (\u03c9). Since the spatial covariance parameters are unknown, this process has to be repeated in every iteration of optimizing or sampling from the likelihood, which is impractical. Hence, in the next Section we pursue a more practicable approach, we refer to as stitching.",
+            "cite_spans": [
+                {
+                    "start": 382,
+                    "end": 402,
+                    "text": "(Speed et al., 1986)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Graphical Gaussian Processes"
+        },
+        {
+            "text": "We will construct GGPs by stitching together univariate GPs. Stitching will work for any multivariate GP, but we motivate it with the multivariate Mat\u00e9rn model (Gneiting et al., 2010; Apanasovich et al., 2012) . We first argue why no simple parametrization of the existing multivariate Mat\u00e9rn GPs yields a Mat\u00e9rn GGP with respect to G V . The isotropic multivariate Mat\u00e9rn",
+            "cite_spans": [
+                {
+                    "start": 160,
+                    "end": 183,
+                    "text": "(Gneiting et al., 2010;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 184,
+                    "end": 209,
+                    "text": "Apanasovich et al., 2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Stitching of Gaussian Processes"
+        },
+        {
+            "text": ", H being the Mat\u00e9rn correlation function (Apanasovich et al., 2012) . If Mat\u00e9rn with parameters \u03b8 ii . This is attractive because it endows each univariate process with its own variance \u03c3 ii , smoothness \u03bd ii , and spatial decay \u03c6 ii . Another nice property is that under this model, \u03a3 = (\u03c3 ij ) = Cov(w(s)) is the covariance matrix for w(s) within each location s. The remaining parameters i.e., the cross-correlation parameters \u03bd ij and \u03c6 ij for i = j, are generally hard to interpret, especially since \u03bd ij does not correspond to the smoothness of any surface.",
+            "cite_spans": [
+                {
+                    "start": 42,
+                    "end": 68,
+                    "text": "(Apanasovich et al., 2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Stitching of Gaussian Processes"
+        },
+        {
+            "text": "Recent work by Kleiber (2017) on the concept of coherence defined by the scaled spectral density matrix of a stationary multivariate process has facilitated the interpretation of the crosscovariance parameters. The parsimonious multivariate Mat\u00e9rn model of Gneiting et al. (2010) is subsumed in this general specification as a sub-case with \u03bd ij = (\u03bd ii + \u03bd jj )/2 and \u03c6 ij = \u03c6.",
+            "cite_spans": [
+                {
+                    "start": 15,
+                    "end": 29,
+                    "text": "Kleiber (2017)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 257,
+                    "end": 279,
+                    "text": "Gneiting et al. (2010)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Stitching of Gaussian Processes"
+        },
+        {
+            "text": "To ensure a valid multivariate Mat\u00e9rn cross-covariance function, it is sufficient to constrain the intra-site covariance matrix \u03a3 = (\u03c3 ij ) to be of the form (Theorem 1, Apanasovich et al.,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Stitching of Gaussian Processes"
+        },
+        {
+            "text": "This is equivalent to \u03a3 being constrained as \u03a3 = (B (\u03b3 ij )) where \u03b3 ij are constants collecting the terms in (2) involving only \u03bd ij 's and \u03c6 ij 's, and denotes the Hadamard (element-wise) product. Similarly, the spectral density matrix takes the form F (\u03c9) = (B (g ij (\u03c9))), where g ij (\u03c9) involves the parameters \u03c6 ij and \u03bd ij .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "The b ij 's are the q 2 parameters (free of \u03c6 ij 's or \u03bd ij 's) that are constrained to ensure B is positive-definite. For independent and identically distributed multivariate data, when q is large, a sparse graphical model among the variables is typically enforced by setting elements of the q \u00d7 q inverse-covariance (precision) matrix to be zero. However, it is clear that zeros in B \u22121 or \u03a3 \u22121 do not generally equate to zeros in F \u22121 (\u03c9) for the multivariate Mat\u00e9rn. An exception occurs when each component is posited to have the same smoothness \u03bd and the same spatial decay parameter \u03c6, whence both \u03a3 and F (\u03c9) become proportional to B. Hence, zeros in B \u22121 (specified according to G V ) will correspond to zeros in \u03a3 \u22121 and F \u22121 (\u03c9) yielding a GGP with respect to G V . However, assuming \u03bd ij = \u03bd and \u03c6 ij = \u03c6 for all (i, j) implies that the univariate GPs have the same smoothness and rate of spatial decay, which is restrictive.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "Beyond this \"separable\" case, there is, to the best of our knowledge, no known parameter choice for the multivariate Mat\u00e9rn GPs that will allow it to be a GGP with respect to a given graph G V . This issue persists even when the GPs are restricted to a finite set of locations L. Instead of constraining parameters, we will \"stitch\" univariate GPs to build a multivariate GGP, given a valid q \u00d7 q cross-covariance C(s, s ) and a graph G V . We begin our construction on L, a finite, but otherwise arbitrary, set of locations in D. Our aim is to construct a q-variate GP w(\u00b7) with the following properties: (i) each w i (L) is a realization from a univariate GP with covariance function C ii (s, s ), i.e., Cov(w i (L)) = C ii (L, L); (ii) for any edge (i, j) \u2208 E V , the cross-covariances are preserved, i.e., Cov(w i (L), w j (L)) = C ij (L, L); and (iii) w(\u00b7) retains the conditional independence relations specified by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "We identify existence of such a matrix M (L, L) as a covariance selection problem. Let G L = (L, E L ) be the complete graph on the set of locations L. To ensure that the crosscovariances are preserved over L for (i, j) \u2208 E V and the conditional independence among elements of w(L) are inherited from G V , we have to use the strong product G V G L to build",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "comprises edges between vertex-pairs (v, l) and (v , l ) based upon the following strong-product adjacency rules: iterative proportional scaling algorithm (Speed et al., 1986; Xu et al., 2011) .",
+            "cite_spans": [
+                {
+                    "start": 155,
+                    "end": 175,
+                    "text": "(Speed et al., 1986;",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 176,
+                    "end": 192,
+                    "text": "Xu et al., 2011)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "Having built the finite-dimensional distribution of w(L) from G V G L , we now suitably extend it to a well-defined multivariate GP w(\u00b7) over the domain D, which conforms to the conditional dependencies implied by G V :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "where each z i (s) is a zero-centred Gaussian Process, independent across i and independent of",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": ") and w i (s) defined in (3) for s \u2208 D \\ L specifies a welldefined q-variate GP w(\u00b7) = (w 1 (\u00b7), . . . , w q (\u00b7)) T over D. The above construction, which we refer to as \"stitching\", ensures the following.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "Theorem 2.3. Given a cross-covariance matrix C(s, s ) = (C ij (s, s )) and an inter-variable graph G V , stitching creates a valid multivariate GGP w(\u00b7) with positive-definite cross-",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "for all s, s \u2208 D and for each i = 1, . . . , q.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "(c) If variables (i, j) / \u2208 E V , then the processes w i (\u00b7) and w j (\u00b7) will be conditionally independent on D given w B (\u00b7), where w B (\u00b7) = {w k (\u00b7); k \u2208 V \\ {i, j}} are all the other processes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "Proof. See Supplementary Materials. Stitching, therefore, ensures that the marginal covariance functions for each",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "for locations in L, which can be made arbitrarily dense in the domain. Finally process-level conditional independence relations are established using G V G L on L and then using independent processes z i (\u00b7) for each variable i for the extension to D without violating the specified conditional independence. In particular, if C(h) is the multivariate Mat\u00e9rn cross-covariance (Gneiting et al., 2010; Apanasovich et al., 2012) , then stitching with G V will produce a GGP w(s) on D such that each w i (s) is a GP with univariate Mat\u00e9rn covariance functions. Furthermore, these Mat\u00e9rn processes satisfy the conditional independence specified by G V .",
+            "cite_spans": [
+                {
+                    "start": 376,
+                    "end": 399,
+                    "text": "(Gneiting et al., 2010;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 400,
+                    "end": 425,
+                    "text": "Apanasovich et al., 2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "The term \"stitching\" is motivated from the example in Figure 1 . Figure 1 (a) shows realizations of 4 univariate Mat\u00e9rn GPs w i (\u00b7), i = 1, . . . , 4 over 3 locations, each with a different smoothness and spatial range. Figure 1 (b) shows a multivariate GGP constructed by stitching together the 4 processes at the 3 locations in L using a path-graph as G V . Geometrically, this looks like stitching the four surfaces together at the locations L, while exactly preserving each univariate surface. The graph edges serve as the threads holding the surfaces together.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 54,
+                    "end": 62,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 65,
+                    "end": 73,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 220,
+                    "end": 228,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "2012)"
+        },
+        {
+            "text": "We point out differences between the GGP ensured by Theorem 2.2 and the one produced by stitching. For pairs of variables (i, j) \u2208 E V , the cross-covariance for the former is the same as the Mat\u00e9rn cross-covariance C ij on the entire domain D, whereas for the latter this agreement is only on L. In fact, for a pair s, s / \u2208 L and i = j it is straightforward to see that,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "Stitching exploits this fixed rank cross-covariance to construct a practically implementable GGP with full-rank marginal covariance and process-level conditional independence inherited from G V . On the other hand, unlike Theorem 2.2, stitching does not need the given crosscovariance C to be stationary and can be used with asymmetric or even non-stationary C.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "The reference set L is arbitrary and can, but need not, overlap with the set of data locations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "If D i , i = 1, 2, . . . , q denotes the set of n i data locations for the i-th variable, then the joint probability density of w i (D i ) and w(L) is specified by w(L) \u223c N (0, M (L, L)) and ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2012)"
+        },
+        {
+            "text": "We now consider decomposable inter-variable graphs G V in highly multivariate settings. For",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "The graph is said to be decomposable if it is complete or if there exists a proper decomposition",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "Decomposability is conspicuous in graphical models (see, e.g., Dobra et al., 2003; Wang and West, 2009 ) and fitting Bayesian graphical models is cumbersome for non-decomposable graphs (Roverato, 2002; Atay-Kayis and Massam, 2005) .",
+            "cite_spans": [
+                {
+                    "start": 63,
+                    "end": 82,
+                    "text": "Dobra et al., 2003;",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 83,
+                    "end": 102,
+                    "text": "Wang and West, 2009",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 185,
+                    "end": 201,
+                    "text": "(Roverato, 2002;",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 202,
+                    "end": 230,
+                    "text": "Atay-Kayis and Massam, 2005)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "For decomposable graphs we can significantly reduce the dimension of the parameter space, storage, and computational burden of stitching using Mat\u00e9rn GPs. An important property of a decomposable graph is that the cliques of the graph can be ordered into a perfect sequence (Lauritzen, 1996) . Let K 1 , \u00b7 \u00b7 \u00b7 , K p be a sequence of subsets of the vertex set V for an undirected",
+            "cite_spans": [
+                {
+                    "start": 273,
+                    "end": 290,
+                    "text": "(Lauritzen, 1996)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "perfect if it satisfies the following: (i) for every l > 1, there is an m < l such that S l \u2282 K m ;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "and (ii) the sets S m are complete for all m. If G V is decomposable, then it has a perfect clique sequence and the joint density of w(L) can be factorized as follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "Corollary 3.0.1. If G V has a perfect clique sequence, {K 1 , K 2 , \u00b7 \u00b7 \u00b7 , K p }, then the GGP likelihood can be decomposed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "where S m = F m\u22121 \u2229 K m and F m\u22121 = K 1 \u222a \u00b7 \u00b7 \u00b7 \u222a K m\u22121 , and f M and f C are the densities of Gaussian Processes with covariance functions M (s, s ) and C(s, s ), respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "Proof. See Supplementary Materials. Corollary 3.0.1 helps us manage the dimension and constraints of the parameter space and the computational complexity. For an arbitrary graph G V , the parameter space for the stitching covariance function M is the same as the parameter space {\u03b8 ij |1 < i, j \u2264 q} for the original covariance function C. For a decomposable graph G V , the likelihood (6) and, in turn, the stitched GGP is only specified by the parameters {\u03b8 ij | (i = j) or (i, j) \u2208 E V }. Therefore, the dimension of the parameter space reduces from O(q 2 ) to |E V |, the number of edges on G V , which is small for sparse graphs. When using a multivariate Mat\u00e9rn cross-covariance C for stitching, the parameter space for B in the stitched graphical Mat\u00e9rn is the intersection of the parameter spaces of the low-dimensional clique-specific multivariate Mat\u00e9rn covariance",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "and needs to satisfy the constraint that B K l = (b ij ) i,j\u2208K l is positive definite for all l = 1, . . . , p.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "This reduces the complexity of the parameter space constraints",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "where q * is the largest clique size and p * is the maximum number of cliques sharing a common vertex.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "The precision matrix of w(L) satisfies (see, e.g., Lemma 5.5 in Lauritzen, 1996) ",
+            "cite_spans": [
+                {
+                    "start": 64,
+                    "end": 80,
+                    "text": "Lauritzen, 1996)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "where, for any symmetric matrix A = (a ij ) with rows and columns indexed by a subset U of",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "and (A V\u00d7L ) ij = 0 elsewhere. From (6) and (7) flops and O(pn 2 q * 2 ) storage, where p is the length of the perfect ordering. Table 1 summarizes these gains from stitching over decomposable graphs.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 129,
+                    "end": 136,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "In addition to the computational benefits described above, stitched GGP models are naturally amenable to parallel computing. In a Bayesian implementation of a stitched GGP model (described in Section S2.1) of the Supplement, we can exploit the underlying graphical model G V and deploy a chromatic Gibbs sampler (Gonzalez et al., 2011) to simultaneously update Gneiting et al. (2010) or Apanasovich et al. (2012) and a multivariate graphical Mat\u00e9rn GP stitched using a decomposable graph G V with largest clique size q * , length of perfect ordering p, and maximal number of cliques p * sharing a common vertex. (Figure 2(b) ) and the number of such sequential batch updates will be the chromatic number \u03c7(G E (G V )), a reduction from |E V | sequential updates for b ij .",
+            "cite_spans": [
+                {
+                    "start": 312,
+                    "end": 335,
+                    "text": "(Gonzalez et al., 2011)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 361,
+                    "end": 383,
+                    "text": "Gneiting et al. (2010)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 387,
+                    "end": 412,
+                    "text": "Apanasovich et al. (2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 612,
+                    "end": 624,
+                    "text": "(Figure 2(b)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Highly multivariate Graphical Mat\u00e9rn Gaussian processes"
+        },
+        {
+            "text": "(a) Colouring of a gem graph G V . (b) Colouring of the corresponding edge graph G E (G V ) Figure 2 : Chromatic sampling for GGP: Left: Colouring of a gem graph G V between 5 variable processes w 1 , w 2 , w 3 , w 4 , w 5 , used for chromatic sampling of the marginal (variable-specific) parameters. Right: Colouring of the corresponding edge graph G E (G V ) used for chromatic sampling of the cross-covariance parameters b ij 's.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 92,
+                    "end": 100,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Model attributes Multivariate Mat\u00e9rn Graphical model Mat\u00e9rn Number of parameters"
+        },
+        {
+            "text": "Graphical Gaussian Processes constructed from stitching can also be natural candidates for non-separable (in space-time), non-stationary (in time) modelling of univariate or multivariate spatial time-series data. First, consider a univariate spatial time-series modelled as a Gaussian",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "Process w(s, t) for s \u2208 D evolving over a discrete set of time points t \u2208 T = {1, 2, . . . , T }.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "We envision this as a T \u00d7 1 GP w(s) = (w 1 (s), . . . , w T (s)) T , where w t (s) = w(s, t).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "Temporal evolution of processes is encapsulated using a directed acyclic graph (DAG), which, when moralized, produces an undirected graph G T over T . We can then recast the spatial time-series model as a T \u00d7 1 GGP conforming to the conditional independence implied by G T . A multivariate Mat\u00e9rn used for stitching will produce a GGP with each w t (\u00b7) being a Mat\u00e9rn GP with parameters \u03b8 tt . Time-specific spatial parameters enrich the model without imposing stationarity of the spatial process over time and space-time separability (Gneiting, 2002) .",
+            "cite_spans": [
+                {
+                    "start": 535,
+                    "end": 551,
+                    "text": "(Gneiting, 2002)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "Any Autoregressive (AR) structure over time corresponds to a decomposable moralized graph G T . For example, the AR(1) model corresponds to a path graph with edges {(t, t+1) | t = 1, . . . , T \u2212 1}, q * = 2 and p * = 2. An AR(2) is specified by the DAG t \u2212 2 \u2192 t and t \u2212 1 \u2192 t for all t \u2208 3, . . . , T ( Figure S1 (a) in the Supplement), which, when moralized, yields the sparse decomposable graph G T (with q * = 3) in Figure S1 (b) of the Supplement. Hence, Corollary 3.0.1 ensures accrual of computational gains for GGP models for autoregressive spatial time-series. An added benefit of using the GGP is that the auto-regression parameters need not be universal, but can be time-specific, thus relaxing another restrictive stationarity condition.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 304,
+                    "end": 313,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 420,
+                    "end": 429,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "Multivariate spatial time-series can also be modelled using GGPs. We envision q variables recorded at T time-points resulting in qT variables. We now specify G V\u00d7T on the variable-time set. Common specifications for multivariate time-series like graphical vector autoregressive (VAR) structures (Dahlhaus and Eichler, 2003) will yield decomposable G V\u00d7T . For example, consider the non-separable graphical-VAR of order 1 with q = 2 and specified by the DAG",
+            "cite_spans": [
+                {
+                    "start": 295,
+                    "end": 323,
+                    "text": "(Dahlhaus and Eichler, 2003)",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "(1, t \u2212 1) \u2192 (1, t), (1, t \u2212 1) \u2192 (2, t), and (2, t \u2212 1) \u2192 (2, t) ( Figure S1 (c) of the Supplement).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 68,
+                    "end": 77,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "This yields the decomposable G V\u00d7T in Figure S1 (d) of the Supplement, also with q * = 3.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 38,
+                    "end": 47,
+                    "text": "Figure S1",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Non-separable spatial time-series modelling"
+        },
+        {
+            "text": "So far all our examples have involved isotropic (symmetric) multivariate Mat\u00e9rn crosscovariances. Symmetry implies C ij (s, s ) = C ij (s , s) for all i, j, s, s and is not a necessary condition for validity of a cross-covariance function. Asymmetric cross-covariance functions have been discussed in Apanasovich and Genton (2010) and Li and Zhang (2011) . An asymmetric cross-covariance C a can be specified in-terms of a symmetric cross-covariance C as",
+            "cite_spans": [
+                {
+                    "start": 301,
+                    "end": 330,
+                    "text": "Apanasovich and Genton (2010)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 335,
+                    "end": 354,
+                    "text": "Li and Zhang (2011)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Asymmetric covariance functions"
+        },
+        {
+            "text": "where a i , i = 1, . . . , q are distinct variable specific parameters. As mentioned earlier, stitching will work with any valid cross-covariance function, and if C a is used for the stitching, then the resulting graphical cross-covariance M a will also be asymmetric, satisfying M a ij (s, s ) = C a ij (s, s ) for all (i, j) \u2208 E V , and s, s \u2208 L.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Asymmetric covariance functions"
+        },
+        {
+            "text": "We outline a Gibbs sampler in Section S2.1 of the Supplement for the multivariate spatial linear model in (1), where the latent q \u00d7 1 process w(s) is modelled as a GGP. If |L| = n, then the algorithm needs to sample all the O(nq) latent spatial random effects w i (L) at each iteration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Response model"
+        },
+        {
+            "text": "A common strategy for estimating process parameters in spatial linear models is to integrate out the spatial random effects w and directly use the marginalized (or collapsed) likelihood for the response process y(\u00b7) = (y 1 (\u00b7), . . . , y q (\u00b7)) T , which is also a multivariate GP. However, w(\u00b7) modelled as a GGP does not ensure the marginalized y(\u00b7) will be a GGP. We demonstrate this in Figure 3 (a) with a path graph G V between 3 latent processes w 1 (\u00b7), w 2 (\u00b7) and w 3 (\u00b7). The response processes y i (\u00b7) = w i (\u00b7) + i (\u00b7) have complete graphs. This is because Cov(y) = Cov(w) + Cov( ), and the zeros in Cov(w) \u22121 do not correspond to zeros in Cov(y) \u22121 . Hence, modelling the latent spatial process as a GGP and subsequent marginalization is inconvenient because the marginalized likelihood for y will not factorize like (6).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 390,
+                    "end": 398,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Response model"
+        },
+        {
+            "text": "Instead, we can directly create a GGP for the response process by stitching the marginal cross-covariance function Cov(y(s), y(s + h)) = C(h) + D(h) using G V , where D(h) = diag(\u03c4 2 1 , . . . , \u03c4 2 q )I(h = 0) is the diagonal white-noise covariance function. If using a Mat\u00e9rn (a) GGP on the latent process.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Response model"
+        },
+        {
+            "text": "(b) GGP on the response process. cross-covariance C, the resulting GGP model for y(\u00b7) has, for each y i (\u00b7), univariate processes with mean x i (\u00b7) T \u03b2 i and covariance function C ii (h)+\u03c4 2 i I(h = 0). The cross-covariance between y i (\u00b7) and y j (\u00b7) is also Mat\u00e9rn for (i, j) \u2208 E V and locations in L. For (i, j) / \u2208 G V , the response processes y i (\u00b7) and y j (\u00b7) will be conditionally independent. We denote the covariance function of this GGP by M * and outline the Gibbs sampler in Section S2.2 of the Supplement.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Response model"
+        },
+        {
+            "text": "The response model drastically reduces the dimensionality of the sampler from O(nq + |E V |) for the latent model to O(q+|E V |). However, what we gain in terms of convergence of the chain gets compromised in interpretation of the latent process. As we see in Figure 3 (b), using a graphical model on the response process leads to a complete graph among the latent process.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 260,
+                    "end": 268,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Response model"
+        },
+        {
+            "text": "If, however, conditional independence on the latent processes is not absolutely necessary, then the marginalized GGP model is a viable alternative for modelling highly multivariate spatial data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Response model"
+        },
+        {
+            "text": "We We consider the 4 settings in Table 2 . In Set 1, we have q = 5 and generate data from a graphical Mat\u00e9rn using a gem graph (Figure 2 (a)) for stitching. We assumed no spatial misalignment, i.e, all variables observed at each location in L. Hence, we used GM for estimation. As q is small, we could implement both PM and MM. Set 1 did not use a nugget, hence BGML and BGMR are the same for this set. For all scenarios, the number of locations was n = 250 and locations were generated uniformly from a grid within the unit square. For",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 33,
+                    "end": 40,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 127,
+                    "end": 136,
+                    "text": "(Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Simulation"
+        },
+        {
+            "text": "Set 2, we considered q = 15 spatially misaligned outcomes, a path graph G V , and included the nugget processes to generate the responses. The models fitted are PM, BGML and BGMR.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "Sets 3A and 3B consider the highly multivariate case with q = 100 outcomes and a path graph among the variables. Neither PM nor MM can be implemented for such settings because B",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "involves 4950 parameters and likelihood evaluation requires inverting a 25000 \u00d7 25000 matrix in each iteration. The data is generated using GM in 3A and MM in 3B, the latter serving as a misspecified example.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "We simulated 1 covariate x j (s i ) for each variable j, generated independently from a N (0, 4) distribution and the true regression coefficients \u03b2 j from Unif(-2,2) for j = 1, 2, . . . , q . The \u03c6 ii and \u03c3 ii were equispaced numbers in (1, 5), while the b ij 's where chosen as in Table 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 283,
+                    "end": 290,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Simulation"
+        },
+        {
+            "text": "For all of the candidate models, each component of the q-variate process is a Mat\u00e9rn GP.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "Hence, following the recommendation outlined in Apanasovich et al. (2012) , the marginal parameters \u03b8 ii for the univariate Mat\u00e9rn processes were estimated apriori using only the data for corresponding i-th variable. The BRISC package (Saha and Datta, 2018) was used for estimation. We primarily focus on estimating the cross-covariance parameters b ij , (i, j) \u2208 E V , as they specify the cross-covariances in stitching. In Figure 4 we present the estimates of \u03c3 ij \u03c6 ij = \u0393(1/2)b ij which are the b ij 's rescaled to be at the same scale as the marginal microergodic parameters \u03c3 ii \u03c6 ii . The variable-specific parameters are of lesser importance because stitching ensures that each univariate process is Mat\u00e9rn GP, similar to the multivariate Mat\u00e9rn models.",
+            "cite_spans": [
+                {
+                    "start": 48,
+                    "end": 73,
+                    "text": "Apanasovich et al. (2012)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 235,
+                    "end": 257,
+                    "text": "(Saha and Datta, 2018)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 425,
+                    "end": 433,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Simulation"
+        },
+        {
+            "text": "The estimates of the marginal spatial parameters are plotted in Figure S2 of the Supplement. The estimates of the regression coefficients \u03b2 j were accurate for all models, and are not presented. Figure 2 (a) reveals that for Set 1, the MM, GM and BGMR all produce reasonable estimates of the true cross-covariance parameters, whereas the parsimonious Mat\u00e9rn estimates are biased and more variable. For Set 2, the estimates of PM are once again biased, whereas both BGML and BGMR produce estimates much closer to the truth. For the highly multivariate setting of Set 3A, the GGP is still competitive with both BGML and BGMR once again accurately estimating all the b ij 's for (i, j) \u2208 E V . This is true even for the misspecified case of Set 3B,",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 64,
+                    "end": 73,
+                    "text": "Figure S2",
+                    "ref_id": null
+                },
+                {
+                    "start": 195,
+                    "end": 203,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Simulation"
+        },
+        {
+            "text": "where both BGML and BGMR accurately estimated all the cross covariances for variable pairs belonging to the graphical model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "6 Spatio-temporal modelling of PM 2.5",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "We demonstrate an application of GGP for non-stationary (in time) and non-separable (in space-time) modelling of spatial time-series, as discussed in Section 4.1. We model daily levels of PM 2.5 measured at different monitoring stations across 11 states of the north-eastern US and Washington DC for a three month period from February, 01, 2020, until April, 30th, 2020.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "The data is publicly available from the website of the United States Environmental Protection Agency.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "We selected n = 106 stations that had at least two months of measured data. Meteorological variables like temperature, barometric pressure, wind-speed and relative humidity are known to affect PM 2.5 levels. Since all of the pollutant monitoring stations do not have the meteorological covariates, we collected the weather information from NOAA Local Climatological",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "Database. Finally, we merged the weather information from EPA and NOAA and imputed the daily weather information at pollutant monitoring locations using multilevel B-spline smoothing. Following Section 4.1, we view the spatial time-series at n = 106 locations and T = 90 days as a highly multivariate (90-dimensional) spatial dataset. Neither the parsimonious Mat\u00e9rn nor the multivariate Mat\u00e9rn were implementable as they involve around 4000 cross-covariance parameters and 10000 \u00d7 10000 matrix computations at each iteration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "We used a Mat\u00e9rn GGP to model the data, with an AR(1) graphical model for smoothing across time, as exploratory analysis revealed strong autocorrelation between pollutant processes on consecutive days even after adjusting for all the covariates. The marginal parameters for Estimates of the auto-regression covariance from graphical Mat\u00e9rn for the full analysis, (c) Estimates of the residual spatial processes from BGMR for PM 2.5 pollutant levels (after adjusting for covariates) in North-east US between first two weeks of February and last two weeks of April day t were \u03c3 tt , \u03c6 tt and \u03c4 2 t . The autoregressive coefficient (cross-covariance parameter) between days t \u2212 1 and t was \u03c1 t . Thus GGP offered the flexibility to model non-separability across space and time, time-varying marginal spatial parameters and autoregresive coefficients. We implemented both the latent (BGML) and the response (BGMR) models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "We first present a sub-group analysis breaking the 90 days worth of data into 6 fortnights.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "Data for each fortnight is only 15 dimensional and, hence, we are able to analyse each chunk separately using the parsimonious Mat\u00e9rn. We compare the daily RMSPE based on hold-out data among the three methods. Figure 5 (a) reveals that the three method produce very similar predictive performance when analysing each fortnight of data separately. We analyse the full dataset using the GGP model as other multivariate Mat\u00e9rn GPs are precluded by the highly multivariate setting. The GGP model involves only 89 cross-covariance parameters. Since the largest clique size in an AR(1) graph is 2, the largest matrix we deal with is only 212 \u00d7 212.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 210,
+                    "end": 218,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Simulation"
+        },
+        {
+            "text": "We present the estimates of the auto-covariance parameters in Figure 5 (b). We see that there is large variation in the estimates of this parameter across time with many spikes indicating high positive autocorrelation. The estimates provide strong evidence in favour of non-stationarity across time.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 62,
+                    "end": 70,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Simulation"
+        },
+        {
+            "text": "Figure 5(c) presents the estimated average residual spatial surface y P (s) =",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "(1/|P|) t\u2208P (y t (s) \u2212 x t (s) T\u03b2 t ) over two choices of the time-period P -the first two weeks of February, 2020 (left) and the last two weeks of April, 2020 (right). These two periods represent the beginning and end of the time period for our study and also correspond to the before and during lock-downs imposed in the north-eastern US due to COVID-19. We observe a decrease in intensity of the residual process from February to April suggesting a decrease in the PM 2.5 levels during this period even after accounting for the meteorological covariates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation"
+        },
+        {
+            "text": "We have addressed modelling highly-multivariate spatial data using GGPs with crosscovariance functions that exploit graphical models to ensure process-level conditional independence among the variables, while preserving attractive interpretation of the marginal covariance functions (e.g., the Mat\u00e9rn family) for each univariate process. The existence of such processes is formally established and a pragmatic variant using \"stitching\" is developed. The highly multivariate setting is scaled by stitching with decomposable graphical models and Mat\u00e9rn GPs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "This development has focused upon the highly multivariate setting that require joint modelling of a very large number of spatially dependent variables. This \"high-dimensional\" problem is distinctly different from the burgeoning literature on high-dimensional problems referring to the massive number of spatial locations. Nevertheless, there are some obvious connections between these two problems in lieu of the recent interest in DAG-based GPs for modelling the latter situation Datta et al. (2016 Datta et al. ( , 2018 . A future direction will be to simultaneously address the problem of big \"n\" and big \"q\" by merging the ideas of nearest neighbor location graphs with sparse variable graphs in a modified stitching procedure.",
+            "cite_spans": [
+                {
+                    "start": 481,
+                    "end": 499,
+                    "text": "Datta et al. (2016",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 500,
+                    "end": 521,
+                    "text": "Datta et al. ( , 2018",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Models for Highly Multivariate Spatial Data\" Debangan Dey, Abhirup Datta, Sudipto Banerjee S1 Proofs of Theorem 2.2. For the original GP, for each \u03c9, F (\u03c9) = {f ij (\u03c9)} is a valid spectral density matrix. Therefore, following Cramer's Theorem (Cram\u00e9r, 1940; Parra and Tobar, 2017) , F (\u03c9)",
+            "cite_spans": [
+                {
+                    "start": 243,
+                    "end": 257,
+                    "text": "(Cram\u00e9r, 1940;",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 258,
+                    "end": 280,
+                    "text": "Parra and Tobar, 2017)",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "is positive definite for (almost) every \u03c9. Using Lemma 2.1 we derive a unique F (\u03c9) = ( f ij (\u03c9)),",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "which is also positive definite and satisfies",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "The square-integrability assumption of f ii (\u03c9) is sufficient to ensure that | F ij (\u03c9)|d\u03c9 < \u221e using the Cauchy-Schwarz inequality. Thus, we have a spectral density matrix F (\u03c9), which is positive definite for (almost) all \u03c9, f ii (\u03c9) = f ii (\u03c9) > 0 for all i, \u03c9, and | f ij (\u03c9)|d\u03c9 < \u221e for all i, j. By Cramer's theorem, there exists a GP w(\u00b7)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "with spectral density matrix F (\u03c9) and some cross-covariance function M . As by construction",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "and almost all \u03c9, using the result of Dahlhaus (2000) , w(s) has process-level conditional independence as specified by G V , completing the proof.",
+            "cite_spans": [
+                {
+                    "start": 38,
+                    "end": 53,
+                    "text": "Dahlhaus (2000)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "of Theorem 2.3. For two arbitrary locations s 1 , s 2 \u2208 D, we can calculate the covariance func-tion from our construction as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "The second equality follows from the independence of z i and z j for i = j, the third equality uses M ii (LL) = C ii (L, L) and the fourth uses the form of the conditional covariance function (3). It is now immediate, that w i has the covariance function C ii on the entire domain D, proving Part (a).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "If (i, j) \u2208 E V , and (s 1 , s 2 ) \u2208 L, in (S1), we will have M ij (s 1 , s 2 ) = C ij (s 1 , s 2 ) directly from the construction of M (L, L). This proves part (b).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "To prove part (c), without loss of generality we only consider q = 3 processes w 1 (s), w 2 (s), w 3 (s) which is constructed via stitching, with the assumption that (1, 3) / \u2208 E V .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "First, we will show that, for any two locations s 1 , s 2 \u2208 D, w 1 (s 1 ) is conditionally independent of w 3 (s 2 ) given w 2 (L), which we denote as w 1 (s 1 ) \u22a5 \u22a5 w 3 (s 2 ) | w 2 (L).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "As ( For any s 1 , s 2 \u2208 D we have, similar to (S1),",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "Cov(w 1 (s 1 )w 3 (s 2 ) | w 2 (L)) = C 11 (s 1 , L)C 11 (L, L) \u22121 Cov (w 1 (L), w 3 (L) | w 2 (L)) C 33 (L, L) \u22121 C 33 (L, s 2 ) = 0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "Hence, w 1 (s 1 ) \u22a5 \u22a5 w 3 (s 2 ) | w 2 (L) for any s 1 , s 2 \u2208 D. Now",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "Cov(w 1 (s 1 ), w 3 (s 2 ) | \u03c3 ({w 2 (s) | s \u2208 D})) = Cov(w 1 (s 1 ), w 3 (s 2 ) | \u03c3 (w 2 (L), {z 2 (s) | s \u2208 D})) = Cov(w 1 (s 1 ), w 3 (s 2 ) | \u03c3 (w 2 (L))) = 0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "(S2)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "The third inequality follows from the fact that for any three random variables X, Y and Z such that X and Y are independent of Z, E(X|Y, Z) = E(X|Y ). Equation (S2) establishes process level conditional independence for w 1 (\u00b7) and w 3 (\u00b7) given w 2 (\u00b7), thereby proving part (c).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "of Corollary 3.0.1. Recall from the construction of M (L, L) that the Gaussian random vector w(L) satisfies the graphical model G = G V G L , where G L is the complete graph between n locations. The strong product graph G is decomposable and K m G L ; m = 1, \u00b7 \u00b7 \u00b7 , p form a perfect sequence for G with S m G L ; m = 2, \u00b7 \u00b7 \u00b7 , p being the separators.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "Thus, using results (3.17) and (5.44) from Lauritzen (1996) , we are able to factorize w(L) as (6).",
+            "cite_spans": [
+                {
+                    "start": 43,
+                    "end": 59,
+                    "text": "Lauritzen (1996)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Supplementary Materials for \"Graphical Gaussian Process"
+        },
+        {
+            "text": "Let y i = (y i (s i1 ), y i (s i2 ), . . . , y i (s in i )) T be the n i \u00d7 1 vector of measurements for the i-th response or outcome over the set of n i locations in D. Let X i = (x i (s i1 ), x i (s i2 ), \u00b7 \u00b7 \u00b7 , x i (s in i )) T be the known n i \u00d7p i matrix of predictors on the set S i = {s i1 , \u00b7 \u00b7 \u00b7 , s in i }. We specify the spatial linear model as y i = X i \u03b2 i + w i + i , where \u03b2 i is the p i \u00d7 1 vector of regression coefficients, i is the n i \u00d7 1 vector of normally distributed random independent errors with marginal common variance \u03c4 2 i , and w i is defined analogously to y i for the latent spatial process corresponding to the i-th outcome. The distribution of each w i is derived from the specification of w(s) as the q \u00d7 1 multivariate Mat\u00e9rn GGP with respect to a decomposable G V . Let {\u03c6 ii , \u03c3 ii , \u03c4 2 i |i = 1. . . . , q} denote the marginal parameters for each component Mat\u00e9rn process w i (\u00b7).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.1 Gibbs sampler for GGP model for the latent processes"
+        },
+        {
+            "text": "We elucidate the sampler using a GGP constructed by stitching the simple multivariate Mat\u00e9rn (Apanasovich et al., 2012) , where \u03bd ij = (\u03bd ii + \u03bd jj )/2, \u2206 A = 0 in (2) and \u03c6 2 ij = (\u03c6 2 ii + \u03c6 2 jj )/2. Hence, the only additional cross-correlation parameters are {b ij |(i, j) \u2208 E V }.",
+            "cite_spans": [
+                {
+                    "start": 93,
+                    "end": 119,
+                    "text": "(Apanasovich et al., 2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S2.1 Gibbs sampler for GGP model for the latent processes"
+        },
+        {
+            "text": "Any of the other multivariate Mat\u00e9rn specifications in Apanasovich et al. (2012) that involve more parameters to specify \u03bd ij 's and \u03c6 ij 's can be implemented in a similar manner. We consider partial overlap between the variable-specific location sets and take L = \u222a i S i as the reference set for stitching. If there is total lack of overlap between the data locations for each variable, we can simply take L to be a set of locations sufficiently well distributed in the domain and the Gibbs sampler can be designed analogously. all (i, s) \u2208 a. We denote cliques by K and separators by S in the perfect ordering of the graph",
+            "cite_spans": [
+                {
+                    "start": 55,
+                    "end": 80,
+                    "text": "Apanasovich et al. (2012)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S2.1 Gibbs sampler for GGP model for the latent processes"
+        },
+        {
+            "text": "The full-conditional distributions for the Gibbs updates of the parameters are as follows.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.1 Gibbs sampler for GGP model for the latent processes"
+        },
+        {
+            "text": "To update the latent random effects w, let L = {s 1 , . . . , s n } and o i = diag(I(s 1 \u2208 S 1 ), . . . , I(s n \u2208 S n )) denote the vector of missing observations for the i-th outcome. With corresponding to the largest clique. The largest matrix that needs storing is also of dimension nq * \u00d7 nq * . These result in appreciable reduction of computations from any multivariate Mat\u00e9rn model that involves nq \u00d7 nq matrices and positive-definiteness checks for q \u00d7 q matrices at every iteration.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.1 Gibbs sampler for GGP model for the latent processes"
+        },
+        {
+            "text": "Finally, for generating predictive distributions, note that, as a part of the Gibbs sampler, we are simultaneously imputing w i at the locations L \\ S i . Subsequently, we only need to sample y i (L \\ S i ) | \u00b7 \u223c N (X i (L \\ S i ) \u03b2 i + w i (L \\ S i ), \u03c4 2 i I).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.1 Gibbs sampler for GGP model for the latent processes"
+        },
+        {
+            "text": "Let y(L) = (y 1 (L), \u00b7 \u00b7 \u00b7 , y q (L)) T , X(L) = bdiag(X 1 (L), . . . , X q (L)), and \u03b2 = (\u03b2 T 1 , \u00b7 \u00b7 \u00b7 , \u03b2 T q ) T .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.2 Gibbs sampler for GGP model for the response processes"
+        },
+        {
+            "text": "We will consider the joint likelihood The update of \u03b2 involves the large nq \u00d7 nq matrix M * \u22121 L . However, from (7), M * \u22121 L can be expressed as sum of sparse matrices, each requiring at-most O(n 3 q * 3 ) storage and computation arising from inverting matrices of the form C K L +D K L . For updates of the spatial parameters \u03b8 ii and b ij , coordinate descent moves along the respective parameter and optimizing the negative log-likelihood which is expresses in terms of the corresponding negative log-likelihoods of the cliques and separators containing that parameter. This process is iterated until convergence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.2 Gibbs sampler for GGP model for the response processes"
+        },
+        {
+            "text": "Each iteration of the co-ordinate descent has the same complexity of parameter dimension, same computation and storage costs and parameter constraint check as each iteration of the Gibbs sampler, and hence is comparably scalable. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.2 Gibbs sampler for GGP model for the response processes"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Cross-covariance functions for multivariate random fields based on latent dimensions",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Apanasovich",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Genton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Biometrika",
+            "volume": "97",
+            "issn": "1",
+            "pages": "15--30",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A valid mat\u00e9rn class of crosscovariance functions for multivariate random fields with any number of components",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Apanasovich",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Genton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "107",
+            "issn": "497",
+            "pages": "180--193",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A monte carlo method for computing the marginal likelihood in nondecomposable gaussian graphical models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Atay-Kayis",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Massam",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Biometrika",
+            "volume": "92",
+            "issn": "2",
+            "pages": "317--335",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Hierarchical Modeling and Analysis for Spatial Data",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Banerjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Carlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Gelfand",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "On the theory of stationary random processes",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Cram\u00e9r",
+                    "suffix": ""
+                }
+            ],
+            "year": 1940,
+            "venue": "Annals of Mathematics",
+            "volume": "",
+            "issn": "",
+            "pages": "215--230",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Multivariate spatial covariance models: a conditional approach",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Cressie",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zammit-Mangion",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Biometrika",
+            "volume": "103",
+            "issn": "4",
+            "pages": "915--935",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Statistics for spatio-temporal data",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "A C"
+                    ],
+                    "last": "Cressie",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Wikle",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Wiley Series in Probability and Statistics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Graphical interaction models for multivariate time series",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dahlhaus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Metrika",
+            "volume": "51",
+            "issn": "2",
+            "pages": "157--172",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Causality and graphical models in time series analysis",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Dahlhaus",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Eichler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Oxford Statistical Science Series",
+            "volume": "",
+            "issn": "",
+            "pages": "115--137",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Hierarchical nearest-neighbor Gaussian process models for large geostatistical datasets",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Datta",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Banerjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Finley",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Gelfand",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "111",
+            "issn": "514",
+            "pages": "800--812",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Spatial disease mapping using directed acyclic graph auto-regressive (dagar) models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Datta",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Banerjee",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hodges",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Bayesian Analysis",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Covariance selection",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Dempster",
+                    "suffix": ""
+                }
+            ],
+            "year": 1972,
+            "venue": "Biometrics",
+            "volume": "",
+            "issn": "",
+            "pages": "157--175",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Markov bases for decomposable graphical models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dobra",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Bernoulli",
+            "volume": "9",
+            "issn": "6",
+            "pages": "1093--1108",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Cross-covariance functions for multivariate geostatistics",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Genton",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kleiber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Statistical Science",
+            "volume": "",
+            "issn": "",
+            "pages": "147--163",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Nonseparable, stationary covariance functions for space-time data",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gneiting",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "97",
+            "issn": "458",
+            "pages": "590--600",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Mat\u00e9rn cross-covariance functions for multivariate random fields",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gneiting",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kleiber",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schlather",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "105",
+            "issn": "491",
+            "pages": "1167--1177",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Parallel gibbs sampling: From colored fields to thin junction trees",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gonzalez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Low",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gretton",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Guestrin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the Fourteenth International Conference on Artificial Intelligence and Statistics",
+            "volume": "",
+            "issn": "",
+            "pages": "324--332",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "A case study competition among methods for analyzing large spatial data",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Heaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Datta",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Finley",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Furrer",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Guinness",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Guhaniyogi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Gerber",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Gramacy",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hammerling",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Katzfuss",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Journal of Agricultural, Biological and Environmental Statistics",
+            "volume": "24",
+            "issn": "3",
+            "pages": "398--425",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Coherence for multivariate random fields",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Kleiber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Statistica Sinica",
+            "volume": "",
+            "issn": "",
+            "pages": "1675--1697",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Graphical models",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Lauritzen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "",
+            "volume": "17",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "An approach to modeling asymmetric multivariate spatial covariance structures",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of Multivariate Analysis",
+            "volume": "102",
+            "issn": "10",
+            "pages": "1445--1453",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Spectral mixture kernels for multi-output gaussian processes",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Parra",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Tobar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "6681--6690",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Hyper inverse wishart distribution for non-decomposable graphs and its application to bayesian inference for gaussian graphical models",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Roverato",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Scandinavian Journal of Statistics",
+            "volume": "29",
+            "issn": "3",
+            "pages": "391--411",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Brisc: bootstrap for rapid inference on spatial covariances",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Datta",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Stat",
+            "volume": "7",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Gaussian markov distributions over finite graphs. The Annals of Statistics",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Speed",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Kiiveri",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "",
+            "volume": "14",
+            "issn": "",
+            "pages": "138--150",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Multivariate geostatistics: an introduction with applications",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wackernagel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Bayesian analysis of matrix normal graphical models",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "West",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Biometrika",
+            "volume": "96",
+            "issn": "4",
+            "pages": "821--834",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "An improved iterative proportional scaling procedure for gaussian graphical models",
+            "authors": [
+                {
+                    "first": "P.-F",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of Computational and Graphical Statistics",
+            "volume": "20",
+            "issn": "2",
+            "pages": "417--431",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "U ) = bdiag({X j (U \u2229 ({j} \u00d7 L))|j U \u2229 ({j} \u00d7 L) = {}}. We have the following updates",
+            "authors": [
+                {
+                    "first": "U \u2286 V \u00d7 L",
+                    "middle": [],
+                    "last": "Letx",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "The covariance C(L, L) = Cov(w(L)) is defined through \u03bd ij 's, \u03c6 ij 's and b ij 's. Even when all parameters except the b ij 's are known, C(L, L) is a complicated function depending upon O(q 2 ) parameters in B, and zeros in B \u22121 do not correspond to zeros in C(L, L) \u22121 . There are no obvious constraints on the parameters to enforce process level conditional independence.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Lemma 2.1 with the positive definite matrix F = C(L, L) and the graph G V G L , ensures the existence and uniqueness of a positive definite matrix F = M (L, L) satisfying conditions (a), (b) and (c) above. In practice, M (L, L) can be obtained using an",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Stitching Gaussian Processes. Left: Realizations of 4 univariate GPs. Right: Realization of a multivariate (4-dimensional) GGP created by stitching together the 4 univariate GPs from the left figure using the strong product graph over the 4 variables and 3 locations.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "q} involves a block-diagonal covariance matrix with variable-specific blocks. Therefore, it can be evaluated easily if all n i 's are small. If some n i 's are large, one can use one of the many well-established variants for scaling up GPs to very large number of locations(Heaton et al., 2019). For example, a nearest neighbour GP (NNGP,Datta et al., 2016) yields a sparse approximation of C ii | L (D i , D i ) with linear complexity, but the joint distribution still preserves the conditional independence implied by G V .Turning to the highly multivariate case, where q is large, note that {w i (D i ) | w(L), i = 1, . . . , q} in (5) has q conditionally independent factors and is easy to compute. Hence, it is w(L) \u223c N (0, M (L, L)) that presents the bottleneck. In particular, there are two challenges for large q. As discussed earlier, the multivariate Mat\u00e9rn C(h) required for stitching needs toconstrain B = (b ij ) to be p.d. matrix on an O(q 2 )-dimensional parameter space. Searching in such a high-dimensional space is difficult for large q and verifying positive definiteness of B incurs an additional cost of O(q 3 ) floating point operations. Second, evaluating w(L) \u223c N (0, M (L, L)) involves matrix operations for the nq\u00d7nq matrix M (L, L). While the precision matrix, M (L, L) \u22121 , is sparse because of G V , its determinant is usually not available in closed form and the calculation can become prohibitive even for small n.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "we see that we can avoid the large matrix M (L, L) and all matrix operations are limited to the sub-matrices of M (L, L) corresponding to the cliques K m G L and separators S m G L . The entire process requires at most O(pn 3 q * 3 )",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "random variables in parallel. If we group all variable-specific parameters (regression coefficients, spatial parameters, noise variance and latent spatial random effects) to be the parameter vector \u03b7 i , under a graph colouring of G V , \u03b7 i and \u03b7 i can be updated simultaneously if i and i share the same colour, as illustrated inFigure 2(a). This brings down the number of sequential steps in sampling of the \u03b7 i 's from q to the chromatic number \u03c7(G V ). The chromatic sampling scheme will be different for the b ij 's. Let G E (G V ) = (E V , E * ) denote a graph with vertices as the set of edges E V . An edge ((i, j), (i , j )) in this new graph G E (G V ) is in E * if {i, i , j, j } are in some clique K of G V . Then we can batch the updates of b ij 's based on colouring of the graph G E (G V )",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Comparison of induced graphs for 3 processes (obeying a path graph) from marginalized model and latent model. Blue edges indicate the dependencies modelled and red edges denote the marginal dependencies induced from the model construction.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "conducted multiple simulation experiments to compare five models: (a) PM: Parsimonious Multivariate Matern of Gneiting et al. (2010); (b) MM: Multivariate Mat\u00e9rn of Apanasovich et al. (2012) with \u03bd ij = \u03bd ii = \u03bd jj = 1 2 , and \u2206 A = 0 and \u03c6 2 ij = (\u03c6 2 ii + \u03c6 2 jj )/2; (c) BGML: Bayesian Graphical Matern on the latent process; (d) BGMR: Bayesian Graphical Matern on the response process (Sections 4.3 and S2.2); and (e) GM: Graphical Matern using classical maximum likelihood estimation for parameter estimation (using the co-ordinate descent algorithm outlined in Section S2.3 of the Supplement). All GGPs were stitched using the MM model of (a).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Estimates of the cross-covariance parameters\u03c3 ij \u03c6 ij = \u0393(1/2)b ij , (i, j) \u2208 E V ,for the 4 simulation sets. The horizontal pink lines in Figures (a) and (b) indicate true parameter values.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "PM 2.5 analysis: (a) Daily RMSPE for the 6 fortnightly analyses, (b)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "1, 3) / \u2208 E V , the sets {1 \u00d7 L} = {(1, s) | s \u2208 L} and {3 \u00d7 L} are separated by {2 \u00d7 L} in the graph G V G L . Hence, using the global Markov property of Gaussian graphical models, we have w 1 (L) \u22a5 \u22a5 w 3 (L) | w 2 (L).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Conjugate priors are available for\u03b2 i ind \u223c N (\u00b5 i , V i ) and \u03c4 2 i ind \u223c IG(a i , b i ), where IG is the Inverse-Gamma distribution.There are no conjugate priors for the process parameters.For ease of notation, the collection M a,b the submatrix of M indexed by sets a and b, M a = M a,a , and M a|b = M a \u2212 M a,b M \u22121 b M b,a . Similarly, we denote w(a) to be the vector stacking w i (s) for",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "i (L) = (x i (s 1 ), . . . , x i (s n )) T , y i (L) and w i (L) defined similarly, we have,i (L) \u2212 x i (L) T \u03b2 i ) A\\{i})\u00d7L M {i}\u00d7L,(A\\{i})\u00d7L M \u22121 (A\\{i})\u00d7L , for A \u2208 {K, S}.The Gibbs sampler evinces the multifaceted computational gains. The constraints on the parameters B no longer require checking the positive-definiteness of B, which would require O(q 3 ) flops for each check. Instead, due to decomposability, it is enough to check for positive definiteness of the (atmost q * dimensional) sub-matrices B K of B corresponding to the cliques of G V . The largest matrix inversion across all these updates is of the order nq * \u00d7 nq * ,",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "y(L) | X(L), \u03b2, {\u03c6 ii , \u03c3 ii , \u03c4 2 i } {i=1,...,q} , {b ij } {(i,j)\u2208E V } \u223c N (X(L)\u03b2, M * V \u00d7L )(S3)and impute the missing data y i (L \\ S i ) in the sampler.Let T i = {i} \u00d7 (L \\ S i ), U i (A) = (A \u00d7 L) \\ T i for A \u2208 {K,S} and \u03b2(A) be the vector stacking up \u03b2 j for j \u2208 A. Also, for any the following updates of the parameters: S (\u03b8 ii ) , where for any A \u2282 V,l A (\u03b8 ii ) = log(|M * A\u00d7L (\u03b8 ii , \u03b8 K (b ij ) \u2212 log(I(B K > 0)) \u2212 S (i,j)\u02dc S (b ij ) , for (i, j) \u2208 E V , where\u02dc A (b ij ) = log(|M * A\u00d7L (b ij , \u03b8",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": ") DAG for the graphical VAR model example of Section 4.1 (d) Moralized G V\u00d7T for the graphical VAR model of Figure (c) Graphical models for autoregressive spatial time-series. Estimates of the marginal parameters \u03c3 ii \u03c6 ii , i \u2208 V, for the 4 simulation settings. The horizontal pink lines in Figures (a) and (b) indicate the true parameter values.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "then for a multivariate Mat\u00e9rn GP the ith individual variable is a univariate",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Properties of any q-dimensional multivariate Mat\u00e9rn GP of",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Different simulation scenarios considered for the comparison between methods.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Once again the updates require inversion or storage of matrices of size atmost nq * \u00d7 nq * .The updates for the other parameters are similar to that in the sampler of Section S2.1 of the Supplement with the cross-covariance M * replacing M . The only exception is \u03c4 2 i , which no longer has conjugate full conditionals and are also now updated using Metropolis random walk steps within the Gibbs sampler akin to the other spatial parameters.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        },
+        {
+            "text": "To conduct estimation and prediction using GGP in a frequentist setting, we outline a coordinate descent algorithm for maximum likelihood estimation. We illustrate the implementation for the case where each of the q variables are measured at L. The case of spatial misalignment can be handled by an EM algorithm to impute the missing responses for each variable. For the frequentist setup, we use the GGP model for the response. From Corollary 3.0.1, the joint likelihood can be factored into sub-likelihoods corresponding to specific cliques and separators. Let \u03b8 (t) denote the values of the spatial parameters \u03b8 at the t-th iteration, and M * L = M * L (\u03b8) denote the GGP covariance matrix of y(V \u00d7 L) from stitching. Let",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S2.3 Co-ordinate descent"
+        }
+    ]
+}

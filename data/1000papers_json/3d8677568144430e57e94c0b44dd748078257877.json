@@ -1,0 +1,2080 @@
+{
+    "paper_id": "3d8677568144430e57e94c0b44dd748078257877",
+    "metadata": {
+        "title": "Covid-19 epidemic under the K-quarantine model: Network approach",
+        "authors": [
+            {
+                "first": "K",
+                "middle": [],
+                "last": "Choi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Seoul National University",
+                    "location": {
+                        "postCode": "08826",
+                        "settlement": "Seoul",
+                        "country": "Korea"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hoyun",
+                "middle": [],
+                "last": "Choi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Seoul National University",
+                    "location": {
+                        "postCode": "08826",
+                        "settlement": "Seoul",
+                        "country": "Korea"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "B",
+                "middle": [],
+                "last": "Kahng",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Seoul National University",
+                    "location": {
+                        "postCode": "08826",
+                        "settlement": "Seoul",
+                        "country": "Korea"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The Covid-19 pandemic is ongoing worldwide, and the damage it has caused is unprecedented. For prevention, South Korea has adopted a local quarantine strategy rather than a global lockdown. This approach not only minimizes economic damage, but it also efficiently prevents the spread of the disease. In this work, the spread of COVID-19 under local quarantine measures is modeled using the Susceptible-Exposed-Infected-Recovered model on complex networks. In this network approach, the links connected to isolated people are disconnected and then reinstated when they are released. This link dynamics leads to time-dependent reproduction number. Numerical simulations are performed on networks with reaction rates estimated from empirical data. The temporal pattern of the cumulative number of confirmed cases is then reproduced. The results show that a large number of asymptomatic infected patients are detected as they are quarantined together with infected patients. Additionally, possible consequences of the breakdowns of local quarantine measures and social distancing are considered. arXiv:2010.07157v1 [physics.soc-ph] ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The COVID-19 pandemic has changed various aspects of our societies, ranging from public health and economic conditions to human rights. Two other recent coronavirus pandemics, Severe Acute Respiratory Syndrome (SARS) in 2002 and Middle East Respiratory Syndrome (MERS) in 2013, have produced 8437 and 2519 cases, respectively [1, 2]. On the other hand, within just eight months (as of September 4th, 2020) there have been about 28 million cases of Covid-19 and 0.9 million resulting deaths [3] . This is due to an abnormally high transmission rate, asymptomatic spreading, and the lack of vaccines or treatments [4, 5] . Under these circumstances, non-pharmaceutical interventions such as social distancing among individuals, masking, and reinforcing personal hygiene are alternative approaches to prevention.",
+            "cite_spans": [
+                {
+                    "start": 490,
+                    "end": 493,
+                    "text": "[3]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 612,
+                    "end": 615,
+                    "text": "[4,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 616,
+                    "end": 618,
+                    "text": "5]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Beginning with Wuhan, China, the majority of countries facing the spread of COVID-19 have used the lockdown policy that restricts travel from other countries and prevents people from participating in non-essential social activities [6] [7] [8] . However, such a lockdown policy is not sustainable, because it drastically reduces economic activities [6] . Indeed, the majority of countries that adopted the lockdown policy have failed to sustain it for more than two to three months; they are gradually returning to their former policies.",
+            "cite_spans": [
+                {
+                    "start": 232,
+                    "end": 235,
+                    "text": "[6]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 236,
+                    "end": 239,
+                    "text": "[7]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 240,
+                    "end": 243,
+                    "text": "[8]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 349,
+                    "end": 352,
+                    "text": "[6]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The Korean Center for Disease Control and Prevention (KCDC) has achieved great success using the socalled K-quarantine model, which enforces local quarantine around confirmed patients rather than implementing a global lockdown. This approach, implemented using the \"3T steps,\" efficiently prevents the spread of disease without critical economic damage.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The first step in this procedure is testing. In South Korea, based on the measures adopted during the 2015 MERS outbreak, diagnostic tool kits have been developed. Thus, the Covid-19 inspection capability and * bkahng@snu.ac.kr speed have improved drastically. Moreover, using the drive-through and walk-through methods, rapid and large-scale testing with safe separation between potential patients and medical staff has become possible. Individuals who enter the country from abroad or have been in close contact with confirmed patients are required undergo diagnostic tests. Those with positive results are required to be placed in quarantine for two weeks, which is the maximum incubation period of the disease. During the quarantine period, they must monitor their health daily and report it on a self-quarantine safety protection mobile application managed by the KCDC. Their locations are also monitored using the application. If they exit officially designated locations, they are immediately apprehended and fined. Thus, a near-ideal quarantine system is achieved.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The second step is tracing. When the diagnostic test confirms that an individual is Covid-19 positive, an epidemiological investigation system is launched for that patient. The KCDC traces every place the patient visited at any time over a recent time window. These places and times are immediately reported to the public (without any personal information of the patient) using the application within the districts of visited sites. Every individual that the patient has been in contact with is identified and requested to take a diagnostic test. Those who were in close contact with the patient are preemptively quarantined, while others are encouraged to selfisolate at home. Among them, if some cases are confirmed, the infection route is identified. Thus, the locations at which the epidemic has originated are found, closed, and disinfected. Those who were in the same place but did not have close contact with the patient are identified or encouraged to voluntarily report to the KCDC, which allows them to take free diagnostic tests. In certain cases, the location identified may involve privacy infringement, such that individuals present at the same time as the patient may hesitate to report themselves having been there. Such individuals are identified using resources such as the mobile phone records in the local station and required to take a diagnostic test. Further, they are requested to self-quarantine. During the quarantine period, individuals are also expected to check their body temperature and report it on the application. After two weeks, they are encouraged to undergo the diagnostic test again. If the test result is negative, they are released and can return to their normal lives.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "The final step is treatment. For efficient usage of medical resources, the severity of patients' prompts are graded. Serious cases are admitted to either the residential treatment center or the hospital. Others are isolated at low-level designated locations or at home. The distribution of medical resources and facilities has contributed significantly to the low death rate in South Korea. In addition, hospitals isolate respiratory patients to protect ordinary patients who require urgent medical care and are availing other medical services.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "These K-quarantine strategies may have some side effects such as invasion of privacy and infringement of human rights. Therefore, the KCDC makes a significant effort to conceal patients' personal information from the public.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Networks. It is worth examining the manner in which the epidemic contagion spreads under the K-quarantine model as compared to its spread under global lockdown without local restrictions. To achieve this, a mathematical model is considered in this work. The conventional epidemiological model is a compartmental model in which each person is considered to be in one of the following possible states: susceptible (S), latent (L), infected (I), or recovered/deceased (R). The proportions of people in each state are regarded as continuous variables, and their rate equations (time derivatives) are set up as a function of these proportions with appropriate rate constants. By solving these differential equations, the fraction of each state as a function of time is obtained. In the past, this approach has successfully predicted the evolution of the fraction of infected populations. However, it may not be useful when considering the local quarantine effect under the K-quarantine measures stated above.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Here, the epidemic reactions are simulated on networks. A network is composed of nodes and links, which represent people and contact between a pair of connected people, respectively. The numbers of nodes and links that are simulated on are taken as N = 2.1 \u00d7 10 4 and L = 5 \u00d7 N , respectively. This implies that a society composed of N people is being considered, and the average number of people in contact with each person (called the 'degree' in graph theory) is given as d = 2L/N = 10. Some of them, such as family members and colleagues in the workplace, are in close contact, whereas others, such as people who met at shopping malls, are in loose contact. However, these two groups were not differentiated in the simulations described herein. This is because distinguishing between these two types of contact is only necessary for lockdown measures [6] , where the loosely connected links are disconnected. In the K-quarantine model, such a lockdown is not applied. The links need not be distinguished into two types. Instead, all links are regarded as close contacts in this small simulation system sizes. The K-quarantine process is realized by locally disconnecting the links to an infected node. As soon as the quarantine is completed and the patient is released, these links are reinstated. In the K-quarantine model, once a person is quarantined, they are required to take a diagnostic test. If the result is positive, then the people in contact with the patient are quarantined. Thus, links connected to the neighbors of the confirmed patient also need to be disconnected.",
+            "cite_spans": [
+                {
+                    "start": 855,
+                    "end": 858,
+                    "text": "[6]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Networks are classified into two types based on their connection configurations: random networks and scale-free networks. For random networks, each link is added between two randomly selected nodes. Thus, the degrees of each node have a Poisson distribution. Because this model was first proposed by Erd\u0151s-R\u00e9nyi, it is often called the ER model [9] . For scale-free networks, following the power law, the degrees of each node are heterogeneous. This implies that a few nodes have large degrees, but the remaining nodes have small ones. The nodes with large numbers of neighbors are called hubs. When a hub is infected, a large number of susceptible neighbors are exposed to the contagion. This may result in a spike in contagion. Scale-free networks were constructed using the models proposed by Goh et al. [10] and Chung and Lu [11] .",
+            "cite_spans": [
+                {
+                    "start": 345,
+                    "end": 348,
+                    "text": "[9]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 807,
+                    "end": 811,
+                    "text": "[10]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 829,
+                    "end": 833,
+                    "text": "[11]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Models. The epidemic reactions proceed as per Markovian dynamics, which are realized by the Gillespie algorithm (GA) [12, 13] . Each node is in one of the following states: susceptible (S), latent (L), asymptomatic infectious (I a ), symptomatic infectious (I s ), asymptomatic in quarantine(I a ), symptomatic in quarantine (I s ), or recovered (R, R , or R * ) [14] [15] [16] [17] . The states of susceptible in quarantine (S ) and latent in quarantine (L ) also exist. The dynamic begins with one infected person, with all the others being in a susceptible state. When nodes in states L, I a , and I s are absent, the dynamic falls into an absorbing state, and the nodes in state S or R remain. The detailed dynamics are as follows:",
+            "cite_spans": [
+                {
+                    "start": 117,
+                    "end": 121,
+                    "text": "[12,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 122,
+                    "end": 125,
+                    "text": "13]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 363,
+                    "end": 367,
+                    "text": "[14]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 368,
+                    "end": 372,
+                    "text": "[15]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[16]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 378,
+                    "end": 382,
+                    "text": "[17]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "A susceptible individual in contact with an infectious individual I a and I s enters the latent state (L) at the rate k 1 . These reactions are expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "When the latency period ends, the individual becomes infectious, that is, they can transmit the infection with or without symptoms. These states are denoted as I a or I s , respectively. These processes occur at rates k 2 p a and k 2 (1 \u2212 p a ), respectively. Here, p a represents the fraction of asymptomatic infectious patients. These reactions are expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "(2) When symptoms develop, the infected individual must go to the hospital and take a diagnostic test. If the result is positive, they are quarantined. This process occurs at the rate k 3 and is expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "where the prime indicates that the individual is quarantined. On the other hand, an asymptomatic individual may recover naturally without any treatment. This process occurs at the rate k 4 and is expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The isolated individual in state I s may be recovered through treatment or succumb to the disease. This recovered individual is counted as a confirmed case of recovery, denoted by R * . This process occurs at the rate k 5 and is expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "In the K-quarantine model, confirmed cases (I s ) and their neighbors are self-quarantined as potential infectious people even if they are asymptomatic. Regardless of their state being S, L, I a , I s , or R, they are quarantined at the rate k 6 . This process is expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "where k 6 is the quarantine rate. Because quarantined individuals must undergo a diagnostic test, isolated asymptomatic carriers I a are identified as confirmed cases. Accordingly, the neighbors of the identified asymptotic carrier are also quarantined at the rate k 6 :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "This trace process is repeated until no further confirmed cases are identified. [17, 18] . During the quarantine period, identified asymptomatic infected individuals recover at the rate k 4 , expressed as",
+            "cite_spans": [
+                {
+                    "start": 80,
+                    "end": 84,
+                    "text": "[17,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 85,
+                    "end": 88,
+                    "text": "18]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Here, it is assumed that asymptomatic patients have the same recovery rate k 4 regardless of isolation. Individuals in the states S , L , or R with negative diagnostic test results are released from quarantine. They then return to their original states.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "where \u03c4 is the quarantine period (not the rate).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The reproduction number (denoted as R 0 ), the number of individuals who are susceptible and become infectious by contacting an infected individual, is calculated as R 0 = k 1 d /k 3 , where d is the mean number of neighbors on a given network. Herd immunity is the level of immunity in a population that prevents the spread of a disease over the entire system. The herd immunity threshold is described as P c = 1 \u2212 (1/R 0 ) [19] .",
+            "cite_spans": [
+                {
+                    "start": 425,
+                    "end": 429,
+                    "text": "[19]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Reaction rates. To explore the effect of the selfquarantine measure on the transmission of Covid-19, the rates k 2 \u2212 k 5 and p a were estimated based on empirical data on Covid-19 provided by the Center for Disease Control (CDC) and KCDC. First, to find the rate k 2 and p a , the time period between exposure and the onset of symptoms is used. This interval was estimated to be 6 (mean) days [7, 16, 23] . The infected individual can transmit the disease 1\u22123 days prior to the onset of symptoms [16, 23] . Thus, the interval between exposure and becoming infectious is estimated to be 4 (mean) days [8, [24] [25] [26] [27] [28] . We take k 2 (1 \u2212 p a ) = 0.25. The resulting data show that the percentage of asymptomatic infections is estimated to be 15%-40% [29] [30] [31] . We take p a = 0.36. Thus, k 2 \u2248 0.39 and k 2 p a \u2248 0.14.",
+            "cite_spans": [
+                {
+                    "start": 393,
+                    "end": 396,
+                    "text": "[7,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 397,
+                    "end": 400,
+                    "text": "16,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 401,
+                    "end": 404,
+                    "text": "23]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 496,
+                    "end": 500,
+                    "text": "[16,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 501,
+                    "end": 504,
+                    "text": "23]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 600,
+                    "end": 603,
+                    "text": "[8,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 604,
+                    "end": 608,
+                    "text": "[24]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 609,
+                    "end": 613,
+                    "text": "[25]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 614,
+                    "end": 618,
+                    "text": "[26]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 619,
+                    "end": 623,
+                    "text": "[27]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 624,
+                    "end": 628,
+                    "text": "[28]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 760,
+                    "end": 764,
+                    "text": "[29]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 765,
+                    "end": 769,
+                    "text": "[30]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 770,
+                    "end": 774,
+                    "text": "[31]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "In South Korea, a potential symptomatic infectious individual develop symptoms and then quarantined approximately in three days [16, 23] . Thus, k 3 \u2248 0.33 was set. Further, it takes approximately nine and 12 days for an asymptotic carrier and a confirmed infected individual, respectively, to recover [32] . Thus, k 4 \u2248 0.11 and k 5 \u2248 0.08 were set. \u03c4 was taken to be 14 days.",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 132,
+                    "text": "[16,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 133,
+                    "end": 136,
+                    "text": "23]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 302,
+                    "end": 306,
+                    "text": "[32]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The infection rate k 1 is estimated using the relation R 0 = k 1 d /k 3 . Using the rate k 3 = 1/3 and the mean , where \u03c1C denotes \u03c1R * + \u03c1 I a + \u03c1 I s as a function of t for the Susceptible-Exposed-Infected-Recovered (SEIR) model. These represent the proportions of susceptible individuals, recovered individuals without noticing, newly confirmed cases, and accumulated confirmed cases, respectively. The rates are taken as k1 = 0.11, k2 = 0.39, pa = 0.36, k3 = 0.33, k4 = 0.11, and k5 = 0.08. a, Simulations are performed on ER random networks without the K-quarantine measures. System size N = 2.1 \u00d7 10 4 , the mean degree d = 10, and k6 = 0 are set. b, Similar plot to a, but under the K-quarantine strategy k6 = 0.09. c, Similar plot to b, but the rate k1 changes suddenly at t = 108 to k1 = 0.41. This change is caused by a new type of coronavirus, GH clade [20, 21] . d, Similar plot to b, but the rate k6 = 0 at t = 108. This change is considered to occur because the quarantine system no longer functions owing to overloading. e, and f, Similar plots to b, but simulations are performed on scale-free networks with degree exponent \u03bb = 2.5 [11] and on an empirical social network [22] , respectively. For f, N = 21403 and d = 7.8. Owing to this smaller mean degree, the contagion rate is lower. degree d = 10, k 1 = 0.11 is obtained when R 0 = 3.3 is taken. Using these parameter values, it is observed that the simulation result fits to the empirical data from an early stage (March 2020) of the Covid-19 outbreak in South Korea. For the same outbreak, the value of R 0 directly measured from the empirical data is R 0 \u2248 3.58 [33] .",
+            "cite_spans": [
+                {
+                    "start": 864,
+                    "end": 868,
+                    "text": "[20,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 869,
+                    "end": 872,
+                    "text": "21]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1148,
+                    "end": 1152,
+                    "text": "[11]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1188,
+                    "end": 1192,
+                    "text": "[22]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1635,
+                    "end": 1639,
+                    "text": "[33]",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Here, the K-quarantine model was simulated with fixed rates (k 1 \u2212 k 5 ) and p a , and a controllable quarantine rate (k 6 ) on several types of networks. These included random networks (Fig. 2a -d scale-free networks (Fig. 2e) , an empirical social network (Fig. 2f) , and random networks with modules ( Fig. 2g-h) . It should be noted that all the rates are fixed throughout the epidemic spreading process unless otherwise specified. The proportions of nodes in each state are measured as a function of time in days.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 186,
+                    "end": 194,
+                    "text": "(Fig. 2a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 218,
+                    "end": 227,
+                    "text": "(Fig. 2e)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 258,
+                    "end": 267,
+                    "text": "(Fig. 2f)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 305,
+                    "end": 315,
+                    "text": "Fig. 2g-h)",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Temporal evolutions of several quantities. In Fig. 2a , the SEIR model [34, 35] is considered without any quarantine on random networks. Thus, k 6 = 0 was set. Initially, one node is assumed to be infected, while the other nodes are susceptible. The fractions \u03c1 S (t), \u03c1 R (t),\u03c1 C , and \u03c1 C , are obtained, where \u03c1 C = \u03c1 R * +\u03c1 I a +\u03c1 I s , and the dot represents the time derivative. \u03c1 C and \u03c1 C represent the proportions of newly confirmed cases and the accumulated confirmed cases, respectively. The three densities are shown in Fig. 2a . The contagion spreads rapidly during the early stage and eventually reaches a steady state. As shown in Fig 2b with k 6 = 0.09, when the quarantine system is functioning, the fraction \u03c1 C initially increases rapidly, then slowly increases with some fluctuations, and finally reaches a steady state. Resurgent behavior is observed in\u03c1 C . Further, it is noted that for the system with no quarantine strategy, the absorbing state of the infectious node completely disappears on reaching the 150th day, whereas for the K-quarantine system, it reaches the 400th day. The proportions of the accumulated confirmed cases for a and b are close; however, the proportion of remaining susceptible people is extremely small for a, but it is more than 20% for b. On the other hand, the fraction of asymptomatic infected patients appears to be about 30% for a, but it is approximately 10% for b. This is because asymptomatic patients can be detected when they are in quarantine owing to the infection of their neighbors. Fig. 2c depicts the case in which the infection rate k 1 suddenly increases to k 1 = 0.41 at t = 108, owing to the change of virus species from S or V to GH clade [20, 21] . There exists another significant peak of\u03c1 C around t = 130, and the infection rate increases dramatically. Following this, the system reaches a steady state. The density of \u03c1 C in the steady state increased by 22.72% compared to that of case b. However, no such dramatic change is observed in the empirical data. Fig. 2d depicts the case in which the quarantine system is overloaded and does not act at a certain time (e.g., t = 108). Then, \u03c1 C instantaneously exhibits resurgent behavior and \u03c1 C rapidly increases and reaches a steady state, as in the SIR model.",
+            "cite_spans": [
+                {
+                    "start": 71,
+                    "end": 75,
+                    "text": "[34,",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 76,
+                    "end": 79,
+                    "text": "35]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1712,
+                    "end": 1716,
+                    "text": "[20,",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1717,
+                    "end": 1720,
+                    "text": "21]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 46,
+                    "end": 53,
+                    "text": "Fig. 2a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 532,
+                    "end": 539,
+                    "text": "Fig. 2a",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1549,
+                    "end": 1556,
+                    "text": "Fig. 2c",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 2036,
+                    "end": 2043,
+                    "text": "Fig. 2d",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Next, the K-quarantine model is simulated on a scalefree network in Fig. 2e and on an empirical social network in Fig. 2f . It is thus concluded that overall, the contagion pattern is insensitive to network structure. However, the peaks of the daily confirmed case f is higher than those in Fig. 2b . For f, the mean degree is smaller than that for Fig. 2a-e . Therefore, the proportion of accumulated confirmed cases in the steady state is considerably smaller than that in Fig. 2b. For g-h, simulations are performed on modular networks [36, 37] . The modular networks are composed of N m modules, each of which contains N n nodes. Thus, the total number of nodes in the system is N m N n . Nodes within each module are connected to each other randomly with mean degree d intra = 10. To make the modules connected, m pairs of modules are selected randomly, each of the pairs are connected by p links by selecting p nodes from each module. Thus, the total number of inter-modular edges is L m = m p . Specific those numbers are listed in the caption of Fig. 2g -h. Fig. 3a and b depict the cases in which the system is lockdown for 60 days. The lockdown can be realized by either social distancing or restriction of transportation [6] [7] [8] . In a, the lockdown is implemented by deleting the fractions of links (indicated in the legend) randomly selected at the 30th day. After 60 days, those links are recovered. When the fractions are below 50%, the lockdown effect is almost negligible. On the other hand, when the fraction is 90%, then the epidemic spread is highly suppressed. In the intermediate range, a resurgent behavior appears. However, such behaviors fluctuate depending on the density of infectious nodes at the 30th day. Thus, in b, we consider the case that the starting day of lockdown measure is determined by the fraction of accumulated confirmed cases, called lockdown threshold. Once the lockdown comes into force, 70% of links are deleted and they are recovered after 60 days. Depending on the threshold value, the time of resurgent peak is determined. In short, while the lockdown measure during the 60 days is effective during some interval, the outbreak eventually occurs.",
+            "cite_spans": [
+                {
+                    "start": 539,
+                    "end": 543,
+                    "text": "[36,",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 544,
+                    "end": 547,
+                    "text": "37]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 1232,
+                    "end": 1235,
+                    "text": "[6]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1236,
+                    "end": 1239,
+                    "text": "[7]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1240,
+                    "end": 1243,
+                    "text": "[8]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 68,
+                    "end": 75,
+                    "text": "Fig. 2e",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 114,
+                    "end": 121,
+                    "text": "Fig. 2f",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 291,
+                    "end": 298,
+                    "text": "Fig. 2b",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 349,
+                    "end": 358,
+                    "text": "Fig. 2a-e",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 475,
+                    "end": 492,
+                    "text": "Fig. 2b. For g-h,",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1054,
+                    "end": 1061,
+                    "text": "Fig. 2g",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1066,
+                    "end": 1073,
+                    "text": "Fig. 3a",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "In Fig. 3c , a small number of the nodes in state S everyday change its state to L. This change is considered to occur when individuals from abroad become new sources of epidemic. Because in this case, no root is found explicitly and implicitly in the trail of disease transmission, the pattern of spread may somewhat differ from the previous patterns. In Fig. 3d , a large fraction of the nodes in state S instantaneously change state to L. This change is considered to occur by the transmission of disease among people participating in a large street demonstration at t = 209 owing to their close contact and shouting.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 10,
+                    "text": "Fig. 3c",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 356,
+                    "end": 363,
+                    "text": "Fig. 3d",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "In Fig. 4 , the simulation results are compared with the empirical data of South Korea (accumulated as of September 9th, 2020). It is observed that the increasing behavior of the number of accumulated confirmed cases from the model during the early stage is well-fitted to the Fig. 2b . a, But, at t = 30, some fraction of links (indicated in legend) are artificially deleted. This change is considered to occur when a global lockdown is functioning. Depending on the fraction, diverse temporal patterns of \u03c1C appear. (See the details in the main text.) b, Similar plot to a but the lockdown is functioning when the fraction of accumulated confirmed cases reaches a threshold value given in legend. Then 70% links are deleted at random. c, Similar plot to Fig. 2b , but a small fraction of the nodes in state S randomly selected everyday are forced to change their state to the latent state from the specified day. This is caused by the transmission of the disease by people from abroad. d, Similar plot to Fig. 2b , but a large fraction of the nodes in state S instantaneously change state to L on a single occasion. This change reflects the transmission of the disease by close contact among people participating in a large street demonstration.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 9,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 277,
+                    "end": 284,
+                    "text": "Fig. 2b",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 756,
+                    "end": 763,
+                    "text": "Fig. 2b",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1007,
+                    "end": 1014,
+                    "text": "Fig. 2b",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "empirical data with the rates assumed herein. However, there is some difference during the intermediate stage, which may be due to the unexpected social event (a festival opening in a club) that was held shortly after reducing the level of social distancing. In the later region, the number of confirmed cases abruptly increases owing to the large demonstration on the main street near the city hall in Seoul. Among over 10,000 people participating in the demonstration, a non-negligible portion of them did not wear masks. Therefore, the disease transmission would be high. The model proposed herein cannot reproduce the output of such a large perturbation. Instead, some portion (80%) of the remaining susceptible nodes were changed to nodes in the latent state, under the assumption that those portions of people are infected in high-risk areas. With the passage of time, the surge decreases owing to the K-quarantine measures.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "In summary, a network model was introduced to illustrate the spread of Covid-19 in South Korea under the K-quarantine model. This model is essentially a SEIR model on networks; however, it also includes the process of disconnecting links around infected nodes. While these disconnections indicate the local isolation of infectious people, they do not necessitate global lockdown over the entire system. It may be noted that social contact is not static but changes temporally. Thus, recognizing all individuals who were in contact with infectious individuals is a challenging task. Further, information on the spatial and temporal trajectories of infectious individuals is collected using diverse methods such as CCTV recordings, mobile phone data from local stations, and sending messages on mobile phones of ordinary people living in the given regions of the trajectories. This type of tracing requires a significant amount of human labor combined with advanced technology.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "Simulation algorithm. The probability that the state X i of a node i changes the state A from B in unit time is called the transition rate r Xi:A\u2192B . For example, in the K-quarantine model, the probability that a node in the susceptible state S moves to the latency state L is as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "where A ij is the adjacency matrix of the network, and \u03b4(X j , L) is the Kronecker delta. When the K-quarantine model is simulated through the discrete-time approach method, the state of each node is changed independently depending on the reactions in Fig. 1 . On the other hand, the time interval \u03c4 is constant [38] . It is possible that node i in state A changes to B 1 , \u00b7 \u00b7 \u00b7 , B Mi , and the transition rate of node i is expressed as",
+            "cite_spans": [
+                {
+                    "start": 312,
+                    "end": 316,
+                    "text": "[38]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 252,
+                    "end": 258,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "r Xi:A\u2192B\u03b1 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Assume that the reactions follow the Poisson process. Then, for a given time interval \u03c4 , the probabilities p i and p Xi:A\u2192B\u03b1 that the state of the node i changes to another state and to a specific state B \u03b1 , respectively, are obtained as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Therefore, a random number u is chosen from the uniform random distribution following (0 : 1]. If u > p i , the state of node i is not changed; else, the state of node i may be changed to B \u03b2 as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "\u03b2\u22121 \u03b1=k r Xi:A\u2192B\u03b1 < u \u2264 \u03b2 \u03b1=1 r Xi:A\u2192B\u03b1 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Following the updation of the states of all nodes in parallel, this increases the time by \u03c4 . The Gillespie algorithm [12] was also employed for the numerical simulation of the K-quarantine model. Because this algorithm adjusts the time interval \u03c4 according to the transition probability, it is widely used to simulate stochastic epidemic models in real time [13, 39] . The cumulative transition rate r is the probability that at least one reaction occurs per unit time,",
+            "cite_spans": [
+                {
+                    "start": 118,
+                    "end": 122,
+                    "text": "[12]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 359,
+                    "end": 363,
+                    "text": "[13,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 364,
+                    "end": 367,
+                    "text": "39]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "It is well known that the time interval \u03c4 in which at least one reaction occurs follows an exponential distribution with a mean of 1/r.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Two random numbers u 1 and u 2 were chosen from the uniform random distribution following (0 : 1], respectively. Then, the time interval \u03c4 = 1 r ln 1 u1 was found, and the node j and state B \u03b2 were obtained as follows: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Following the change of the state of node j to state B \u03b2 , the time increases by \u03c4 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Methods"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Who coronavirus disease (covid-19) dashboard",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "High Contagiousness and Rapid Spread of Severe Acute Respiratory Syndrome Coronavirus 2",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sanche",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerging Infectious Diseases",
+            "volume": "26",
+            "issn": "",
+            "pages": "1470--1477",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The reproductive number of COVID-19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Travel Medicine",
+            "volume": "27",
+            "issn": "",
+            "pages": "1--4",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Network model and analysis of the spread of Covid-19 with social distancing",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Maheshwari",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Albert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The effect of travel restrictions on the spread of the 2019 novel coronavirus (COVID-19) outbreak",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Chinazzi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "368",
+            "issn": "",
+            "pages": "395--400",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The effect of human mobility and control measures on the COVID-19 epidemic in China",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Kraemer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "368",
+            "issn": "",
+            "pages": "493--497",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "The evolution of random graphs",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Erd\u0151s",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "R\u00e9nyi",
+                    "suffix": ""
+                }
+            ],
+            "year": 1960,
+            "venue": "Publ. Math. Inst. Hung. Acad. Sci. Ser. A",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Universal behavior of load distribution in scale-free networks",
+            "authors": [
+                {
+                    "first": "K.-I",
+                    "middle": [],
+                    "last": "Goh",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kahng",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Physical Review Letters",
+            "volume": "87",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Connected Components in Random Graphs with Given Expected Degree Sequences",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Chung",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Annals of Combinatorics",
+            "volume": "6",
+            "issn": "",
+            "pages": "125--145",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Exact stochastic simulation of coupled chemical reactions",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Gillespie",
+                    "suffix": ""
+                }
+            ],
+            "year": 1977,
+            "venue": "Journal of Physical Chemistry",
+            "volume": "81",
+            "issn": "",
+            "pages": "2340--2361",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Temporal gillespie algorithm: Fast simulation of contagion processes on time-varying networks",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Vestergaard",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "G\u00e9nois",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PLoS Computational Biology",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Evidence Supporting Transmission of Severe Acute Respiratory Syndrome Coronavirus 2 while Presymptomatic or Asymptomatic",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Furukawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Furukawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Brooks",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sobel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerging Infectious Diseases",
+            "volume": "26",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Reconstruction of the full transmission dynamics of COVID-19 in Wuhan",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Hao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "584",
+            "issn": "",
+            "pages": "420--424",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Reply to: Is presymptomatic spread a major contributor to COVID-19 transmission?",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Medicine",
+            "volume": "26",
+            "issn": "",
+            "pages": "1534--1536",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Virus spread versus contact tracing: two competing contagion processes 1-11 (2020)",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Reyna-Lara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Effectiveness of isolation, testing, contact tracing, and physical distancing on reducing transmission of SARS-CoV-2 in different settings: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet Infectious Diseases",
+            "volume": "20",
+            "issn": "",
+            "pages": "1151--1160",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Herd Immunity: Understanding COVID-19",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Randolph",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Barreiro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Immunity",
+            "volume": "52",
+            "issn": "",
+            "pages": "737--741",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "KCDC. Updates on covid-19 in republic of korea(as of 6 july",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "2996--2996",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Tracking Changes in SARS-CoV-2 Spike: Evidence that D614G Increases Infectivity of the COVID-19 Virus",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Korber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cell",
+            "volume": "812",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Complete trails of coauthorship network evolution",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-I",
+                    "middle": [],
+                    "last": "Goh",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kahng",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Phys. Rev. E",
+            "volume": "82",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Covid-19 pandemic planning scenarios",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Epidemiological parameters of coronavirus disease 2019: a pooled analysis of publicly reported individual data of 1155 cases from seven countries",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Incubation period and reproduction number for novel coronavirus (covid-19) infections in india",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Patrikar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "medRxiv",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "A COVID-19 epidemic model with latency period",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Magal",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Seydi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Webb",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infectious Disease Modelling",
+            "volume": "5",
+            "issn": "",
+            "pages": "323--337",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Evolving epidemiology and transmission dynamics of coronavirus disease 2019 outside Hubei province, China: a descriptive and modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet Infectious Diseases",
+            "volume": "20",
+            "issn": "",
+            "pages": "793--802",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Changes in contact patterns shape the dynamics of the COVID-19 outbreak in China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "368",
+            "issn": "",
+            "pages": "1481--1486",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Estimation of the asymptomatic ratio of novel coronavirus infections (COVID-19)",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Nishiura",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "94",
+            "issn": "",
+            "pages": "154--155",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Estimating the asymptomatic proportion of coronavirus disease 2019 (COVID-19) cases on board the Diamond Princess cruise ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "",
+            "pages": "1--5",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "The proportion of COVID-19 cases that are asymptomatic in South Korea: Comment on Nishiura et al",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Workman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "96",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Report of the WHO-China Joint Mission on Coronavirus Disease",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Liang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Estimating the reproduction number and the outbreak size of novel coronavirus disease (covid-19) in south korea",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Choi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ki",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Kostat",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Bifurcation analysis of periodic SEIR and SIR epidemic models",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kuznetsov",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Piccardi",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Journal of Mathematical Biology",
+            "volume": "32",
+            "issn": "",
+            "pages": "109--121",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Global dynamics of a SEIR model with varying total population size",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Graef",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Karsai",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Mathematical Biosciences",
+            "volume": "160",
+            "issn": "",
+            "pages": "191--213",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "resurgent epidemics in a hierarchical metapopulation model",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Watts",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Muhamad",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Medina",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Dodds",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Multiscale",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Proceedings of the National Academy of Sciences of the United States of America",
+            "volume": "102",
+            "issn": "",
+            "pages": "11157--11162",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Risk for transportation of coronavirus disease from Wuhan to other cities in China",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerging Infectious Diseases",
+            "volume": "26",
+            "issn": "",
+            "pages": "1049--1052",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Limitations of discrete-time approaches to continuous-time contagion dynamics",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Fennell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Melnik",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Gleeson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Physical Review E",
+            "volume": "94",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Epidemic thresholds of the susceptible-infected-susceptible model on networks: A comparison of numerical and theoretical results",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ferreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Castellano",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Pastor-Satorras",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Nonlinear, and Soft Matter Physics",
+            "volume": "86",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "resurgent epidemics in a hierarchical metapopulation model",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Watts",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Muhamad",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Medina",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Dodds",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Multiscale",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "102",
+            "issn": "",
+            "pages": "11157--11162",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Influence of nonlinear incidence rates upon the behavior of SIRS epidemiological models",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Min Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Levin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Iwasa",
+                    "suffix": ""
+                }
+            ],
+            "year": 1986,
+            "venue": "Journal of Mathematical Biology",
+            "volume": "23",
+            "issn": "",
+            "pages": "187--204",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Nowcasting and forecasting the potential domestic and international spread of the 2019-nCoV outbreak originating in Wuhan, China: a modelling study",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "689--697",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Estimating clinical severity of COVID-19 from the transmission dynamics in Wuhan, China",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Wu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Medicine",
+            "volume": "26",
+            "issn": "",
+            "pages": "506--510",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "A mathematical model for simulating the phase-based transmissibility of a novel coronavirus",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Infectious Diseases of Poverty",
+            "volume": "9",
+            "issn": "",
+            "pages": "1--8",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Phase-adjusted estimation of the number of Coronavirus Disease 2019 cases in Wuhan",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China. Cell Discovery",
+            "volume": "6",
+            "issn": "",
+            "pages": "4--11",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Epidemiological and clinical characteristics of the COVID-19 epidemic in Brazil",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "De Souza",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "William",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Human Behaviour",
+            "volume": "4",
+            "issn": "",
+            "pages": "856--865",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Estimated effectiveness of symptom and risk screening to prevent the spread of COVID-19",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Gostic",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Gomez",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Mummah",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Lloyd-Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "9",
+            "issn": "",
+            "pages": "1--18",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "A systematic review of covid-19 epidemiology based on current evidence",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cook",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Dickens",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Clinical Medicine",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "Modelling the impact of testing, contact tracing and household quarantine on second waves of COVID-19",
+            "authors": [
+                {
+                    "first": "Aleta",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature Human Behaviour",
+            "volume": "4",
+            "issn": "",
+            "pages": "964--971",
+            "other_ids": {}
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "Early insights from statistical and mathematical modeling of key epdemiologic parameters of covid-19",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Matthew",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Flowchart for the K-quarantine model. The states under quarantine are represented by squares, while others are represented by stadiums.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Plot of the densities \u03c1S(t), \u03c1R(t),\u03c1C (t), and \u03c1C (t)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "g and h, Similar plots to b, but on modular networks. The network is composed of Nm modules and each module contains Nn nodes and has the mean degree of intra-module edge dintra = 10. Those modules are connected through Lm inter-modular links. For g, Nm = 10, Nn = 10 4 , and Lm = 200 are set. For h, Nm = 10 3 , Nn = 10 2 , and Lm = 10 4 are set.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Similar plots to",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "(Red solid curve) Plot of the number of accumulated confirmed cases that occur in South Korea versus time in days. (Black dashed curve) Plot of the same quantity obtained from the K-quarantine model on an ER random network. The arrows indicate the dates of the three surges. With the choice of reaction rates k1 \u2212 k6, the increasing behavior of the accumulated confirmed cases from the model is well-fitted to the empirical data up to t = 209. Beyond this point, owing to an explosive epidemic contagion by a large number of street demonstrations, the theoretical curve no longer matches the empirical curve.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors declare no competing interests in this work.[1] WHO. Cumulative number of reported probable cases of sars. https://www.who.int/csr/sars/country/2003_ 07_11/en/ (2003).[2] WHO. Mers situation update, january 2020. http://www.emro.who.int/health-topics/mers-cov/ mers-outbreaks.html (2020).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Competing interests"
+        }
+    ]
+}

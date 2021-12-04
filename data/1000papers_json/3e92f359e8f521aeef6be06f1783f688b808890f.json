@@ -1,0 +1,1820 @@
+{
+    "paper_id": "3e92f359e8f521aeef6be06f1783f688b808890f",
+    "metadata": {
+        "title": "Whom Should Be Saved? A Proposed Ethical Framework for Allocating Scarce Medical Resources to COVID-19 Patients Using Fuzzy Logic Fuzzy-Ethical Framework for Resource Allocation",
+        "authors": [
+            {
+                "first": "Maysa",
+                "middle": [],
+                "last": "Al-Hussaini",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Rolf",
+                "middle": [],
+                "last": "Bass",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Domenico",
+                "middle": [],
+                "last": "Criscuolo",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Heba",
+                "middle": [],
+                "last": "Saadeh",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "The University of Jordan",
+                    "location": {
+                        "settlement": "Amman",
+                        "country": "Jordan"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Maha",
+                "middle": [],
+                "last": "Saadeh",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Middlesex University",
+                    "location": {}
+                },
+                "email": ""
+            },
+            {
+                "first": "\u2020",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Wesam",
+                "middle": [],
+                "last": "Almobaideen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "The University of Jordan",
+                    "location": {
+                        "settlement": "Amman",
+                        "country": "Jordan"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "COVID-19 is a global pandemic that affected the everyday life activities of billions around the world. It is an unprecedented crisis that the modern world had never experienced before. It mainly affected the economic state and the health care system. The rapid and increasing number of infected patients overwhelmed the healthcare infrastructure, which causes high demand and, thus, shortage in the required staff members and medical resources. This shortage necessitates practical and ethical suggestions to guide clinicians and medical centers when allocating and reallocating scarce resources for and between COVID-19 patients. Many studies proposed a set of ethical principles that should be applied and implemented to address this problem. In this study, five different ethical principles based on the most commonly recommended principles and aligned with WHO guidelines and state-of-the-art practices proposed in the literature were identified, and recommendations for their applications were discussed. Furthermore, a recent study highlighted physicians' propensity to apply a combination of more than one ethical principle while prioritizing the medical resource allocation. Based on that, an ethical framework that is based on Fuzzy inference systems was proposed. The proposed framework's input is the identified ethical principles, and the output is a weighted value (per patient). This value can be used as a rank or a priority factor given to the patients based on their condition and other relevant information, like the severity of their disease status. The main idea of implementing fuzzy logic in the framework is to combine more than one principle when calculating the weighted value, hence mimicking what some physicians apply in practice. Moreover, the framework's rules are aligned with the identified ethical principles. This framework can help clinicians and guide them while making critical decisions to allocate/reallocate the limited medical resources during the current COVID-19 crisis and future similar pandemics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The novel coronavirus 2019 (COVID-19) is a global respiratory pandemic that is highly contagious emerged in Wuhan city of China (1) . It had negatively affected all the countries worldwide and disturbed the everyday lives of billions of citizens worldwide. It changed the way people used to work, learn, interact, communicate, and travel (2, 3) . The social, economic, and psychological impacts of COVID-19 are essential; however, the physiological impact on the health of the infected individuals and the patients of chronic diseases and/or patients who need emergent care is crucial since it has a direct, apparent, and immediate effect on the health care system of the country (4) (5) (6) (7) (8) . The COVID-19 fatality rate is alarming (around 107 million causalities and more than two millions death cases, as of 7th of February, 2021), and the death cases had been recorded for all ages and various health conditions (9, 10) , especially with the emerging of new strains of COVID-19 (11) .",
+            "cite_spans": [
+                {
+                    "start": 128,
+                    "end": 131,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 338,
+                    "end": 341,
+                    "text": "(2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 342,
+                    "end": 344,
+                    "text": "3)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 680,
+                    "end": 683,
+                    "text": "(4)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 684,
+                    "end": 687,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 688,
+                    "end": 691,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 692,
+                    "end": 695,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 696,
+                    "end": 699,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 924,
+                    "end": 927,
+                    "text": "(9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 928,
+                    "end": 931,
+                    "text": "10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 990,
+                    "end": 994,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Italy has been one of the first countries severely affected by the spread of COVID-19 outside China. Ten percent of positively tested patients in Italy needed intensive care to overcome the acute respiratory distress syndrome. Moreover, due to the exponential rise of the number of COVID-19 patients, there was an actual risk of running out of Intensive Care Unit (ICU) beds, ventilators, and other medical resources, including face masks and shields (12, 13) . Many medical centers in Italy respond to the largest outbreak of COVID-19 outside Asia by developing and applying their response plans (14) . As the number of COVID-19 cases is still increasing worldwide, mainly due to the second wave and virus mutations, in addition to the limitation of medical resources, doctors and medical professionals are left with the hardest decision to make: whom should be saved first? The decision to select one patient over the others is affected by principles, which may vary based on cultural, religious, and humanity-related reasons (15) (16) (17) .",
+            "cite_spans": [
+                {
+                    "start": 451,
+                    "end": 455,
+                    "text": "(12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 456,
+                    "end": 459,
+                    "text": "13)",
+                    "ref_id": null
+                },
+                {
+                    "start": 597,
+                    "end": 601,
+                    "text": "(14)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1028,
+                    "end": 1032,
+                    "text": "(15)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1033,
+                    "end": 1037,
+                    "text": "(16)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1038,
+                    "end": 1042,
+                    "text": "(17)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "It is vital to have a comprehensive, ethical, and applicable framework/plan to be used when needed for a sudden and massive crisis. Previous pandemics such as influenza also required high demand from the health systems, and protocols to prevent, control, and mitigate the effects of influenza had been provided (18). Similarly, medical centers and hospitals provided recommendations for containing and managing COVID-19, with a particular interest in the best practice of scarce medical resource allocation. The guiding principles discussed by Emanuel et al. (19) to allocate resources during COVID-19 recommended that the ICU workers act in a way that strives to save the most number of lives and/or maximize the life-years saved. This means \"allocating scarce resources to patients who are sick enough to benefit but also have the best chance of survival\" (20) . Although this guidance is essential, it might cause a bias since this principle does not uphold all persons' protected rights (21) . According to the World Health Organization (WHO), excluding population groups from being allocated medical resources would be inappropriate (22) . Moreover, resource allocation should be guided by well-established and broadlyapplicable ethical principles when there is insufficient supply to meet everyone's needs.",
+            "cite_spans": [
+                {
+                    "start": 559,
+                    "end": 563,
+                    "text": "(19)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 858,
+                    "end": 862,
+                    "text": "(20)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 991,
+                    "end": 995,
+                    "text": "(21)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1138,
+                    "end": 1142,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "DeJong et al. (23) provide practical ethical suggestions to guide clinicians and medical centers while allocating limited medications for COVID-19 inpatients in the US. They suggested four ethical principles: firstly, the benefit from reducing mortality should be assessed using the best available evidence. Allowing policies should be revised as evidence develops, and medications should be prioritized during the shortage. Secondly, the choices of each patient should be respected. However, when there is an insufficient supply of medications, it may not be possible to follow individual patients and their physicians' preferences. Thirdly, in order to avoid discrimination and mitigate health disparities, scarce medications should be allocated fairly. Lastly, allocation policies should be made accountable, responsive to the concerns of those affected, transparent, and comparable to the situation, including the progression of the epidemic and the proportion of the supply and demand of medications. Moreover, Brown and Goodwin (24) pointed out that resource allocation guidance should be in alliance with anti-discriminatory criteria such as disability, socioeconomic status, race, and insurance status.",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 18,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1016,
+                    "end": 1038,
+                    "text": "Brown and Goodwin (24)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Favoring young patients (youngest first) was the outcome of an online survey completed by 586 US participants. The aim was to elicit the general public preferences to allocate ventilators for COVID-19 patients (25) . This result is consistent with the proposed guiding ethical principles by Emanuel et al. (19) , summarized in treating patients equally, prioritizing the worst-off, and maximizing social and individual benefits. This is also aligned with the Italian physicians' guidelines; give higher priority to the young patients when assigning intensive care supplies (16, 17) . Another recent study, conducted in Jordan, collected a total of 754 responses from five different public groups: religion scholars (3.9%), physicians (22.0%), medical students (21.5%), allied health practitioners (16.2%), and lay people (36.3%). The survey was based on nine ethical principles for allocating medical resources: sickest-first, waiting list (order), youngest first, service, random, monetary contribution, survival, instrumental value, and individual behavior (26) . Four groups (excluding physicians) favor sickest-first despite the age, while the physicians tend to choose combined criteria when allocating the scarce medical resources (26) .",
+            "cite_spans": [
+                {
+                    "start": 210,
+                    "end": 214,
+                    "text": "(25)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 306,
+                    "end": 310,
+                    "text": "(19)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 573,
+                    "end": 577,
+                    "text": "(16,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 578,
+                    "end": 581,
+                    "text": "17)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1059,
+                    "end": 1063,
+                    "text": "(26)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1237,
+                    "end": 1241,
+                    "text": "(26)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Usually, allocating medical resources is carefully assessed percase in order to ensure the maximum benefits. However, at the time of crises, health care systems experienced extensive pressure and shortened in medical resources, despite the country's wealth. This is what most of the countries faced during the current pandemic, COVID-19, and hence allocating scarce medical resources was not a straight forward process. Combining more than one ethical principle to determine who should be given medical attention might be a good process to follow. This paper aims to identify the most commonly recommended ethical principles and provide recommendations for their applications. Furthermore, propose an ethical framework using fuzzy logic that guides clinicians' decisions in allocating medical resources to COVID-19 patients. This framework gives weight to patients based on five ethical principles identified according to WHO guidelines and state-of-the-art practices proposed in the literature. However, the proposed framework is solely based on the ethical principles applied when allocating the currently available scarce medical resources to the current patients arriving at a hospital. The differences between rich and developing countries and considering per-hospital resources in addition to the availability of resources at different times in the same hospital were not within the scope of the proposed ethical framework.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Based on current state-of-the-art practices proposed in the literature during the COVID-19 pandemic, five ethical principles that were commonly suggested and recommended are identified. The five principles are: anti-discrimination, prioritize the worst off, social effects, patient's history, and clinical evidence.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IDENTIFIED ETHICAL PRINCIPLES"
+        },
+        {
+            "text": "Allocate medical resources randomly among eligible patients. Resource allocation should not exclude patients based on race, age, religion, disability, origin, sexual orientation, gender, perceived quality of life, or any other type of discrimination. According to WHO, this principle must promote specific ethical values such as transparency, inclusiveness, consistency, and accountability (22) . Transparency means that the decisions and justifications should be made public. Inclusiveness is relayed to allow decisions affected entities to influence the decisionmaking process and the decision itself. Consistency is to treat all persons in the same categories in the same way. Finally, accountability means that decision-makers should justify their allocation decisions and be held responsible (22) .",
+            "cite_spans": [
+                {
+                    "start": 390,
+                    "end": 394,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 797,
+                    "end": 801,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fairness/Equality/Anti-discrimination"
+        },
+        {
+            "text": "To allocate medical resources to those most at risk or those in greatest medical need. This principle can be applied when it maximizes the expected post-treatment life-years. Thus, favoring younger patients or even sickest patients if it maximizes survival years (19) .",
+            "cite_spans": [
+                {
+                    "start": 263,
+                    "end": 267,
+                    "text": "(19)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Prioritize the Worst Off"
+        },
+        {
+            "text": "To consider family responsibilities, such as children or elderly caretakers, and people who contributed or will have a potential contribution to the community, such as physicians, clinicians, and healthcare providers. This principle is being referred to as maximizing social benefits.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Relational/Social Effects"
+        },
+        {
+            "text": "Patients already receiving a medical resource and/or drugs for other severe conditions should continue to receive it.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Patient's History"
+        },
+        {
+            "text": "Medical resource allocation should be evidence-based. This means allocating the resources to patient groups who have been shown by rigorous randomized clinical trials (RCTs) to benefit the most from the treatment provided.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Clinical Evidence"
+        },
+        {
+            "text": "According to the WHO guidelines and the literature's best practices, the main recommendations on how to implement and apply the identified ethical principle are summarized below.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "RECOMMENDATIONS FOR THE APPLICATIONS OF THE IDENTIFIED ETHICAL PRINCIPLES"
+        },
+        {
+            "text": "Fairness/Equality/Anti-discrimination World Health Organization recommends that \"each person's interest should count equally unless there are good reasons that justify the differential prioritization of resources\" (22) . WHO also advises that fairness must promote specific ethical values such as transparency, inclusiveness, consistency, and accountability (22) . The equality principle justifies the allocation of resources by a lottery (22) . According to DeJong et al. (23) , a \"first-come, firstserved\" approach should be avoided because it disadvantages those who experience barriers to seeking health care. Instead, a random allocation, such as a lottery, is the fairest way for drug allocation among eligible patients.",
+            "cite_spans": [
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 358,
+                    "end": 362,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 439,
+                    "end": 443,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 473,
+                    "end": 477,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RECOMMENDATIONS FOR THE APPLICATIONS OF THE IDENTIFIED ETHICAL PRINCIPLES"
+        },
+        {
+            "text": "Moreover, they recommended that scarce medications be allocated fairly and be made accountable, transparent, proportionate to the situation, and responsive to those affected (23) . However, from George Washington University Milken Institute, Adnan Hyder has pointed out that random allocation is challenging for patients with a similar prognosis since it assumes agreement among clinicians of prognostic indicators (27) . Brown and Goodwin advised that ethical recommendations must be supplemented with explicit guidance against discrimination or an attempt to balance the concern for maximizing prognosis with concerns about social justice (24) . Similarly, according to Liddell et al. (21) , \"principles must uphold the protected rights of all persons.\" Unless the patient/legal representative consents or unless ventilation is not clinically indicated, it is considered a criminal offense and a civil wrong to physically remove intubation.",
+            "cite_spans": [
+                {
+                    "start": 174,
+                    "end": 178,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 415,
+                    "end": 419,
+                    "text": "(27)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 641,
+                    "end": 645,
+                    "text": "(24)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 687,
+                    "end": 691,
+                    "text": "(21)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RECOMMENDATIONS FOR THE APPLICATIONS OF THE IDENTIFIED ETHICAL PRINCIPLES"
+        },
+        {
+            "text": "Moreover, this could be a breach of Article 3 of the European Convention on Human Rights, which protects patients from inhuman and degrading treatment (21) . DeJong et al. (23) recommended that \"prioritization should not exclude patients based on age, disability, religion, race, or ethnicity, national origin, gender, sexual orientation, or perceived quality of life\". However, Scheidegger et al. had recommended that age is a risk factor for mortality and must be taken into account (28) . Kirkpatrick et al. (20) had also recommended that it is necessary to have special consideration to ensure fair distributions of medical resources, especially to patients with disabilities. The \"first-come, first-served\" approach is not the right approach for resource allocation. As stated by Berlinger et al. (29) , \"a critically ill patient waiting for an ICU bed might be better able to benefit from this resource than a patient already in the ICU whose condition is not improving.\" The random ethical principle (26) is highly recommended to ensure fairness. However, the order of registration (first-come, first-serve), monetary (contribution to the costs of the treatment), and youngest first ethical principles should be avoided since these contradict the fairness principle.",
+            "cite_spans": [
+                {
+                    "start": 151,
+                    "end": 155,
+                    "text": "(21)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 172,
+                    "end": 176,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 485,
+                    "end": 489,
+                    "text": "(28)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 492,
+                    "end": 515,
+                    "text": "Kirkpatrick et al. (20)",
+                    "ref_id": null
+                },
+                {
+                    "start": 802,
+                    "end": 806,
+                    "text": "(29)",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1007,
+                    "end": 1011,
+                    "text": "(26)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RECOMMENDATIONS FOR THE APPLICATIONS OF THE IDENTIFIED ETHICAL PRINCIPLES"
+        },
+        {
+            "text": "According to the World Health Organization, this principle is appropriate to guide the allocation of resources for people at risk, such as providing vaccines for healthcare providers (22) . Emanuel et al. (19) recommended that medical resources \"should go first to front-line healthcare workers and those who care for ill patients and those who keep critical infrastructure operating.\" Likewise, Scheidegger et al. (28) had recommended that \"professionals whose health is at greater risk in the event of infection with the coronavirus are to be especially protected.\" Based on their survey, Yousef et al. (26) have highlighted that the sickest patients are recommended to be considered first for scarce medical resources allocation. Moreover, the likelihood to survive the longest is also considered a priority for scarce medical resource allocation.",
+            "cite_spans": [
+                {
+                    "start": 183,
+                    "end": 187,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 205,
+                    "end": 209,
+                    "text": "(19)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 415,
+                    "end": 419,
+                    "text": "(28)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 605,
+                    "end": 609,
+                    "text": "(26)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Prioritize the Worst Off"
+        },
+        {
+            "text": "World Health Organization recommends giving priority to those who contributed or will have a potential contribution to the community, such as clinicians, healthcare providers, and first responders (22) . Ethical analysis needs to account for relational effects representing a different value for decisions (27) . However, a person's relationship with dependents is hard to assess in a crisis, and the assessment risks becoming a judgment of social worth (30) . Emmanuel et al. (19) recommend that medical resources \"should go first to front-line healthcare workers and others who care for ill patients and who keep critical infrastructure operating.\" Similarly, Yousef et al. (26) had considered giving priority to those who have essential roles for keeping society operational or have contributed in the past to the common good.",
+            "cite_spans": [
+                {
+                    "start": 197,
+                    "end": 201,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 306,
+                    "end": 310,
+                    "text": "(27)",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 454,
+                    "end": 458,
+                    "text": "(30)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 477,
+                    "end": 481,
+                    "text": "(19)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 676,
+                    "end": 680,
+                    "text": "(26)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Relational/Social Effects"
+        },
+        {
+            "text": "For existing FDA-approved medications, DeJong et al. (23) recommended that, with good evidence, patients already receiving the drug for other severe conditions or severe chronic diseases should continue to receive it.",
+            "cite_spans": [
+                {
+                    "start": 53,
+                    "end": 57,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Patient's History"
+        },
+        {
+            "text": "DeJong et al. (23) recommended that if there is no evidence that patients who suffer from special health conditions such as coronary artery disease, diabetes, and hypertension show a lower level of therapy response compared to other patients, then the former type of patients should be provided with new therapies. Moreover, they suggested that patient groups receive priority if sound evidence emerged that they have more considerable clinical benefits than others (23) . This principle can guide the allocation of scarce resources that confer substantially different benefits to different individuals (22) . Kirkpatrick et al. (20) had stated that reallocation of medical resources might occur after time-limited trials to see the evidence of recovery or improvement; otherwise, these resources may be reallocated to other patients. Scheidegger et al. (28) had recommended that the highest priority and intensive care should be given to patients whose condition will be improved with it but will suffer without it.",
+            "cite_spans": [
+                {
+                    "start": 14,
+                    "end": 18,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 466,
+                    "end": 470,
+                    "text": "(23)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 603,
+                    "end": 607,
+                    "text": "(22)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 610,
+                    "end": 633,
+                    "text": "Kirkpatrick et al. (20)",
+                    "ref_id": null
+                },
+                {
+                    "start": 854,
+                    "end": 858,
+                    "text": "(28)",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Clinical Evidence"
+        },
+        {
+            "text": "Allocating scarce medical resources at the time of crises, like COVID-19, is not a straight forward process and holds a bit of uncertainty. It is sometimes hard to apply only one principle, like youngest first, since physicians tend to assess the need by applying more than one principle at once to maximize the benefits. Therefore, a combined criterion (based on more than one principle) is often more preferred. This is highlighted in a recent comprehensive study conducted in Jordan to assess general public opinions regarding allocating scarce medical resources, and physicians tend to choose combined criteria while deciding who should be given medical attention first (26) . Based on that, an ethical framework that combined multiple ethical principles to prioritize medical resource allocation decisions is proposed. Fuzzy Logic (31) was used to model this framework to handle the companion uncertainty.",
+            "cite_spans": [
+                {
+                    "start": 674,
+                    "end": 678,
+                    "text": "(26)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "PROPOSED FUZZY ETHICAL FRAMEWORK"
+        },
+        {
+            "text": "The proposed fuzzy framework (Figure 1) is centered on the five identified ethical principles (previous section). The idea is to give the patient a weight that can serve as a decision-making factor when scarce medical resources are allocated. This weight is calculated based on the combination of these five ethical principles. For example, if a patient satisfies multiple principles, he/she will get a higher weight than others and hence more likely to get medical resources than others. The fuzzy framework can prioritize the different ethical principles in different settings, and this can vary based on different cultural, religious, and humanity-related factors.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 29,
+                    "end": 39,
+                    "text": "(Figure 1)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "PROPOSED FUZZY ETHICAL FRAMEWORK"
+        },
+        {
+            "text": "The fuzzy logic, first proposed by Zadeh in 1965, is defined as a set of elements with a degree of membership. Thus, instead of having a step value such as 0 or 1, a value can be between 0 and 1, like 0.4. The advantage of fuzzy logic is that it describes the problem in terms of linguistic variables, like age: old or young, making it a powerful tool for managing the vagueness and uncertainty efficiently (31). A Fuzzy inference system is an inference system based on fuzzy logic to infer values using a predefined set of rules. The inference system consists of three main steps: fuzzification, rules evaluation, and defuzzification (32) . The inputs and outputs are variables that can have real numbers values. In the fuzzification step, real number inputs are mapped to the fuzzy domain by converting each value into a fuzzy value (linguistic term). For example, if the variable can have any value in the range [0, 1], say 0.3, then the fuzzy value that corresponds to this value is Low. On the other hand, if the input is 0.8, then the fuzzy value is High. Any value in between can be Moderate. In the second step, a set of predefined rules are evaluated. The rule has the following format assuming n fuzzy values for the input variable and m fuzzy values for the ",
+            "cite_spans": [
+                {
+                    "start": 635,
+                    "end": 639,
+                    "text": "(32)",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fuzzy Logic Overview"
+        },
+        {
+            "text": "The proposed ethical framework that is based on the fuzzy logic (Figure 2 ) takes the following inputs:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 64,
+                    "end": 73,
+                    "text": "(Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Details of the Proposed Fuzzy Framework"
+        },
+        {
+            "text": "1. Condition Severeness (CS): this input is related to the \"prioritize the worst off \" ethical principle. This input's value is determined by the physicians/clinicians based on the patient's disease condition. The value is between 0 and 1. For example, values 0.3 or less indicate a non-severe condition, while 0.8 or more indicate a severe condition and any values in between indicate moderate condition. 2. Social Value (SV): this input is related to the \"relational/social effects\" ethical principle. This input's value is determined by the physicians/clinicians based on the patient's social impact. The value is between 0 and 1. For example, a nurse who is the only breadwinner for his/her family can be assigned a social value of 0.8, which indicates a high social impact, i.e., healthcare provider and family support, on the other hand, the social value for a single nurse can be 0.5 indicates a lower social impact, i.e., healthcare provider only. 3. Resource Usage History (RUH): this input is related to the \"patient's history\" ethical principle. This input's value is determined by the physicians/clinicians based on the patient's record on receiving a particular medical resource. The value is between 0 and 1. For example, a patient who is already receiving a medical resource can be assigned a RUH value of 0.8, which indicates a high priority to continue receiving the medical resource. On the other hand, a value of 0.3 indicates that the patient received medical resources in the past. A value of 0 indicates no previous record of receiving a particular medical resource. 4. Clinical Evidence (CE): this input is related to the \"clinical evidence\" ethical principle. The value of this input is determined by the physicians/clinicians based on any evidence of the benefit of receiving a particular medical resource. The value is between 0 and 1. For example, a patient who showed recovery or improvement evidence can be assigned a value of 0.8, which indicates a high priority to receive the medical resource. On the other hand, a value of 0.3 indicates that the patient's condition is improving slowly, thus, a lower priority to receive it. A value of 0 indicates no improvement of patient condition is noticed after receiving the medical resource.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Details of the Proposed Fuzzy Framework"
+        },
+        {
+            "text": "The inference system's output is a weighted value (W), which indicates the level of the combined interaction between the four different ethical principles that were met. This output is calculated as a result of predefined rules (shown below). This weighted value can take five fuzzy values: VeryLow (VL), Low (L), Moderate (M), High (H), and VeryHigh (VH). These fuzzy values are then mapped to a value between 0 and 1. Below is an example of some fuzzy rules proposed for the ethical framework. Fuzzy Inference Rules ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Details of the Proposed Fuzzy Framework"
+        },
+        {
+            "text": "\u2022 According to the first rule, if all the four ethical principles were favorably satisfied, then the weight is VeryHigh. \u2022 According to the second rule, if three ethical principles were favorably satisfied, then the weight is High \u2022 According to the third rule, if two ethical principles were favorably satisfied, then the weight is Moderate \u2022 According to the fourth rule, if only one ethical principle was favorably satisfied, then the weight is Low \u2022 And according to the last rule, if all the four ethical principles were not satisfied, then the weight is VeryLow",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Details of the Proposed Fuzzy Framework"
+        },
+        {
+            "text": "Note that the \"Fairness/Equality/Anti-discrimination\" ethical principle is implicitly satisfied by not considering the patient's age and gender in the framework. Moreover, this ethical principle is also satisfied when two or more patients have equal weights; accordingly, a random selection can be applied.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Details of the Proposed Fuzzy Framework"
+        },
+        {
+            "text": "The massive disruption caused by the COVID-19 pandemic had uncovered the lack of readiness in the health systems regarding staff members and medical resources. The rapid and increasing number of infected patients in a short time and the severe medical complications accompanying the disease overwhelmed the health care infrastructure of many counties. Thus, clinicians had been in desperate need of practical and ethical recommendations to guide them while allocating and reallocating scarce resources for and between COVID-19 patients. This research identified the most commonly recommended ethical principles in accordance with WHO guidelines and literature's best practices and provide recommendations for their applications. Furthermore, it proposed an ethical framework based on fuzzy logic that can help clinicians and guide them in their decisions while allocating limited medical resources, like ICU beds and ventilators, to COVID-19 patients. This framework is aligned with the identified ethical principles and can also be applied in a similar future pandemic. Finally, expanding the current proposed fuzzy framework to consider not only ethical principles but also other per-hospital resource availability and other different restrictions globally worth investigating.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION"
+        },
+        {
+            "text": "The original contributions presented in the study are included in the article/Supplementary Material, further inquiries can be directed to the corresponding author/s.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DATA AVAILABILITY STATEMENT"
+        },
+        {
+            "text": "All authors listed have made a substantial, direct and intellectual contribution to the work, and approved it for publication.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "AUTHOR CONTRIBUTIONS"
+        },
+        {
+            "text": "The ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SUPPLEMENTARY MATERIAL"
+        },
+        {
+            "text": "This appendix discusses the implementation of the proposed ethical framework using the Matlab Fuzzy Logic Toolkit. Firstly, we need to implement the structure of the fuzzy inference system. The proposed ethical framework consists of four input variables that correspond to the identified ethical principles, which are Condition Severeness (CS), Social Value (SV), Resource Usage History (RUH), and Clinical Evidence (CE) and one output variable, which is the Weight (W). Supplementary Figure 1 shows the proposed framework as implemented by Matlab using Mamdani fuzzy inference. Each input variable is mapped to the following fuzzy values:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 485,
+                    "end": 493,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "APPENDIX"
+        },
+        {
+            "text": "\u2022 Low is represented by a trapezoidal membership function, which takes four values to specify the range (0, 0, 0.1, 0.4). This means that any input value in this range will be considered as Low. \u2022 Moderate is represented by a triangular membership function, which takes three values to specify the range (0.25, 0.5, 0.75). This means that any input value in this range will be considered as Moderate. \u2022 High is represented by a trapezoidal membership function, which takes four values to specify the range (0.6, 0.9, 1, 1). This means that any input value in this range will be considered as High.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX"
+        },
+        {
+            "text": "As illustrated in Supplementary Figure 2 , the membership functions are overlapped to allow inputs to take two values in different membership functions. For example, an input value of 0.3 is considered both Low and Moderate since it intersects with both functions. The output variable W is represented in five fuzzy values (Supplementary Figure 3) as the following:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 18,
+                    "end": 40,
+                    "text": "Supplementary Figure 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 323,
+                    "end": 347,
+                    "text": "(Supplementary Figure 3)",
+                    "ref_id": null
+                }
+            ],
+            "section": "APPENDIX"
+        },
+        {
+            "text": "\u2022 VeryLow is represented by a trapezoidal membership function, which takes four values to specify the range (0, 0, 0.15, 0.3). This means that any output value in this range will be considered as VeryLow. \u2022 Low is represented by a triangular membership function, which takes three values to specify the range (0.15, 0.3, 0.45). This means that any output value in this range will be considered as Low. \u2022 Moderate is represented by a triangular membership function, which takes three values to specify the range (0.35, 0.5, 0.65). This means that any output value in this range will be considered as Moderate. \u2022 High is represented by a triangular membership function, which takes three values to specify the range (0.55, 0.7, 0.85). This means that any output value in this range will be considered as High. \u2022 VeryHigh is represented by a trapezoidal membership function, which takes four values to specify the range (0.7, 0.85, 1, 1). This means that any output value in this range will be considered as VeryHigh.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX"
+        },
+        {
+            "text": "Secondly, after implementing the fuzzy inference inputs and output, we added the fuzzy rules. Supplementary Figure 4 shows a sample of these rules. The fuzzy values for input variables will be matched with each rule. The rule will be applied when the condition part is satisfied (fully matched with the fuzzy inputs values); otherwise, the rule will not be selected. Supplementary Figure 5 shows the applied rule when inputs have high values (when all ethical principles are met), which is rule number 1. As illustrated, the weight, in this case, is VeryHigh = 0.865. The scenario in Supplementary Figure 6 is applied when the patient satisfies only a single ethical principle in which the weight is Low = 0.3.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 94,
+                    "end": 116,
+                    "text": "Supplementary Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 381,
+                    "end": 389,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 584,
+                    "end": 606,
+                    "text": "Supplementary Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "APPENDIX"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Clinical characteristics of coronavirus disease 2019 in China",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ni",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "1708--1728",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMoa2002032"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Available online at",
+            "authors": [],
+            "year": 2021,
+            "venue": "Weekly Epidemiological Update",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "COVID-19) Situation Reports",
+            "authors": [
+                {
+                    "first": "Coronavirus",
+                    "middle": [],
+                    "last": "Disease",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Closure of Universities Due to Coronavirus Disease 2019 (COVID-19): impact on Education and Mental Health of Students and Academic Staff",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sahu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cureus",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.7759/cureus.7541"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The psychological impact of quarantine and how to reduce it: rapid review of the evidence",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Brooks",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Webster",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Woodland",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wessely",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Greenberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "912--932",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30460-8"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The socio-economic implications of the coronavirus pandemic (COVID-19): a review",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nicola",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Alsafi",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sohrabi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kerwan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Al-Jabir",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Iosifidis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Int J Surg",
+            "volume": "78",
+            "issn": "",
+            "pages": "185--93",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ijsu.2020.04.018"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "COVID-19 pandemic: the effects of quarantine on cardiovascular risk",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Mattioli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ballerini",
+                    "middle": [],
+                    "last": "Puviani",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nasi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Farinetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eur J Clin Nutr",
+            "volume": "646",
+            "issn": "",
+            "pages": "852--857",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41430-020-0646-z"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "COVID-19, medicine, and sports",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gilat",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Cole",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Arthrosc Sports Med Rehabil",
+            "volume": "2",
+            "issn": "",
+            "pages": "175--181",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.asmr.2020.04.003"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Available online at",
+            "authors": [],
+            "year": null,
+            "venue": "Coronavirus disease",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Live):106,587,319 Cases and 2,324,945 Deaths from COVID-19 Virus Pandemic-Worldometer",
+            "authors": [],
+            "year": 2021,
+            "venue": "Coronavirus Update",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Available online at",
+            "authors": [],
+            "year": 2021,
+            "venue": "A New Strain of Coronavirus: What You Should Know. Johns Hopkins Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The COVID-19 outbreak in Italy: Initial implications for organ transplantation programs",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Angelico",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Trapani",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Manzia",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Lombardini",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Tisone",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Cardillo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Am J Transplant",
+            "volume": "20",
+            "issn": "",
+            "pages": "1780--1784",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/ajt.15904"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The response of Milan's emergency medical system to the COVID-19 outbreak in Italy",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Spina",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Marrazzo",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Migliari",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Stucchi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sforza",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Fumagalli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "49--50",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0140-6736(20)30493-1"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The COVID-19 Global Rheumatology Alliance: evaluating the rapid design and implementation of an international registry against best practice",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Liew",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bhana",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Costello",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Hausmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Machado",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Robinson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Rheumatology",
+            "volume": "483",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {
+                "DOI": [
+                    "10.1093/rheumatology/keaa483"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Clinical ethics recommendations for the allocation of intensive care treatments in exceptional, resource-limited circumstances: The Italian perspective during the COVID-19 epidemic",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Vergano",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bertolini",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Giannini",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Gristina",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Livigni",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Mistraletti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Critical Care",
+            "volume": "24",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1186/s13054-020-02891-w"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Available online at",
+            "authors": [],
+            "year": 2020,
+            "venue": "Coronavirus: Extraordinary Decisions For Italian Doctors-The Atlantic",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Fair Allocation of Scarce Medical Resources in the Time of Covid-19",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Emanuel",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Persad",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Upshur",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Thome",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Parker",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Glickman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "2049--55",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMsb2005114"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Scarce resource allocation and patient triage during the COVID-19 Pandemic: JACC review topic of the week",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Kirkpatrick",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hull",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Fedson",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Mullen",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Goodlin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Am Coll Cardiol",
+            "volume": "76",
+            "issn": "",
+            "pages": "85--92",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.jacc.2020.05.006"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Allocating medical resources in the time of Covid-19",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Liddell",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Martin",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Palmer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Resource Allocation and Priority-Setting. WHO",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "19",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "An ethical framework for allocating scarce inpatient medications for COVID-19 in the US",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Dejong",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "JAMA",
+            "volume": "323",
+            "issn": "",
+            "pages": "2367--2375",
+            "other_ids": {
+                "DOI": [
+                    "10.1001/jama.2020.8914"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Allocating medical resources in the time of Covid-19",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Brown",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Goodwin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1056/NEJMc2009666"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "General public preferences for allocating scarce medical resources during COVID-19",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Huseynov",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Palmama",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rmj",
+                    "middle": [],
+                    "last": "Nayga",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3389/fpubh.2020.587423"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "The fair allocation of scarce medical resources: a comparative study from",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Yousef",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Alhalaseh",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mansour",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sultan",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Alnadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Maswadeh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Jordan. Front Med",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3389/fmed.2020.603406"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Allocating medical resources in the time of Covid-19",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hyder",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "N Engl J Med",
+            "volume": "382",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "COVID-19 pandemic: triage for intensive-care treatment under resource scarcity",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Scheidegger",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Fumeaux",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hurst",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Swiss Med Wkly",
+            "volume": "150",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.4414/smw.2020.20229"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Ethical Framework for Health Care Institutions Responding to Novel Coronavirus SARS-CoV-2 (COVID-19) Guidelines for Institutional Ethics Services Responding to COVID-19 Managing Uncertainty, Safeguarding Communities, Guiding Practice",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Berlinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wynia",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Powell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Micah",
+                    "middle": [],
+                    "last": "Hester",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Milliken",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Fabi",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Allocating medical resources in the time of Covid-19",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Persad",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Phillips",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Emanuel",
+                    "suffix": ""
+                }
+            ],
+            "year": 1965,
+            "venue": "Zadeh LA. Fuzzy sets. Inf Control",
+            "volume": "382",
+            "issn": "",
+            "pages": "338--53",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0019-9958(65)90241-X"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "An experiment in linguistic synthesis with a fuzzy logic controller",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Mamdani",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Assilian",
+                    "suffix": ""
+                }
+            ],
+            "year": 1975,
+            "venue": "Int J Man Mach Stud",
+            "volume": "7",
+            "issn": "",
+            "pages": "1--13",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S0020-7373(75)80002-2"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "The identified five ethical principles for the proposed fuzzy ethical framework of scarce medical resource allocation. output variable:IF{Input \u2212 variable is Value n }THEN {Output \u2212 Variable is Value m }The previous step's fuzzy output value is mapped back to the real numbers' domain in the last step.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "The proposed fuzzy ethical framework components. Inputs: four ethical principles. Processing: three main stages. Output: a weight or decision factor per patient to determine his/her priority in receiving a medical resource.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Supplementary Material for this article can be found online at: https://www.frontiersin.org/articles/10.3389/fmed. 2021.600415/full#supplementary-material The proposed ethical framework using the Mamdani inference system implemented in Matlab. The membership functions of input variables. The membership functions of the output variable. Sample of the fuzzy inference rules. The output weight variable is VeryHigh when all ethical principles are satisfied for a particular patient. The output weight variable is Low when a single ethical principle is satisfied for a particular patient.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The authors declare that the research was conducted in the absence of any commercial or financial relationships that could be construed as a potential conflict of interest.Copyright \u00a9 2021 Saadeh, Saadeh and Almobaideen. This is an open-access article distributed under the terms of the Creative Commons Attribution License (CC BY). The use, distribution or reproduction in other forums is permitted, provided the original author(s) and the copyright owner(s) are credited and that the original publication in this journal is cited, in accordance with accepted academic practice. No use, distribution or reproduction is permitted which does not comply with these terms.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of Interest:"
+        }
+    ]
+}

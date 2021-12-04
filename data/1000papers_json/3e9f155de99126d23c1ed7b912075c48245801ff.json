@@ -1,0 +1,1329 @@
+{
+    "paper_id": "3e9f155de99126d23c1ed7b912075c48245801ff",
+    "metadata": {
+        "title": "Implementation of an alternative method for assessing competing risks: restricted mean time lost \u00a7",
+        "authors": [
+            {
+                "first": "Hongji",
+                "middle": [],
+                "last": "Wu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Southern Medical University",
+                    "location": {
+                        "settlement": "Guangzhou",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hao",
+                "middle": [],
+                "last": "Yuan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Southern Medical University",
+                    "location": {
+                        "settlement": "Guangzhou",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Zijing",
+                "middle": [],
+                "last": "Yang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Southern Medical University",
+                    "location": {
+                        "settlement": "Guangzhou",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Yawen",
+                "middle": [],
+                "last": "Hou",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Jinan University",
+                    "location": {
+                        "settlement": "Guangzhou",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Zheng",
+                "middle": [],
+                "last": "Chen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Southern Medical University",
+                    "location": {
+                        "settlement": "Guangzhou",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "In clinical and epidemiological studies, hazard ratios are often applied to compare treatment effects between two groups for survival data. For competing risks data, the corresponding quantities of interest are cause-specific hazard ratios (CHRs) and subdistribution hazard ratios (SHRs). However, they all have some limitations related to model assumptions and clinical interpretation. Therefore, we introduce restricted mean time lost (RMTL) as an alternative that is easy to interpret in a competing risks framework. We propose a hypothetical test and sample size estimator based on the difference in RMTL (RMTLd). The simulation results show that the RMTLd test has robust statistical performance (both type I error and power).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Meanwhile, the RMTLd-based sample size can approximately achieve the predefined power level. The results of two example analyses also verify the performance of the RMTLd test. From the perspectives of clinical interpretation, application conditions and statistical performance, we recommend that the RMTLd be reported with the HR when analyzing competing risks data and that the RMTLd even be regarded as the primary outcome when the proportional hazard assumption fails.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "KEY WORDS survival analysis, competing risks, hazard ratio, restricted mean time lost, hypothesis test, sample size calculation \u00a7 This is the original version of this manuscript. The revised manuscript (Version of Record) has been accepted for publication in the American Journal of Epidemiology, 2021.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Clinical trials of treatments and preventative measures for coronavirus disease 2019 have received global attention. In published and ongoing randomized trials for COVID-19 treatments, the time-to-event endpoint of interest, such as the time to clinical improvement (or recovery), has been the most commonly used primary outcome (1) , and the corresponding method is the Kaplan-Meier method and hazard ratio (HR).",
+            "cite_spans": [
+                {
+                    "start": 329,
+                    "end": 332,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "However, patients may die of COVID-19 before improvement (or recovery), so competing risks problems occur (2, 3) ; that is, the occurrence of the event of interest (improvement or recovery) is precluded by a competing event (death). At this time, the commonly applied survival analysis techniques may lead to biased results where subjects who experience a competing event are censored (4, 5) . Therefore, competing risks analysis should be applied for such situations.",
+            "cite_spans": [
+                {
+                    "start": 106,
+                    "end": 109,
+                    "text": "(2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 110,
+                    "end": 112,
+                    "text": "3)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 385,
+                    "end": 388,
+                    "text": "(4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 389,
+                    "end": 391,
+                    "text": "5)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "In competing risks analysis, there are two widely used approaches based on hazards (6) : one is based on a cause-specific hazard function (CSH), which refers to the instantaneous rate of occurrence of a specific event among the individuals who are still event-free; its corresponding statistical test is the log-rank test, and the statistics measure cause-specific hazard ratio (CHR) can be estimated through a cause-specific Cox regression model. The other approach is the subdistribution hazard function (SDH), which refers to the instantaneous rate of the event of interest in subjects who have not yet experienced the given event. The statistical test is the Gray test, and the estimated effect of one group relative to another, i.e., the subdistribution hazard ratio (SHR), can be calculated by the Fine-Gray model. Meanwhile, the descriptive statistics for clinical or epidemiological interests are described by the cumulative incidence function (CIF), the probability of one event of interest occurring by a particular time in the presence of other events, which reflects the risk of the cause of interest without ignoring the presence of other competing events.",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 86,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "In clinical analysis of competing risks data, the estimations and statistical test based on CHR and SHR still have some limitations: 1) The hazard ratio (both CHR and SHR) should be described as a relative rate, not as a relative risk (7) . Without the assumption of independence of competing events, the CHR cannot be linked to the comparison of CIFs for an event between two groups (8) , i.e., CHR>1 does not necessarily imply (13, 14, 15) . The difference in RMTL (restricted mean time lost difference, RMTLd) is used to qualify the treatment effect and is also directly associated with comparisons of CIFs.",
+            "cite_spans": [
+                {
+                    "start": 235,
+                    "end": 238,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 384,
+                    "end": 387,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 429,
+                    "end": 433,
+                    "text": "(13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 434,
+                    "end": 437,
+                    "text": "14,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 438,
+                    "end": 441,
+                    "text": "15)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "Although Anderson (10) and Zhao (11) introduced the concept of RMTL, neither of them discussed the corresponding hypothetical test. Lyu (12) showed a statistical inference framework and sample size estimator based on RMTLd, but they seemed to lack robustness. Therefore, in this article, we introduce a new RMTL-based statistical inference framework and sample size estimator and show its performance through simulation and illustrative examples.",
+            "cite_spans": [
+                {
+                    "start": 32,
+                    "end": 36,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 136,
+                    "end": 140,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BACKGROUND"
+        },
+        {
+            "text": "Without loss of generality, only one event of interest ( 1 j = ) and one competing event ( 1 j = ) are assumed in the research. T is defined as the observed time, that is ( )",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "METHODS"
+        },
+        {
+            "text": ", where T 1 and T 2 correspond to the time to the event of interest and the time to the competing event, respectively, and C corresponds to the censoring time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "METHODS"
+        },
+        {
+            "text": "The nonparametric estimation of CIF is as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Estimation"
+        },
+        {
+            "text": "where t i is the ith ordered event time of cause j, d ij is the number of events of cause ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Estimation"
+        },
+        {
+            "text": "which can be interpreted as the mean time lost due to a specific cause within the year \u03c4 \u2212 window. The variance of j RMTL can be estimated based on the derivation of the martingale approximation (16) (for the detailed process, see Appendix 1):",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Estimation"
+        },
+        {
+            "text": "In this part, only events of interest are considered (because they are similar to competing events). ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Hypothetical test"
+        },
+        {
+            "text": "Suppose 0 n and 1 n are the required sample sizes in the control group and treatment group, respectively, and 1 0 r n n = is the ratio of sample sizes. Then, assume we test the null hypothesis with power 1 \u03b2 \u2212 at a two-sided significance level \u03b1 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sample size"
+        },
+        {
+            "text": "Under alternative hypothesis 1 H , we then have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sample size"
+        },
+        {
+            "text": "Hence, the total sample size is (for the detailed derivation, see Appendix 2) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sample size"
+        },
+        {
+            "text": "In the simulation setup, two main points were considered. First, we compared the Type I error and statistical power of the Gray test and proposed RMTLd test under different scenarios (shown in Figure 1 ) to evaluate the performance of the RMTLd test.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 193,
+                    "end": 201,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Simulation setup"
+        },
+        {
+            "text": "Second, we calculated the observed power of RMTLd-based sample sizes under a variety of situations to assess the performance of the above sample size estimation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation setup"
+        },
+        {
+            "text": "Let the type of interest and competing events be generated through binomial",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation setup"
+        },
+        {
+            "text": ", where N is defined as the sample size of each group and 1 p is the maximum cumulative incidence of events of interest, which is set To evaluate type I error rates, the CIFs of events of interest and competing events were assumed to be",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation setup"
+        },
+        {
+            "text": "respectively, so the failure time in both groups was generated from",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation setup"
+        },
+        {
+            "text": ", as shown in Figure 1A .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 14,
+                    "end": 23,
+                    "text": "Figure 1A",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Simulation setup"
+        },
+        {
+            "text": "To assess statistical power, several situations were considered (Figure 1B -F): 1)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation setup"
+        },
+        {
+            "text": "The proportional SDH assumption is met: failure times were generated from the CIFs ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Simulation setup"
+        },
+        {
+            "text": "For each scenario ( Figure 1A -F), the type I error rate and statistical power results are summarized in Table 1 . The type I error rates in Table 1 ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 20,
+                    "end": 29,
+                    "text": "Figure 1A",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 105,
+                    "end": 112,
+                    "text": "Table 1",
+                    "ref_id": "TABREF6"
+                },
+                {
+                    "start": 141,
+                    "end": 148,
+                    "text": "Table 1",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "Hypothetical test"
+        },
+        {
+            "text": "For each scenario ( Figure B -F) , 10,000 simulations were performed to evaluate the observed power of the RMTLd-based sample size, and the results are shown in sex, have no effect on survival; then, we focused on comparisons between females and males. In our analysis, death from cancer was defined as the event of interest and observed in a total of 57 patients: 28 women and 29 men, while death from other causes was defined as the competing event and observed in a total of 14 patients: 7 women and 7 men. Figure 2A shows the CIF curve of the event of interest, and Table 3 neither the CSH nor the SDH could be obtained in any group, resulting in empty cells in Table 3 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 20,
+                    "end": 32,
+                    "text": "Figure B -F)",
+                    "ref_id": null
+                },
+                {
+                    "start": 510,
+                    "end": 519,
+                    "text": "Figure 2A",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 570,
+                    "end": 577,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                },
+                {
+                    "start": 666,
+                    "end": 673,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Sample size"
+        },
+        {
+            "text": "Next, we let 1 12.307 \u03c4 = years, which corresponds to the shortest maximum follow-up time in the two groups. Table 3 shows that the RMTL of the female group Figure 2C and As shown in Figure 2D , the RMTLd-based sample size decreases as \u03c4 increases, and after approximately 13.5 years, the RMTLd-based sample sizes are smaller than those of the SHR. Combined with simulation and Figure 2C, ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 109,
+                    "end": 116,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                },
+                {
+                    "start": 157,
+                    "end": 166,
+                    "text": "Figure 2C",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 183,
+                    "end": 192,
+                    "text": "Figure 2D",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 378,
+                    "end": 388,
+                    "text": "Figure 2C,",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Sample size"
+        },
+        {
+            "text": "The presence of competing risks makes treatment effect assessment in clinical trials and epidemiological studies with time-to-event endpoints more cumbersome, and the commonly reported quantitative measures are the CHR and SHR, where the former might be used to study the etiology of diseases from biological mechanisms and the latter might be more suitable for predicting an individual's risk of a specific outcome (8) .",
+            "cite_spans": [
+                {
+                    "start": 416,
+                    "end": 419,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "However, from our example application, there are still some limitations to the above two indicators. First, as a \"relative\" measure, HRs (both the CHR and SHR) cannot be easily understood when lacking a baseline hazard (i.e., of a control group), even though the proportional CSH and SDH assumptions were satisfied in example 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Moreover, the CHR = 1.939 and SHR = 1.890 in example 1 cannot be directly interpreted, as the \"risk\" of death from cancer increased 93.9% or 89.0%, respectively, for male patients; rather, it should be understood as a 93.9% or 89.0% increase, respectively, in the \"hazard\" of death from cancer, which is difficult to interpret clinically (2, 7) . Furthermore, because the proportional assumptions were violated in example 2, the CSH and SDH curves of the two groups in eFigure 1 (obtained through the nonparametric technique) have a late difference, showing that CHRs and SHRs may vary over time. Therefore, a weighted average HR only may fail to quantify and interpret the treatment effect.",
+            "cite_spans": [
+                {
+                    "start": 338,
+                    "end": 341,
+                    "text": "(2,",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 342,
+                    "end": 344,
+                    "text": "7)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "According to the above limitations, some researchers (10, 11, 12) In summary, in competing risks analysis, we recommend the RMTLd as a supplement for the CHR or SHR when measuring the treatment effect when proportional hazard assumptions are satisfied. When the assumptions are violated, the RMTLd could be selected as an alternative statistic for summarizing and interpreting the treatment effect.",
+            "cite_spans": [
+                {
+                    "start": 53,
+                    "end": 57,
+                    "text": "(10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 58,
+                    "end": 61,
+                    "text": "11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 62,
+                    "end": 65,
+                    "text": "12)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Without loss of generality, we assume that interest event and competing event are recoded as j = 1 and j = 2 for the two groups (k = 0 and 1), respectively. For the i th event",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX 1 The variance of restricted mean time lost"
+        },
+        {
+            "text": "as the indicators of experiencing failure from cause j by time i t and being at risk just before i t ,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX 1 The variance of restricted mean time lost"
+        },
+        {
+            "text": "respectively. Then, the estimation of the cumulative incidence function of cause j in group k can be written as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX 1 The variance of restricted mean time lost"
+        },
+        {
+            "text": "Meier estimate when all events (both j = 1 and j = 2) are considered.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX 1 The variance of restricted mean time lost"
+        },
+        {
+            "text": "According to Bajorunaite (16) , the integrated difference between the CIF of interest event and the corresponding variance can be written as follows:",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 29,
+                    "text": "Bajorunaite (16)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "APPENDIX 1 The variance of restricted mean time lost"
+        },
+        {
+            "text": "and Then, the variance of \uf0b7 j RMTL can be written as ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "APPENDIX 1 The variance of restricted mean time lost"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Reporting and design of randomized controlled trials for COVID-19: A systematic review",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dillman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jjh",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Zoratti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Contemp Clin Trials",
+            "volume": "101",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "How to Quantify and Interpret Treatment Effects in Comparative Clinical Studies of COVID-19",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Mccaw",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Vassy",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Ann Intern Med",
+            "volume": "14",
+            "issn": "2020",
+            "pages": "632--637",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Impact of competing event in COVID-19 clinical data analysis",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Competing risks in epidemiology: possibilities and pitfalls",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Andersen",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Geskus",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "De Witte",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Int J Epidemiol",
+            "volume": "41",
+            "issn": "3",
+            "pages": "861--70",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Ignoring competing events in the analysis of survival data may lead to biased results: a nonmathematical illustration of competing risk analysis",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Schuster",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Hoogendijk",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aal",
+                    "middle": [],
+                    "last": "Kok",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Clin Epidemiol",
+            "volume": "122",
+            "issn": "",
+            "pages": "42--48",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "A competing risks analysis should report results on all cause-specific hazards and cumulative incidence functions",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Latouche",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Allignol",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Beyersmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J Clin Epidemiol",
+            "volume": "66",
+            "issn": "6",
+            "pages": "648--53",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Relative rates not relative risks: addressing a widespread misinterpretation of hazard ratios",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sutradhar",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Austin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Ann Epidemiol",
+            "volume": "28",
+            "issn": "1",
+            "pages": "54--57",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Competing risk regression models for epidemiologic data",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cole",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Gange",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Am J Epidemiol",
+            "volume": "170",
+            "issn": "2",
+            "pages": "244--56",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Practical recommendations for reporting Fine-Gray model analyses for competing risk data",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Austin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Fine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Stat Med",
+            "volume": "36",
+            "issn": "27",
+            "pages": "4391--4400",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Decomposition of number of life years lost according to causes of death",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Andersen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Stat Med",
+            "volume": "32",
+            "issn": "30",
+            "pages": "5278--85",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Estimating Treatment Effect With Clinical Interpretation From a Comparative Clinical Trial With an End Point Subject to Competing Risks",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Claggett",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "JAMA Cardiol",
+            "volume": "3",
+            "issn": "4",
+            "pages": "357--358",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The use of restricted mean time lost under competing risks data",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lyu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "BMC Med Res Methodol",
+            "volume": "20",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Novel Risk Modeling Approach of Atrial Fibrillation With Restricted Mean Survival Times: Application in the Framingham Heart Study Community-Based Cohort",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Staerk",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Preis",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Circ Cardiovasc Qual Outcomes",
+            "volume": "13",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Restricted mean survival time: an alternative to the hazard ratio for the design and analysis of randomized trials with a time-to-event outcome",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Royston",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Parmar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "BMC Med Res Methodol",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Interpretability of Cancer Clinical Trial Results Using 15",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Pak",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Uno",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Restricted Mean Survival Time as an Alternative to the Hazard Ratio",
+            "authors": [],
+            "year": 2017,
+            "venue": "JAMA Oncol",
+            "volume": "3",
+            "issn": "12",
+            "pages": "1692--1696",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Two-sample tests of the equality of two cumulative incidence function",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bajorunaite",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Klein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Comput Stat Data Anal",
+            "volume": "51",
+            "issn": "9",
+            "pages": "4269--4281",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "On the empirical choice of the time window for restricted mean survival time",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Uno",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biometrics",
+            "volume": "76",
+            "issn": "4",
+            "pages": "1157--1166",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Weighted comparison of two cumulative incidence functions with R-CIFsmry package",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Le-Rademacher",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Comput Methods Programs Biomed",
+            "volume": "116",
+            "issn": "3",
+            "pages": "205--219",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Modeling Survival Data: Extending the Cox Model",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Thernean",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Grambsch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Analysis and design of randomised clinical trials involving competing risks endpoints",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Tai",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wee",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Machin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Trials",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "mstate: An R Package for the Analysis of Competing Risks and Multi-State Models",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "De Wreede",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Fiocco",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Putter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "J Stat Softw",
+            "volume": "38",
+            "issn": "7",
+            "pages": "1--30",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Comparison of two treatments in the presence of competing risks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lyu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Pharm Stat",
+            "volume": "19",
+            "issn": "6",
+            "pages": "746--762",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Sources of funding: This work is supported by the National Natural Science Foundation of China (81673268, 81903411), the Guangdong Basic and Applied Basic Research Foundation (2019A1515011506) and Natural Science Foundation of Guangdong Province",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "that occur at time t i , ( ) i Y t is the number of subjects at risk at time t i , and ( ) S t is the event-free survival probability. \u03c4 is the chosen time point, and T \u03c4 \u2264 . The RMTL of cause j is denoted",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "follows a standard normal distribution.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "the inverse standard normal distribution function at probability p, can be obtained through a pilot or previous study.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "The parameter settings of failure time j T (j = 1, 2 correspond to the event of interest and the competing event, respectively) under different situations are shown in eTable 1, and the censoring times of the two groups were based on uniform distributions U b , respectively. Next, define the observed time censoring rates were required to be similar between the two groups and approximately 0%, 15%, 30% or 45% by changing the setting of a and b. For the sample size, we considered both a point \u03c4 is selected as the minimum of the maximum follow-up time of the two groups(17). All simulations are performed using 10,000 replications.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "the group indicator (Z = 0 and 1 for the control group and treatment group, respectively). Meanwhile, we considered two scenarios, SHR \u2248 0.905 and SHR \u2248 0.741, corresponding to Figure 1B and Figure 1C, respectively. 2) The proportional SDH assumption is violated: both an early difference (Figure 1D) and a late difference (Figure 1E -F) in the CIFs were considered. The failure time was generated based on CIFs with piecewise Weibull distributions ( , ) W \u03bb \u03ba (where \u03bb and \u03ba are the scale parameter over each simulation to calculate the RMTLd-based sample sizes under different situations (Figure 1B -F). Next, we simulated the observed power of the Gray test and RMTLd test based on the calculated sample sizes through 10,000 simulations.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "shows the statistical results of different tests. Using the log-rank test to evaluate the effect of sex on the CSH, a negative effect of male sex on death from cancer was suggested (CHR = 1.939, 95% CI: 1.115 -3.260; log-rank P = 0.011), and the assumption of proportionality of the CSH was satisfied (P = 0.221). Meanwhile, the Gray test was used to assess the effect of sex on the SDH and also showed a negative effect of male sex on the event of interest (SHR = 1.890, 95% CI: 1.128 -3.167; Gray P = 0.016), and a test of the proportional SDH assumption yielded a result of P = 0.218. Due to the semi-parametric nature of the regression model,",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "194 years, while that of the male group was 3.728 years. The results can be interpreted as follows: during 12.307 years of follow-up, the mean lost time due to death from cancer of patients in the female and male groups was 2.194 and 3.728 years, respectively. The RMTLd test results showed a poor effect in the male group (RMTLd = 1.534, 95% CI: 0.245 -2.823; RMTLd P = 0.020), and RMTLd = 1.534 years means that the patients in the male group lost an additional 1.534 years of life due to cancer within 12.307 ( 1 \u03c4 ) years of follow-up. The RMTLd-based results provide us with a more acceptable conception of the time scale. At the same time, based on different time points \u03c4 , we calculated the RMTLd-based sample size at the chosen time and the SHR-based sample size (20) for comparison. As shown in Figure 2B, RMTLd-based sample sizes decrease first and then increase over time, and after approximately 12 years, the RMTLd-based sample sizes are slightly larger than the SHR-based sample sizes. sizes are 294 and 296 for the SHR and RMTLd, respectively. Example 2. Between 1962 and 1977, 2,279 patients with accurate lymphoid leukemia who received allergenic bone transplants from a human leukocyte antigen (HLA)-identical sibling donor were recorded in the European Group for Blood and Marrow Transplantation (21). Similarly, we studied the effect of donor-recipient sex matches on survival and ignored other risk factors, so a total of 2,279 patients were grouped into sex matches (n = 545) and mismatches (n = 1,734). Death after transplantation was documented as the event of interest in a total of 533 patients: 145 matches and 388 mismatches, and relapse from transplantation was defined as a competing event in 378 patients, with 90 matches and 280 mismatches.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "most robust approach. Meanwhile, the results of the sample size simulation showed that the power of the RMTLd-based sample size can approximately achieve the predefined level of power, indicating that the proposed sample size formula is effective and suitable. However, there are still some limitations: 1) only single factor analysis was considered in this study, regardless of the presence of multiple factors; 2) the time point \u03c4 was simply restricted to be the shortest maximum follow-up time of the two groups, whereas, from a practical point of view, \u03c4 can be chosen according to scientific clinical or epidemiological knowledge, e.g., 28 days can be determined from COVID-19 studies; and 3) the results of the statistical tests and sample size calculations in the two examples were applied for the purpose of illustrating the analysis and interpreting the outcomes but did not offer any clinically relevant conclusions.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "where k n is the sample size in group k and \u03c4 is the chosen time point. ( ) k Y t is the risk set at time t in group k. Assuming that jk RMTL is the RMTL of cause j in group k, formula 3 and formula 4 can be reduced to the following:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "be the RMTL of the event of interest in group k, the ratio of sample sizes. Assume we test the null hypothesis with power 1 \u03b2 \u2212 at a two-sided significance level \u03b1 . Then, under the alternative hypothesis can be obtained through pilot or previous studies.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Figure 1. Scenarios",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Both the cause-specific Cox model and Fine-Gray model depend on an assumption of proportionality of CSH and SDH; as a consequence, many published survival analyses report only a single CHR or SHR, which is a weighted average outcome. However, if the above assumption is violated, a single HR is difficult to interpret because the HR varies over time. 3) Because of the semi-parametric nature of the two regression models, the \"relative\" hazard rates CHR and SHR are not interchangeable with the \"absolute\" hazard rate without baseline hazards, which may make their clinical interpretation difficult to conceptualize. RMTL). RMTL can be estimated as the area under the CIF curve up to a specified time point and interpreted as the mean time lost due to a specific cause during a predefined time window. Thus, compared to HRs, the clinical interpretation of the RMTL, which is based on a time scale, can be easily understood by doctors and patients",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "show that both the proposed RMTLd test and the Gray test have well-controlled error rates. Under the proportional SDH assumption (B and C), the RMTLd test has similar power to the Gray test. In the early difference scenario (D), the RMTLd test provides significantly greater power than the Gray test. Meanwhile, as the censoring rate increases, the power of the two tests increases. This tendency may be interpreted as follows: because of high censoring, the number of patients in the later part of the CIF curve may be small, resulting in increased variability in the shape of the curve. The results for the late difference situations (E and F) show that the power of the two tests increases as the sample size increases and with a larger difference, and that the RMTLd test provides higher values than the Gray test.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Under proportional subdistribution hazards (B and C), the power of the RMTLd test and Gray test are found to be approximately equal to the predefined level of 80%. In the early difference (D), the power of the RMTLd test is larger than the University Hospital, Denmark(19). The objective of the study was to assess the effect of risk factors, including the sex and age of the patients and the histological variables tumor thickness, on survival. For simplicity, we assumed that other risk factors, except",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "show the CIF curve of the event of interest and the statistical results,",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "Type I error and statistical power of the Gary test and RMTLd test.Abbreviations: CR, Censoring Rate; Gray, Gray test; RMTL, RMTLd test.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "Observed power of the Gray and RMTLd tests based on the same sample sizes a . : CR, Censoring Rate; N, Total sample size; Gray, Gray test; RMTL, RMTLd test. a The sample sizes were calculated based on the RMTLd test. The chosen time point \u03c4 was the shortest maximum follow-up time of the two groups, and the pre-specified power was 80%.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Statistical results for the two examples Abbreviations: CHR, Cause-specific Hazard Ratio; SHR, Subdistribution Hazard Ratio; RMTLd, Restricted Mean Time Lost difference. a The cause-specific hazard, subdistribution hazard and RMTL in each group. b The CHR and SHR are related to the corresponding ratio, while the RMTLd is related to the difference. c P-values for the CHR, SHR and RMTLd were calculated by the log-rank test, Gray test and RMTLd test, respectively.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "and 0 n can be written as ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "annex"
+        }
+    ]
+}

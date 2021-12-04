@@ -1,0 +1,712 @@
+{
+    "paper_id": "3d636891f7e753628a0d3cdabd49e817be64c842",
+    "metadata": {
+        "title": "Science Machine Learning Prediction of SARS-CoV-2 Polymerase Chain Reaction Results with Routine Blood Tests",
+        "authors": [
+            {
+                "first": "Thomas",
+                "middle": [],
+                "last": "Tschoellitsch",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johannes Kepler University",
+                    "location": {
+                        "settlement": "Linz",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Martin",
+                "middle": [],
+                "last": "D\u00fcnser",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johannes Kepler University",
+                    "location": {
+                        "settlement": "Linz",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Carl",
+                "middle": [],
+                "last": "B\u00f6ck",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johannes Kepler University",
+                    "location": {
+                        "settlement": "Linz",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Karin",
+                "middle": [],
+                "last": "Schwarzbauer",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johannes Kepler University",
+                    "location": {
+                        "settlement": "Linz",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jens",
+                "middle": [],
+                "last": "Meier",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Johannes Kepler University",
+                    "location": {
+                        "settlement": "Linz",
+                        "country": "Austria"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Objective: The diagnosis of COVID-19 is based on the detection of SARS-CoV-2 in respiratory secretions, blood, or stool. Currently, reverse transcription polymerase chain reaction (RT-PCR) is the most commonly used method to test for SARS-CoV-2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Methods: In this retrospective cohort analysis, we evaluated whether machine learning could exclude SARS-CoV-2 infection using routinely available laboratory values. A Random Forests algorithm with 1353 unique features was trained to predict the RT-PCR results.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Results: Out of 12,848 patients undergoing SARS-CoV-2 testing, routine blood tests were simultaneously performed in 1528 patients. The machine learning model could predict SARS-CoV-2 test results with an accuracy of 86% and an area under the receiver operating characteristic curve of 0.90.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Conclusion: Machine learning methods can reliably predict a negative SARS-CoV-2 RT-PCR test result using standard blood tests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The diagnosis of COVID-19 is based on the detection of SARS-CoV-2 in respiratory secretions, blood, or stool. 1,2 Currently, reverse-transcription polymerase chain reaction (RT-PCR) is the most commonly used method to test for SARS-CoV-2. 3 Key limitations of this technique are its restricted availability and time requirement, often leaving clinicians unaware of the patient's virus status for 12 hours or longer.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In this retrospective cohort analysis, we evaluated whether machine learning could exclude SARS-CoV-2 PCR infection using routinely available laboratory values. Therefore, we extracted demographic, clinical, and laboratory data and concurrent (ie, within a 24-hour window) SARS-CoV-2 RT-PCR test results (Cobas SARS-CoV-2, Roche, Freiburg, Germany and Real-Time PCR Assay, BioProducts Genesig, Camberley, United Kingdom) from the electronic charts of patients in whom a SARS-CoV-2 test was performed at the Kepler University Hospital in Linz, Austria, from March 1, 2020, until April 30, 2020. Laboratory results used were from within 24 hours of admission. We trained a machine learning model (the Random Forests algorithm) 4 using R version 3.6.3 5 and the packages RandomForest 4.6-14, Boruta 7.0.0, Psych 2.0.9, pROC 1.16.2, ROCR 1.0-11, Amelia 1.7.6, and Caret 6.0-86 6 , ranger 0.12.1 using laboratory data with 1353 unique features of which 28 were used in the final model. The following standard laboratory values were included: blood count, electrolytes, C-reactive protein, creatinine, blood urea nitrogen, liver enzymes, bilirubin, cholinesterase, and prothrombin time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "Thereafter, the dataset underwent extensive data preprocessing and data cleaning. The data cleaning included detection of typos and out-of-range values and the imputation of missing values; features with more than 25% of missing values were excluded. The remaining missing values were imputed using Strawman imputation, which replaces missing data by median values (continuous variables) or the most frequently occurring value (categorical values). The Strawman imputation method yielded results comparable to other, more complicated methods (eg, the \"missForest\" technique 7 ). Censored numerical data were truncated (eg, \"<0.1\" was replaced by 0.1). Categorical features with >2 values were one-hot encoded (ie, a binary encoding for every category). Ordinal features were encoded as positive integers. Binary and numerical features were included as they were.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "For the determination of our model performance, we conducted nested cross-validation. The hyperparameter search was conducted in the inner five-fold cross-validation loop via grid-search. The model performance is estimated in the outer loop in five folds. The study protocol was approved by the Ethics Committee of Upper Austria (No. 1104/2020).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Materials and Methods"
+        },
+        {
+            "text": "Out of 12,848 patients undergoing SARS-CoV-2 testing, routine blood tests were performed concurrently in 1528 patients who were then included in the statistical analysis ( Table 1) . Of the 1528 study participants, 65 tested positive for SARS-CoV-2.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 172,
+                    "end": 180,
+                    "text": "Table 1)",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "After data cleaning 1357 study participants were analyzed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "As calculated from the confusion matrix ( Table 2) , the machine learning model was able to detect SARS-CoV-2 test results with an accuracy of 81%, an area under the ROC curve of 0.74 ( Figure 1A) , a sensitivity of 60%, and a specificity of 82%. The positive and negative predictive values were 13% Figure 1B .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 42,
+                    "end": 50,
+                    "text": "Table 2)",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 186,
+                    "end": 196,
+                    "text": "Figure 1A)",
+                    "ref_id": null
+                },
+                {
+                    "start": 300,
+                    "end": 309,
+                    "text": "Figure 1B",
+                    "ref_id": null
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "Our results suggest that machine learning methods can predict SARS-CoV-2 RT-PCR results using routine blood values with fair accuracy. Although from a bedside perspective the value of such a model to predict a positive SARS-CoV-2 test result was poor, the high negative predictive value of 99% allows clinicians to reliably predict a negative SARS-CoV-2 test result with acceptable safety. The machine learning algorithm used, Random Forests, although not new, is a proven and effective method.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "When evaluating the feature importance reported by the machine learning models, leukocyte count ranked as the most important feature. Elevated white blood cell counts have been observed early on in COVID-19 and have been linked to inflammation, similar to an increase in the neutrophil-tolymphocyte ratio. 8 Another highly ranked feature, hemoglobin level, has been associated with mortality from COVID-19. 9 Serum calcium changes are considered to be important for various functions of viruses such as structure and gene expression and release, along with promoting inflammation pathways linked to lung cell damage and edema formation. 10, 11 Our results may have relevant clinical implications, particularly for settings where SARS-CoV-2 RT-PCR testing is not readily available and/or personal protection equipment is in short supply.",
+            "cite_spans": [
+                {
+                    "start": 306,
+                    "end": 307,
+                    "text": "8",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 407,
+                    "end": 408,
+                    "text": "9",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 637,
+                    "end": 640,
+                    "text": "10,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 641,
+                    "end": 643,
+                    "text": "11",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Although World Health Organization (WHO) considerations have defined acceptable and desirable price ranges for largevolume SARS-CoV-2 RT-PCR testing, demand vs general availability and currently reported current prices commonly exceed these recommendations by a factor of 10 or higher. 12, 13 On the contrary, commonly reported reference costs of routinely ordered laboratory tests that were identified as features of high importance in our prediction model are well below the WHO-designated desirable range for SARS-CoV-2 RT-PCR tests. 14 It can therefore be considered beneficial from an economic point of view to employ the presented model as support for clinical decision-making.",
+            "cite_spans": [
+                {
+                    "start": 286,
+                    "end": 289,
+                    "text": "12,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 290,
+                    "end": 292,
+                    "text": "13",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "When interpreting the results of our analysis, 2 limitations must be considered. First, RT-PCR test results can be false-negative and false-positive. 15 This potential impairs the validity of the model to predict true-negative RT-PCR results. Second, although 1357 study patients were included in our analysis, the sample size may still be considered low for machine learning methods, especially regarding the asymmetry of the classification problem. Inclusion of more patients may therefore have yielded more valid results.",
+            "cite_spans": [
+                {
+                    "start": 150,
+                    "end": 152,
+                    "text": "15",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In conclusion, machine learning methods can reliably predict a negative SARS-CoV-2 RT-PCR test result using standard blood values.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Detection of 2019 novel coronavirus (2019-nCoV) by real-time RT-PCR",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Corman",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Landt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kaiser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveill",
+            "volume": "25",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "The presence of SARS-CoV-2 RNA in the feces of COVID-19 patients",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Med Virol",
+            "volume": "92",
+            "issn": "7",
+            "pages": "833--840",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Diagnostic testing for severe acute respiratory syndrome-related coronavirus 2: a narrative review",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Papenburg",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Desjardins",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Ann Intern Med",
+            "volume": "172",
+            "issn": "11",
+            "pages": "726--734",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Random forests",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Breiman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Mach Learn",
+            "volume": "45",
+            "issn": "1",
+            "pages": "5--32",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The R Project for Statistical Computing",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The R Foundation",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "The Comprehensive R Archive Network",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "The R Foundation",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "MissForest-non-parametric missing value imputation for mixed-type data",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Stekhoven",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "B\u00fchlmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Bioinformatics",
+            "volume": "28",
+            "issn": "1",
+            "pages": "112--118",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Dysregulation of immune response in patients with coronavirus 2019 COVID-19 in Wuhan, China",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clin Infect Dis",
+            "volume": "71",
+            "issn": "15",
+            "pages": "762--768",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Leukocytosis and alteration of hemoglobin level in patients with severe COVID-19: association of leukocytosis with mortality",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Sayad",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Afshar",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Mansouri",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Rahimi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Health Sci Rep",
+            "volume": "3",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Viral calciomics: interplays between Ca2+ and virus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Frey",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Cell Calcium",
+            "volume": "46",
+            "issn": "1",
+            "pages": "1--17",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Low levels of total and ionized calcium in blood of COVID-19 patients",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Cappellini",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Brivio",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Casati",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cavallero",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Contro",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Brambilla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Clin Chem Lab Med",
+            "volume": "58",
+            "issn": "9",
+            "pages": "171--173",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Test, re-test, re-test\": using inaccurate tests to greatly increase the accuracy of COVID-19 testing",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Ramdas",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Darzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jain",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat Med",
+            "volume": "26",
+            "issn": "6",
+            "pages": "810--811",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "COVID-19 target product profiles for priority diagnostics to support response to the COVID-19 pandemic v.1.0. World Health Organization website",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Estimated costs of 51 commonly ordered laboratory tests in Canada -PubMed",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Estimating the false-negative test probability of SARS-CoV-2 by RT-PCR",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Wikramaratna",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Paton",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ghafari",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Louren\u00e7o",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "https:/www.medrxiv.org/content/10.1101/2020.04.05.20053355v3"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Figure 1",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "learning model results. A, ROC, AUC (SD): 0.898 (0.002); every fold displayed in individual color. B, Relative feature importance of Random Forests algorithm obtained from the Boruta package of R.5 ShadowMin, shadowMax, and shadowMean refer to features created by the Boruta algorithm 2,3 by shuffling the original features' values (so-called shadow features) and training a model for prediction on the combined original and shuffled feature values; using this model, the Z-scores for the shadow features' importances are calculated. Those features that are ranked more important than their shadow counterpart are marked as important. The Boruta algorithm is used as a validation method for feature importances calculated by the Random Forest algorithm. Blue boxplots are minimal, average, and maximum Z-scores of shadow features; red, yellow, and green boxplots are features that were rejected, remain tentatively important, and are confirmed important, respectively. Box upper and lower horizontal edges are first and third quartiles, whiskers denote the 1.5 interquartile range of feature importance, and circles are outliers. AUC, area under the curve; CRP, C-reactive protein; MCH, mean corpuscular hemoglobin; MCHC, mean corpuscular hemoglobin concentration; MCV, mean corpuscular volume; GFR, glomerular filtration rate; Hb, hemoglobin; RDW-CV, red blood cell distribution width; ROC, receiver operating characteristic; SD, standard deviation.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "www.labmedicine.com Lab Medicine 00;;XX;3-4",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Patient Characteristics and Routine Blood Results",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Confusion Matrix for Model Results",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

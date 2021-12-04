@@ -1,0 +1,2146 @@
+{
+    "paper_id": "3dd77b4fb2bb625f1a739be0955bb370f0eab0ed",
+    "metadata": {
+        "title": "A Quantum Expectation Value Based Language Model with Application to Question Answering",
+        "authors": [
+            {
+                "first": "Qin",
+                "middle": [],
+                "last": "Zhao",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Harbin Institute of Technology",
+                    "location": {
+                        "postCode": "518055",
+                        "settlement": "Shenzhen",
+                        "country": "China"
+                    }
+                },
+                "email": "zhaoqin@hit.edu.cnq.z."
+            },
+            {
+                "first": "Chenguang",
+                "middle": [],
+                "last": "Hou",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "National University of Singapore",
+                    "location": {
+                        "postCode": "119076",
+                        "settlement": "Singapore",
+                        "country": "Singapore"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Changjian",
+                "middle": [],
+                "last": "Liu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Harbin Institute of Technology",
+                    "location": {
+                        "postCode": "518055",
+                        "settlement": "Shenzhen",
+                        "country": "China"
+                    }
+                },
+                "email": "cjliux@163.comc.l."
+            },
+            {
+                "first": "Peng",
+                "middle": [],
+                "last": "Zhang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Tianjin University",
+                    "location": {
+                        "postCode": "300050",
+                        "settlement": "Tianjin",
+                        "country": "China"
+                    }
+                },
+                "email": "pzhang@tju.edu.cn"
+            },
+            {
+                "first": "Ruifeng",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Harbin Institute of Technology",
+                    "location": {
+                        "postCode": "518055",
+                        "settlement": "Shenzhen",
+                        "country": "China"
+                    }
+                },
+                "email": "xuruifeng@hit.edu.cn"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Quantum-inspired language models have been introduced to Information Retrieval due to their transparency and interpretability. While exciting progresses have been made, current studies mainly investigate the relationship between density matrices of difference sentence subspaces of a semantic Hilbert space. The Hilbert space as a whole which has a unique density matrix is lack of exploration. In this paper, we propose a novel Quantum Expectation Value based Language Model (QEV-LM). A unique shared density matrix is constructed for the Semantic Hilbert Space. Words and sentences are viewed as different observables in this quantum model. Under this background, a matching score describing the similarity between a question-answer pair is naturally explained as the quantum expectation value of a joint question-answer observable. In addition to the theoretical soundness, experiment results on the TREC-QA and WIKIQA datasets demonstrate the computational efficiency of our proposed model with excellent performance and low time consumption.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Recently, quantum inspired language models (LMs) have drawn increasing attention in Information Retrieval (IR) [1, 2] and Natural Language Processing (NLP) tasks [3] [4] [5] , for their excellent interpretability and comparable performance to strong Convolutional Neural Network (CNN) [6] and Long Short-term Memory (LSTM) [7] baselines. In contrast to classical LMs which utilize probabilistic models to measure the uncertainty of a text, quantum-inspired LMs are motivated by the quantum probability theory and can be considered as a generalization of the classical ones [8, 9] .",
+            "cite_spans": [
+                {
+                    "start": 111,
+                    "end": 114,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 115,
+                    "end": 117,
+                    "text": "2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 162,
+                    "end": 165,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 166,
+                    "end": 169,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 170,
+                    "end": 173,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 285,
+                    "end": 288,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 323,
+                    "end": 326,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 573,
+                    "end": 576,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 577,
+                    "end": 579,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Sordoni, Nie and Bengio [4] for the first time proposed a Quantum Language Model (QLM) in IR. The probability uncertainties of words and word compounds are encoded in density matrices. Von-Neumann (VN) Divergence between question and answer density matrices are used to compute the matching score. As the first practical application of quantum probability, their model achieves substantial improvements over bag-of-words models.",
+            "cite_spans": [
+                {
+                    "start": 24,
+                    "end": 27,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Zhang et al. [5] proposed an end-to-end Neural Network based Quantum-like Language Model (NNQLM). Word embedding vectors as the analogy of state vectors, are applied to build question and answer density matrices. Then the combination of question and answer density matrices forms a joint representation which can measure the similarity between the question-answer pairs. Two different architectures are utilized to measure the joint representation, namely NNQLM-I and NNQLM-II. NNQLM-I extracts diagonal values and trace values, while NNQLM-II is built upon CNN.",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 16,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In order to further explore the interpretability of neural networks, Li et al. [10] built a Complex-valued Network for Matching (CNM) . Each word is encoded as a complex-valued vector, whose length represents the relative weight of the word, while the direction is considered as a superposition state. Local mixture scheme is adopted to construct a density matrix. A novel projection approach based on Gleason's theorem is proposed to extract features from density matrices. Their model achieves comparable performances to CNN and RNN baselines.",
+            "cite_spans": [
+                {
+                    "start": 79,
+                    "end": 83,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 128,
+                    "end": 133,
+                    "text": "(CNM)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Despite the exciting progress in quantum-inspired language models, there are still two challenges. The first challenge is to construct a unique density matrix shared among the word and sentence levels. In most QLMs, sentence is a semantic subspace in a quantum system and density matrix for each sentence semantic subspace is required to explored. However, in quantum theory, different statistical ensembles of pure states of the same Hilbert space can be described using the system's unique density matrix. Represented as quantum states in the Hilbert Space, words and sentences should therefore be characterized by the unique density matrix, rather than composed of distinct ones. By preserving the consistence of density matrix, the total spatial degrees of freedom of the whole system can be diminished, which will result a more robust model. Secondly, only synthetic measures, lacking self-consistent quantum correspondence, have been employed in the aforementioned models, to evaluate the correlation coefficients between questions and answers. In particular, as an essential component of matching measurements in NNQLM-II, the convolutional layer over a joint representation for a question-answer pair is devoid of an analogous explanation in quantum probability theory. In addition, the projection measurement utilized in CNM also diminishes the interpretability from the perspective of quantum mechanism.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To address the above two challenges, we come up with a Quantum Expectation Value based Language Model (QEV-LM), where a unique density matrix is constructed, and words and sentences are viewed as observables in the same quantum system. We firstly map each word as a complex-valued state in a Hilbert Space, followed by constructing observables for question and answer sentences. By direct multiplication, we build joint question-answer observables, whose quantum expectation value naturally dovetails with the matching score of question-answer pairs. Figure 1 illustrates the correspondence between our quantum model and the classical one. In addition to the model's physical interpretability, it also exhibits higher computational efficiency with excellent performance and low time consumption. Our main contributions can be summarized as follows:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 551,
+                    "end": 559,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "\u2022",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We propose QEV-LM, which represents words and sentences as different observables in a quantum system and utilizes a shared density matrix to measure joint question-answer observables. Under this scheme, the matching score of a question-answer pair is naturally explained as the quantum expectation value of the corresponding joint question-answer observable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We come up with a computationally efficient approach to constructing the shared density matrix via a quantum-like kernel trick.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "We apply QEV-LM to a typical answer selection Question Answering task on TREC-QA and WIKIQA datasets. Our model outperforms other quantum models with low time consumption and also surpasses strong CNN and LSTM baselines.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "\u2022 A detailed discussion is conducted. In particular, we show that the off-diagonal elements of the density matrix, which correspond to sememes' superpositions, play an important role to improve the model's performance.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "The rest of the paper is organized as follows. Section 2 presents a review of the related work, which motivates the proposed Quantum Expectation Value based Language Model as detailed in Section 4. Section 3 gives some relevant quantum physics terminology. Section 4 shows the detailed components of QEV-LM. Section 5 reports our experimental setup and results. The discussion is presented in Section 6. In Section 7, we conclude the paper and point out future research directions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "In this section, we give a brief review of the related work on quantum-inspired work, including the recent work in Information Retrieval (IR) and and some representative work in Question Answering (QA).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Van Rijsbergen (2004) [3] for the first time proposed to adopt mathematical formalism to unify the logical, geometric and probabilistic IR models. Via the corresponding geometric representation in the Hilbert space of basic elements in IR, the traditional IR models are endowed with physical explanation. After this pioneering work, a number of quantum-inspired work [4, [11] [12] [13] has been developed, based on the analogy between quantum phenomena and elements in natural language processing.",
+            "cite_spans": [
+                {
+                    "start": 22,
+                    "end": 25,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 367,
+                    "end": 370,
+                    "text": "[4,",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 371,
+                    "end": 375,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 376,
+                    "end": 380,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 381,
+                    "end": 385,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Inspired by the quantum double-slit experiment, Zuccon and Azzopardi [14] studied that the similarity between document ranking and quantum phenomena and proposed to consider texts' interfere when calculating the relevance of different texts. Zhang et al. [11] modeled cognitive interference in the relevance judgement process, based on probabilistic automaton(PA) and quantum finite automaton. Piwowarski et al. [15] introduced information need vector space where events, such as document relevance or observed user interactions, correspond to subspaces.",
+            "cite_spans": [
+                {
+                    "start": 69,
+                    "end": 73,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 255,
+                    "end": 259,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 412,
+                    "end": 416,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Sordoni, Nie, and Bengio [4] proposed a principled Quantum Language Model (QLM), which generalizes the traditional statistical LM by adopting the probabilistic framework of quantum theory. This model is the first practical application quantum probability in language model. Density matrix is introduced to describe a more general representation for texts by looking at vector space model and language model in the quantum formalism. This model shows significant improvements over a robust bag-of-words baseline. Xie et al. [16] further improved QLM, by considering quantum entanglement.",
+            "cite_spans": [
+                {
+                    "start": 25,
+                    "end": 28,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 523,
+                    "end": 527,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Later, Zhang et al. [5] broadened work in IR to QA. An end-to-end quantum-like language model has been proposed. A new density matrix based on word embedding is designed to represent a sentence. Via matrix multiplication, question and answer density matrices can be combined to a joint representation, from where features can be extracted to measure the matching score. Experiment results show the effectiveness of the model. In order to give a better physical interpretability, Li et al. [10] constructed a complex-valued network, where words are encoded with complex-valued embedding, analogous to physical state in a quantum system. The proposed network for matching achieves comparable performances to typical CNN and RNN baselies.",
+            "cite_spans": [
+                {
+                    "start": 20,
+                    "end": 23,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 489,
+                    "end": 493,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Even though there are fruitful findings in quantum-inspired language models, current research are quite fragmented and facing two problems. First, in most studies of quantum language models, despite a whole quantum system with a complete Hilbert space is introduced, words and sentences usually are viewed as a sub event space, described by specific density matrices. The whole quantum system's unique density matrix is lack of investigation. Second, in quantum-inspired models, only fragmented physical concept is integrated into models, without a systematical complete interpretability. For example, in NNQLM, words are endowed with physical state, but the later convolutional layer lacks of a corresponding physical explanation. In this paper, we aim to tackle the above two problems. We propose a Quantum Expectation Value based Language Model (QEV-LM). A unique density matrix is constructed which carries the whole information of the semantic Hilbert space. Words and sentences now are viewed as different observables in the same space. By calculating the expectation value of each observable using the unique density matrix, one can obtain the probability of each observable.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "Under this picture, the matching score of a question-answer pair is naturally explained as the quantum expectation of joint question-answer observable. The detailed components of QEV-LM are presented in Section 4.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "In this section, we briefly introduce some relevant quantum physics terminology.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Background"
+        },
+        {
+            "text": "In quantum probability theory [17] , the probabilistic space is naturally represented in a vector space, specifically a Hilbert space, denoted as H n . We use Dirac's notation to denote a unit vector in this space. For example, a unit vector u \u2208 H and its transpose u T are respectively written as a ket |u and a bra u|. The inner product between two state vectors is written as u|v . The projector onto the direction |u is an outer product of |u itself, which is denoted as |u u|. Each rank-one projector |u u| represents a quantum elementary event, also called a dyad. After choosing the standard basis {|e j }(i = 1, 2, \u00b7 \u00b7 \u00b7 n) for sememes, any state vector |u can be a superposition of the basis vectors:",
+            "cite_spans": [
+                {
+                    "start": 30,
+                    "end": 34,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Basic Concepts"
+        },
+        {
+            "text": "where u i is the probability amplitude along |e i and satisfies \u2211 i u 2 i = 1. A generalization of the conventional finite probability distributions in quantum probability theory is called density matrices [18] . A density matrix \u03c1 can be defined as a mixture over dyads",
+            "cite_spans": [
+                {
+                    "start": 206,
+                    "end": 210,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Basic Concepts"
+        },
+        {
+            "text": "where {\u03c8 i } n i=1 are pure states and p i \u2265 0 is the corresponding probability. Equivalently, the density matrix can be decomposed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Basic Concepts"
+        },
+        {
+            "text": "where \u03bb i is an eigenvalue, |k i is the corresponding eigenvector, and \u03c1 is symmetric, positive sem-idefinite, and of trace 1. By Gleason's theorem [19, 20] , every density matrix \u03c1 uniquely corresponds to a quantum probability measure \u00b5, according to",
+            "cite_spans": [
+                {
+                    "start": 148,
+                    "end": 152,
+                    "text": "[19,",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 153,
+                    "end": 156,
+                    "text": "20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Basic Concepts"
+        },
+        {
+            "text": "A projector is only one special type of observable in a quantum system. The quantum probability measurement can generalize to that of arbitrary observables. In quantum probability theory, an experimental setup is depicted by its observable to be measured and the state of the system. The expectation value of the observable O is the probabilistic expected value of the measurement [17, 21] . That is, it is an average of all the possible outcomes of a measurement as weighted by their likelihood. Consider an observable O.",
+            "cite_spans": [
+                {
+                    "start": 381,
+                    "end": 385,
+                    "text": "[17,",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 386,
+                    "end": 389,
+                    "text": "21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantum Expectation Value of an Observable"
+        },
+        {
+            "text": "In the commonly used case in quantum mechanics, \u03c8 is a pure state in the Hilbert space. The expectation value is defined as \u03c8|O|\u03c8 . However, in system like thermodynamics and quantum optics, mixed states are of importance. The systems are described by their corresponding density matrix Equation (2) , and the quantum expectation value of any observable O can be obtained as follows:",
+            "cite_spans": [
+                {
+                    "start": 296,
+                    "end": 299,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantum Expectation Value of an Observable"
+        },
+        {
+            "text": "when consider O = |u u|, Equation (5) is just Equation (4).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantum Expectation Value of an Observable"
+        },
+        {
+            "text": "In quantum language model, there is a unique quantum system with a Hilbert space. All the physical event happens in this unique system. Under this background, our proposed Quantum Expectation Value Based Language Model (QEV-LM) is constructed, as shown in Figure 2 . It consists of several parts: a word encoder, sentence observales, joint quenstion-answer observable and quantum expectation value as the matching score. Detailed explanation of each component is presented as follows. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 256,
+                    "end": 264,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Quantum Expectation Value Based Language Model"
+        },
+        {
+            "text": "Inspired by the fact that a quantum state is usually complex-valued, we naturally introduce the Semantic Hilbert Space H n on a complex vector space C n . H n is spanned by a set of orthogonal basis states {|e j } n j=1 , with |e j being a sememe representing a semantic unit [22] . A unit state |e j is a one-hot vector, i.e., only the j-th element in |e j is one while all the other elements are zero.",
+            "cite_spans": [
+                {
+                    "start": 276,
+                    "end": 280,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Complex-Valued Word Embedding"
+        },
+        {
+            "text": "A word w is treated as a superposition of sememes {|e j } n j=1 . Representing the Hilbert Space H n in a polar coordinate system, we can expand word w as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Complex-Valued Word Embedding"
+        },
+        {
+            "text": "where r j is a non-negative real-value amplitude of the state |w along the radius direction, satisfying \u2211 n j=1 r 2 j = 1, and \u03c6 j \u2208 [\u2212\u03c0, \u03c0] is the corresponding phase of the state |w in the polar coordinate system. Under the above constraints, we encode each word w as w with two sets of parameters. The first set consists of radius amplitudes, obtained from a word embedding lookup table E \u2208 R |V|\u00d7d , where |V| is the length of the vocabulary and d is the dimension of the word embedding. The second set contains the corresponding phases, initialized with normally distributed random values between [\u2212\u03c0, \u03c0]. We utilize a L2 normalization to restrict every word w to a unit length as follows:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Complex-Valued Word Embedding"
+        },
+        {
+            "text": "where w denotes L2-norm of w.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Complex-Valued Word Embedding"
+        },
+        {
+            "text": "For each single word w i , the corresponding projector \u03a0 i = |w i w i | is a observable to measure the probability of word w i in the Hilbert Space H n via Gleason's theorem Equation (4), together with the density matrix of the system. Now, we try to construct an observable which can represent a sentence. Assuming that a sentence s has n words, with the corresponding dyads being {|w s1 w s1 |, |w s2 w s2 |, \u00b7 \u00b7 \u00b7 }, we claim that a sentence observable O s is obtained via",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Sentence Level Observable Construction"
+        },
+        {
+            "text": "Here word dyads have divergent contributions to the sentence representation, which are quantified by the weights \u03b1 si , i.e., the soft-max normalization of the Lp-norm length w sj p of the word w si [23] . Then a max-pooling operation is performed to select the biggest items element-wisely along all the weighted dyads. The resultant sentence observable turns out to be excellent in representing the sentence features. This is one of the novelties of this paper. Instead of building a sentence density matrix which follows a standard procedure, the way to design a sentence-level observable is more flexible. This gives us a chance to find a more powerful representation.",
+            "cite_spans": [
+                {
+                    "start": 199,
+                    "end": 203,
+                    "text": "[23]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Sentence Level Observable Construction"
+        },
+        {
+            "text": "After performing the above operations on a pair of question and answer sentences, we can obtain the question observable O q and answer observable O a , respectively. Usually a distance-based score like cosine similarity is computed to measure the similarity between a question-answer pair. Here, inspired by Hu et al. [24] 's and Wang et al. [25] 's work where a joint representation used in the matching model has been proven to be effective, we build a joint question-answer observable O qa via element-wise multiplication as follows:",
+            "cite_spans": [
+                {
+                    "start": 318,
+                    "end": 322,
+                    "text": "[24]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 342,
+                    "end": 346,
+                    "text": "[25]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Joint Question-Answer Observable"
+        },
+        {
+            "text": "Compared to matrix multiplication which mixes elements in the same row and column, the element-wise multiplication focuses on the similarity of the corresponding elements of question and answer observables via straight multiplication. From mathematical point of view, for element-wise multiplication, back propagation can improve the element representation more straightforward and efficiently. This can give us a better joint question-answer representation. In next subsection, we will show that the matching score in our quantum system is just the quantum expectation value of the joint question-answer observable O qa .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Joint Question-Answer Observable"
+        },
+        {
+            "text": "Remember that we introduce the same Sematic Hilbert Space H n (Section 4.2) for all word and sentence observables. Instead of considering respective density matrices for question and answer sentences, it is more reasonable to find the shared density matrix underlying the Semantic Hilbert Space. Then the quantum expectation value for any arbitrary observable O can be calculated according to Equation (5) .",
+            "cite_spans": [
+                {
+                    "start": 402,
+                    "end": 405,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantum Expectation Value of the Joint Question-Answer Observable"
+        },
+        {
+            "text": "So the essential task is to seek the desired density matrix. However, either to check the pure states {|\u03c8 i } n i=1 or to keep the orthogonal basis {|k i } n i=1 as shown in Equations (2) and (3) is at the cost of tremendous computation, which would be a disaster for the training process. To overcome this difficulty, we learn from the kernel trick in traditional machine learning with a kernel function k(x, x (i) ) = \u03c6(x) \u00b7 \u03c6(x (i) ) [26] . Instead of finding the explicit form of \u03c6(x), a kernel function k often admits an implementation that is significantly more computationally efficient. Similarly, in our case, instead of finding the explicit standard orthogonal basis {|k i } n i=1 or pure states {|\u03c8 i } n i=1 , we only focus on the construction of the final density matrix, which is symmetric, positive sem-idefinite, and of trace 1. So this density matrix is a quantum-like kernel function. We choose the general form of the system's density matrix being:",
+            "cite_spans": [
+                {
+                    "start": 437,
+                    "end": 441,
+                    "text": "[26]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Quantum Expectation Value of the Joint Question-Answer Observable"
+        },
+        {
+            "text": "where m is the total number of states |v i to form \u03c1, and {v i } m i=1 are unknown n-dimension vectors to be trained. Note that m does not need to be equal to the dimension n of the Hilbert Space and {|v i } m i=1 can be any arbitrary vectors. Now, we prove that Equation (11) is an allowable density matrix which is symmetric, positive sem-idefinite, and of trace 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Quantum Expectation Value of the Joint Question-Answer Observable"
+        },
+        {
+            "text": "Be symmetric. First of all, |v i v i | for every v i is symmetric. |v i v i | ab = |v i v i | ba , for i \u2208 {1, 2, \u00b7 \u00b7 \u00b7 , m}. Therefore",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "\u2022 Be semi-definite. A matrix M (rank n) is said to be semi-definite if z|M|z is positive or zero for every non-zero column vector z of n numbers [27] . We can show that",
+            "cite_spans": [
+                {
+                    "start": 145,
+                    "end": 149,
+                    "text": "[27]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "\u2022 Be of trace 1. After the density matrix is constructed, one can always multiply a scalar to the matrix to make its trace being 1 without violating the symmetric and semi-definite properties. Since this scalar can be shifted to the later pipeline treated as a rescale operation to our parameters, we do not directly restrict the trace of density matrix in our model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "Given the shared density matrix Equation (11), according to Equation (5), we can compute the quantum expectation value of the joint question-answer observable O qa , which is:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "Since the joint question-answer observable depicts the similarity between question and answer sentences, it is natural to link it to the matching score of a question-answer pair. Therefore, we find a new explanation for the matching score which is the quantum expectation value of the joint question-answer observable O qa .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "The probability of the positive label is viewed as the matching score for ranking. The negative cross entropy loss is used to train the back propagation:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Leaning to Rank"
+        },
+        {
+            "text": "The experiments are conducted on two widely used benchmarking datasets for the Question Answering (QA) task, summarized in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 123,
+                    "end": 130,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "\u2022 TREC-QA [28] is a standard QA dataset in the Text REtrieval Conference (TREC).",
+            "cite_spans": [
+                {
+                    "start": 10,
+                    "end": 14,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "\u2022 WIKIQA [29] is an open domain QA dataset released by Microsoft Research.",
+            "cite_spans": [
+                {
+                    "start": 9,
+                    "end": 13,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "For both datasets, the task aims to select the most suitable answer for a question. Before our training process, data cleaning process is operated to make sure that every question has at least one correct answer. The evaluation metrics used to measure the performance of models are two commonly used rank-based metrics for the same task with the same datasets, namely Mean Average Precision (MAP) and Mean Reciprocal Rank (MRR). ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Experimental Setup"
+        },
+        {
+            "text": "A comprehensive comparison with a wide range of models is made. Since QEV-LM is quantum inspired, it is natural and necessary to compare with other closed quantum inspired models. They include",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Baselines for Comparison"
+        },
+        {
+            "text": "QLM [4] . Density matrices \u03c1 q and \u03c1 a are used to represent question and answer sentences, respectively. Von-Neumann (VN) Divergence between \u03c1 q and \u03c1 a is used to measure the matching score between question and answer pairs [18] . \u2022 NNQLM-II [5] . It is an end-to-end language model. Embedding vector is introduced to encode question and answer sentences. The matching score is computed over the joint representation of question and answer density matrices. \u2022 CNM [10] . It is a complex-valued matching network. Sentence is modeled with local mixture density matrices. Projectors select features for question and answer density matrices, and cosine similarity is used to calculate the matching score.",
+            "cite_spans": [
+                {
+                    "start": 4,
+                    "end": 7,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 226,
+                    "end": 230,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 244,
+                    "end": 247,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 466,
+                    "end": 470,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "In addition, we also pick a couple of basic and typical CNN-based or LSTM-based QA models for comparison. They include Ngram-CNN [30, 31] , Multi-Perspective CNN (MP-CNN) [32] , Long Short-term Memory with attention (LSTM-attn) [33] , three-layer stacked bidirectional Long Short-term Memory with BM25 (Three-Layer BLSTM + BM25) [34] . It also should be mentioned that since quantum language models aims to find a more fundamental physical explanation for language models, we only chose the basic neural network for comparison as other papers on QLMs. The main baselines for comparison are those quantum-inspired models.",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 133,
+                    "text": "[30,",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 134,
+                    "end": 137,
+                    "text": "31]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 171,
+                    "end": 175,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 228,
+                    "end": 232,
+                    "text": "[33]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[34]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [],
+            "section": "\u2022"
+        },
+        {
+            "text": "QEV-LM is implemented by PyTorch [35] . The trainable parameters are the amplitudes {r wi } n i=1 for each word w, the corresponding phases {\u03c6 wi } n i=1 , and the vectors {|v i } m i=1 that contribute to the shared density matrix. {r wi } n i=1 are initialized with 50-dimension Glove vectors and {\u03c6 wi } n i=1 are initialized with random uniform distributed variables between [\u2212\u03c0, \u03c0]. {|v i } m i=1 are initialized with orthogonal complex-valued vectors. We adopt the Adam optimizer with the learning rate among [1e\u22124, 5e\u22124, 1e\u22123]. The batch size is tuned around [16, 32, 64 ]. L2 regularization is performed for the amplitudes {r wi } n i=1 with a coefficient amid [5e\u22127, 5e\u22126, 5e \u22125] . We train our model for 100 epochs and the best model obtained in the dev dataset is used to evaluate in the test dataset. Table 2 , our model wins 3 best performances out of the 4 metrics on TREC-QA and WIKIQA. The detailed comparison between the results of our model and those of other baselines is presented as follows: First, in the scope of quantum language models, a) on TREC-QA dataset, QEV-LM significantly outperforms QLM by 19.49% on MAP and 22.97% on MRR, respectively; it exceeds NNQLM-II by 6.81% on MAP and 8.24% on MRR, respectively; it also surpasses CNM by 5.26% on MAP and 3.99% on MRR, respectively; b) On WIKIQA dataset, QEV-LM outperforms QLM significantly by 32.08% on MAP and 34.97% on MRR, respectively; it performs better than NNQLM-II with a rate of 3.88% on MAP and 5.37% on MRR, respectively. The result of our model is comparable with that of CNM on MAP and better than that of CNM on MRR with a rate of 1.22%. The improvement on TREC dataset is more manifest than that on WIKIQA. We find that the average length of question sentence of TREC-QA is much more closer to that of answer sentence, compared with the situation in WIKIQA. This can benefit the representation of joint question-answer observable, and hence the final performance.",
+            "cite_spans": [
+                {
+                    "start": 33,
+                    "end": 37,
+                    "text": "[35]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 565,
+                    "end": 569,
+                    "text": "[16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 570,
+                    "end": 573,
+                    "text": "32,",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 574,
+                    "end": 576,
+                    "text": "64",
+                    "ref_id": null
+                },
+                {
+                    "start": 684,
+                    "end": 687,
+                    "text": "\u22125]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 812,
+                    "end": 819,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Implementation Details"
+        },
+        {
+            "text": "Second, compared with typical CNN-based or LSTM-based QA models, our model shows better performance on all MAP and MRR measurements. This manifest that the two dimensional sentence observable in QEV-LM can learn more semantic interference than sentence vector representation in traditional language models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "As shown in"
+        },
+        {
+            "text": "We conduct an ablation analysis to investigate the influence of each component on our proposed model. The ablation studies are divided into three groups to investigate the respective effects of the Hilbert Space, observables and the shared density matrix. Experiment results are shown in Table 3 and explained as detailed below: Table 3 . Ablation analysis. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 288,
+                    "end": 295,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 329,
+                    "end": 336,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Ablation Study"
+        },
+        {
+            "text": "Remember that the Semantic Hilbert Space H n is a complex vector space C n . Each state in this quantum system is encoded with a complex-valued vector whose amplitude part corresponds to the classical word embedding and phase part carries additional semantic information. Here, we examine the contribution of the complex-valued setup by reducing the Hilbert Space H n to a real vector space. In this space, QEV-LM-real is built with word vectors and the shared density matrix replaced by their real counterparts. On TREC-QA dataset, Table 3 shows that QEV-LM-real is 0.05% and 2.97% lower than QEV-LM on MAP and MRR, respectively. On WIKIQA dataset, QEV-LM-real is lower than QEV-LM by 3.53% on MAP and 4.42% on MRR. Therefore, the imaginary part carrying additional semantic information can improve the model's performance. By the way, Tables 2 and 3 illustrate that QEV-LM-real, with the influence of imaginary parts eliminated, also outperforms NNQLM-II (a QLM with real embeddings), which demonstrates the architecture's superiority of QEV-LM.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 533,
+                    "end": 540,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": ". Ablation Study on Hilbert Space"
+        },
+        {
+            "text": "Formerly, sentence observables O s are constructed via an element-wise maxpooling over a set of weighted word projectors {|w i w i |}. But a variety of sentence observables can be designed via other flexible ways, e.g., directly maxpooling over word projectors without weights, which generates a model named as QEV-LM-no-weight. Table 3 shows that all results of QEV-LM-no-weight are quite close to those of QEV-LM, meaning that the weights are fine-tune parameters. However, when using the sentence observables with word projectors summed, on TREC-QA dataset, the results of QEV-LM-sum drop dramatically from those of QEV-LM by 18.22% on MAP and 17.02% on MRR; on WIKIQA dataset, there is also a big jump on both MAP and MRR. Even though the more important words contribute more to the sentence observable, after accumulation in summation irrelevant words can introduce a lot noise. Especially, compared to traditional sentence vector representation, observable is a two-dimensional matrix which can be ruined for more elements carrying noise. It is noted that our maximization operation is an element-wise operation over all word projectors, so the sentence observable carries the most important information of all words. This ablation study show than s that a suitable observable plays a vital role in feature extraction, similar to the cases of classical language models where better feature selection would produce higher model performance.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 329,
+                    "end": 336,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Ablation Study on Observables"
+        },
+        {
+            "text": "The general form of a density matrix is \u03c1 = \u2211 n i=1 p i |\u03c8 i \u03c8 i |. In our QEV-LM, to avoid tremendous calculation, a quantum-like kernel trick is used to built the density matrix. However, when {|\u03c8 i } n i=1 are one-hot orthogonal basis, the density matrix reduces to a diagonal matrix with zero-valued off-diagonal elements, and this matrix corresponds to the probabilities of sememes in a classical case without sememes' superpositions. To explore the contribution of the superpositions in the density matrix, two comparative models are built, namely QEV-LM-class1 and QEV-LM-class2. Within QEV-LM-class1, the density matrix is diagonal and contains only 2n parameters instead of m \u00d7 2n. ( In QEV-LM, the density matrix \u03c1 = \u2211 m i=1 |v i v i | is formed by m\u00d7 complex-valued n-dimensional vectors.) In order to keep the same number of parameters, we build QEV-LM-class2 with each of the density matrix's n diagonal elements being the summation of other m parameters. Table 3 shows that the performance of QEV-LM-class1 and QEV-LM-class2 drops dramatically, which demonstrates the effectiveness of the superpositions. After the training process, all parameters {v i } m i=1 can be used to recover the density matrix as shown in Figure 3 . It is reasonable that the contribution from diagonal elements corresponding to the classical probabilities is dominant, but the off-diagonal elements' values are not neglectable. In conclusion, the sememes' superpositions contribute substantially to the model's performance. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 969,
+                    "end": 976,
+                    "text": "Table 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1229,
+                    "end": 1237,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Ablation Study on Density Matrix"
+        },
+        {
+            "text": "This is a 50 \u00d7 50 matrix due to that real |v i is a 50 dimensional vector. According to the color bar in the right, the value of each element of density matrix can be found.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Ablation Study on Density Matrix"
+        },
+        {
+            "text": "As shown in Table 4 , our proposed QEV-LM reveals a comparable number of parameters as CNM [10] and in NNQLM-II [5] . Contributed from the word embedding and the shared density matrix, QEV-LM possesses |V| \u00d7 2n + m \u00d7 2n parameters, with |V|, n, and m as the vocabulary size, the embedding dimension, and the number of vectors {v i } m i=1 respectively. Due to |V| m in normal cases, the scale of word embedding is dominant, which yields a similar model size as NNQLM-II and CNM. The source codes of aforementioned two models are provided in Theano and Keras, respectively. In order to exclude the effects of different machine learning libraries, we reimplement both of them in PyTorch to benchmark their inference speeds. We choose QEV-LM-real as the counterpart of NNQLM-II, since the latter only considers real word embedding.",
+            "cite_spans": [
+                {
+                    "start": 91,
+                    "end": 95,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 112,
+                    "end": 115,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 12,
+                    "end": 19,
+                    "text": "Table 4",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Parameter Scale and Time Consumption"
+        },
+        {
+            "text": "Moreover, due to our straightforward approach to constructing the observables and the shared density matrix, our model is more lightweight and computationally efficient. Table 4 characterizes different models in our performance evaluation, which is conducted on a single GTX 1080 GPU by measuring the average inference time of a 256-sample batch. Our QEV-LM model achieves up to 17.2\u00d7 speedup over CNM on the same platform, without sacrificing speed significantly compared with NNQLM-II, while QEV-LM-real with real embedding vectors achieves the highest speed over the others.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 170,
+                    "end": 177,
+                    "text": "Table 4",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Parameter Scale and Time Consumption"
+        },
+        {
+            "text": "Therefore, we conclude that besides the physical interpretability, our model is computationally efficient with excellent performance and low time consumption. This proves the effectiveness of observables and the shared density matrix which make the model more flexible and robust. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Parameter Scale and Time Consumption"
+        },
+        {
+            "text": "One of the main motivation to introduce quantum language models is their powerful physical interpretability. In this subsection, we analyze the comparison of the explanation on each component of our model with that of other models, as shown in Table 5 . On the word encoder layer, QEV-LM and CNM encode words as complex-valued physical states, which are more similar to a real physical state in a quantum system. As for sentence representation, in many QLMs, a sentence is an information subspace of the quantum system, characterized by a specific density matrix. In those cases, the whole quantum system is divided into many subspaces, and the system itself which has a unique density matrix carrying a complete semantic information is lack of utilization. The similarity between different density matrices of subspaces is analyzed using mathematical methods such as VN-divergence. Especially, the convolutional layer used to extract density matrix's features in NNQLM-II is devoid of an analogous explanation in quantum probability theory. In our model, the whole quantum Hilbert space is not divided, and sentences are represented as quantum observables via word projector operators in the whole quantum system. Based on question's and answer's representation, a joint observable O qa can be constructed for each question-answer pair. Then, the unique density matrix of the system can be utilized to measure the probability, i.e., quantum expectation value, of this joint observable. Therefore, we end up with the physical interpretation that the matching score can be viewed as the quantum expectation value of the joint question-answer pair observable. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 244,
+                    "end": 251,
+                    "text": "Table 5",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Comparison on Physical Interpretability"
+        },
+        {
+            "text": "In this paper, we propose a Quantum Expectation Value based Language Model (QEV-LM), with a shared density matrix constructed via a quantum-like kernel trick. This shared density matrix is the semantic Hilbert space's unique density matrix. Within this framework, words and sentences are treated as quantum observables in the Hilbert Space. The question-answer matching score is naturally explained as the quantum expectation value of the joint question-answer observable. We apply our model on a typical answer selection task on standard benchmarking datasets, namely TREC-QA and WIKIQA. Experiment results on those datasets demonstrate the effectiveness of our proposed QEV-LM. Our model surpasses basic and typical CNN and LSTM baselines on both datasets and especially outperforms other quantum-inspired LMs with low time consumption. In conclusion, our model is not only advantageous with its physical interpretability, but also practically well-performed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Future Work"
+        },
+        {
+            "text": "Our ablation studies show that different observables can dramatically affect the model's performance, and the off-diagonal elements corresponding the semantic superpositions significantly boost the model's performance. Therefore, it would be interesting to further explore the possible observables and other approaches to construct superpositions [36] . ",
+            "cite_spans": [
+                {
+                    "start": 347,
+                    "end": 351,
+                    "text": "[36]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusions and Future Work"
+        },
+        {
+            "text": "The authors declare no conflict of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest:"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Towards quantum language models",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Basile",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Tamburini",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "7--11",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A quantum-theoretic approach to distributional semantics",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Blacoe",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Kashefi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lapata",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceedings of the HLT-NAACL",
+            "volume": "",
+            "issn": "",
+            "pages": "847--857",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The Geometry of Information Retrieval",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Van Rijsbergen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Modeling term dependencies with quantum language models for ir",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sordoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-Y",
+                    "middle": [],
+                    "last": "Nie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceedings of the SIGIR",
+            "volume": "",
+            "issn": "",
+            "pages": "653--662",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2484028.2484098"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "End-to-end quantum-like language models with application to question answering",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Niu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the AAAI",
+            "volume": "",
+            "issn": "",
+            "pages": "5666--5673",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Deep learning for answer sentence selection",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Moritz Hermann",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Blunsom",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Pulman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1412.1632"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Attentive pooling networks. arXiv 2016",
+            "authors": [
+                {
+                    "first": "Dos",
+                    "middle": [],
+                    "last": "Santos",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1602.03609"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Looking at vector space and language models for ir using density matrices",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sordoni",
+                    "suffix": ""
+                },
+                {
+                    "first": "J.-Y",
+                    "middle": [],
+                    "last": "Nie",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Blunsom",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceeding of the QI",
+            "volume": "",
+            "issn": "",
+            "pages": "147--159",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Quantum Mechanics and Information Retrieval",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Melucci",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Van Rijsbergen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "125--155",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Cnm: An interpretable complex-valued network for matching",
+            "authors": [
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Melucci",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the NAACL",
+            "volume": "",
+            "issn": "",
+            "pages": "4139--4148",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Automata modeling for cognitive interference in users relevance judgment",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proceedings of the QI",
+            "volume": "",
+            "issn": "",
+            "pages": "125--133",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Quantum algorithms for supervised and unsupervised machine learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lloyd",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mohseni",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Rebentrost",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1307.0411"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Modelling cued-target recall using quantum inspired models of target activation",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Galea",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Bruza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the QI",
+            "volume": "",
+            "issn": "",
+            "pages": "258--271",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "The quantum probability ranking principle for information retrieval",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Zuccon",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Azzopardi",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Van Rijsbergen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Proceedings of the ICTIR",
+            "volume": "",
+            "issn": "",
+            "pages": "232--240",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "What can quantum theory bring to information retrieval?",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Piwowarski",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Frommholz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lalmas",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Proceedings of the CIKM",
+            "volume": "",
+            "issn": "",
+            "pages": "59--68",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/1871437.1871450"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Modeling quantum entanglements in quantum language models",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the IJCAI",
+            "volume": "",
+            "issn": "",
+            "pages": "1362--1368",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Mathematical Foundations of Quantum Mechanics",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Von Neumann",
+                    "suffix": ""
+                }
+            ],
+            "year": 1955,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Quantum Computation and Quantum Information",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Nielsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chuang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Measures on the closed subspaces of a hilbert space",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Gleason",
+                    "suffix": ""
+                }
+            ],
+            "year": 1957,
+            "venue": "J. Math. Mech",
+            "volume": "6",
+            "issn": "",
+            "pages": "885--893",
+            "other_ids": {
+                "DOI": [
+                    "10.1512/iumj.1957.6.56050"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The Structure and Interpretation of Quantum Mechanics",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "I G"
+                    ],
+                    "last": "Hughes",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Modern Quantum Mechanics",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Sakurai",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Semantic and Lexical Universals: Theory and Empirical Findings",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Goddard",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wierzbicka",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Topological vector spaces",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Bourbaki",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "Elements of Mathematics",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Convolutional neural network architectures for matching natural language sentences",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the NIPS",
+            "volume": "",
+            "issn": "",
+            "pages": "2042--2050",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Exploration of quantum interference in document relevance judgement discrepancy",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Shang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Entropy",
+            "volume": "18",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/e18040144"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Deep Learning",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Goodfellow",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Courville",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Positive Definite Matrices",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Bhatia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Building a question answering test collection",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Voorhees",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Tice",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Proceedings of the SIGIR",
+            "volume": "",
+            "issn": "",
+            "pages": "200--207",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/345508.345577"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Wikiqa: A challenge dataset for open-domain question answering",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W.-T",
+                    "middle": [],
+                    "last": "Yih",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Meek",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the EMNLP",
+            "volume": "",
+            "issn": "",
+            "pages": "2013--2018",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Learning to rank short text pairs with convolutional deep neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Severyn",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Moschitti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the SIGIR",
+            "volume": "",
+            "issn": "",
+            "pages": "373--382",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Modeling relational information in question-answer pairs with convolutional neural networks",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Severyn",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Moschitti",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1604.01178"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Multiperspective sentence similarity modeling with convolutional neural networks",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Gimpel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the EMNLP",
+            "volume": "",
+            "issn": "",
+            "pages": "1576--1586",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Neural variational inference for text processing",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Miao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Blunsom",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1511.06038"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "A long short-term memory model for answer sentence selection in question answering",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Nyberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the ACL",
+            "volume": "",
+            "issn": "",
+            "pages": "707--712",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Pytorch: An imperative style, highperformancedeep learning librar",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Steiner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Devito",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Chintala",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gross",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Paszke",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Massa",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Lerer",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chanan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the NIPS",
+            "volume": "",
+            "issn": "",
+            "pages": "8--14",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "A quantum many body wave function inspired language modeling approach",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "by the authors. Licensee MDPI",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3269206.3271723"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "The correspondence between our quantum model and classical one.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Quantum Expectation Value based Language Model (QEV-LM).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Real part of the density matrix \u03c1",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Contributions: Formal analysis, C.L. and P.Z.; Methodology, Q.Z. and C.H.; Supervision, R.X.; Writing-original draft, Q.Z.; Writing-review & editing, C.H. All authors have read and agreed to the published version of the manuscript. Funding: This work was partially supported by National Natural Science Foundation of China 61632011, 61876053, Shenzhen Foundational Research Funding JCYJ20180507183527919, Key Technologies Research and Development Program of Shenzhen JSGG20170817140856618, Guangdong Province Covid-19 Pandemic Control Research Funding 2020KZDZX1224.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Statistics of TREC-QA and WIKIQA Datasets.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Results on TREC-QA and WIKIQA. The best performed values are in bold.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "The comparison on Parameters (Params) and Time Consumption (TC). Here, time consumption is the average inference time for a batch of 256 samples.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Comparison on physical explanations of different QLMs. QLM one-hot embedding NNQLM-II real-valued physical state CNM complex-valued physical state QEV-LM complex-valued physical state Sentence density matrix via local density matrices scheme QEV-LM Sentence Observable via word project operators Question-Answer pair QLM question density matrix \u03c1 q and answer density matrix \u03c1 a NNQLM-II joint question-answer density matrix \u03c1 qa CNM question density matrix \u03c1 q answer density matrix \u03c1 a QEV-LM joint question-answer observable O qa Matching score QLM VN-divergence NNQLM-II softmax valud of CNN-based density features CNM Cosine distance of density features QEV-LM Quantum expectation value of joint observable",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

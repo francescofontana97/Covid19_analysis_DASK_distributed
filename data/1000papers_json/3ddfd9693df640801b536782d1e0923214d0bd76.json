@@ -1,0 +1,1584 @@
+{
+    "paper_id": "3ddfd9693df640801b536782d1e0923214d0bd76",
+    "metadata": {
+        "title": "Size and duration of COVID-19 clusters go along with a high SARS- CoV-2 viral load : a spatio-temporal investigation in Vaud state",
+        "authors": [
+            {
+                "first": "Switzerland",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ana\u00efs",
+                "middle": [],
+                "last": "Ladoy",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Laboratory of Geographic Information Systems (LASIG)",
+                    "institution": "Ecole Polytechnique F\u00e9d\u00e9rale de Lausanne (EPFL)",
+                    "location": {
+                        "settlement": "Lausanne",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Onya",
+                "middle": [],
+                "last": "Opota",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University Hospital Centre and University of Lausanne",
+                    "location": {
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Pierre-Nicolas",
+                "middle": [],
+                "last": "Carron",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Lausanne University Hospital",
+                    "location": {
+                        "addrLine": "Rue du Bugnon 46",
+                        "postCode": "CH-1011",
+                        "settlement": "Lausanne",
+                        "country": "11 Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Idris",
+                "middle": [],
+                "last": "Guessous",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Geneva University Hospitals",
+                    "location": {
+                        "settlement": "Geneva",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "S\u00e9verine",
+                "middle": [],
+                "last": "",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Vuilleumier",
+                "middle": [],
+                "last": "5\uf0a8",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Sciences and Arts Western Switzerland (HES-SO)",
+                    "institution": "University of Applied",
+                    "location": {
+                        "postCode": "14",
+                        "settlement": "Lausanne",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "St\u00e9phane",
+                "middle": [],
+                "last": "Joost",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Laboratory of Geographic Information Systems (LASIG)",
+                    "institution": "Ecole Polytechnique F\u00e9d\u00e9rale de Lausanne (EPFL)",
+                    "location": {
+                        "settlement": "Lausanne",
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Gilbert",
+                "middle": [],
+                "last": "Greub",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University Hospital Centre and University of Lausanne",
+                    "location": {
+                        "country": "Switzerland"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "To understand the geographical and temporal spread of SARS-CoV-2 during the first wave of 29 infection documented in the canton of Vaud, Switzerland, we analysed clusters of positive 30",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "cases using the precise place of residence of 33'651 individuals tested (RT-PCR) between 31 January 10 and June 30, 2020. We identified both space-time (SaTScan) and transmission 32 (MST-DBSCAN) clusters; we estimated their duration, their transmission behavior 33 (emergence, growth, reduction, etc.) and relative risk. For each cluster, we computed the within 34 number of individuals, their median age and viral load. 35",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "Among 1'684 space-time clusters identified, 457 (27.1%) were significant (p \u2264 0.05), i.e. 36 harboring a higher relative risk of infection, as compared to other regions. They lasted a median 37 of 11 days (IQR 7-13) and included a median of 12 individuals per cluster . The 38 majority of significant clusters (n=260; 56.9 %) had at least one person with an extremely high 39 viral load (above 1 billion copies/ml). Those clusters were considerably larger (median of 17 40 infected individuals, p < 0.001) than clusters with subjects showing a viral load lower than 1 41 million copies/ml (median of 3 infected individuals). The highest viral loads were found in 42 clusters with the lowest average age, while clusters with the highest average age had low to 43 middle viral load. Interestingly, in 20 significant clusters the viral load of three first cases were 44",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The novel coronavirus SARS-CoV-2 causing the COVID-19 disease has impacted our 54 societies on an unprecedented scale. The number of infected people increased rapidly 55 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint specific non-residential setting with illness onset dates within 7 to 14 days. To further label 79 clusters as outbreak, one must also either 1) have identified direct exposure between at least 80 two of the test-confirmed cases in that setting (for example under one meter face to face) and 81 this during the infectious period of one of the cases, or 2) when there is no sustained local 82 community transmission, one must have noticed the absence of an alternative source of 83 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint infection outside the setting for the initially identified positive cases (13). Clusters are also 84 assimilated to the concept of \"hotspot\", which is not clearly defined neither but often used in 85 spatial epidemiology (14) . The World Health Organization (WHO) defined a set of methods 86 and procedures to identify epidemic hotspots and to use them for global surveillance of a 87 population (UNAIDS/WHO, 2013). Beside, infectious diseases studies have proposed 88 methods to identify spatial clusters and characterize them (16, 17) . 89",
+            "cite_spans": [
+                {
+                    "start": 358,
+                    "end": 362,
+                    "text": "(14)",
+                    "ref_id": null
+                },
+                {
+                    "start": 665,
+                    "end": 669,
+                    "text": "(16,",
+                    "ref_id": null
+                },
+                {
+                    "start": 670,
+                    "end": 673,
+                    "text": "17)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "The identification of areas of high prevalence of any phenomenon constitutes a specific Desjardins et al., 2020) and even less used spatial statistics to detect clusters at a local scale 97 (22, 8) . More studies on local and regional scales that consider demographic characteristics 98 of a population at risk are needed to provide timely information to enable accurate prevention 99 and containment measures (10). Indeed, the precise detection of spatial clusters, the 100 description of their dynamics and evolution over time in a geographic context are key to inform 101 decision-makers, to deploy smart testing overtime and to provide targeted health and 102 prevention interventions at a local scale (23). 103",
+            "cite_spans": [
+                {
+                    "start": 190,
+                    "end": 194,
+                    "text": "(22,",
+                    "ref_id": null
+                },
+                {
+                    "start": 195,
+                    "end": 197,
+                    "text": "8)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "The persistence in time of clusters was shown to be associated with socio-economic 104 deprivation (22), but their size and duration are also likely to be due to so-called \"super-105 spreader\" individuals or events (24). They relate to the evidence for large variation in individual 106 reproductive number (25). A super-spreader is considered to greatly contribute to the 107 transmission of an infectious disease. Stein (2011) estimates that it would correspond to a 108 20/80, i.e. 20% of individuals for up to 80% of the transmission. Super-spreaders exist among 109 the SARS-CoV-2 infected persons (27); they are more likely to be highly infectious, a 110 mechanism suggested to be related to high viral loads (28). Noteworthy, as shown recently 111 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [
+                {
+                    "start": 416,
+                    "end": 428,
+                    "text": "Stein (2011)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint 5 (29), viral load found in SARS-CoV-2 infected people appears to be similar to that observed 112 with other respiratory viruses such as influenza B and to be similar across ages. Why SARS-113",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "CoV-2 exhibits such a high reproductive number (R0) of about 2 to 3.5 (30), and whether 114 transmission pattern, cluster duration and size correlate somehow with viral load remains to 115 be explored in a detailed spatio-temporal context. 116",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "Here, we characterized the spatial and temporal dynamics of the first wave of SARS-CoV-2 117 infection in the canton of Vaud (western Switzerland) through the detection and the location of 118 clusters, as well as of their characteristics such as size, duration and composition (number and 119 age of individuals and their viral load). We used the results of the SARS-CoV-2 RT-PCR tests 120 (n= 33'651) performed by the Microbiology Laboratory of the Lausanne University Hospital 121 (CHUV) between January 10 and June 30, 2020 (with a first positive case on 2 nd March). The 122 data collected are results of RT-PCR tests, viral load (copies/ml) when the test is positive, age 123 and geographic location of the address of residence of individuals tested. We used on the one 124 hand a spatial scan approach (31, 32) (i) to detect spatio-temporal clusters of COVID-19 on a 125 daily basis, (ii) to disentangle the relationships between cluster size, duration and composition, Patients exhibiting symptoms compatible with COVID-19, such as fever, cough, dyspnea, 135 smell loss or taste loss were tested by RT-PCR for the presence of the SARS-CoV-2 in their 136 nasopharyngeal secretions, at least when considered vulnerable (e.g. with 137",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "immunosuppression, obesity, chronic obstructive lung disease or age > 65 years) or when 138 likely exposed to vulnerable cases (e.g. healthcare workers or subject living with vulnerable 139 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint All the data used were collected in the state of Vaud located in the south-west of Switzerland, 157 north of Lake Geneva. It has an area of 3'212km2 (see Figure 6A ), a population of 811'203 158 individuals (end of 2019), for a density of 249 inhabitants/km 2 . Of note, there are important 159 differences in population density between the urban area of Lausanne-Morges on the shores 160 of Lake Geneva (~3'000 inhabitants/km2), and country-side toward north where population 161 density is of ~200 inhabitants/km2. One exception is the area of Yverdon-les-Bains directly 162 south of the Lake of Neuch\u00e2tel with 2'200 inhabitants/km2. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 287,
+                    "end": 296,
+                    "text": "Figure 6A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction 53"
+        },
+        {
+            "text": "We used the SaTScan software (version 9.6.1) to detect daily space-time clusters of 168 individuals tested positive for SARS-COV-2 in the canton of Vaud from March 2 to June 30 169 2020 (no positive cases between January 10 and March 2, 2020). The algorithm developed by 170 Kulldorff (1997) tests whether a disease is randomly distributed over space and time. It uses 171 a \"moving cylinder\", with the base and height corresponding to the spatial and temporal 172 components, respectively. Significance evaluates the excess relative risk, i.e. more than 173 expected observed COVID-19 cases within the moving cylinder relative to randomly distributed 174 cases over space and time. We implemented it in a daily prospective surveillance analysis. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [
+                {
+                    "start": 275,
+                    "end": 291,
+                    "text": "Kulldorff (1997)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Spatio-temporal clusters 167"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint as 180 Vaud subjects were documented positive in our laboratory in a single day ( Figure 1A , 223 dark blue). Number of positive cases decreased then considerably from May 1st. The highest 224",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 219,
+                    "end": 228,
+                    "text": "Figure 1A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Spatio-temporal clusters 167"
+        },
+        {
+            "text": "proportion of positive tests was observed 4 days after the peak of the epidemic wave, with a 225 rate of positive tests reaching 32% ( Figure 1A , light blue). The rate of positive cases was 226 relatively high at the start of the epidemic when few individuals were tested and found positive. 227",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 135,
+                    "end": 144,
+                    "text": "Figure 1A",
+                    "ref_id": null
+                }
+            ],
+            "section": "Spatio-temporal clusters 167"
+        },
+        {
+            "text": "Then the shape of percentage of positive tests followed the trajectory of the number of cases. 228",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Spatio-temporal clusters 167"
+        },
+        {
+            "text": "This is likely to be related to the fact that at the beginning of the epidemics only symptomatic 229 subjects and patient at risk were tested, and then a much wider category of individuals was 230 tested to the point all symptomatic individuals and asymptomatic contacts could access a test. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint We can also observe the absence of any significant cluster from May 3 to June 16 ( Figure 2B) . 259 260",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 508,
+                    "end": 518,
+                    "text": "Figure 2B)",
+                    "ref_id": "FIGREF22"
+                }
+            ],
+            "section": "Spatio-temporal clusters 167"
+        },
+        {
+            "text": "Clusters were defined by the presence of at least 3 positive cases within a limited geographic 262 area, as documented in the SaTScan analysis. All clusters were then characterized according 263 to the nasopharyngeal viral load of the cases documented in each cluster (Table 1 ). Significant 264 clusters can have patients with viral load as low as those found in non-significant clusters, i.e. 265 even below 10'000 copies/ml (Supp. Mat. 3). Thus, 5 significant clusters were composed of 3 266 cases exhibiting a viral load below 10'000 copies/ml at time of testing. However, significant 267 clusters were more likely to be detected when viral loads were above 100 million copies/ml 268 The mean viral load of the first 3 cases was also studied, in order to gain insight of the possible 274 relationship between nasopharyngeal viral load and contagiousness, indirectly measured by 275 the documentation of subsequent clusters. For 20 significant clusters, all first 3 cases exhibited 276 a viral load below 100'000 copies/ml, suggesting that subjects with less than 100'000 copies/ml 277 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 268,
+                    "end": 276,
+                    "text": "(Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Viral load in clusters 261"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint Figure 4B ). Indeed, the median age of the individuals within a cluster is 293 significantly higher when the viral load value in the cluster is between 1 and 10 million 294 copies/ml. Then, the average age progressively decreases from 74 years to 48 years, while 295 viral load values increase. Cluster duration is significantly different only between the orange 296 category (100 million to 1 billion/ml) and the pink category (1 to 10 billion/ml) as clusters of the 297 latter category last longer (mean of +0.456 days, p<0.001; see Figure 4C ). 298",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 133,
+                    "end": 142,
+                    "text": "Figure 4B",
+                    "ref_id": "FIGREF25"
+                },
+                {
+                    "start": 668,
+                    "end": 677,
+                    "text": "Figure 4C",
+                    "ref_id": "FIGREF25"
+                }
+            ],
+            "section": "Viral load in clusters 261"
+        },
+        {
+            "text": "Interestingly, clusters with individuals showing the lowest average age and the highest viral 299 load ( Figure 4B ) also constitute the largest clusters ( Figure 4A ) and those that last the longest 300 ( Figure 4C) . is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint Mat. 6 for the dynamics of clusters' behavior. Here, Figure 6 shows the spatial distribution of 307 space-time clusters (A-F) and compares it to information translating the diffusion dynamics of 308 the clusters (A'-F'). A detailed description of the first SARS-CoV-2 epidemic wave in the state 309 of Vaud can be found in Box 1, illustrating the powerful and critical information that the 310 approach offers. 311",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 105,
+                    "end": 114,
+                    "text": "Figure 4B",
+                    "ref_id": "FIGREF25"
+                },
+                {
+                    "start": 156,
+                    "end": 165,
+                    "text": "Figure 4A",
+                    "ref_id": "FIGREF25"
+                },
+                {
+                    "start": 206,
+                    "end": 216,
+                    "text": "Figure 4C)",
+                    "ref_id": "FIGREF25"
+                },
+                {
+                    "start": 405,
+                    "end": 413,
+                    "text": "Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Viral load in clusters 261"
+        },
+        {
+            "text": "Cluster behaviors described in Box 1 were summarized with four diffusion zones shown in 312 Figure 7A and identified at the level of postal code areas using MST-DBSCAN ( Figure 7BCD) . 313",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 92,
+                    "end": 101,
+                    "text": "Figure 7A",
+                    "ref_id": null
+                },
+                {
+                    "start": 170,
+                    "end": 182,
+                    "text": "Figure 7BCD)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Viral load in clusters 261"
+        },
+        {
+            "text": "The grey diffusion zone corresponds to areas where no clusters emerged, while the green, 314 orange and blue diffusion zones differ in the way clusters evolved over time. The green 315 diffusion zones correspond to areas where the clusters immediately increased in size at the 316 beginning of the epidemic wave (red line, Figure 7B ) but decreased drastically once the soft 317 lockdown (vertical dash line) took place. Then we observed a second peak associated with an 318 important increase of clusters that reduced in size (red line, Figure 7B ). Both red and purple 319 curves are bimodal and tend to decrease afterwards, with a few numbers of new small peaks 320 that plateau forming a distribution with a long right tail. Conversely, orange and blue diffusion 321 is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 323,
+                    "end": 332,
+                    "text": "Figure 7B",
+                    "ref_id": null
+                },
+                {
+                    "start": 538,
+                    "end": 547,
+                    "text": "Figure 7B",
+                    "ref_id": null
+                }
+            ],
+            "section": "Viral load in clusters 261"
+        },
+        {
+            "text": "Significant clusters were mainly observed from March 15 to April 5 (red curve in Figure 1B) , 336",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 81,
+                    "end": 91,
+                    "text": "Figure 1B)",
+                    "ref_id": null
+                }
+            ],
+            "section": "A temporal lag between positive cases documentation and clusters burden 335"
+        },
+        {
+            "text": "whereas non-significant clusters that occurred specifically in high population density areas 337 such as Lausanne were already documented 4 to 5 days earlier and continuously occurred 338 until mid-May (grey curve on Figure 1B , and Figure 6A ). We ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 217,
+                    "end": 226,
+                    "text": "Figure 1B",
+                    "ref_id": null
+                },
+                {
+                    "start": 233,
+                    "end": 242,
+                    "text": "Figure 6A",
+                    "ref_id": null
+                }
+            ],
+            "section": "A temporal lag between positive cases documentation and clusters burden 335"
+        },
+        {
+            "text": "Our results show that clusters at the peak of the SARS-CoV-2 epidemic wave are composed 348 of individuals showing a high viral load. Cluster size is positively associated with the presence 349 of individuals with a high viral load among the significant clusters, although 40 clusters had 350 their 3 first cases exhibiting a viral load below 1 million copies/ml, including 33 clusters that all 351 had their cases with a nasopharyngeal viral load below 1 million copies. Moreover, as many 352 as 20 clusters were composed of cases that initially all had a viral load below 100'000 353 copies/ml, suggesting that subjects with less than 100'000 copies/ml may still have been 354",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Viral load is strongly informative on the presence and size of SARS-CoV-2 clusters 347"
+        },
+        {
+            "text": "The fact that significant clusters are composed of patients with viral load as low as those found 356 is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "contagious. 355"
+        },
+        {
+            "text": "Given the relatively low sensitivity of antigen tests, if we had used these assays, about 24 363 clusters would have been missed or identified late, when the first 3 cases would have led to 364 additional cases. Indeed, the 20 significant clusters with a viral load of the three first cases 365 below 100'000 copies/ml would not have been detected with antigen tests, given their limit of 366 detection (for the best ones) of about 100 to 200'0000 copies/Ml (45). Moreover, the clusters 367 with a case between 100'000 copies/ml and 1 million copies/ml will also not have been 368 detected in 5% of cases given an overall antigen sensitivity for such viral load of about 80% 369 (45). Thus, altogether, an antigen-based strategy would miss about 5% (24/457) of the 370 significant clusters. 371 372",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Advantage of RT-PCRs over antigen-based testing 362"
+        },
+        {
+            "text": "Within clusters we found a clear negative relationship between age and level of viral load 374 measured ( Figure 4B ), and between cluster size and viral load ( Figure 4A) . Indeed, while a 375 high viral load was found in large clusters with the youngest group age, low to intermediate 376 viral load was measured in small clusters constituted of older group age. This suggests that 377 large clusters were generated by active individuals belonging to the working population and 378 that super-spreader events might be at the origin of such large clusters. Surprisingly, when the 379 level of viral load is analyzed across age classes, no relationship was documented (Supp. Mat. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 106,
+                    "end": 115,
+                    "text": "Figure 4B",
+                    "ref_id": "FIGREF25"
+                },
+                {
+                    "start": 161,
+                    "end": 171,
+                    "text": "Figure 4A)",
+                    "ref_id": "FIGREF25"
+                }
+            ],
+            "section": "High viral load in large clusters with the youngest group age 373"
+        },
+        {
+            "text": "Significant and non-significant clusters both show the same epidemiological trajectories. 387",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "Indeed, they display similar patterns in terms of increase and decrease in size with a difference 388 in amplitude only. This suggests that the occurrence of clusters, even non-significant, is a good 389 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint estimator of the epidemic situation. However, significant and non-significant clusters differ in 390 terms of number of cases and measured viral load, but not duration. This suggests (i) that non-391 significant clusters might correspond to transmission events unrelated to subjects with very 392 high viral load, (ii) that they translate a lower impact on the population in terms of viral spread, 393",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "and (iii) that they express a transition towards or from a significant spatio-temporal 394 configuration. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint 47) . Similarly, the rate of false positives in the same laboratory is estimated to be lower 420 than 1/10'000 tests, thank to full automation and bar-coding that have been settled to prevent 421 human errors and samples/tubes inversion (34). Finally, missing cases might be due to the 422 fact that that some people living or working at the border of the state might have been tested 423 in another state, but again this seems to have a limited impact since more than 80% of all 424 samples tested for SARS-CoV-2 in 2020 have been taken from subjects living in the canton of 425 is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 239,
+                    "end": 242,
+                    "text": "47)",
+                    "ref_id": "FIGREF25"
+                }
+            ],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint of clusters increase and decrease in smaller urban centers and less dense areas ( Figure 7D) . is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint Altogether, we provide robust data suggesting that transmission may occur even when all 501 possible source cases in a cluster present a viral load lower than 100'000 copies/ml. Such low 502 viral load cases remain undetected by antigen testing, hence underlying the importance of RT-503",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 219,
+                    "end": 229,
+                    "text": "Figure 7D)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "PCRs assay in case finding and tracing strategies. This in-depth analysis suggests that even 504 older at-risk individuals that try to avoid infection may get infected by SARS-CoV-2 and hence 505 by one of the other cluster members, even when all cluster members exhibit a low viral load, 506",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "i.e. below 100'000 copies/ml. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-significant clusters also convey information on the progression of the epidemic 386"
+        },
+        {
+            "text": "AL performed the data analyses and drafted the manuscript. AL, SV, SJ and GG conceived 530 the study and completed the manuscript. OO, PNC, and IG participated in the design of the 531 study and helped to draft the manuscript. All authors read and approved the final manuscript. 532 533",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Author contributions 529"
+        },
+        {
+            "text": "The authors declare to have no conflict of interest. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint Within-cluster cases were identified by matching both geographically and temporally positive 701 test subjects, geocoded at the residential address, with space-time clusters. For example, a 702 cluster was classified as \"all below 1 million\" if all individuals tested positive within the cluster 703 during its active period had a viral load below 1 million copies/ml. Noteworthy, in 20 significant 704 clusters the viral load of three first cases were all below 100'000 copies/ml. 705 is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint The classification procedure is explained into more details in the legend of Table 1 . 724",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1414,
+                    "end": 1421,
+                    "text": "Table 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Conflict of interest 534"
+        },
+        {
+            "text": "Characteristics include the number of cases observed in clusters (A), the mean age of the 725 positive tests individuals forming clusters (B), and the duration of clusters (C). Of note, the 726 median number of cases was significantly higher (17 individuals) among clusters with subjects 727",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of interest 534"
+        },
+        {
+            "text": "showing extremely high viral load > 1 billion copies/ml) as compared to clusters with individuals 728 exhibiting a viral load < 1 million copies/ml (xx individuals). is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of interest 534"
+        },
+        {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of interest 534"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "World Health Organization. 2021. Weekly epidemiological update -12",
+            "authors": [],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "539 2. World Health Organization. 2021. WHO Coronavirus Disease (COVID-19) Dashboard",
+            "authors": [],
+            "year": 2021,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Health policy and leadership models during the COVID-19 pandemic: A review",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nicola",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Sohrabi",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Mathew",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kerwan",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Al-Jabir",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Griffin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Agha",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Agha",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "541",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Superspreading and the 612 effect of individual variation on disease emergence",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "O"
+                    ],
+                    "last": "Lloyd-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Schreiber",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Kopp",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Getz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Nature",
+            "volume": "7066",
+            "issn": "",
+            "pages": "355--359",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Super-spreaders in infectious diseases",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Stein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Int J Infect Dis",
+            "volume": "15",
+            "issn": "",
+            "pages": "510--513",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Frieden TR, Lee CT. 2020. Identifying and Interrupting Superspreading",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Implications for Control of Severe Acute Respiratory Syndrome Coronavirus 2",
+            "authors": [],
+            "year": null,
+            "venue": "Infect Dis",
+            "volume": "616",
+            "issn": "",
+            "pages": "1059--1066",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Do superspreaders generate new superspreaders? A 618 hypothesis to explain the propagation pattern of COVID-19",
+            "authors": [],
+            "year": null,
+            "venue": "Int J Infect Dis",
+            "volume": "96",
+            "issn": "",
+            "pages": "461--619",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Viral load of SARS-CoV-2 across patients 621 and compared to other respiratory viruses",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jacot",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Greub",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Opota",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Microbes Infect",
+            "volume": "22",
+            "issn": "",
+            "pages": "617--621",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The reproductive number of COVID-623 19 is higher compared to SARS coronavirus",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Gayle",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wilder-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Rockl\u00f6v",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Travel Med",
+            "volume": "27",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A spatial scan statistic",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kulldorff",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Commun Stat -Theory Methods",
+            "volume": "26",
+            "issn": "",
+            "pages": "1481--625",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Detection of spatial disease clusters with LISA functions",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Moraga",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Montes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Characterizing Diffusion Dynamics of Disease 629 Clustering: A Modified Space-Time DBSCAN (MST-DBSCAN) Algorithm",
+            "authors": [
+                {
+                    "first": "F-Y",
+                    "middle": [],
+                    "last": "Kuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "T-H",
+                    "middle": [],
+                    "last": "Wen",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Sabel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Ann Am",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Ten years of R&D and full automation in 632 molecular diagnosis",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Greub",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sahli",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Brouillet",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jaton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Future Microbiol",
+            "volume": "11",
+            "issn": "",
+            "pages": "403--425",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Detection of 2019 novel coronavirus 637 (2019-nCoV) by real-time RT-PCR",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Reusken",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Koopmans",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Drosten",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eurosurveillance",
+            "volume": "25",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "CoV-2 detection by real-time RT-PCR",
+            "authors": [],
+            "year": null,
+            "venue": "Euro Surveill Bull Eur Sur Mal Transm Eur",
+            "volume": "640",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Comparison of SARS-CoV-2 RT-PCR 642",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Opota",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Brouillet",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Greub",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jaton",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "on a high-throughput molecular diagnostic platform and the cobas SARS-CoV-2 test for 643 the diagnostic of COVID-19 on various clinical samples",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Universal admission screening strategy for COVID-19 highlighted the clinical 646 importance of reporting SARS-CoV-2 viral loads",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Moraz",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jacot",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Papadimitriou-Olivgeris",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Senn",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Greub",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Opota",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "New Microbes New Infect",
+            "volume": "645",
+            "issn": "2020",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "39. SFSO. 2019. STATPOP -Population and Households Statistics. Fed Stat Off",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Population and Household Statistics (STATPOP), spatial data 2019",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Simple Monte Carlo Tests for Spatial Pattern",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Besag",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Diggle",
+                    "suffix": ""
+                }
+            ],
+            "year": 1977,
+            "venue": "J R Stat Soc",
+            "volume": "651",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "A Density-Based Algorithm for Discovering Clusters 653",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ester",
+                    "suffix": ""
+                },
+                {
+                    "first": "H-P",
+                    "middle": [],
+                    "last": "Kriegel",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Proceedings of the Second International",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "654",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Conference on Knowledge Discovery and Data MiningEvangelos Simoudis",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "MicroGIS S. 2019. LC Swiss Localities -Swiss postcode database",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Fast unfolding of 658 communities in large networks",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Blondel",
+                    "suffix": ""
+                },
+                {
+                    "first": "J-L",
+                    "middle": [],
+                    "last": "Guillaume",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Lambiotte",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Lefebvre",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "J Stat Mech Theory Exp",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "CoV-2 Rapid antigen testing in the Emergency wArd of a Swiss univErsity hospital: the 662 INCREASE study",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Computer-aided medical 664 microbiology monitoring tool: a strategy to adapt to the SARS-CoV-2 epidemic and that 665 highlights RT-PCR consistency",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mueller",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Scherz",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Greub",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Jaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Opota",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "90 research domain in spatial statistics. Point pattern analysis (18) and local spatial 91 autocorrelation methods were applied for the detection of disease clusters (19). In the current 92 COVID-19 pandemic, Zhang et al. (2020) used local Moran's statistics to identify clusters in 93 China, but at a large geographic scale and using incident cases aggregated at the level of 94 large administrative units. Among studies involving geospatial information reviewed by Franch-95 Pardo et al. (2020), few characterized the spread of COVID-19 in space and time (e.g. 96",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "126 and (iii) to assess the importance of viral load in the evolution of the clusters. On the other 127 hand, we implemented the Modified Space-Time DBSCAN (MST-DBSCAN) algorithm (33) to 128 characterize the diffusion dynamics of transmission clusters. Finally, we discussed the effect 129 of a soft lockdown such as deployed in Switzerland from March 19 to April 27, 2020, on the 130 dynamics of the spread of the virus.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "175 We used a discrete Poisson model, where the number of events in the geographic area (total 176 number of positive tests) is Poisson-distributed, according to a known underlying population at 177 risk. The spatial size of the clusters' radius reported on maps covers a maximum of 0.5% of 178 the total resident population (population at risk) in the canton of Vaud (N=811'203 inhabitants; 179 SFSO, 2019). Tested individuals and the underlying population at risk were georeferenced at 180 the centroids of a hectometric grid (40) covering the entire study area. The minimum number 181 of positive cases considered to constitute a cluster is 3, and we restricted the temporal 182 scanning window to a minimum of 2 days and a maximum of 14 days. The upper limit of 14 183 days accounts for the incubation period (generally 2 to 7 days) and for being infectious (no 184 more than 10 days from symptoms onset). The significance of the clusters was evaluated on 185 the basis of 999 Monte-Carlo permutations that randomize both locations (41) and times of the 186 cases. 187 188 Cluster evolution and diffusion zones 189 We used MST-DBSCAN (modified space-time density-based spatial clustering of application 190 with noise; Kuo et al., 2018) to characterize the diffusion dynamics of clusters. MST-DBSCAN 191 is an algorithm for detecting, characterizing, and visualizing disease cluster evolution in the 192 geographic space and in time. It computes geographically a kernel density that considers the 193 effect of the incubation period of an infection disease. It is based on DBSCAN (42), a non-",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "parametric density-based clustering algorithm that groups together objects (here SARS-COV-195 2 positive cases) that are closely packed together (points with many nearby neighbors), 196 marking as outliers points that lie in low-density regions. The MST-DBSCAN identifies six 197 different cluster behaviors: a) emerge, b) grow (or increase), c) remain steady (keep), d) move, 198 e) split or f) reduce (decrease).199 We applied the MST-DBSCAN analysis to the 3'317 COVID-19 positive cases identified 200 (among 33'651 tested individuals) and georeferenced at their precise address of residence in 201 the canton of Vaud. Disease clusters were computed daily from March 4, 2020, to June 30, 202 2020. The maximum spatial radius considered was of 1'000 meters, and we have set a time 203 window of 1 to 7 days to reflect the incubation period of the disease. A minimum number of 3 204 positive cases was considered to constitute a cluster. For all clusters identified, we established 205 a typology of similar diffusion patterns in the geographical space. We associated the clusters 206 with the postcode areas (557 units; MicroGIS, 2019) of the canton of Vaud and used them as 207 spatial references. Then, we focused on three main cluster behaviors, which are increase (b), 208 reduce (f) and keep (c) to characterize the diffusion type through the postcode areas. The 209 diffusion patterns were detected using the Louvain method, a group detection algorithm using 210 network analysis (44). This approach synthetizes the spatio-temporal information and 211 facilitates its visualization on a single map. 212 213 Results 214 Epidemic trajectories of positive cases 215 A total of 33'651 subjects have been tested over a period of 6 months, of which 3'317 (9.86%) 216 were positive by RT-PCR. Seventy-nine percent of positive cases (2609/3317) were observed 217 between March 9 and April 5: this 4-weeks period corresponds to only 16% of the total duration 218 of the studied period, but in this short period as many as 2'609 tests were positive (22.2% of 219 11'756 tests) (Figure 1A). The peak of the 1 st epidemic wave occurred on March 18, i.e. two 220 days after the start of the soft lockdown implemented in Switzerland and lasting from March 221 16 to April 27 (see vertical dashed lines inFigure 1A). At the peak of the outbreak, as many 222",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Cluster detection and temporal dynamics 233We identified 1'684 space-time clusters using the place of residence of patients positive to 234 SARS-CoV-2. Among them, 457 were considered significant based on the within proportion of 235 positive cases compared to the total documented positive cases. Highest values of both 236 significant and non-significant clusters were observed between March 9 and April 5 (Figure 237",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "1B). Number of clusters decreased from the 1 st of May. Thus, the decrease in the number of 238 positive patients following the beginning of the soft lockdown (Figure 1A) occurred about two 239 weeks earlier than the decrease in the number of clusters (Figure 1B). Significant or not, the 240 number of clusters displays a similar pattern through time in terms of increase and decrease 241 but with a difference in amplitude. As shown onFigure 1C, the relative risk for new clusters 242 was higher before the soft lockdown and about 80 days after the end of the lockdown. The size 243 of clusters (i.e. number of cases within clusters) used to compute the relative risk does not 244 strongly change the value of the relative risk during the core of the epidemic wave; however, 245 it affects this value when the number of positive cases is small, i.e. at the beginning and at the 246 end of the epidemic wave.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "space-time clusters generally involved a larger number of positive cases (maximum 252 of 21 cases in average, with the largest cluster showing 43 cases on March 25) compared to 253 non-significant ones (maximum of 11 positive cases in average; Figure 2A). Noteworthy, as 254 shown in Figure 2A, significant clusters with more than 15 positive cases were mainly observed 255 shortly after the soft lockdown implemented from March 16 to April 27, with one exception on 256 April 3. Cluster durationsalthough limited to 14 days -increased over time from the start of 257 the epidemic wave, showing little differences between significant and non-significant clusters. 258",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Figure 3). Finally, as many as 18 significant clusters with at least 1 subject showing between269 1 billion and 10 billion copies/ml were documented on March 24 (Figure 3, pink curve). The 270 frequency distribution of viral load in significant clusters significantly differs from the distribution 271 of viral load in non-significant clusters and outside clusters (Kolmogorov-Smirnov test, two-272 sample case, p<0.001, see Supp. figures 1 and 2).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "size, duration and viral load 281 Cluster size (number of within cases) is positively associated with the presence of individuals 282 with high viral load (Figure 4A). The highest viral loads measured showed a value of at least 283 10 billion copies/ml and occurred in the largest clusters (median number of 21 positive cases). 284 Such a result nicely identifies super-spreading events. Even when comparing clusters 285 harboring individuals with all viral loads below 1 million copies/ml and the ones with at least 286 one case showing a viral load above 1 million copies/ml, the difference in cluster size was 287 significant with a median increasing from 3 cases per cluster to 4 cases per cluster (p<0.001; 288 figure 4A). Similar relationships were observed when considering the mean and maximal 289 values of viral loads of the first three positive cases (Figure 5A & B). 290 Highest values of viral load were found in clusters with individuals showing the lowest average 291 age. Clusters composed of individuals with the highest average age had low to middle viral 292 load values (",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "Geographic distribution of the first epidemic wave 303We chose six key dates to illustrate the evolution of the two types of clusters during the first 304 wave of the epidemic in the canton of Vaud. An animation showing the spatio-temporal 305",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "zones show a first peak of increasing clusters later, i.e. about at the time of the start of the soft 322 lockdown (orange & blue areas, Figure 7C and D). Both also show clusters that remain stable 323 in size during the soft lockdown (blue line). Blue diffusion zone is the only one to show no more 324 clusters after April 27, i.e. the end of the lockdown and that does not display a bimodal 325 distribution of clusters. Please note that no difference in viral load was documented among 326 these different diffusion zones (Figure 7E). 327 328 Discussion 329The discussion is divided into three majors part. The first highlights results that uncover new 330 information on COVID-19 clusters, the second explicits limitations in the interpretation of the 331 results, the third presents added value of the methods used to tackle epidemics and to evaluate 332 the effect of lockdown strategies.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "observed a time shift between the 339 decrease of the number of positive cases and the decrease of the number of clusters. This 340 delay could be explained by the fact that most positive cases might have been at the origin of 341 lasting clusters, i.e. lasting more than 10 days starting at the time when positive cases are 342 identified. Interestingly, the number of patients hospitalized at Lausanne University Hospital 343 (CHUV) and the number of deaths due to COVID-19 in the Canton of Vaud also followed the 344 same epidemic curve, but with a 2 weeks delay (personal communication, G. Greub). 345 346",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF14": {
+            "text": "in non-significant clusters further supports the hypothesis of community transmission with low 357 level of viral load. Nevertheless, this may also reflect a statistic bias since large clusters with 358 more than 10 individuals are more likely to get at least one individual with a very high viral 359",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF15": {
+            "text": "), meaning that useful information emerges within clusters. Indeed, the characterization of the 381 clusters provides a deeper analysis of the mechanisms behind the progression of an epidemic 382 and the geographic analysis of clusters of cases might constitute a type of investigations to 383 favor in the future. 384 385",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF16": {
+            "text": "Tested population is not homogeneous through time 398During the course of the studied epidemic wave, recommendations for testing requested by399 the authorities have regularly changed. Initially only symptomatic patients at risk and health 400 workers were tested. Then, since mid-March, a wider portion of the population was 401 progressively tested, although younger subjects still were reluctant to get tested. This might 402 have generated heterogeneity in our longitudinal investigation. Moreover, tests could have 403 been done at different stages of the infection (early, late, etc.) and not be representative of the 404 right window of infection. Days of the week might also generate differences in number of 405 positive tests as the number of tests was often reduced over the weekend, for example some 406 persons preferred to be tested only on the next Monday, to avoid quarantine over the week-407 end. 408 409Positive cases might be missing 410Our estimate of the number of positive cases might not be fully representative of the epidemics, 411 particularly at the beginning of the event when only symptomatic patients at risk and health 412 workers were tested. We might assume that their close relatives might also have been infected 413 but were not tested at that time due to reagents shortage. This bias might however have a 414 limited impact on the assessment of cluster size, since any person in contact with the positive 415 cases (documented by the contact tracing team) was tested. Besides, a source of 416 underestimation may be the false negative RT-PCRs, due to imperfect nasopharyngeal 417",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF17": {
+            "text": "value of the methods used 428Geographic clusters to characterize the epidemics: a key tool for intervention 429Beyond the fact that a formal definition of what a cluster is in a geographical context is lacking, 430 the statistical approaches used make implicit assumptions thatthrough different parameters 431have a direct influence on cluster detection and on how to interpret them. We used two 432 complementary approaches that highlight different key aspects of disease clustering. Space-433 time scan statistics detect the geographical location of case clusters, assess their significance, 434 and characterize their relative risk and duration. This prospective approach is particularly 435 appropriate for the establishment of a daily surveillance system, since it identifies 'alive' 436 clusters only, i.e. having an excess of relative risk on the day of analysis (48). Unlike other 437 detection methods, this approach search for clusters without imposing the specification of their 438 size and allow for analysis of area with heterogeneous population densities. Indeed it identifies 439 a cluster if risk of disease within a space-time cylinder (radius = space, and height = time) is 440 higher than outside. This type of information is key for public health authorities to target 441 neighborhoods and calibrate protective or preventive measures to be deployed. 442As for the MST-DBSCAN algorithm, it characterizes the diffusion dynamic of the transmission 443 clusters. Here the input parameters require a precise definition of the incubation period, the 444 cluster transmission areas, and a minimum number of spatio-temporal neighbors required to 445",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF18": {
+            "text": ". The output is a cluster typology according to their behaviors, which is of 446 interest to design sets of appropriate measures to control them. The space-time (SaTScan) 447 and the diffusion-type (MST-DBSCAN) analyses thus provide complementary results in terms 448 of clusters emergence, duration, and demographic characteristics. The two approaches used 449 in conjunction, allow thus for detailed monitoring of the disease's epidemic trajectory and 450 populations at risk and offer adequate tools for governments to both prioritize interventions on 451 excess-risk locations and develop adapted strategies to control cluster diffusion types. 452 453 Maps reflect the chronology of the epidemic 454 The results displayed on static and animated maps well reflect the chronology of the sanitary 455 situation during the first wave of the epidemics. For instance, the major clusters in the Joux 456 valley area can be clearly observed on different maps (Figures 6B, 6B', 6C, 6C'). Noteworthy, 457 these large clusters originate from a super-spreader event that took place end of February in 458 a religious ceremony in Mulhouse, France. Many swiss residents participated in this ceremony 459 and additional related clusters were also observed during the same period north of the 460 Lausanne urban area, and along the Jura mountains (e.g. Morges and Nyon). Conversely, 461 Lausanne was early hit by clusters likely due to a first transmission event that occurred in 462 Northern Italy. 463 Interestingly, the initial phase observed in the state of Vaud differ from what happened in 464 Geneva, where the first clusters emerged in deprived neighborhoods eight days (March 5) after 465 the first positive case (February 26) was detected (22, 8). In Vaud instead, the initial cluster 466 was directly detected the day of the first cases (March 4), with 9 positives and in a wealthy 467 neighborhood. 468 469 Positive impact of soft lockdown 470The soft lockdown was directly associated with a rapid reduction in the number of positive 471 cases and this despite the increased rate of testing. The reduction takes place massively and 472 in two clear phases in the main urban areas (seeFigure 7B), while it happens as a succession 473",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF19": {
+            "text": "474 However, due to the time lag between the identification of positive individuals and the 475 constitution of clusters, the cluster burden occurred directly after the implementation of the soft 476 lockdown. Similarly, the largest clusters, the longest duration and the clusters with individuals 477 showing large viral loads were observed just after the same time-lag. This time lag seems 478 shorter in urban areas as compared to rural areas, likely reflecting the faster spread of the 479 virus in large town such as Lausanne, Morges, Nyon, Yverdon and on the Vaud Riviera. This 480 faster spread is likely due to differences in social and cultural organization between rural and 481 urban areas, to less available room per person in housings, with higher risk of subsequent 482 infection in family with lower socio-economic situations. 483 Our results highlight the efficacy of the lockdown strategy, even soft, to control the epidemic 484 and to decrease the number of positive cases. It also demonstrates the importance of acting 485 when the number of positive cases increases and not waiting for the settlement of clusters. 486 Besides, our results show that the relative risk stayed very low within all the lockdown period. 487 Of note, the compliance of Swiss residents during the first soft lockdown is signaled by the 488 absence of any significant cluster from May 3 to June 16. And finally, it has not escaped our 489 notice that it is already possible to observe the beginnings of the second wave from June 22, 490 2020 (Figure 2A), that is to say exactly two weeks after a series of relaxations of the protective 491 measures such as in particular the authorization of public demonstrations up to 300 people, 492 and the opening of nightclubs (June 6, 2020). 493 494 Conclusion 495Our results highlight that cluster size goes along with the presence of individuals with high viral 496 load, the latter being more commonly found in clusters harboring the youngest group age. This 497 work also stresses the fact that cluster size and cluster duration are largely dependent on the 498 viral load of a few number of individuals within a given cluster, underlying the impact of viral 499 load on contagiousness.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF20": {
+            "text": ", such a spatio-temporal characterization of clusters demonstrates the huge effect of the 508 soft lockdown that took place in Switzerland from March 16 to April 27, 2020. Those important 509 results have been documented thanks to the contribution of the geospatial analysis of clusters. 510 511 Acknowledgments 512 Ana\u00efs Ladoy is funded by the Direction G\u00e9n\u00e9rale de la Sant\u00e9 of the canton of Vaud (DGS-513 Vaud) in the context of the GEOSAN project (Grant Agreement C/20-21 /037). 514 515 Ethical statement 516 This study was approved by the Commission cantonale d'\u00e9thique de la recherche sur l'\u00eatre 517 humain (CER-VD), Switzerland. Authorization no. 2020-01302 (20.7.2020). 518 519 Data availability statement 520The dataset analyzed during the current study is available from the corresponding author 521 upon reasonable request. The dataset could not be made publicly available due to the 522 sensitivity of individual georeferenced SARS-CoV-2 testing data. Requests to access the 523 data should be directed to Prof. Gilbert Greub (gilbert.greub@chuv.ch).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF21": {
+            "text": "IY-H, Alam P, Larson HJ, Lin L. 2020. Social consequences of mass quarantine 544 during epidemics: a systematic review with implications for the COVID-19 response. J 545 Travel Med 27. 546 5. Clark A, Jit M, Warren-Gash C, Guthrie B, Wang HHX, Mercer SW, Sanderson C, 547 McKee M, Troeger C, Ong KL, Checchi F, Perel P, Joseph S, Gibbs HP, Banerjee A, 548 Eggo RM, Nightingale ES, O'Reilly K, Jombart T, Edmunds WJ, Rosello A, Sun FY, 549 Atkins KE, Bosse NI, Clifford S, Russell TW, Deol AK, Liu Y, Procter SR, Leclerc QJ, 550 Medley G, Knight G, Munday JD, Kucharski AJ, Pearson CAB, Klepac P, Prem K, 551 Houben RMGJ, Endo A, Flasche S, Davies NG, Diamond C, van Zandvoort K, Funk S, 552 Auzenbergs M, Rees EM, Tully DC, Emery JC, Quilty BJ, Abbott S, Villabona-Arenas 553CJ, Hu\u00e9 S, Hellewell J, Gimma A, Jarvis CI. 2020. Global, regional, and national 554 estimates of the population at increased risk of severe COVID-19 due to underlying 555 health conditions in 2020: a modelling study. Lancet Glob Health 8:e1003-e1017.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF22": {
+            "text": "Case cluster characteristics over time. 692 The average and confidence intervals of the number of cases within clusters (A) and the 693 duration of clusters (B) are calculated for significant (red line) and non significant clusters (grey 694 line). Between May 6 and June 15, the prospective space-time scan statistic detected no 695 significant clusters. In the figures, the vertical dashed lines delimit the Swiss lockdown period 696",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF23": {
+            "text": "For each cluster category, the total number of case clusters detected by prospective space-706 time scan statistics over the entire study period (March 2-June 20) and the proportion of 707 significant clusters (p\u22640.05) are reported.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF24": {
+            "text": "Number of significant (p\u22640.05) case clusters over time characterized according to 711 the viral load of the cases documented in each cluster. 712 The vertical dashed lines delimit the Swiss lockdown period (March 16 -April 27). For each 713 cluster, we extracted the positive test individuals intersecting the cluster both geographically 714 and temporally, and we characterized the clusters according to the viral load of the individuals 715 composing it. The clusters represented in green are therefore composed solely of individuals 716with a viral load of less than 1 million copies/ml. The clusters shown in blue are made up of at 717 least one individual with a viral load between 1 million and 10 million copies/ml, and so on.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF25": {
+            "text": "Characteristics (size, age and duration) of significant space-time clusters (p\u22640.05) 722 over the study period, categorized according to the viral load of the cases involved. 723",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF27": {
+            "text": "Number of cases observed within significant space-time clusters (p\u22640.05) in function 732 of the mean (A) and maximal (B) viral load of the first three cases involved. Points are colored 733 according to the significance level of the cluster, which was assessed through 999",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "persons). Contacts of most positive cases were also tested, even when asymptomatic, in order 140 to define need of a 10 days quarantine period or isolation. Precise address of residence was 141 prospectively collected at the time of sampling as well as person age.142 Most RT-PCR were performed using the automated molecular plateform implemented at the 145 Institute of Microbiology. It uses the Magnapure automated RNA extraction method followed 146 by PCR amplification on QuantStudio automated systems (34) with primers described by 147 Corman et al. (2020), later slightly modified according to Pillonel et al. (2020) to further improve 148 PCR sensitivity. Then, from March 24, 2020, most RT-PCR were performed using the COBAS 149 6800 RT-PCR test, which exhibited similar performance than the home-brew automated 150 approach (Opota et al. 2020). A few numbers of cases were tested using the GeneXpert 151 approach to reduce time to results (38). Viral load was calculated based on the so-called \"cycle 152 threshold\" (Ct), which corresponds to the number of cycles, when the fluorescent signal is 153",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "evolution of the clusters for the whole first wave can be visualized in Supp. Mat. 5, and in Supp. 306",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "sampling. They might however not be of importance as the clinical sensitivity of RT-PCR 418 performed on nasopharyngeal samples in our laboratory is very good, i.e. about 96 to 98% 419",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF11": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint 6. Ruktanonchai NW, Floyd JR, Lai S, Ruktanonchai CW, Sadilek A, Rente-Lourenco P, 557 Ben X, Carioli A, Gwinn J, Steele JE, Prosper O, Schneider A, Oplinger A, Eastham P, 558 Tatem AJ. 2020. Assessing the impact of coordinated COVID-19 exit strategies across 559 Europe. Science 369:1465-1470.560 7. Faber M, Ghisletta A, Schmidheiny K. 2020. A lockdown index to assess the economic 561 impact of the coronavirus. Swiss J Econ Stat 156:11. 562 8. De Ridder D, Sandoval J, Vuilleumier N, Stringhini S, Spechbach H, Joost S, Kaiser L, 563 Guessous I. 2020. Geospatial digital monitoring of COVID-19 cases at high 564 spatiotemporal resolution. Lancet Digit Health 2:e393-e394. 565 9. Hohl A, Delmelle EM, Desjardins MR, Lan Y. 2020. Daily surveillance of COVID-19 566 using the prospective space-time scan statistic in the United States. Spat Spatio-567 Temporal Epidemiol 34:100354. 568 10. Franch-Pardo I, Napoletano BM, Rosete-Verges F, Billa L. 2020. Spatial analysis and 569 GIS in the study of COVID-19. A review. Sci Total Environ 739:140033. 570 11. Keesara S, Jonas A, Schulman K. 2020. Covid-19 and Health Care's Digital 571 Revolution. N Engl J Med 382:e82. 572 12. Cromley EK. 2019. Using GIS to Address Epidemiologic Research Questions. Curr 573 Epidemiol Rep 6:162-173. 574 13. Public Health England. 2020. COVID-19: epidemiological definitions of outbreaks and 575 clusters in particular settings. GOVUK. 576 14. Lessler J, Azman AS, McKay HS, Moore SM. 2017. What is a Hotspot Anyway? Am J 577 Trop Med Hyg 96:1270-1273. 578 15. UNAIDS/WHO Working Group on Global HIV/AIDS and STI Surveillance, Joint United 579 Nations Programme on HIV/AIDS, World Health Organization. 2013. Guidelines for 580 second generation HIV surveillance: an update : know your epidemic. 581 16. Bejon P, Williams TN, Liljander A, Noor AM, Wambua J, Ogada E, Olotu A, Osier FHA, 582 Hay SI, F\u00e4rnert A, Marsh K. 2010. Stable and Unstable Malaria Hotspots in 583 Longitudinal Cohort Studies in Kenya. PLOS Med 7:e1000304. 584 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF12": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint 17. Bousema T, Griffin JT, Sauerwein RW, Smith DL, Churcher TS, Takken W, Ghani A, 585 Drakeley C, Gosling R. 2012. Hitting Hotspots: Spatial Targeting of Malaria for Control 586 and Elimination. PLOS Med 9:e1001165. 587 18. Gatrell AC, Bailey TC, Diggle PJ, Rowlingson BS. 1996. Spatial Point Pattern Analysis 588 and Its Application in Geographical Epidemiology. Trans Inst Br Geogr 21:256-274. 589 19. Jacquez GM, Greiling DA. 2003. Local clustering in breast, lung and colorectal cancer 590 in Long Island, New York. Int J Health Geogr 2:3. 591 20. Zhang X, Rao H, Wu Y, Huang Y, Dai H. 2020. Comparison of spatiotemporal 592 characteristics of the COVID-19 and SARS outbreaks in mainland China. BMC Infect 593 Dis 20:805. 594 . CC-BY-NC-ND 4.0 International license It is made available under a perpetuity.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF13": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF14": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint Table 1. Classification of the space-time clusters according to the viral load of the cases 699 involved. 700",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF15": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF16": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF17": {
+            "text": "The copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprintThe copyright holder for this this version posted February 19, 2021. Below the map are shown the frequencies of major evolution types over time for zone 1 (B), 756zone 2 (C) and zone 3 (D). The red line corresponds to the \"increase\" diffusion type 757 assigned to the transmission clusters whose area becomes larger, the blue line corresponds 758 to the \"keep\" diffusion type assigned to the transmission clusters whose area remains, and the 759 purple line corresponds to the \"decrease\" diffusion type assigned to the transmission clusters 760 whose area becomes smaller. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprintThe copyright holder for this this version posted February 19, 2021. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprintThe copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint 37 Box 1: The first SARS-CoV-2 epidemic wave in the state of Vaud, Switzerland 765On March 11, 7 days after the first detection of a positive case ( Figure 6A ), we observe a phase 766 of rapid growth and merging (see Figure 6A' ) and a series of significant clusters explodes 767 directly north of Lausanne, the main city of the state. Interestingly three out of the four clusters 768shown are located in wealthy areas. March 15 ( Figures 6B and 6B') is the day before the soft-769lockdown. There is a multitude of clusters in the Lausanne area, among which a large fraction 770 is significant ( Figure 6B ). Figure 6B ' shows that these clusters rapidly merged into a single 771 \"super cluster\" deployed over the urban agglomeration. In the country-side, active clusters 772 emerge and grow north of the lake in the Joux valley located in the Jura mountains where 773 population density is low. Four days later, March 19 ( Figures 6C and 6C') , the peak of the first 774 wave is approaching (see Figure 1B ). The number of case clusters is high in the Lausanne 775 area ( Figure 6C ) but clearly stabilizes. Similar behavior is observed towards east, along 776 Geneva lake; in the Riviera area only one moving cluster is observed ( Figure 6C Figure 1B ). New cases reactivate moving 780 clusters in the center of Lausanne, while towards west the situation stabilizes and even 781 reduces toward Geneva with no more significant cluster in the Nyon area. At the peak, a large 782 significant cluster remains steady in the Jura, and several clusters grow in the remote, rural 783 periphery north of the main urban area ( Figures 6D and 6D' ). In the north, close to the Lake of 784Neuch\u00e2tel, the clusters are not significant despite growing. March 27 ( Figures 6E and 6E') is 785 the start of the important and rapid reduction phase of all clusters (see Figure 1B) . The merged 786 clusters of the Lausanne area split and most of those located on the country-side are steady. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprintThe copyright holder for this this version posted February 19, 2021. ; https://doi.org/10.1101/2021.02.16.21251641 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 2122,
+                    "end": 2131,
+                    "text": "Figure 6A",
+                    "ref_id": null
+                },
+                {
+                    "start": 2191,
+                    "end": 2201,
+                    "text": "Figure 6A'",
+                    "ref_id": null
+                },
+                {
+                    "start": 2405,
+                    "end": 2424,
+                    "text": "Figures 6B and 6B')",
+                    "ref_id": null
+                },
+                {
+                    "start": 2570,
+                    "end": 2579,
+                    "text": "Figure 6B",
+                    "ref_id": null
+                },
+                {
+                    "start": 2583,
+                    "end": 2592,
+                    "text": "Figure 6B",
+                    "ref_id": null
+                },
+                {
+                    "start": 2898,
+                    "end": 2917,
+                    "text": "Figures 6C and 6C')",
+                    "ref_id": null
+                },
+                {
+                    "start": 2971,
+                    "end": 2980,
+                    "text": "Figure 1B",
+                    "ref_id": null
+                },
+                {
+                    "start": 3047,
+                    "end": 3056,
+                    "text": "Figure 6C",
+                    "ref_id": null
+                },
+                {
+                    "start": 3207,
+                    "end": 3216,
+                    "text": "Figure 6C",
+                    "ref_id": null
+                },
+                {
+                    "start": 3217,
+                    "end": 3226,
+                    "text": "Figure 1B",
+                    "ref_id": null
+                },
+                {
+                    "start": 3593,
+                    "end": 3611,
+                    "text": "Figures 6D and 6D'",
+                    "ref_id": null
+                },
+                {
+                    "start": 3725,
+                    "end": 3744,
+                    "text": "Figures 6E and 6E')",
+                    "ref_id": null
+                },
+                {
+                    "start": 3826,
+                    "end": 3836,
+                    "text": "Figure 1B)",
+                    "ref_id": null
+                }
+            ],
+            "section": "annex"
+        }
+    ]
+}

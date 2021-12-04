@@ -1,0 +1,2144 @@
+{
+    "paper_id": "3e8b49ec2330368b754e4f8b47e8aeb0f966d78b",
+    "metadata": {
+        "title": "Event-Driven Learning of Systematic Behaviours in Stock Markets",
+        "authors": [
+            {
+                "first": "Xianchao",
+                "middle": [],
+                "last": "Wu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "NVIDIA",
+                    "location": {}
+                },
+                "email": "xianchaow@nvidia.com"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "It is reported that financial news, especially financial events expressed in news, provide information to investors' long/short decisions and influence the movements of stock markets. Motivated by this, we leverage financial event streams to train a classification neural network that detects latent event-stock linkages and stock markets' systematic behaviours in the U.S. stock market. Our proposed pipeline includes (1) a combined event extraction method that utilizes Open Information Extraction and neural co-reference resolution, (2) a BERT/ALBERT enhanced representation of events, and (3) an extended hierarchical attention network that includes attentions on event, news and temporal levels. Our pipeline achieves significantly better accuracies and higher simulated annualized returns than state-of-the-art models when being applied to predicting Standard&Poor 500, Dow Jones, Nasdaq indices and 10 individual stocks. arXiv:2010.15586v1 [q-fin.ST]",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "It is widely reported that financial news, especially financial events expressed in the news, influence the movements of stock markets (Ding et al., 2014 (Ding et al., , 2015 (Ding et al., , 2016 Hu et al., 2018; Ding et al., 2019; Huang et al., 2019; Glasserman et al., 2019) . For example, one company's releasing of new products brings novel time-sensitive factors to the stock movement of that company and further to the whole market; changing of interest rates from the central bank of the country bring changes of currency fluidity invested in the stock market. Frequently, good news brings increased estimation of the future value of the target company and consequently a higher stock price tendency.",
+            "cite_spans": [
+                {
+                    "start": 135,
+                    "end": 153,
+                    "text": "(Ding et al., 2014",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 154,
+                    "end": 174,
+                    "text": "(Ding et al., , 2015",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 175,
+                    "end": 195,
+                    "text": "(Ding et al., , 2016",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 196,
+                    "end": 212,
+                    "text": "Hu et al., 2018;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 213,
+                    "end": 231,
+                    "text": "Ding et al., 2019;",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 232,
+                    "end": 251,
+                    "text": "Huang et al., 2019;",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 252,
+                    "end": 276,
+                    "text": "Glasserman et al., 2019)",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Warren Buffett said in his interview 1 that he frequently spent 5 hours reading news and financial 1 https://www.youtube.com/watch?v=Pqc56crs56s reports to manage his portfolios. Regarding the rich information included in daily published news articles, we are encouraged to read them not by ourselves but by employing deep learning algorithms to guide our investments. One solution is to automatically collect thousands of news published every day, extract financial events from the news, and rank the importance of the events to predict market behaviours. In particular, we are aiming at quantifying the latent relevance of between financial event streams and target stocks' price volatilities.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "However, this is not a trivial task and there are a number of challenges. First, it is ambiguous to define good or bad news. For example, bad news for one company could be worse news to its downstream supply-chain partner companies yet good news to its competitors. It is time-consuming and untrackable to annotate news manually and train a sentiment analysis model on it, considering that the generalization of the model to novel financial events is fragile. Second, how shall we express the impact of the news published in different days? Generally, news articles have their individual and accumulated influences to the investors. For example, billion-dollar mergers and acquisitions frequently bring bigger and longer impact than adding a new member to the board. Third, regarding that news articles are too long to be generalized for comparison, how to extract shorter, high-level summarized and complete financial events from news? There are factual and opinion-level events expressed in news and their appearance order matters for concluding the news. Finally, how to measure the similarities among financial events guided by historical stock movements? The latent-space representation of events empowers the generalization ability of a machine learning model for predicting event-volatility based on representing and projecting novel events into existing event representation space.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In order to tackle these challenges, we propose a classification network for stock movement prediction. We first describe a combined event extraction method basing on Open Information Extraction (Fader et al., 2011) and neural co-reference resolution (Clark and Manning, 2016b,a) to keep the mined events to be compact and complete with meaning. Then, we learn the event representations and similarities among events under BERT/ALBERT (Devlin et al., 2019; Lan et al., 2020) pretrained contextualized language models. Finally, we construct a hierarchical attention network (HAN) (Yang et al., 2016; Hu et al., 2018) that employs events, news, and historical days to organize the granularity of information for final multi-category stock movement prediction.",
+            "cite_spans": [
+                {
+                    "start": 195,
+                    "end": 215,
+                    "text": "(Fader et al., 2011)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 251,
+                    "end": 279,
+                    "text": "(Clark and Manning, 2016b,a)",
+                    "ref_id": null
+                },
+                {
+                    "start": 435,
+                    "end": 456,
+                    "text": "(Devlin et al., 2019;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 457,
+                    "end": 474,
+                    "text": "Lan et al., 2020)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 579,
+                    "end": 598,
+                    "text": "(Yang et al., 2016;",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 599,
+                    "end": 615,
+                    "text": "Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Following Ding et al. (2014) , we define a financial event as a tuple alike a 1 , p, a 2 , [timestamp] . Arguments a 1 and a 2 respectively act as subject and object. The predicate p is the action that links a 1 and a 2 . Publishing timestamp of the news is attached to each tuple, which is used to align events with the consequent stock movements.",
+            "cite_spans": [
+                {
+                    "start": 10,
+                    "end": 28,
+                    "text": "Ding et al. (2014)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Event Definition and Classification"
+        },
+        {
+            "text": "The major components in arguments a 1 and a 2 are named entities (such as names of person, company, and stock/index). The main components in predicates p are verb (phrases) standing for actions performed of among the arguments. For example, \"the standard&poor's 500 index, rose, 0.6 percent\". The polarities of events are traditionally classified into positive, negative, and neutral events (Huang et al., 2019) . In this paper, instead of explicitly assign polarity to each event, we ask the HAN model to tune the attentional weights of the event sequences which are mixtures of various types of events expressed in news during a period.",
+            "cite_spans": [
+                {
+                    "start": 391,
+                    "end": 411,
+                    "text": "(Huang et al., 2019)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Event Definition and Classification"
+        },
+        {
+            "text": "From another point of view, events can be classified into objective evidence and subjective opinions. For example, \"equities and bonds, were both in, bear markets\" is a real-world fact evidence. On the other hand, \"This, is, the best buying opportunity\" is more alike a subjective opinion of someone's (e.g., journalists or analysts in the news) judgement. Our usage of event sequence is a mixture of evidence and opinions. The weights of events are learned simultaneously based on their contributions to the consequent days' stock movements. Figure 1 : Applying reverb and neural-coref in parallel for event extracting.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 543,
+                    "end": 551,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Event Definition and Classification"
+        },
+        {
+            "text": "No. Events (Original Format) 1 Wednesday U.S. investment-grade corporate bonds, have been heavily battered in, recent weeks 2 Wednesday U.S. investment-grade corporate bonds, are, the best buying opportunity 3 This, is, the best buying opportunity 4 equities and bonds, were both in, bear markets 5 average now yield about 7 percent 6 That, 's almost as much as, junk bonds 7 Congress, will pass, a controversial $ 700 billion financial bailout package 8 the heels of the collapse of Lehman Brothers and AIG, has triggered, a flight 9 people, have to sell for, one reason 10 It, 's, an illiquid market 11 an illiquid market, makes, matters 12 Fuss, is vice chairman of, Boston-based Loomis Sayles 13 He/fuss, 's able to buy, long-maturing AA 14 junk bonds, were yielding in, March 2007 15 vice chairman of Boston-based Loomis Sayles, oversees more than, $ 100 billion ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Event Definition and Classification"
+        },
+        {
+            "text": "Our process for English financial event extraction is depicted in Figure 1 . There are mainly two modules, the OpenIE reverb module 2 (Fader et al., 2011) for raw event extraction and the neural coref module 3 (Clark and Manning, 2016b,a) for coreference resolution. These modules are executed in parallel and combined together to yield coreferencefree events. There are two differences between our work and the former event-driven researches (Ding et al., 2014 (Ding et al., , 2015 (Ding et al., , 2016 (Ding et al., , 2019 : we additionally use neural-coref for entity linking to rewrite events and we ignore post-filtering such as restricted dependency relations among a 1 , a 2 and p. We select one article from Reuters 4 as an example. The extracted events are listed in Table 1 . These events reflect objective evidence (events 1, 4 to 10, 12 to 15) and subjective opinions (events 2, 3, 11). This news was published at 2008/10/01, right during the \"2008 Financial Crisis\". It was an illiquid market with quite decreased trading volume of both stocks and bonds. Yet it was hard to judge whether or not it was the \"best\" buying opportunity (Event 3), depending on how far the market trusts these opinions. With the usage of these evidence and opinions, we are hoping to learn latent connection of between these events and the next-day's (open-price) stock movement.",
+            "cite_spans": [
+                {
+                    "start": 134,
+                    "end": 154,
+                    "text": "(Fader et al., 2011)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 443,
+                    "end": 461,
+                    "text": "(Ding et al., 2014",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 462,
+                    "end": 482,
+                    "text": "(Ding et al., , 2015",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 483,
+                    "end": 503,
+                    "text": "(Ding et al., , 2016",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 504,
+                    "end": 524,
+                    "text": "(Ding et al., , 2019",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 66,
+                    "end": 74,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 776,
+                    "end": 783,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Event Extraction"
+        },
+        {
+            "text": "We propose two updates of the original HANs used in (Hu et al., 2018) and (Yang et al., 2016) : inserting an event-layer between words and news levels, and representing events by pretrained contextualized language models such as BERT (Devlin et al., 2019) instead of bidirectional gated recurrent unit (bi-GRU) (Cho et al., 2014) plus attention networks. The encoding of financial information in the units of events is inspired by Ding et al. (2014 Ding et al. ( , 2019 .",
+            "cite_spans": [
+                {
+                    "start": 52,
+                    "end": 69,
+                    "text": "(Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 74,
+                    "end": 93,
+                    "text": "(Yang et al., 2016)",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 234,
+                    "end": 255,
+                    "text": "(Devlin et al., 2019)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 311,
+                    "end": 329,
+                    "text": "(Cho et al., 2014)",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 431,
+                    "end": 448,
+                    "text": "Ding et al. (2014",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 449,
+                    "end": 469,
+                    "text": "Ding et al. ( , 2019",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "The difference is that, we replace the neural tensor network (Ding et al., 2014) by BERT. Hu et al. (2018) directly used selected words in news as the initial layer in their HAN for stock movement prediction. The drawbacks that we find are (1) one news include hundreds to thousands words and it is difficult to select representative words from them to fit the final stock movement prediction task, and (2) too long news prevents the generalization ability of being embedded for financial information similarity computing. Generally, our proposed network can be seen as a combination of events (Ding et al., 2014 (Ding et al., , 2019 represented by deep pretrained contextualized language models (Devlin et al., 2019) inside a hierarchical attention mechanisms (Hu et al., 2018; Yang et al., 2016) . In Figure 2 , we assume that there are N words in one financial event. We attach a classification token [CLS] at the beginning of an event and then execute BERT to obtain the representation tensor of the event. The output vector of [CLS] is taken as the representation of the event.",
+            "cite_spans": [
+                {
+                    "start": 61,
+                    "end": 80,
+                    "text": "(Ding et al., 2014)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 90,
+                    "end": 106,
+                    "text": "Hu et al. (2018)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 594,
+                    "end": 612,
+                    "text": "(Ding et al., 2014",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 613,
+                    "end": 633,
+                    "text": "(Ding et al., , 2019",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 696,
+                    "end": 717,
+                    "text": "(Devlin et al., 2019)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 761,
+                    "end": 778,
+                    "text": "(Hu et al., 2018;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 779,
+                    "end": 797,
+                    "text": "Yang et al., 2016)",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 803,
+                    "end": 811,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "In the event-level network block, our target is to construct a recurrent representation for the news by taking all its M events into consideration. We first apply a bi-GRU to the vectors of events:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "The result h i incorporates the contextual information of M events. Through this way, we encode the event sequence of each news.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "Considering that different events contribute unequally to the final representation of one news, we adopt the attention mechanism (Bahdanau et al., 2015; Hu et al., 2018) to aggregate the events weighted by an assigned attention value, in order to reward the event(s) that offer critical information:",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 152,
+                    "text": "(Bahdanau et al., 2015;",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 153,
+                    "end": 169,
+                    "text": "Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "We first estimate attention values by feeding h i through a one-layer full-connection linear neural network followed by a sigmoid function to obtain the event-level attention value u i . Then, we calculate its normalized attention weight \u03b2 i through a softmax function. Finally, we calculate the news vector n i as a weighted sum of each event vector. A parameter \u03b8 i is attached to each event in the softmax layer, indicating in general which event is more representative. Through this way, we construct the event-level representation and attention for each news. We reuse these recurrent and attention layers to news-level block. Suppose that there are maximum L news in one day's financial news collection. We construct news-level recurrent and attention computing for one day's news. Here, bi-GRU is employed to capture the \"contextual\" relations among news sorted by their published timestamps. Also, attention mechanism is employed to capture which news contributes more to the representation of that day's vector d i . Again, d i is an attention weighted sum of the news vectors.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "In the temporal level, we suppose that there are K historical days for tomorrow's stock movement prediction. The news published at different dates contribute differently to the final stock trend. We the third time use bi-GRU to capture the latent dependencies of day vectors and attention mechanism to weight the day vectors. The final vector V is a weighted sum of d 1 to d K .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "The final discriminative network is a standard multi-layer perceptron (MLP) that takes V as the input and produces the multi-category classification of the stock movement. Generally, the prediction is explainable by listing the most valuable events in the most trustable news published in those important historical days (Table 6 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 321,
+                    "end": 329,
+                    "text": "(Table 6",
+                    "ref_id": "TABREF8"
+                }
+            ],
+            "section": "BERT-enhanced HANs with Three-Level Attentions"
+        },
+        {
+            "text": "We select Standard&Poor (S&P) 500, Dow Jones and Nasdaq indices 5 to disclose how far financial news information can bring impacts to the systematic behaviours in stock markets. Following researches on stock movement prediction (Hu et al., 2018; Ding et al., 2019) , we define it as a multicategory classification problem.",
+            "cite_spans": [
+                {
+                    "start": 228,
+                    "end": 245,
+                    "text": "(Hu et al., 2018;",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 246,
+                    "end": 264,
+                    "text": "Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S&P 500, Dow Jones and Nasdaq Indices"
+        },
+        {
+            "text": "For a given date t and a given stock s (i.e., an individual stock or an index), its daily return r(s, t) (or, rise percent) is computed by: Date t \u2212 1 here refers to target stock's rightformer market-opening date before date t. These three indices and their related daily returns (r) are depicted in Figure 3 . Intuitively observing, despite their absolute values, the curves of these indices' open prices are quite similar. Thus, it is reasonable to argue that there do exist (latent) driving factors. Specifically, when we simply compare the UP (r > 0) or DOWN (r < 0) movements, S&P 500 respectively shares 87.8% and 75.4% days with Dow Jones and Nasdaq of identical movements, and Dow Jones shares 69.2% identical days with Nasdaq.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 300,
+                    "end": 308,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "S&P 500, Dow Jones and Nasdaq Indices"
+        },
+        {
+            "text": "For We focus on out-of-sample testing to figure out if the weights of the events happened during the train period is explainable enough for the future movements of the indices.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "S&P 500, Dow Jones and Nasdaq Indices"
+        },
+        {
+            "text": "For qualitatively evaluating the strengths of events, we define five categories, UP+, UP, PRE-SERVE, DOWN and DOWN-, representing the significant rising, rising, steady, dropping, and significant dropping compared with the former openmarket date. In addition to align with (Ding et al., 2019) and (Hu et al., 2018) , we also report results on 2-category UP(r > 0)/DOWN(r < 0) and 3category UP/PRESERVE/DOWN predictions.",
+            "cite_spans": [
+                {
+                    "start": 273,
+                    "end": 292,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 297,
+                    "end": 314,
+                    "text": "(Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S&P 500, Dow Jones and Nasdaq Indices"
+        },
+        {
+            "text": "There are 1,786 samples in our observation period and each sample contains more than one news. In order to balance the number of samples in each category, following (Hu et al., 2018) , we respectively split this sample set equally into five and three subsets by setting four and two thresholds, for 5-category and 3-category classification. For example, for the 3-category case of S&P 500 index, the lower/higher thresholds are -0.23% and 0.38%, yielding 601/609/576 DOWN/UP/PRESERVE samples.",
+            "cite_spans": [
+                {
+                    "start": 165,
+                    "end": 182,
+                    "text": "(Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "S&P 500, Dow Jones and Nasdaq Indices"
+        },
+        {
+            "text": "Following (Ding et al., 2015 (Ding et al., , 2016 (Ding et al., , 2019 , we utilize Bloomberg and Reuters financial news 7 (2006/10 to 2013/11) for extracting financial events that are related to the U.S. stock market. Table 2 lists detailed statistical information of the events that we extracted from Bloomberg and Reuters. The number of events in total is more than 10 million, significantly (around 28 times) larger than the 366K events used in (Ding et al., 2014 (Ding et al., , 2016 (Ding et al., , 2019 . We will show that these largescale mined events are essential for training the BERT+HAN and for achieving significant better prediction accuracies (Section 4.4).",
+            "cite_spans": [
+                {
+                    "start": 10,
+                    "end": 28,
+                    "text": "(Ding et al., 2015",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 29,
+                    "end": 49,
+                    "text": "(Ding et al., , 2016",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 50,
+                    "end": 70,
+                    "text": "(Ding et al., , 2019",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 449,
+                    "end": 467,
+                    "text": "(Ding et al., 2014",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 468,
+                    "end": 488,
+                    "text": "(Ding et al., , 2016",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 489,
+                    "end": 509,
+                    "text": "(Ding et al., , 2019",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 219,
+                    "end": 226,
+                    "text": "Table 2",
+                    "ref_id": "TABREF2"
+                }
+            ],
+            "section": "Bloomberg and Reuters News"
+        },
+        {
+            "text": "Bloomberg (ranges from 195.5 to 337.0 news articles per day) has much more news per day than Reuters (ranges from 38.3 to 46.8 news articles per day) during the three observation periods. Also, there are more missing days without any news in the Reuters dataset. In terms of events in the Bloomberg set, the three datasets (train, validation, and test) all have more than 2 million events and daily event number is in a range of from 2K (train set) to more than 8K (validation and test sets). These too long sequences prevent a direct usage of BERT style pretraining models which directly make a prediction based on [CLS]'s vector, due to the GPU memory limitation and computational difficulty of multi-head self-attention (Vaswani et al., 2017) on 8K events in which each event further has averagely >7 words.",
+            "cite_spans": [
+                {
+                    "start": 723,
+                    "end": 745,
+                    "text": "(Vaswani et al., 2017)",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Bloomberg and Reuters News"
+        },
+        {
+            "text": "In our HAN, we set historical days K=10, maximum news per day L=500, maximum events per news M =100 and maximum words per event N =20, the dimensions of hidden states in recurrent networks and attention vectors are set to be 1,024. We implement our BERT-HAN under Huggingface's transformers 8 written in PyTorch. We specially selected BERT (Devlin et al., 2019 ) pretrained model of \"bert-large-uncased\" and AL-BERT (Lan et al., 2020) pretrained model of \"albert-xxlarge-v2\" 9 . Categorical cross-entropy loss is optimized by the Adam algorithm with weight decay (Kingma and Ba, 2015; Loshchilov and Hutter, 2019). We run experiments on three machines, each with a NVIDIA V100 GPU card with 32GB memory.",
+            "cite_spans": [
+                {
+                    "start": 340,
+                    "end": 360,
+                    "text": "(Devlin et al., 2019",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 416,
+                    "end": 434,
+                    "text": "(Lan et al., 2020)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experiment Setups"
+        },
+        {
+            "text": "BERT and ALBERT's tokenizers are reused to tokenize words into word pieces (Kudo and Richardson, 2018) . For direct comparing with BERT and ALBERT's event representation learning, we also reuse an existing 100-dimension word embedding file 10 with 400K words (covers 75.76% of words in the event set) pre-trained by GloVe (Pennington et al., 2014) and set it to be tunable.",
+            "cite_spans": [
+                {
+                    "start": 75,
+                    "end": 102,
+                    "text": "(Kudo and Richardson, 2018)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 322,
+                    "end": 347,
+                    "text": "(Pennington et al., 2014)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Experiment Setups"
+        },
+        {
+            "text": "We report three variants of our framework basing on event-level HAN: GloVe-based of word2vec style, BERT and ALBERT-based of pretraining + tuning style. ALBERT (Lan et al., 2020) is a lite BERT which significantly outperform BERT through three updates: factorized embedding parametrization, cross-layer parameter sharing and inter-sentence coherence loss.",
+            "cite_spans": [
+                {
+                    "start": 160,
+                    "end": 178,
+                    "text": "(Lan et al., 2020)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Prediction Results and Discussions"
+        },
+        {
+            "text": "We compare our framework variants with four strong baselines, as shown in Table 3 . The first is wordHAN (Hu et al., 2018) which utilized words in news for 3-category individual stock movement prediction in Chinese market. Their original accuracies were reported to be around 40% to 50%. We reimplement their network and retrain it using our datasets for US market prediction. The second is ECK+event (Ding et al., 2019) , i.e., external commonsense knowledge (ECK) enhanced event representative learning. Since only 2-category results were reported in (Ding et al., 2019) , we reuse their code 11 and retrain it for 3-category and 5category predictions. Note that, even using exactly the same news data, the number of events used in (Ding et al., 2019) is only 366K. When we replace their event set with ours and retrain their model, we obtain an averagely 4.2% absolute improvements of the 9 tasks. This reflects the importance of mining large-scale and coreference-free events ( Figure  1) .",
+            "cite_spans": [
+                {
+                    "start": 105,
+                    "end": 122,
+                    "text": "(Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 401,
+                    "end": 420,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 553,
+                    "end": 572,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 734,
+                    "end": 753,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 74,
+                    "end": 81,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 982,
+                    "end": 992,
+                    "text": "Figure  1)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Prediction Results and Discussions"
+        },
+        {
+            "text": "The third is HATS, a hierarchical graph attention network (Kim et al., 2019) on historical stock prices and company-relations. Their original averaged accuracies for 3-category S&P 500 index prediction was under 40%. We reuse their code 12 and retrain it by enriching relations with our events which also include named entity relations. This up-dating brings more than 10% improvements (Table  3) . The fourth is a document-classification oriented BERT (Adhikari et al., 2019) . Since their original idea and code are only for single-document classification yet we have hundreds of news documents per day, we modify their code 13 to include an additional recurrent+attention mechanism (same with the usage in our HAN, Figure 2 ) so that document vectors represented by docBERT are further processed to yield a final classification result.",
+            "cite_spans": [
+                {
+                    "start": 58,
+                    "end": 76,
+                    "text": "(Kim et al., 2019)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 453,
+                    "end": 476,
+                    "text": "(Adhikari et al., 2019)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 386,
+                    "end": 396,
+                    "text": "(Table  3)",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 718,
+                    "end": 726,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Prediction Results and Discussions"
+        },
+        {
+            "text": "We conclude the major results. First, AL-BERT+eventHAN performs significantly better (p < 0.01) than its GloVe+eventHAN counterpart, with an absolute improvement of averagely 5.9%. This observation also aligns with the recent success of \"pretraining+tuning\" architecture in numerous NLP tasks (Qiu et al., 2020) . Second, ALBERT+eventHAN performs significantly better (p < 0.01) than docBERT, with an absolute improvement of averagely 10.0%. The improvements come from two folds, ALBERT itself performing significantly better than BERT and the additionally appended eventHAN. To remove the impacts from ALBERT, we compare BERT+eventHAN with docBERT: BERT+eventHAN is still significantly better (p < 0.01) than docBERT reflecting the effectiveness of eventHAN (+6.7% averagely).",
+            "cite_spans": [
+                {
+                    "start": 293,
+                    "end": 311,
+                    "text": "(Qiu et al., 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Prediction Results and Discussions"
+        },
+        {
+            "text": "Among the four baselines, docBERT performs the best, showing the BERT-style models' strength. Even respectively enriched with external commonsense knowledge and wikidata, ECK+event and HATS did not outperform wordHAN. Despite this, graphical neural network is a promising direction and both its theory and applications are developing in a fast way. Enriching HATS with large-scale textual data is supposed to be a valuable direction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Prediction Results and Discussions"
+        },
+        {
+            "text": "In addition, in Table 3 , we observe that the difficulties of predicting S&P 500, Dow Jones and Nasdaq are improving reflected by their absolute accuracies. We found that in the news dataset, the amount of news mentioning Dow Jones and Nasdaq is respectively only 80% and 50% of that for S&P 500 and the IT companies included in Nasdaq index changes the most frequently.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 16,
+                    "end": 23,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Prediction Results and Discussions"
+        },
+        {
+            "text": "Are BERT-style pretraining models really suitable for stock movement prediction? One serious question is that, what if the data used for pretraining BERT/ALBERT are from the same period of the 2-category 3-category 5-category sp500 dow nasdaq sp500 dow nasdaq sp500 dow nasdaq wordHAN (Hu et al., 2018) 79 test sets (year of 2013 in this paper and in our references) and already include hints of the market movements? Even the usage of GloVe word2vec is doubtful, so does the external commonsense knowledge. That is, to make the prediction align with real-world applications, no \"future\" related data should be included for stock movement predicting, regardless if they are news, external resources or wikidata: their creation timestamps matter.",
+            "cite_spans": [
+                {
+                    "start": 285,
+                    "end": 302,
+                    "text": "(Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Is It Really Correct of Using BERT Here?"
+        },
+        {
+            "text": "In order to answer this question, we need to set our test set to be after the releasing of these pretraining models or external data. The ALBERT model was the latest, released at 2019/12/30 from their web page. We thus construct another test set of covering these three indices of the first four months (83 market-opening days) of 2020, which means no external data are in this period. We set the new development period (127 days) to be from 2019/07/01 to 2019/12/31. The remaining 2006/10/20 to 2019/06/30 with 3,194 days are taken as the new training set.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Is It Really Correct of Using BERT Here?"
+        },
+        {
+            "text": "Moreover, we further collected the Bloomberg and Reuters news data of from Nov. 2013 to the end of Apr. 2020. Then, we perform the same event extraction pipeline and unify the events to construct the new training, validating and testing sets. Major statistical information and 5-category results are listed in Table 4 and Table 5 , respectively.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 310,
+                    "end": 329,
+                    "text": "Table 4 and Table 5",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "Is It Really Correct of Using BERT Here?"
+        },
+        {
+            "text": "There is an increasing of news and events per day during recent years, comparing Table 2 and Table 4 . These also bring longer event sequences and bigger challenge of employ BERT-style pretraining models for fine-tuning. For simplicity, we only report the most difficult 5-category prediction. Our sp500 dow nas. wordHAN (Hu et al., 2018) 49.4 45.8 42.2 ECK + event (Ding et al., 2019) 47.0 43.4 39.8 HATS (Kim et al., 2019) 43 proposed approaches still significantly outperforms (p < 0.01) the four baselines. The improvements of the systems are comparable to that listed in Table 3 , a averagely +9.2% absolute improvements of ALBERT+eventHAN compared with the best baseline of docBERT. However, generally the accuracies drop in the 2020 test set, averagely -3.6%, compared with the 2013 test set. The reasons are multi-fold: the indices' movements of year 2020 are extremely serious (with tripled standard derivations compared with its former year) and thus less predictable due to the worldly influenced COVID-19 virus, and no 2020-year data are taken into consideration for retraining BERT, ALBERT or other knowledge datasets used in the baseline systems.",
+            "cite_spans": [
+                {
+                    "start": 321,
+                    "end": 338,
+                    "text": "(Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 366,
+                    "end": 385,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 406,
+                    "end": 424,
+                    "text": "(Kim et al., 2019)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 81,
+                    "end": 100,
+                    "text": "Table 2 and Table 4",
+                    "ref_id": "TABREF2"
+                },
+                {
+                    "start": 576,
+                    "end": 583,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Is It Really Correct of Using BERT Here?"
+        },
+        {
+            "text": "Even our major target is to understand systematic behaviours in stock market taking predicting of indices as our task, we are still wondering how good our proposed methods at learning individual stocks. Following (Ding et al., 2015 (Ding et al., , 2016 , we select ten companies, including Google, Microsoft, Apple, Visa, Nike, Boeing, Wal-Mart, Starbucks, Symantec, and Avon Products. We pick the 2020's first four months as our test set and the other configurations follow Table 4 . We report their averaged 5-category accuracies of the four baselines and our three system variants. Under the same order of Table 5 , the four baselines achieve accuracies of 43.2%, 40.1%, 38.7%, and 45.9%. Our three system variants achieve accuracies of 50.6%, 53.8% and 55.7%, all are significantly better (p < 0.01) than the four baselines. Generally, the prediction of individual stocks in our experiments are more difficult compared with index prediction. One reason is the amount of daily news reflecting individual companies are quite limited and the other reason is that individual companies have rather long-term developing strategies which require larger window size of historical days, months or even years, which further brings computational difficulties.",
+            "cite_spans": [
+                {
+                    "start": 213,
+                    "end": 231,
+                    "text": "(Ding et al., 2015",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 232,
+                    "end": 252,
+                    "text": "(Ding et al., , 2016",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 475,
+                    "end": 482,
+                    "text": "Table 4",
+                    "ref_id": "TABREF5"
+                },
+                {
+                    "start": 609,
+                    "end": 616,
+                    "text": "Table 5",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "Application to Individual Stocks"
+        },
+        {
+            "text": "We finally evaluate our framework by simulating (back-testing) the stock trading during the 83 market-opening days of 2020. We conduct the trading in daily frequency. Initially, we suppose we hold these 3 indices and 10 stocks at equal amounts. At the beginning of a trading date, our model will give each index and stock a score based on the probability of the five movement categories: we respectively short/long 100% of current amount of indices in case of DOWN-/UP+, and 50% in case of DOWN/UP and keep unchanging in case of PRESERVE. It is possible that we sell out all the indices or stocks, then hold the cash, and buy them (top-5) back when there is predicted a UP or UP+ the next day. We take a transaction cost of 0.3% for each trading. We use the annualized return as the metric, which equals to the cumulative profit per year. Following the order in Table 5 , the four baseline systems respectively yield 61.0%, 57.2%, 52.1%, and 71.9% annualized return. Our three variants respectively achieved 85.2%, 88.4% and 93.2% annualized returns. This simulation results additionally verify that our proposed approach is more robust compared with baseline systems.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 862,
+                    "end": 869,
+                    "text": "Table 5",
+                    "ref_id": "TABREF6"
+                }
+            ],
+            "section": "Market Trading Simulation"
+        },
+        {
+            "text": "We finally investigate the explanation ability of our model in terms of event sequences. Table 6 lists the top-5 events ranked by attention mechanisms for 5-category S&P500 classification of 5 days. All these 5 days are correctly predicted by our AL-BERT+eventHAN model. Negative words, such as lost, dropped, stop buying, the biggest percentage drop, and fell, appear in all the top-5 related events of the DOWN-category. This reflects that the strength of the news does be taken into consideration by the investors and the market. In the DOWN category, most events include negative words, such as losing momentum, get out of, and slowed .. low.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 89,
+                    "end": 96,
+                    "text": "Table 6",
+                    "ref_id": "TABREF8"
+                }
+            ],
+            "section": "Explanation of Systematic Behaviours"
+        },
+        {
+            "text": "Comparing these five events with DOWN-'s top-5 events, we have a sense that DOWN-'s events contain more strong negative words with specific numbers such as \"lost 27.75 points\", \"dropped 216.40 points\", \"the biggest percentage drop\" and \"fell 45.57 points\". These also provide us an evidence of the impact of the financial events to the final stock movement prediction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Explanation of Systematic Behaviours"
+        },
+        {
+            "text": "The top ranked events in the PRESERVE category are rather more neutral without positive or negative words. In the UP and UP+ categories, most events contain positive words, such as better and take advantage of. Note that there are also neutral or slightly negative words used, such as cautioned .. swings, dipped briefly, undermined, and divergent. These reflect that the latent linkage between the polarities of the financial events and S&P 500 index movements is more than linear. That is, daily news contains both positive and negative news and it is important for us to model the impact of each news and their final combined contribution to the final movement. These reflect the importance of the event-driven hierarchical attention network with pretrained contextualized language models.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Explanation of Systematic Behaviours"
+        },
+        {
+            "text": "Employing event representations for stock movement prediction has been proposed in (Ding et al., 2015 (Ding et al., , 2016 (Ding et al., , 2019 for index and individual stock prediction. For example, external commonsense knowledge, such as the intents and emotions of the event participants, was utilized in (Ding et al., 2019) to enhance event representation learning. We follow the usage of events dynamically extracted from financial news. The differences are that we additionally perform a neural coreference resolution module to keep the events being independent and we did not perform any manual filtering (refer to Figure 1 and Table 3 ).",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 101,
+                    "text": "(Ding et al., 2015",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 102,
+                    "end": 122,
+                    "text": "(Ding et al., , 2016",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 123,
+                    "end": 143,
+                    "text": "(Ding et al., , 2019",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 308,
+                    "end": 327,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 622,
+                    "end": 630,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 635,
+                    "end": 642,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Related Work"
+        },
+        {
+            "text": "In addition to event representation learning followed by shallow neural networks, deep HANs (Yang et al., 2016; Hu et al., 2018) that embeds various granularities of market document-style information are another tendency. Hierarchical graph attention networks (Kim et al., 2019) made use of existing corporate relational data from Wikidata. Examples of these relational data are alike triplets of [Apple, Founded by, Steve jobs], which align with the commonsense knowledge used in (Ding et al., 2019) . Graph neural networks by incorporating company knowledge graphs which express inter-market and inter-company relations were proposed in (Matsunaga et al., 2019) for Japanese stock market prediction. In stead of using existing relational data, our pipeline keeps updating itself by extracting updated events from lastly published news. In our eventHANs, the final predictions are explainable in terms of which events expressed in which news published in which day (Table 6) .",
+            "cite_spans": [
+                {
+                    "start": 92,
+                    "end": 111,
+                    "text": "(Yang et al., 2016;",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 112,
+                    "end": 128,
+                    "text": "Hu et al., 2018)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 260,
+                    "end": 278,
+                    "text": "(Kim et al., 2019)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 481,
+                    "end": 500,
+                    "text": "(Ding et al., 2019)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 639,
+                    "end": 663,
+                    "text": "(Matsunaga et al., 2019)",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 966,
+                    "end": 975,
+                    "text": "(Table 6)",
+                    "ref_id": "TABREF8"
+                }
+            ],
+            "section": "Related Work"
+        },
+        {
+            "text": "On the other hand, pretrained contextualized language models, such ELMo (Peters et al., 2018) , BERT (Devlin et al., 2019) , GPT (Radford et al., 2018) and their consequent variants (Qiu et al., 2020) are leading the research in numerous NLP applications. However, most existing pretraining models can only take limited length of sequences (such as 512 tokens) as inputs while there are thousands of news containing million-level words appearing everyday. Each news expresses limited information and investors are required to accumulate news together to predict their influence to the future market.",
+            "cite_spans": [
+                {
+                    "start": 72,
+                    "end": 93,
+                    "text": "(Peters et al., 2018)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 101,
+                    "end": 122,
+                    "text": "(Devlin et al., 2019)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 129,
+                    "end": 151,
+                    "text": "(Radford et al., 2018)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 182,
+                    "end": 200,
+                    "text": "(Qiu et al., 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "In this paper, we combine three elements together: event streams represented by BERT/ALBERT and their integration in HANs to capture super long event sequences for better stock movement prediction. The strengths of our pipeline include: (1) significantly large-scale syntactically independent event sequences are extracted, (2) extremely long event sequences are leveraged, and (3) explainable predictions with accuracies significantly better than state-of-the-art baselines are achieved.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "In this paper, we investigate answers to the question if textual information such as financial events can qualitatively and quantitatively influence the stock market's movements. Our contributions to this field include: a neural co-reference enhanced OpenIE pipeline for event extraction from financial news, BERT/ALBERT enhanced event representations, an event-enhanced HAN that utilizes event, news and temporal attentions, and significantly better accuracies and simulated annualized returns than four state-of-the-art baselines on 3 indices and 10 stocks. We observe that quantitative prediction is feasible in a sense that the strength or importance of news is successfully understood and absorbed by the market. This aligns with the efficient-market hypothesis that asset prices reflect all available information 14 (Malkiel and Fama, 1970) .",
+            "cite_spans": [
+                {
+                    "start": 822,
+                    "end": 846,
+                    "text": "(Malkiel and Fama, 1970)",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "For sure, there are a lot of future work: (1) modelling and predicting of global scale markets such as Nikkei 225, TOPIX in Japan, HSI index in Hong Kong, and (2) integrate textual information with financial asset price models, such as Capital Asset Pricing Model (CAPM) (Sharpe, 1964) , Arbitrage pricing theory (APT) (Ross, 1976) , and multi-factor models (Harvey et al., 2014) will be one interesting direction that combines NLP techniques and finance theory through deep neural networks for a same target of future asset pricing: investors read both textual finance information and digital finance indicators.",
+            "cite_spans": [
+                {
+                    "start": 271,
+                    "end": 285,
+                    "text": "(Sharpe, 1964)",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 319,
+                    "end": 331,
+                    "text": "(Ross, 1976)",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Docbert: BERT for document classification",
+            "authors": [
+                {
+                    "first": "Ashutosh",
+                    "middle": [],
+                    "last": "Adhikari",
+                    "suffix": ""
+                },
+                {
+                    "first": "Achyudh",
+                    "middle": [],
+                    "last": "Ram",
+                    "suffix": ""
+                },
+                {
+                    "first": "Raphael",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jimmy",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Neural machine translation by jointly learning to align and translate",
+            "authors": [
+                {
+                    "first": "Dzmitry",
+                    "middle": [],
+                    "last": "Bahdanau",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyunghyun",
+                    "middle": [],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yoshua",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "3rd International Conference on Learning Representations",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Learning phrase representations using RNN encoder-decoder for statistical machine translation",
+            "authors": [
+                {
+                    "first": "Kyunghyun",
+                    "middle": [],
+                    "last": "Cho",
+                    "suffix": ""
+                },
+                {
+                    "first": "Caglar",
+                    "middle": [],
+                    "last": "Bart Van Merri\u00ebnboer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dzmitry",
+                    "middle": [],
+                    "last": "Gulcehre",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fethi",
+                    "middle": [],
+                    "last": "Bahdanau",
+                    "suffix": ""
+                },
+                {
+                    "first": "Holger",
+                    "middle": [],
+                    "last": "Bougares",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yoshua",
+                    "middle": [],
+                    "last": "Schwenk",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+            "volume": "",
+            "issn": "",
+            "pages": "1724--1734",
+            "other_ids": {
+                "DOI": [
+                    "10.3115/v1/D14-1179"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Deep reinforcement learning for mention-ranking coreference models",
+            "authors": [
+                {
+                    "first": "Kevin",
+                    "middle": [],
+                    "last": "Clark",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christopher",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "2256--2262",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/D16-1245"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Improving coreference resolution by learning entitylevel distributed representations",
+            "authors": [
+                {
+                    "first": "Kevin",
+                    "middle": [],
+                    "last": "Clark",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christopher",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics",
+            "volume": "1",
+            "issn": "",
+            "pages": "643--653",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/P16-1061"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "BERT: Pre-training of deep bidirectional transformers for language understanding",
+            "authors": [
+                {
+                    "first": "Jacob",
+                    "middle": [],
+                    "last": "Devlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming-Wei",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kenton",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kristina",
+                    "middle": [],
+                    "last": "Toutanova",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+            "volume": "1",
+            "issn": "",
+            "pages": "4171--4186",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/N19-1423"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Event representation learning enhanced with external commonsense knowledge",
+            "authors": [
+                {
+                    "first": "Xiao",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kuo",
+                    "middle": [],
+                    "last": "Liao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhongyang",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junwen",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
+            "volume": "",
+            "issn": "",
+            "pages": "4893--4902",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/D19-1495"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Using structured events to predict stock price movement: An empirical investigation",
+            "authors": [
+                {
+                    "first": "Xiao",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yue",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junwen",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP)",
+            "volume": "",
+            "issn": "",
+            "pages": "1415--1425",
+            "other_ids": {
+                "DOI": [
+                    "10.3115/v1/D14-1148"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Deep learning for event-driven stock prediction",
+            "authors": [
+                {
+                    "first": "Xiao",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yue",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junwen",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Proceedings of the Twenty-Fourth International Joint Conference on Artificial Intelligence (IJ-CAI 2015)",
+            "volume": "",
+            "issn": "",
+            "pages": "2327--2333",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Knowledge-driven event embedding for stock prediction",
+            "authors": [
+                {
+                    "first": "Xiao",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yue",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junwen",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of COLING 2016, the 26th International Conference on Computational Linguistics: Technical Papers",
+            "volume": "",
+            "issn": "",
+            "pages": "2133--2142",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Identifying relations for open information extraction",
+            "authors": [
+                {
+                    "first": "Anthony",
+                    "middle": [],
+                    "last": "Fader",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stephen",
+                    "middle": [],
+                    "last": "Soderland",
+                    "suffix": ""
+                },
+                {
+                    "first": "Oren",
+                    "middle": [],
+                    "last": "Etzioni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Proceedings of the 2011 Conference on Empirical Methods in Natural Language Processing",
+            "volume": "",
+            "issn": "",
+            "pages": "1535--1545",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Time variation in the news-returns relationship. Columbia Business School Research Paper Forthcoming",
+            "authors": [
+                {
+                    "first": "Paul",
+                    "middle": [],
+                    "last": "Glasserman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fulin",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Harry",
+                    "middle": [],
+                    "last": "Mamaysky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2139/ssrn.3420981"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "and the cross-section of expected returns",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Campbell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan",
+                    "middle": [],
+                    "last": "Harvey",
+                    "suffix": ""
+                },
+                {
+                    "first": "Heqing",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3386/w20592"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Listening to chaotic whispers: A deep learning framework for news-oriented stock trend prediction",
+            "authors": [
+                {
+                    "first": "Ziniu",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weiqing",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiang",
+                    "middle": [],
+                    "last": "Bian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuanzhe",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tie-Yan",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of WSDM",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3159652.3159690"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Institutional trading around corporate news: Evidence from textual analysis",
+            "authors": [
+                {
+                    "first": "Alan Guoming",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.2139/ssrn.2336069"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Hats: A hierarchical graph attention network for stock movement prediction",
+            "authors": [
+                {
+                    "first": "Raehyun",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chan",
+                    "middle": [],
+                    "last": "Ho So",
+                    "suffix": ""
+                },
+                {
+                    "first": "Minbyul",
+                    "middle": [],
+                    "last": "Jeong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sanghoon",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jinkyu",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jaewoo",
+                    "middle": [],
+                    "last": "Kang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Papers",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Adam: A method for stochastic optimization",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Diederik",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jimmy",
+                    "middle": [],
+                    "last": "Kingma",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "3rd International Conference on Learning Representations",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Sentence-Piece: A simple and language independent subword tokenizer and detokenizer for neural text processing",
+            "authors": [
+                {
+                    "first": "Taku",
+                    "middle": [],
+                    "last": "Kudo",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Richardson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing: System Demonstrations",
+            "volume": "",
+            "issn": "",
+            "pages": "66--71",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/D18-2012"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Albert: A lite bert for self-supervised learning of language representations",
+            "authors": [
+                {
+                    "first": "Zhenzhong",
+                    "middle": [],
+                    "last": "Lan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mingda",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sebastian",
+                    "middle": [],
+                    "last": "Goodman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kevin",
+                    "middle": [],
+                    "last": "Gimpel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Piyush",
+                    "middle": [],
+                    "last": "Sharma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Radu",
+                    "middle": [],
+                    "last": "Soricut",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Conference on Learning Representations",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Decoupled weight decay regularization",
+            "authors": [
+                {
+                    "first": "Ilya",
+                    "middle": [],
+                    "last": "Loshchilov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Frank",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "International Conference on Learning Representations",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Efficient capital markets: A review of theory and empirical work*",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Burton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eugene",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Malkiel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fama",
+                    "suffix": ""
+                }
+            ],
+            "year": 1970,
+            "venue": "The Journal of Finance",
+            "volume": "25",
+            "issn": "2",
+            "pages": "383--417",
+            "other_ids": {
+                "DOI": [
+                    "10.1111/j.1540-6261.1970.tb00518.x"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Exploring graph neural networks for stock market predictions with rolling window analysis",
+            "authors": [
+                {
+                    "first": "Daiki",
+                    "middle": [],
+                    "last": "Matsunaga",
+                    "suffix": ""
+                },
+                {
+                    "first": "Toyotaro",
+                    "middle": [],
+                    "last": "Suzumura",
+                    "suffix": ""
+                },
+                {
+                    "first": "Toshihiro",
+                    "middle": [],
+                    "last": "Takahashi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "NeurIPS 2019 Workshop on Robust AI in Financial Services: Data, Fairness, Explainability, Trustworthiness, and Privacy",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Glove: Global vectors for word representation",
+            "authors": [
+                {
+                    "first": "Jeffrey",
+                    "middle": [],
+                    "last": "Pennington",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [],
+                    "last": "Socher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christopher",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Empirical Methods in Natural Language Processing (EMNLP)",
+            "volume": "",
+            "issn": "",
+            "pages": "1532--1543",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Deep contextualized word representations",
+            "authors": [
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Peters",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Neumann",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mohit",
+                    "middle": [],
+                    "last": "Iyyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matt",
+                    "middle": [],
+                    "last": "Gardner",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christopher",
+                    "middle": [],
+                    "last": "Clark",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kenton",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Luke",
+                    "middle": [],
+                    "last": "Zettlemoyer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 2018 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+            "volume": "1",
+            "issn": "",
+            "pages": "2227--2237",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/N18-1202"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "and Xuanjing Huang. 2020. Pre-trained Models for Natural Language Processing: A Survey. arXiv e-prints",
+            "authors": [
+                {
+                    "first": "Xipeng",
+                    "middle": [],
+                    "last": "Qiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tianxiang",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yige",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yunfan",
+                    "middle": [],
+                    "last": "Shao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ning",
+                    "middle": [],
+                    "last": "Dai",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.08271"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Improving language understanding by generative pre-training",
+            "authors": [
+                {
+                    "first": "Alec",
+                    "middle": [],
+                    "last": "Radford",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karthik",
+                    "middle": [],
+                    "last": "Narasimhan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "The arbitrage theory of capital asset pricing",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stephen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ross",
+                    "suffix": ""
+                }
+            ],
+            "year": 1976,
+            "venue": "Journal of Economic Theory",
+            "volume": "13",
+            "issn": "3",
+            "pages": "341--360",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Capital asset prices: A theory of market equilibrium under conditions of risk",
+            "authors": [
+                {
+                    "first": "William",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Sharpe",
+                    "suffix": ""
+                }
+            ],
+            "year": 1964,
+            "venue": "The Journal of Finance",
+            "volume": "19",
+            "issn": "3",
+            "pages": "425--442",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Attention is all you need",
+            "authors": [
+                {
+                    "first": "Ashish",
+                    "middle": [],
+                    "last": "Vaswani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Noam",
+                    "middle": [],
+                    "last": "Shazeer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Niki",
+                    "middle": [],
+                    "last": "Parmar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jakob",
+                    "middle": [],
+                    "last": "Uszkoreit",
+                    "suffix": ""
+                },
+                {
+                    "first": "Llion",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aidan",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Gomez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Illia",
+                    "middle": [],
+                    "last": "Kaiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Polosukhin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Advances in Neural Information Processing Systems",
+            "volume": "30",
+            "issn": "",
+            "pages": "5998--6008",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Hierarchical attention networks for document classification",
+            "authors": [
+                {
+                    "first": "Zichao",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Diyi",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Dyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaodong",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alex",
+                    "middle": [],
+                    "last": "Smola",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eduard",
+                    "middle": [],
+                    "last": "Hovy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+            "volume": "",
+            "issn": "",
+            "pages": "1480--1489",
+            "other_ids": {
+                "DOI": [
+                    "10.18653/v1/N16-1174"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "BERT-enhanced HAN with word, event, news and temporal level representations and attentions.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "S&P 500, Dow Jones, and Nasdaq indices (open prices) and their daily returns during the experiment period of from 2006/10/20 to 2013/11/27.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Event examples extracted from one news.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "example, 2008 Financial Crisis caused a significant drop (as much as 50%) of all the three indices during the whole 2008. After that, the indices recovered and continued increasing generally from 2009 to 2013. We separate this period into three subsets, the training set (2006/10/20 \u223c 2012/06/18), the validation set (2012/06/19 \u223c 2013/02/21), and the testing set (2013/02/22 \u223c 2013/11/27), exactly same with(Ding et al., 2014(Ding et al., , 2019 for direct comparison 6 . The whole 2008 Financial Crisis period is included in the training set.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "Statistical information (news and events related) for train, validation and test sets.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Statistical information for updated three sets.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF6": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF7": {
+            "text": "the nasdaq composite index clung to u.s. blue-chip stocks gains. 0.01: chinese activity slowed to an 11-month low.P 0.39: company has given over the last month. 0.23: the horizon are the fed meeting. 0.21: the last month or so said michael sheldon. 0.09: i think verizon. 0.03: comments are different than he. U 0.56: analysts cautioned on price swings. 0.25: brent crude oil dipped briefly. 0.14: investors were also eying friday 's monthly u.s. non-farm payrolls data. 0.02: people think the fed. 0.01: the two have promising cancer immunotherpaies. U+ 0.57: stocks fared better in europe. 0.20: investors looked to take advantage of the previous session 's sharp sell-off. 0.10: it further undermined confidence in the state of recovery. 0.03: divergent views said jack ablin. 0.03: i do believe there.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF8": {
+            "text": "Event examples ranked by attention mechanisms for 5-category classification. D=Down, P=Preserve, and U=UP.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

@@ -1,0 +1,1186 @@
+{
+    "paper_id": "3dad7fae523acd891f2b24aee936760fa05e2ccc",
+    "metadata": {
+        "title": "Tracking and Classifying Global COVID-19 Cases by using 1D Deep Convolution Neural Networks",
+        "authors": [
+            {
+                "first": "Mark",
+                "middle": [],
+                "last": "Amo-Boateng",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Energy and Natural Resources",
+                    "location": {
+                        "settlement": "Sunyani",
+                        "region": "Bono Region",
+                        "country": "Ghana"
+                    }
+                },
+                "email": "*mark.amo-boateng@uenr.edu.gh"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The novel coronavirus disease and pandemic has taken the world by surprise and simultaneously challenged the health infrastructure of every country. Governments have resorted to draconian measures to contain the spread of the disease despite its devastating effect on their economies and education. Tracking the novel coronavirus 2019 disease remains vital as it influences the executive decisions needed to tighten or ease restrictions meant to curb the pandemic. One-Dimensional (1D) Convolution Neural Networks (CNN) have been used classify and predict several time-series and sequence data. Here 1D-CNN is applied to the time-series data of confirmed COVID-19 cases for all reporting countries and territories. The model performance was 90.5% accurate. The model was used to develop an automated AI tracker web app (AI Country Monitor) and is hosted on https://aicountrymonitor.org. This article also presents a novel concept of pandemic response curves based on cumulative confirmed cases that can be use to classify the stage of a country or reporting territory. It is our firm believe that this Artificial Intelligence COVID-19 tracker can be extended to other domains such as the monitoring/tracking of Sustainable Development Goals (SDGs) in addition to monitoring and tracking pandemics.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The COVID-19 disease was declared as a global pandemic [1] [2] [3] [4] leading to the imposition of restrictions in almost all countries and states worldwide. Since then, confirmed COVID-19 cases, as well as, reported recoveries and deaths have been tracked and monitored on several apps and platforms 1, 2, 5-7 . These tracking dashboards and apps provide data that can be used to estimate the rate of spread and other statistics which influences the top-level decisions by governments which may lead to tightening or easing of these state-wide restrictions and policies 6, [8] [9] [10] .",
+            "cite_spans": [
+                {
+                    "start": 55,
+                    "end": 58,
+                    "text": "[1]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 59,
+                    "end": 62,
+                    "text": "[2]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 63,
+                    "end": 66,
+                    "text": "[3]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 67,
+                    "end": 70,
+                    "text": "[4]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 572,
+                    "end": 574,
+                    "text": "6,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 575,
+                    "end": 578,
+                    "text": "[8]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 579,
+                    "end": 582,
+                    "text": "[9]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 583,
+                    "end": 587,
+                    "text": "[10]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The existing COVID-19 trackers 2, 6, 11, 12 focus on presenting the COVID-19 case data as reported by countries and territories only as dashboards and charts ; they and do not perform any predictions or classifications. We also note that no studies or existing dashboards/trackers employ the use of artificial intelligence to predict the state of COVID-19 for reporting countries and territories. The method proposed in this study involves data preprocessing, feature extraction, and predictions using one dimensional deep convolution neural networks. Even though other algorithms exist that can be used in performing feature extraction and classification of sequence or time-series data, convolution neural networks have been found to be superior [13] [14] [15] [16] in extracting unique features and patterns in sequences [17] [18] [19] , images and video data. In fact, deep convolution neural networks algorithms are behind some of the state-of-the-art detection and tracking algorithms found in everyday images and videos. Here, 1D-CNN is used to extract unique feature identifiers that help predict the true state of countries and territories with respect to the novel coronavirus disease, uncovering hidden and underlying patterns that might otherwise not be readily noticed.",
+            "cite_spans": [
+                {
+                    "start": 748,
+                    "end": 752,
+                    "text": "[13]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 753,
+                    "end": 757,
+                    "text": "[14]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 758,
+                    "end": 762,
+                    "text": "[15]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 763,
+                    "end": 767,
+                    "text": "[16]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 824,
+                    "end": 828,
+                    "text": "[17]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 829,
+                    "end": 833,
+                    "text": "[18]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 834,
+                    "end": 838,
+                    "text": "[19]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We propose an artificial intelligence prediction algorithm for the novel coronavirus 2019 stages for countries and reporting territories based on 1-D deep convolution neural networks trained on confirmed COVID-19 cases. We also propose the concept of pandemic response curves also based on confirmed COVID-19 cases that provides further insights into the state of each reporting country or territory. Our main aim is to provide real-time predictions of the stages of COVID-19 that is unbiased or subjective to human prejudices for all countries and reporting territories.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Also, COVID-19 state for each county and territories in the USA on on 11th, 18th, 25th and 31st May as classified by the AI used in this paper is given in Figure 3 . The color code for the diagram is: Red: Stage 1 -Emerging (cases actively rising); Amber: Stage 2 -Controlling (cases passed peak and actively declining); Green: Stage 3 -Winning (cases consistently zero or near zero after stage 2). Changes in the US counties and territories as seen each week is shown in Figure 4 . It is very evident that though some counties did not have any changes over the month of May, many counties had a negative change, moving from Stage 3: Winning to Stage 1: Emerging; while others moved in the opposite direction.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 155,
+                    "end": 163,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 472,
+                    "end": 480,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2/14"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "2/14"
+        },
+        {
+            "text": "The Pandemic Response Curves, as shown in Figure 5 , provides a visual inspection of the similarities among countries in the various stages of the COVID-19 pandemic. The curve highlights patterns that may have otherwise not been noticeable and helps clarify unbiasedly where each country or reporting territory is at in the COVID-19 fight. Figure 6 provides some of the PRC for selected countries in each of the stages. Also, Figure 7 shows the country Ghana PRC compared to other countries' PRC which recorded their first cases of COVID-19 the same day.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 42,
+                    "end": 50,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 340,
+                    "end": 348,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF9"
+                },
+                {
+                    "start": 426,
+                    "end": 434,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Pandemic Response Curves"
+        },
+        {
+            "text": "The COVID-19 pandemic is still ravaging many countries and territories, and has led to strict movement restrictions including border closures and curfews in many countries. Public gatherings, schools, restaurants and hotels have also been closed as a results on its unprecedented method of spreading. To help contain the virus, many apps have been developed that track infections across the globe. Notable amongst them include the John Hopkins CSSE COVID-19 dashboard which has served as a reference database. To understand further understand hidden insights to all reported cases an artificial intelligence was developed in this paper. Artificial intelligence is already being applied COVID-19 diagnosis of Chest XRays and CT-Scans 20, 21 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In this paper, we applied AI to the cumulative confirmed coronavirus cases to uncover hidden insights and tell the status of each country for the month of May. This begun by preprocessing the data and manually classifying some of the data from the countries (see Table 3 . The data was meant to help the AI be a generalizer of the patterns in the confirmed coronavirus cases. Further, the AI was developed using Convolution Neural Networks which has been demonstrated to be superior in finding hidden patters in images and videos. By apply a 1D-CNN, we had hoped for a very efficient pattern finding of the confirmed COVID-19 cases, and used that to classify the cases into three main groups: Stage 1: Emerging (active rising cases); Stage 2: Controlling (passed peak and active decline cases); Stage 3: Winning (consistently zero or near zero cases after active decline).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 263,
+                    "end": 270,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Discussion"
+        },
+        {
+            "text": "Training the AI on the pre-classified data using the last 100 days yield a 90.5% accuracy. The trained model was then",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "3/14"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. applied to the whole data for all countries and reporting territories, as well as US counties and territories. The results of this operation for each country is shown in Figure 1 and Figure 3 for US counties and territories. In addition, tracking the changes overtime is paramount to helping us understand which countries or states are performing well or otherwise, as such, changes in the performance of all countries and states were also carried out. These results for the month of May can be seen in Figure 2 and Table 2 for all countries and reporting territories. Similar results for US counties and territories are shown in Figure 4 . From the above results, it can be clearly seen that very few countries, states and US counties are changing their COVID-19 status. There are even instances where some countries or states went from consistently very low or zero cases to actively rising cases (e.g. Djibouti, Namibia, Zimbabwe).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 244,
+                    "end": 252,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 257,
+                    "end": 265,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 577,
+                    "end": 585,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 590,
+                    "end": 597,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 704,
+                    "end": 712,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The AI developed in this paper currently relies on patterns within the cumulative confirmed coronvavirus cases for all reporting countries and territories. A further investigation into the performance of the AI led to the development of the Pandemic Response Curves (PRC). The PRC showed that countries with similar COVID-19 status had identical curves. This suggests that the generalized PRC shapes can be used to classify the status of all countries in an unbiased way. The PRCs for all countries, highlighting the shapes and similarities of curves (irrespective of population and other metrics) are shown in 5. Selected countries with kwown COVID-19 status are shown in 6. To further highlight the uniqueness of the PRCs, Ghana (a Stage 1: Emerging country) was compared to other countries that recorded their first case on the same day. This result is shown in 7 for Namibia (Stage 3: Winning -see Figure 7a ), Seychelles (Stage 2: Controlling -see Figure 7b ), and Phillipines (also Stage 1: Emerging -see Figure 7c ). It is hoped that the PRCs be developed further to help automatically classify pandemics.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 902,
+                    "end": 911,
+                    "text": "Figure 7a",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 953,
+                    "end": 962,
+                    "text": "Figure 7b",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 1011,
+                    "end": 1020,
+                    "text": "Figure 7c",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "4/14"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The dataset used for this project is the one compiled daily by the John Hopkins Center for Systems Science and Engineering (CSSE) and made available to the public via GitHub. Data sources used in compiling the CSSE database include: WHO, CDC, ECDC, NHC, DXY, 1point3acres, Worldometers.info, the COVID Tracking Project (testing and hospitalizations), and city, county, state and national public health departments. The time series data consist of daily cumulative cases of COVID-19 from all countries and territories. In addition, data for the United States counties are presented. The time series data begins on January 22nd, 2020 till date.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dataset"
+        },
+        {
+            "text": "Each country or reporting territory data is normalized with respect to its maximum cumulative cases. The resulting time-series data is in the range of 0 to 1. To account for the inconsistencies in the data reporting intervals across all countries, the normalized data time-series is then smoothed with time-windowed simple moving average. The following time-windows were considered: 3, 5, 7, 10, 12, 14 day moving averages. Data Labeling: countries and reporting territories that have been found to have been reported in the media as having reached one of the 3 stages of COVID-19 were manually identified, verified (visually and using third-party websites like EndCoronavirus.org and tagged with one of the labels: Stage 1 -Cases actively rising; Stage 2 -Cases have passed peak and begun to actively decline; Stage 3 -Cases consistently zero or near zero after active declining. These stages were labeled as Stage 1: Emerging, Stage 2: Controlling, Stage 3: Winning.In the most recent version of the model update 134 countries were manually labelled for AI training and validation. The labelled data was one-hot encoded for the 3 classes; and then split into 0.7:0.3 ratio for training and validation. Pre-classified countries and territories used in the training of",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Preprocessing"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "5/14"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. the AI model is shown in Table 3 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 99,
+                    "end": 106,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "1D-CNN was used in this AI model with an initial input sequence length of 100; thus using data of the last 100 days for training, validation and prediction. This layer also had 64 filters, a kernel size of 3 x 3, and ReLu activation unit. This was followed by another 1D-CNN also with 64 filters, kernel size of 3 x 3, padding, strides of 1, and ReLu activation unit. A GlobalMaxPooling1D layer was used to flatten the 1D-CNN and the output fed into a 256 Dense layer. A 20% Dropout layer was then added with ReLu activation unit and then fed to another 128 Dense layer then to the 3 classification output layers using the Sigmoid activation function. The model was compiled using the Adam as the optimizer(initial learning rate of 0.001), Mean Squared Error (MSE) as the loss function, and Accuracy as the metrics. In addition, four callbacks were also setup and used with model during training. They were: ModelCheckpoint (saved the best models during training), EarlyStopping (terminateg training if no improvement is being made), ReduceLROnPlateau (adjusts the learning rate if optimizer appears stuck in a local minima), and Tensorboard (live monitoring of training progress). The model was then repeatedly trained over 2000 epochs and the best performing models selected for use in the AI Covid Tracker.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "1D-CNN COVID-19 AI Model"
+        },
+        {
+            "text": ". CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "6/14"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. . https://doi.org/10.1101/2020.06.09.20126565 doi: medRxiv preprint . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. . https://doi.org/10.1101/2020.06.09.20126565 doi: medRxiv preprint . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted June 12, 2020. . https://doi.org/10.1101/2020.06.09.20126565 doi: medRxiv preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Henan (China), Hong Kong (China)",
+            "authors": [
+                {
+                    "first": "Antigua",
+                    "middle": [],
+                    "last": "Andorra",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Barbuda ; Australia",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Austria",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Barbados",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Belize",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Benin",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Botswana",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Brunei",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Burma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Diamond",
+                    "middle": [],
+                    "last": "Cambodia",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Princess",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "South Australia (Australia)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "-Faroe Islands, Greenland (Den.), Dominican Republic, The Gambia",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Iraq",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ireland",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Israel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Monaco",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mongolia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Papua",
+                    "middle": [],
+                    "last": "Norway",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "New Guinea",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Paraguay",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Poland",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Jamaica",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Real-time tracking of self-reported symptoms to predict potential COVID-19",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Menni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1038/s41591-020-0916-2"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Clinical characteristics of coronavirus disease 2019 in China",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New Engl. J. Medicine",
+            "volume": "382",
+            "issn": "",
+            "pages": "1708--1720",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1056/NEJMoa2002032"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Spread of SARS-CoV-2 in the Icelandic Population",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Gudbjartsson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New Engl. J. Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1056/nejmoa2006100"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "An investigation of transmission control measures during the first 50 days of the COVID-19 epidemic in China",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Tian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Sci",
+            "volume": "368",
+            "issn": "",
+            "pages": "638--642",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1126/science.abb6105"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Flu near you: Crowdsourced symptom reporting spanning 2 influenza seasons",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Smolinski",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Am. J. Public Heal",
+            "volume": "105",
+            "issn": "",
+            "pages": "2124--2130",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.2105/AJPH.2015.302696"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Real-time monitoring the transmission potential of COVID-19 in Singapore",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tariq",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1101/2020.02.21.20026435"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A framework for identifying regional outbreak and spread of COVID-19 from one-minute populationwide surveys",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Rossman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1038/s41591-020-0857-9"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Universal Screening for SARS-CoV-2 in Women Admitted for Delivery",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Sutton",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Fuchs",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "D&apos;alton",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Goffman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New Engl. J. Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1056/nejmc2009316"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Priorities for the US Health Community Responding to COVID-19",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Adalja",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Toner",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Inglesby",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1001/jama.2020.3413"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Estimating the asymptomatic proportion of coronavirus disease 2019 (COVID-19) cases on board the Diamond Princess cruise ship",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Mizumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kagaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zarebski",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chowell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.2807/1560-7917.ES.2020.25.10.2000180"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Building an international consortium for tracking coronavirus health status",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Segal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Medicine 1-4",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1038/s41591-020-0929-x"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Rapid implementation of mobile technology for real-time epidemiology of COVID-19",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Drew",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science",
+            "volume": "0473",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1126/science.abc0473"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "A Novel CNN-Based CAD System for Early Assessment of",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Abdeltawab",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Transplanted Kidney Dysfunction. Sci. Reports",
+            "volume": "9",
+            "issn": "",
+            "pages": "1--11",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1038/s41598-019-42431-3"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Machine Learning Approach to Predict Ventricular Fibrillation Based on QRS Complex Shape",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Taye",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Shim",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Front. Physiol",
+            "volume": "10",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.3389/fphys.2019.01193"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Application of a convolutional neural network for predicting the occurrence of ventricular tachyarrhythmia using heart rate variability features",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Taye",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hwang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Sci. Reports",
+            "volume": "10",
+            "issn": "",
+            "pages": "1--7",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1038/s41598-020-63566-8"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Automatic prediction of cardiovascular and cerebrovascular events using heart rate variability analysis",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Melillo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PLoS ONE",
+            "volume": "10",
+            "issn": "",
+            "pages": "1--14",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1371/journal.pone.0118504"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Classification of heart rate data using artificial neural network and fuzzy equivalence relation",
+            "authors": [
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Rajendra Acharya",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Subbanna Bhat",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Iyengar",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Rao",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Dua",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Pattern Recognit",
+            "volume": "36",
+            "issn": "",
+            "pages": "61--68",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1016/S0031-3203(02)00063-8"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Pattern Classification Using Neural Networks",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Lippmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "IEEE Commun. Mag",
+            "volume": "27",
+            "issn": "",
+            "pages": "47--50",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1109/35.41401"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Application of deep convolutional neural network for automated detection of myocardial infarction using ECG signals",
+            "authors": [
+                {
+                    "first": "U",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Acharya",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Inf. Sci",
+            "volume": "",
+            "issn": "",
+            "pages": "415--416",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1016/j.ins.2017.06.027"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "A familial cluster of pneumonia associated with the 2019 novel coronavirus indicating person-to-person transmission: a study of a family cluster",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "F W"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "514--523",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.1016/S0140-6736(20)30154-9"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "Weekly COVID-19 Global Predictions of Countries and Territories for May, 2020)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Changes 18th -25th May, 2020 (d) Changes 25th -31st May, Global Changes in COVID-19 Stages for Countries and Territories in May, 2020.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Weekly COVID-19 USA Predictions of Counties and Territories for May, 2020.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Changes 18th -25th May, 2020 (d) Changes 25th -31st May, 2020",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Changes in Weekly COVID-19 Stages in USA Counties and Territories for May, 2020.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "General COVID-19 Pandemic Response Curves for Countries and Territories (11th May, 2020) 7/14",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Sample COVID-19 Pandemic Response Curves for Selected Countries and Territories (4th May, 2020) Stage 3: Ghana Vs. Namibia in Winning Countries and States (b) Stage 2: Ghana Vs. Seychelles in Controlling Countries and States (c) Stage 1: Ghana Vs. Philippines in Emerging Countries and States",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Ghana versus selected countries COVID-19 Pandemic Response Curves (11th May, 2020) 10/14",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "COVID-19 AI Network Architecture 11/14",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF13": {
+            "text": "COVID-19 AI Model Training Loss and Accuracy12/14",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Countries and reporting territories that have changed their COVID-19 state in May",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": ". https://doi.org/10.1101/2020.06.09.20126565 doi: medRxiv preprint (a) Stage 3: Selected PRC for Winning Countries and States (b) Stage 2: Selected PRC for Controlling Countries and States (c) Stage 1: Selected PRC for Emerging Countries and States",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "I will like to thank the John Hopkins Center for Systems Science and Engineering (CSSE) for making COVID-19 data openly available on GitHub.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        },
+        {
+            "text": "A.B. conceived the experiment(s), conducted the experiment(s), and analysed the results. All authors reviewed the manuscript.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Author contributions statement"
+        },
+        {
+            "text": "We declare no competing interests",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Additional information"
+        }
+    ]
+}

@@ -1,0 +1,2914 @@
+{
+    "paper_id": "3e2c8ed2d8c770e8dff36d59773e758aedf2f368",
+    "metadata": {
+        "title": "Insurance valuation: A two-step generalised regression approach",
+        "authors": [
+            {
+                "first": "Karim",
+                "middle": [],
+                "last": "Barigou",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "UCBL",
+                    "location": {
+                        "postCode": "LSAF EA2429, F-69007",
+                        "settlement": "Lyon",
+                        "country": "France"
+                    }
+                },
+                "email": "karim.barigou@univ-lyon1.frcorrespondingauthor\u2020e-mailaddress:valeria.bignozzi@unimib.it\u2021e-mailaddress:a.tsanakas.1@city.ac.uk"
+            },
+            {
+                "first": "Valeria",
+                "middle": [],
+                "last": "Bignozzi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Milano-Bicocca",
+                    "location": {
+                        "country": "Italy"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Andreas",
+                "middle": [],
+                "last": "Tsanakas",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of London",
+                    "location": {
+                        "settlement": "City",
+                        "country": "UK"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Current approaches to fair valuation in insurance often follow a two-step approach, combining quadratic hedging with application of a risk measure on the residual liability, to obtain a cost-of-capital margin. In such approaches, the preferences represented by the regulatory risk measure are not reflected in the hedging process. We address this issue by an alternative two-step hedging procedure, based on generalised regression arguments, which leads to portfolios that are neutral with respect to a risk measure, such as Value-at-Risk or the expectile.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "First, a portfolio of traded assets aimed at replicating the liability is determined by local quadratic hedging. Second, the residual liability is hedged using an alternative objective function. The risk margin is then defined as the cost of the capital required to hedge the residual liability. In the case quantile regression is used in the second step, yearly solvency constraints are naturally satisfied; furthermore, the portfolio is a risk minimiser among all hedging portfolios that satisfy such constraints. We present a neural network algorithm for the valuation and hedging of insurance liabilities based on a backward iterations scheme.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "The algorithm is fairly general and easily applicable, as it only requires simulated paths of risk drivers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Fair valuation of insurance liabilities has become a fundamental feature of modern solvency regulations in the insurance industry, such as the Swiss Solvency Test, Solvency II and C-ROSS (Chinese solvency regulation), see e.g. CEIOPS (2010) . Broadly speaking, insurance regulations distinguish between liabilities that are completely replicable in deep, liquid and transparent markets and liabilities for which this is not possible. In the first case, by no-arbitrage arguments, the fair value should correspond to the initial cost of the replicating portfolio. Otherwise, the fair value is defined as the sum of the expected present value (called best-estimate) and a risk margin that is based on cost-of-capital arguments.",
+            "cite_spans": [
+                {
+                    "start": 227,
+                    "end": 240,
+                    "text": "CEIOPS (2010)",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Since insurance liabilities are often a combination of traded and non-traded risks, one cannot classify insurance liabilities as perfectly replicable or non-replicable. In this context, it is not so evident how the regulatory valuation should proceed and the valuation is therefore usually performed in two steps. In a first step, a hedging portfolio for the liabilities is set up, based on the available traded assets via typically a quadratic objective function (W\u00fcthrich and Merz, 2013 , Pelsser and Schweizer, 2016 , W\u00fcthrich, 2016 . In a second step, a risk margin is added to account for the residual risk via a risk measure or an actuarial principle. See for instance M\u00f6hr (2011) , Happ et al. (2015) and Dhaene et al. (2017) .",
+            "cite_spans": [
+                {
+                    "start": 464,
+                    "end": 488,
+                    "text": "(W\u00fcthrich and Merz, 2013",
+                    "ref_id": "BIBREF46"
+                },
+                {
+                    "start": 489,
+                    "end": 518,
+                    "text": ", Pelsser and Schweizer, 2016",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 519,
+                    "end": 535,
+                    "text": ", W\u00fcthrich, 2016",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 675,
+                    "end": 686,
+                    "text": "M\u00f6hr (2011)",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 689,
+                    "end": 707,
+                    "text": "Happ et al. (2015)",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 712,
+                    "end": 732,
+                    "text": "Dhaene et al. (2017)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "As far as the hedging procedures are concerned, several objective functions have been proposed in the literature. Some papers considered maximising the expected utility of the hedger (see Henderson and Hobson, 2004) or minimising the risk by quadratic hedging (Schweizer, 1995) .",
+            "cite_spans": [
+                {
+                    "start": 188,
+                    "end": 215,
+                    "text": "Henderson and Hobson, 2004)",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 260,
+                    "end": 277,
+                    "text": "(Schweizer, 1995)",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The major drawback of using a quadratic penalty function is that it penalises equally both gains and losses. Furthermore, quadratic hedging, leading to residuals with zero expectation, is divorced from the preferences encoded in regulation, which require neutralisation of a risk measure such as Value-at-Risk (VaR). F\u00f6llmer and Leukert (2000) and Fran\u00e7ois et al. (2014) proposed to use general expected penalties that only penalise losses. F\u00f6llmer and Leukert (1999) defined the quantile hedging scheme, which maximises the probability that the hedging loss does not exceed a certain threshold at maturity, given an initial capital. In this paper, by quantile hedging, we mean hedging with a quantile regressor as considered in Koenker and Bassett Jr (1978) which is a related but different objective compared to the quantile hedging of F\u00f6llmer and Leukert (1999) .",
+            "cite_spans": [
+                {
+                    "start": 317,
+                    "end": 343,
+                    "text": "F\u00f6llmer and Leukert (2000)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 348,
+                    "end": 370,
+                    "text": "Fran\u00e7ois et al. (2014)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 441,
+                    "end": 467,
+                    "text": "F\u00f6llmer and Leukert (1999)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 729,
+                    "end": 758,
+                    "text": "Koenker and Bassett Jr (1978)",
+                    "ref_id": null
+                },
+                {
+                    "start": 838,
+                    "end": 864,
+                    "text": "F\u00f6llmer and Leukert (1999)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The first contribution of our paper is the introduction of a new valuation framework for the multi-period fair valuation of insurance liabilities based on a two-step hedging procedure.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The framework we present makes use of sequential local quadratic and quantile risk-minimising strategies to take into account all intermediate solvency requirements. By considering a local approach, not only we focus on the loss at maturity but also on the difference between the hedging portfolio and the liability value at intermediate times (for instance on a yearly basis) which is of paramount importance in a regulatory context given yearly solvency constraints. Moreover, by switching from a quadratic to an alternative loss function, we target the tail risk rather than the mean of the residual loss and therefore account explicitly, as part of the hedging and valuation process, for those extreme events that drive capital requirements.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The two-step approach can be summarised as follows. In a first step, a portfolio of traded assets aimed at replicating the liability as close as possible (in the quadratic sense) is determined similar to F\u00f6llmer and Schweizer (1988) . Such portfolio replicates the liability on average. In a second step, the residual liability is managed by generalised error functions, which are associated with setting different statistics of residual loss (e.g. VaR or Expectile) to zero. In particular, our focus is on local quantile hedging using the asymmetric Koenker-Basset error (cf. Koenker and Bassett Jr, 1978) given the use of VaR in regulation. Interestingly, the resulting hedging portfolio appears as a Tail Value-at-Risk deviation risk minimiser among all portfolios which satisfy VaR constraints (Rockafellar et al., 2008) . Hence, one can achieve a better risk management by quantile-hedging the residual risk rather than setting up a VaR capital buffer (cf. Lemma 2.7).",
+            "cite_spans": [
+                {
+                    "start": 204,
+                    "end": 232,
+                    "text": "F\u00f6llmer and Schweizer (1988)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 577,
+                    "end": 606,
+                    "text": "Koenker and Bassett Jr, 1978)",
+                    "ref_id": null
+                },
+                {
+                    "start": 798,
+                    "end": 824,
+                    "text": "(Rockafellar et al., 2008)",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Finally, the fair value is then defined as the sum of the cost of the quadratic hedging portfolio and the cost-of-capital for the quantile hedging of the residual liability.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Standard implementation of local hedging strategies requires dynamic programming in discrete time, which leads to expensive computational time (see\u010cern\u1ef3, 2004 and Augustyniak et al., 2017) . Some recent papers proposed machine-learning based algorithms to speed up the global hedging problem (F\u00e9camp et al., 2019 and Carbonneau and Godin, 2020 ) but we are not aware of similar algorithms for local quantile hedging.",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 162,
+                    "text": "(see\u010cern\u1ef3, 2004 and",
+                    "ref_id": null
+                },
+                {
+                    "start": 163,
+                    "end": 188,
+                    "text": "Augustyniak et al., 2017)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 292,
+                    "end": 316,
+                    "text": "(F\u00e9camp et al., 2019 and",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 317,
+                    "end": 331,
+                    "text": "Carbonneau and",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 332,
+                    "end": 343,
+                    "text": "Godin, 2020",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The second main contribution is the proposition of a general algorithm for the valuation and hedging of insurance liabilities based on a backward iteration scheme. Contrary to the standard dynamic programming approach, our algorithm does not present a nested structure and only requires sample paths of the main risk drivers. This is of practical importance, as typically the stochastic asset models used in insurance do not have simple tractable forms; instead insurers have access to the output of Economic Scenario Generators (Varnell, 2011) , which provide precisely a matrix of sample paths for multiple assets. In this paper, we focus on a neural network implementation for quantile hedging, but the algorithm remains valid with other non-linear optimisers and for general loss functions. Furthermore, this paper provides a practical implementation to generate future scenarios for the fair values and their corresponding hedging portfolios.",
+            "cite_spans": [
+                {
+                    "start": 529,
+                    "end": 544,
+                    "text": "(Varnell, 2011)",
+                    "ref_id": "BIBREF44"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The paper is organised as follows. Section 2 starts by motivating our two-step valuation approach in a one-period setting and its connection to the Solvency II regulatory framework.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Moreover, we show that the two-step valuation is market-consistent and actuarial in the sense of Dhaene et al. (2017) . In Section 3, we generalise the valuation approach in a dynamic multi-period setting by sequential risk-minimisation. Section 4 presents a general procedure for implementing the dynamic hedging problem and proposes a neural network algorithm based on Monte-Carlo simulations of the financial and actuarial risk drivers. Section 5 provides a detailed numerical example illustrating the neural network approximation. Finally, brief conclusions are given in Section 6.",
+            "cite_spans": [
+                {
+                    "start": 97,
+                    "end": 117,
+                    "text": "Dhaene et al. (2017)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "We start investigating the one-period case. Let (\u2126, F, P) be a probability space and denote C \u2286 L 2 (\u2126, F, P) the set of all claims with maturity T = 1. We assume that the financial market consists of asset 0, which is risk-free with deterministic interest rate r \u2265 0 and n risky assets.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation in a one-period setting"
+        },
+        {
+            "text": "The vectors y = (1, y 1 , . . . , y n ) and Y = (Y 0 , Y 1 , . . . , Y n ) respectively represent the assets value at time 0 and time 1 where Y 0 = e r , y i \u2265 0, Y i \u2208 C for any i = 1, 2, . . . , n. A trading strategy \u03b2 = (\u03b2 0 , . . . , \u03b2 n ) is a real valued vector where \u03b2 i provides the units of capital invested in asset i at time 0. We assume that the strategy is not modified over time and denote B = R n+1 the set of all trading strategies. The value of the trading strategy at time 0 and 1 is obtained as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation in a one-period setting"
+        },
+        {
+            "text": "We further assume that all the assets are non redundant which implies \u03b2 \u00b7 Y = 0 if only if \u03b2 = (0, . . . , 0) 1 and that any tradable asset can be bought and/or sold in any quantity in a deep, liquid and transparent market with negligible transactions costs and other market frictions; all inequalities between random variables are understood to hold P-almost surely.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation in a one-period setting"
+        },
+        {
+            "text": "The actuarial solvency regulations require a fair valuation of assets and liabilities, that is, their value should correspond to the amount of capital for which they could be transferred to another company or exchanged on the market. For this reason the valuation of a contingent claim strictly depends on whether it is tradable on the financial market.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "Similar to Dhaene et al. (2017) , we denote by C h \u2286 C the class of claims perfectly hedgeable on the market. For any S \u2208 C h it is possible to find a strategy \u03bd \u2208 B such that, S = \u03bd \u00b7 Y. In this case, the fair value of the liability S is simply given by the value of the trading strategy at time 0, \u03bd \u00b7 y. Moreover, we denote by C \u22a5 \u2286 C the class of claims independent of the vector of traded assets Y = (Y 0 , Y 1 , . . . , Y n ). For such claims, the position of the insurer cannot be hedged in the financial market and therefore the fair value of S \u2208 C \u22a5 is calculated by an actuarial premium principle. In a solvency framework, with capital requirements calculated according to the Valueat-Risk (VaR) risk measure, the standard choice is the cost-of-capital premium principle, see for instance CEIOPS (2010) and Pelsser (2011) . It is defined as follows:",
+            "cite_spans": [
+                {
+                    "start": 11,
+                    "end": 31,
+                    "text": "Dhaene et al. (2017)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 817,
+                    "end": 831,
+                    "text": "Pelsser (2011)",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "where i is the cost-of-capital rate and VaR \u03b1 (X) = inf{x \u2208 R |P(X \u2264 x) \u2265 \u03b1}, for any risk X and \u03b1 \u2208 (0, 1).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "Thus, \u03c0(S) is understood as the expected value (net premium) of S, loaded by the cost of the capital required to hold the liability S \u2212 E[S]. Specifically, it is assumed that the insurer's shareholders require a return i on VaR \u03b1 (S \u2212 E [S]), that is, on the assets required to support S, net of the expected value.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "Many claims that insurance companies face are not perfectly hedgeable, but nevertheless not independent of the payoffs of the traded assets. We call these claims hybrid claims when S \u2208 C\\(C h \u222a C \u22a5 ) and these are the focus of our paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "In this case, some (generally imperfect) hedging of S by Y is possible and typically a two-step approach is followed (see M\u00f6hr, 2011 and Albrecher et al., 2018) . First, the insurer determines a hedging portfolio that is as close as possible to the liability S. To measure \"closeness\", the most popular objective function is the quadratic loss function, providing a trading strategy that minimises the L 2 -distance between the liability and the hedging portfolio (see Pelsser and Schweizer, 2016) :",
+            "cite_spans": [
+                {
+                    "start": 122,
+                    "end": 136,
+                    "text": "M\u00f6hr, 2011 and",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 137,
+                    "end": 160,
+                    "text": "Albrecher et al., 2018)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 469,
+                    "end": 497,
+                    "text": "Pelsser and Schweizer, 2016)",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "For the rest of the paper \u03b8 S will always denote the trading strategy associated with the quadratic loss function and the index S will be dropped when no confusion is possible. Standard leastsquares arguments provide the solution to problem (2)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "and ensure that the expected value of the hedging portfolio matches the expected value of the liability:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "Second, the insurer values the residual risk R(S, \u03b8) := S \u2212 \u03b8 \u00b7 Y, which could not be hedged, by the cost of capital principle \u03c0. Following such a method, the fair value \u03c6(S) is calculated as the sum of the cost of the hedging portfolio and the premium principle of the residual risk (see Dhaene et al., 2017) :",
+            "cite_spans": [
+                {
+                    "start": 289,
+                    "end": 309,
+                    "text": "Dhaene et al., 2017)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "where we used the property (3).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "The fair value (4) can be seen as a generalisation of the premium principle (1), where (a) the net premium E[S] is replaced by the cost of the hedging strategy \u03b8 \u00b7 y, which once again matches on average the liability S and (b) the cost of capital is calculated on the residual S \u2212 \u03b8 \u00b7 Y, rather than S \u2212 E[S].",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with a quadratic loss function"
+        },
+        {
+            "text": "The valuation approach we just discussed relies on the use of a quadratic loss function (x) = x 2",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "to penalise deviations of the hedging portfolio payoff from the liability. Here, we generalise the two-step valuation approach, addressing two specific concerns:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "\u2022 The quadratic loss function penalises losses and gains equally. As an insurer, the major concern is to avoid a shortfall, namely situations where S > \u03b8 \u00b7 Y. Various authors (for instance Leukert, 2000 and Fran\u00e7ois et al., 2014) proposed alternative penalty functions that only penalise losses or penalise losses and gains asymmetrically.",
+            "cite_spans": [
+                {
+                    "start": 189,
+                    "end": 206,
+                    "text": "Leukert, 2000 and",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 207,
+                    "end": 229,
+                    "text": "Fran\u00e7ois et al., 2014)",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "\u2022 The total level of assets that the insurer has to hold with respect to their liabilities is typically given by a risk measure, e.g. in the case of Solvency II, VaR 0.995 . It is then not obvious why a quadratic hedging strategy should be used, which results in a residual risk with mean zero, rather than a hedging strategy that produces a VaR 0.995 -neutral portfolio.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "To elaborate on these points, consider a convex loss function : R \u2192 [0, +\u221e), with (0) = 0 and the resulting hedging strategies ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "where \u0393 ( ) is the risk measure given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "Slightly different versions of risk functionals as defined in (6) are treated in the literature using a first order condition to find the minimiser in (5), see for instance the zero-utility premium principles discussed in Deprez and Gerber (1985) , the class of shortfall risk measures introduced by F\u00f6llmer and Schied (2002) , the generalised quantiles investigated by Bellini et al. (2014) , the optimised certainty equivalent in Ben-Tal and Teboulle (2007), the elicitable functionals studied in Gneiting (2011) and the references therein. The implications of different choices of are elaborated on in detail by Rockafellar and Uryasev (2013) . Three important examples are:",
+            "cite_spans": [
+                {
+                    "start": 222,
+                    "end": 246,
+                    "text": "Deprez and Gerber (1985)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 300,
+                    "end": 325,
+                    "text": "F\u00f6llmer and Schied (2002)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 370,
+                    "end": 391,
+                    "text": "Bellini et al. (2014)",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 499,
+                    "end": 514,
+                    "text": "Gneiting (2011)",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 615,
+                    "end": 645,
+                    "text": "Rockafellar and Uryasev (2013)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "1. If (x) = x 2 , we have that \u0393 ( ) (X) = E[X] and \u03be ( ) = \u03b8, as seen before.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "is the normalised Koenker-Bassett loss function, see Koenker (2005) . Then, \u0393 ( \u03b1 ) (X) = VaR \u03b1 (X). We henceforth denote the trading strategy associated with this loss function by \u03be ( ) := \u03be. This strategy satisfies",
+            "cite_spans": [
+                {
+                    "start": 53,
+                    "end": 67,
+                    "text": "Koenker (2005)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "This case is important to us, given the desired feature that the VaR of the residual risk is zero, indicating that sufficient assets have been allocated to satisfy regulatory requirements.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "3. Alternatively, with slight abuse of notation, consider the loss function (",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "The resulting risk measure \u0393 ( \u03c4 ) (X) is the \u03c4 -expectile. Expectiles generalise the mean (which is obtained by setting \u03c4 = 0.5) and for \u03c4 \u2265 0.5, are coherent risk measures, thus addressing a common criticism of VaR, while remaining within the tractable class of shortfall risk measures (see for instance Delbaen et al., 2016) . One can see hedging with \u03c4 (x)",
+            "cite_spans": [
+                {
+                    "start": 306,
+                    "end": 327,
+                    "text": "Delbaen et al., 2016)",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "as a modification of quadratic hedging, where, for \u03c4 > 0.5 additional weight is given to the downside risk. Expectile regression was introduced by Newey and Powell (1987) and then further generalised to M -quantiles by Breckling and Chambers (1988) . We return to expectile hedging strategies in Section 2.3.",
+            "cite_spans": [
+                {
+                    "start": 219,
+                    "end": 248,
+                    "text": "Breckling and Chambers (1988)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "In this paper, we focus on the use of the quantile hedging strategy",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "where \u03b1 (x) is given in (7).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "By changing the hedging objective from a quadratic to an asymmetric loss function targeted at large losses, our hedging strategy becomes more conservative. Specifically, by (8), if we set up the strategy \u03be for \u03b1 = 0.995, by construction, the portfolio will cover the liability S with probability \u03b1 = 0.995. The regression problem (9) is well-known as the quantile regression pioneered by Koenker and Bassett Jr (1978) . As we use it for hedging objectives, we refer to this minimisation as quantile hedging; this should not be confused with the quantile hedging of F\u00f6llmer and Leukert (1999) which targets another objective.",
+            "cite_spans": [
+                {
+                    "start": 388,
+                    "end": 417,
+                    "text": "Koenker and Bassett Jr (1978)",
+                    "ref_id": null
+                },
+                {
+                    "start": 565,
+                    "end": 591,
+                    "text": "F\u00f6llmer and Leukert (1999)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "Moreover, as the quantile hedging strategy is a risk minimiser with respect to a convex loss function, we will avoid situations where capital requirements can be reduced by shifting losses to the extreme tails, beyond the VaR level. Hence one of the key criticisms of VaR, see e.g. Section 4.4 of Dan\u0131elsson (2002) , is addressed, as illustrated in the following example.",
+            "cite_spans": [
+                {
+                    "start": 297,
+                    "end": 314,
+                    "text": "Dan\u0131elsson (2002)",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "Example 1. We consider a simple example, where there is only one risky asset correlated with the liability S. Assume that the risk measure used is VaR 0.9 and that the risk-free asset has return 1 (zero interest rates, in particular y 0 = Y 0 = 1). The liability S follows a Lognormal distribution with parameters \u00b5 = 0.1 and \u03c3 = 0.3, such that VaR 0.9 (S) = 1.623. The asset Y 1 is a derivative on S, with a price of y 1 = 1 and pay-off:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "Hence, the derivative offers a high return when S is less than VaR 0.9 (S), but produces an even larger loss when S exceeds VaR 0.9 (S). Investment in such an asset would be capital efficient, as it moves the loss beyond the 90% confidence level, thus making it 'invisible' to VaR 0.9 . On the other hand, prudent risk management would require the holder of S to short Y 1 , in order to be able to hedge their tail risk.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "To make these considerations precise, we look at two investment strategies:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "A Invest \u03b2 0 = 0 in the risk-free asset Y 0 and \u03b2 1 = VaR 0.9 (S)/1.5 = 1.082 in Y 1 . The resulting portfolio Value-at-Risk is:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "where the 3rd equality is by comonotonic additivity of VaR.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "where \u03be is the quantile hedging strategy at level \u03b1 = 0.9. By construction we have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "The corresponding optimal positions are \u03be 0 = 1.697,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "Hence, it is indeed seen that a negative exposure to Y 1 is produced. Furthermore, the cost of this strategy is equal to \u03be 0 + \u03be 1 = 1.523 > 1.082 = \u03b2 1 . Hence the Strategy B is more expensive, while achieving the same zero VaR for the portfolio as Strategy A.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "We compare these two strategies with respect to the cumulative distribution function (cdf) of their residual risks in Figure 1 . The persistent tail risk arising from Strategy A is clearly visible, indicating how this strategy, while cost efficient, reflects poor (unethical even) risk management.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 118,
+                    "end": 126,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "This is not a problem we face with the quantile hedging Strategy B. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Valuation with general loss functions"
+        },
+        {
+            "text": "While we consider the quantile hedging strategy to yield a portfolio that is more suitable for fair valuation in a solvency context, compared to quadratic hedging, valuation still needs to take into account that only a fraction of the cost of capital requirements is borne by policyholders. Here we propose a two-step valuation approach, where quadratic hedging is used as a first step and quantile hedging is subsequently applied on the residual liability. This approach enables us to decompose the cost of quantile hedging to a part that is fully borne by policyholders and a 'costof-capital' part, generalising in this way (4). Before proceeding, we briefly recall the definition of a valuation and its properties as introduced in Dhaene et al. (2017).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation with quadratic and quantile hedging"
+        },
+        {
+            "text": "that is normalised \u03c1(0) = 0 and translation invariant",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Here we list some properties that a valuation may satisfy and which will be discussed in the following. For any S, S 1 , S 2 \u2208 C we say that a valuation \u03c1 is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "for any hedgeable payoff:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "for any claim S \u22a5 \u2208 C \u22a5 , where RM : C \u22a5 \u2192 R is a mapping that does not depend on current asset prices y;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "4. Fair if \u03c1 is market-consistent and actuarial.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "The market-consistency property means that the valuation is marked-to-market for any hedgeable part of a liability, while a valuation is actuarial if it is marked-to-model for any claim which is independent of the financial market.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Definition 2.2 (Two-step valuation). Consider the liability S. Let \u03b8 be the quadratic hedging strategy for S and let \u03b7 ( ) be the hedging strategy for the residual risk R(S, \u03b8) = S \u2212 \u03b8 \u00b7 Y with a generic loss function , that is:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Then, the two-step valuation for S is defined as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "The remainder of the paper focuses on the two-step valuation where the quantile hedging strategy is considered in the second step, called the mean-quantile valuation. From now on, we drop the upper-script if we consider quantile hedging in the second step. In this section, we also briefly discuss the two-step valuation with the expectile loss function (3) in the second step, that we call the mean-expectile valuation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Using the translation invariance property of the ordinary least square regression it is immediate to verify that the two-step valuation is indeed a valuation according to Definition 2.1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "In the cost-of-capital approach for (4), a capital c = VaR \u03b1 (R(S, \u03b8)) is set up and kept risk-free until year 1 to guarantee that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "In the two-step valuation proposed in this section, we set up a strategy \u03b7 such that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "In the next lemma, we show that performing quantile hedging on the liability or performing quadratic hedging on the liability and then quantile hedging on the residual risk leads to the same hedging strategy. Hence our two-step approach is consistent with constructing an asset portfolio that \"quantile-hedges\" the liability S.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Lemma 2.3. a) If \u03be is the unique quantile hedging strategy for S as defined in (9), and if \u03b8 and \u03b7 are the hedging strategies as defined in (2) and (10), then we have that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "b) If the quantile hedging strategy for S is not unique, denote by {\u03be j } j\u2208A the set of minimisers of (10), := \u03b1 . Then, for any j \u2208 A, we have that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "where \u03b7 j \u2208 {\u03b7 j } j\u2208A , the set of quantile hedging strategies for the residual risk S \u2212 \u03b8 \u00b7 Y.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Proof. a) Let us first consider the case where the quantile hedging solution is unique. The proof is by contradiction. Assume that \u03be = \u03b8 + \u03b7 and define \u03b7 * = \u03be \u2212 \u03b8. By (9) we have",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "which contradicts the definition of \u03b7:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "b) For the non-uniqueness case, take \u03be j \u2208 {\u03be j } j\u2208A and define \u03b7 j = \u03be j \u2212 \u03b8. By definition, we have that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Therefore, \u03b7 j should be a quantile hedging strategy for the residual risk, otherwise this would contradict the optimality of \u03be j . Analogously, if \u03b7 j is a quantile hedging strategy for the residual risk then \u03be j = \u03b8 + \u03b7 j must be a quantile hedging strategy for S.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Remark 2.4. Lemma 2.3 holds equally if we consider a two-step valuation where the second step is obtained using expectile hedging instead of quantile hedging, we find again",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "In the following result, we show that the mean-quantile valuation is positive homogeneous and fair.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Theorem 2.5. The mean-quantile valuation is positive homogeneous and fair.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Proof. The positive homogeneity (also known as scale equivariance) is directly obtained by the positive homogeneity of \u03b8 and \u03b7 (see Koenker, 2005) . To prove that the mean-quantile valuation is fair, we show that the valuation is market-consistent and actuarial.",
+            "cite_spans": [
+                {
+                    "start": 132,
+                    "end": 146,
+                    "text": "Koenker, 2005)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "\u2022 First, we notice that the solution of the quadratic hedging problem is additive:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Since S h can be hedged with \u03bd, we have that \u03b8 S h = \u03bd. Therefore, we find that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "where \u03b7 S+S h is the quantile hedging strategy of the residual loss of S + S h :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "which ends the proof.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "\u2022 By standard least-squares arguments, the quadratic hedging strategy of S \u22a5 is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Otherwise stated, if a liability is independent of risky assets, the hedging strategy only invests risk-free. Therefore, we find that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "is independent of the risky assets, we find that the quantile hedging strategy is (cf. Theorem 4 in Dhaene et al., 2017) ",
+            "cite_spans": [
+                {
+                    "start": 100,
+                    "end": 120,
+                    "text": "Dhaene et al., 2017)",
+                    "ref_id": "BIBREF17"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "The mean-quantile valuation corresponds then to the standard cost-of-capital principle and the mean-quantile valuation is fair.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Theorem 2.6. The mean-expectile valuation is positive homogeneous and fair.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Proof. To verify the positive homogeneity of the valuation it is sufficient to check that the expectile strategy is positive homogeneous. Note that for any a > 0, S \u2208 C, \u03b2 \u2208 B we have:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "The fairness of the mean-expectile valuation follows exactly the same steps of the one for the mean-quantile valuation and is therefore omitted.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Hereafter, we show that applying quantile hedging to the residual risk will reduce the tail of the residual risk compared to making an investment in the risk-free asset.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Let us assume that we want to hedge R(S, \u03b8) = S \u2212 \u03b8 \u00b7 Y and the regulator imposes that VaR \u03b1 (R(S, \u03b8) \u2212 \u03b2 \u00b7 Y) = 0 for some trading strategy \u03b2 \u2208 B. To achieve this, there are two possibilities:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "\u2022 Consider an investment in the risk-free asset equal to VaR \u03b1 (R(S, \u03b8)). We denote this strategy by \u03bd.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "\u2022 Consider the quantile hedging strategy \u03b7 such that VaR \u03b1 (R(S, \u03b8) \u2212 \u03b7 \u00b7 Y) = 0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "The quantile hedging strategy is the minimiser of the Tail Value-at-Risk (TVaR) deviation of the residual risk among all the strategies which satisfy the VaR regulatory constraint. We recall that TVaR is a coherent risk measure defined as TVaR \u03b1 (X) = 1 1 \u2212 \u03b1 1 \u03b1 VaR u (X)du, for any finite mean risk X and any \u03b1 \u2208 (0, 1) and the TVaR deviation (dTVaR) is defined as dTVaR \u03b1 (X) = TVaR \u03b1 (X)\u2212E(X) for any X \u2208 C.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Lemma 2.7. Consider \u03bd and \u03b7 as defined above. The quantile hedging strategy is the minimiser of the TVaR deviation of the residual risk:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "for all hedging strategies \u03b2 such that VaR \u03b1 (R(S, \u03b8) \u2212 \u03b2 \u00b7 Y) = 0. This is in particular the case for \u03b2 = \u03bd.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Proof. This is a direct application of Theorem 3.2. in Rockafellar et al. (2008) . Example 2. Here we show how our proposed valuation methodology works in a single-period setting, where the liability S is highly -but non-linearly -correlated with a tradeable asset Y .",
+            "cite_spans": [
+                {
+                    "start": 55,
+                    "end": 80,
+                    "text": "Rockafellar et al. (2008)",
+                    "ref_id": "BIBREF41"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "A more realistic dynamic version of this model is discussed in detail in Section 5.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "We consider a portfolio of equity-linked life insurance contracts, which guarantee a survival benefit to all policyholders who are still alive at maturity time T = 1. The insurance liability can be expressed as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "where N represents the number of survivors at time 1, among an initial population of 1000 policyholders. We make the following assumptions: N \u223c Bin(1000, 0.9); Y 1 \u223c LN (0.1, 0.2 2 ); the value of the risky asset at time 0 is y 1 = 1; interest rates are zero, that is, y 0 = Y 0 = 1; the guarantee level is K = 1. The analysis is carried out on a sample of 200,000 simulated scenarios.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "On the left of Figure 2 , we plot samples of S against Y 1 . One can see the strong (nearly deterministic) positive relationship between the two, indicating that Y 1 can be used to hedge S.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 15,
+                    "end": 23,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "On the right of Figure 2 , we show the residuals of the quadratic hedging strategy, R(S, \u03b8) against Y 1 . The residuals are clearly not independent of the the tradeable asset, indicating that quantile or expectile hedging of those residuals will be meaningful. In other words, we would expect that our two-step valuation \u03c1 would give different answers than the valuation \u03c6 defined in (4).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 16,
+                    "end": 24,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "In Table 1 we present the following trading strategies:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 3,
+                    "end": 10,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "1. \u03b8: the result of quadratic hedging of S. We can observe that \u03be and \u03be ( \u03c4 ) place a substantially higher investment into the risk-free asset, compared to \u03b8, reflecting the more stringent criterion encoded in the respective loss functionsrecall that E R(\u03b8, S) = 0, VaR \u03b1 R(\u03be, S) = 0, \u0393 ( \u03c4 ) R(\u03be ( \u03c4 ) , S) = 0. At the same time, the investment in the risky asset is somewhat higher for \u03b8, reflecting a lower sensitivity to adverse movements in asset values. The remaining three strategies pertain to hedging the residuals of the first (quadratic hedging) step. We see that this second step, for quantile and expectile hedging, involves a reduction in the exposure to the risky asset. In Figure 3 , we show the densities of the residuals corresponding to the strategies of 4.-6.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 689,
+                    "end": 697,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "above. We can see that quantile and expectile hedging lead to a somewhat different shape, compared to a quadratic regression that is followed by investing the VaR \u03b1 of the residual risk in the risk-free asset. We quantify the difference between the three densities, by stating the corresponding TVaR deviations: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "Hence, in this example, the impact on the valuation of S is very limited, even though the hedging strategies and, importantly, the statistical behaviour of residuals, are different.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Definition 2.1 (Valuation). A valuation is a mapping"
+        },
+        {
+            "text": "We extend the previous setup to a model over multiple time periods. We consider a filtered probability space: (\u2126, (F t ) t\u2208{0,1,...,T } , P), where F 0 = {\u2205, \u2126}, F T = F and the \u03c3-algebra F t represents the information available up to time t, t \u2208 {0, 1, . . . , T }.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation in a multi-period setting"
+        },
+        {
+            "text": "Again we consider n + 1 traded assets. We denote Y(t) = (e rt , Y 1 (t), . . . , Y n (t)) the vector of asset prices at time t \u2208 {1, 2, . . . , T } and assume that the asset portfolio can be freely recalculated at each time t, hence we do not require trading strategies to be self-financing. A trading strategy is an n + 1 vector \u03b2(t) = (\u03b2 0 (t), . . . , \u03b2 n (t)), where each \u03b2 i (t) is predictable (i.e. F t\u22121 -measurable) and represents the unit of capital invested in asset i in the time interval [t \u2212 1, t), for any i = 0, 1, . . . , n and t \u2208 {1, 2, . . . , T }. We denote B(t) the set of trading strategies available for the time interval [t \u2212 1, t).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation in a multi-period setting"
+        },
+        {
+            "text": "In this section, we study the problem of an insurer who needs to determine the fair valuation at any times t < T for an insurance liability S which matures at time T . In Barigou et al. (2019) , this objective was achieved by a backward iteration in which for each time period the liability is hedged by quadratic hedging and the non-hedged residual part is priced via an actuarial valuation, e.g. the standard deviation principle. While this approach is fair in the sense of Theorem 2.5, it does not take into account the yearly solvency requirement in its valuation,",
+            "cite_spans": [
+                {
+                    "start": 171,
+                    "end": 192,
+                    "text": "Barigou et al. (2019)",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Two-step valuation in a multi-period setting"
+        },
+        {
+            "text": "namely that the hedging portfolio should cover the fair value of the liability with a confidence level \u03b1 (generally \u03b1 = 0.995).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation in a multi-period setting"
+        },
+        {
+            "text": "Here, we extend our two-step hedging approach from a one-period to a multi-period setting.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation in a multi-period setting"
+        },
+        {
+            "text": "In the first step of the valuation, a quadratic hedging strategy is set up and we know by the relation (3) that its expected payoff corresponds to the expected liability. In the second step of the valuation, we apply a quantile hedging strategy to the residual loss, and by construction, the yearly solvency capital requirement will be satisfied. The cost of this strategy is then included in the valuation through an appropriate cost-of-capital risk margin. ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Two-step valuation in a multi-period setting"
+        },
+        {
+            "text": "where \u03b1 is the Koenker-Bassett error given in (7). By the properties of quantile hedging, the payoff of both hedging strategies will cover the liability with a confidence level of \u03b1, hence satisfying the regulatory constraint:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "The fair value at time T \u2212 1 of the liability is then defined as the cost of the quadratic hedging strategy and a cost-of-capital risk margin for the quantile hedging strategy:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "We can now repeat iteratively the two-step valuation until we reach the fair value at time 0, at each step hedging the fair value of one period ahead. For the fair value \u03c1 t+1 (S), both hedging strategies are given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "Then, the fair value at time t is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "and the yearly solvency constraints are satisfied by construction: (14) We now provide a simple example of our multi-period two-step valuation in a multivariate normal setting. In such a framework, explicit solutions for the fair valuation can be obtained.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "Example 3. We consider a multi-period model with two assets only: Y(t) = (Y 0 (t), Y 1 (t)), t = 0, 1, . . . , T . We assume that Y 0 (t) = 1 for all t (i.e. the risk-free asset has zero interest rate)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "and that the returns of the risky asset, R t = Y1(t) Y1(t\u22121) , t = 1, . . . , T are i.i.d. Moreover, we write the liability development of S as S = s 0 + S 1 + \u00b7 \u00b7 \u00b7 + S T , where s 0 is constant, S t is the liability development at time t which is F t -measurable, S t 's are independent, and E[S t ] = 0 for t = 1, . . . , T, we remark that such a decomposition was also considered in Tsanakas et al. (2013) . Furthermore, (R t , S t ) are bivariate normally distributed, with constant correlation c. For the sake of brevity we define:",
+            "cite_spans": [
+                {
+                    "start": 387,
+                    "end": 409,
+                    "text": "Tsanakas et al. (2013)",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "where \u03ba is constant, while \u03b3 t is deterministic but time varying. First, we determine the quadratic hedging strategy at time T \u2212 1:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "By standard arguments, we get:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "such that the cost of the quadratic hedging strategy is given by:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "In a second step, we determine the risk margin by computing the quantile hedging strategy for the residual:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "By the normality assumption, we have that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "i.e. there is no investment in the risky asset. The related cost is then given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "The resulting fair value of S is then given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "By noting that with respect to F T \u22122 , the only random element in \u03c1 T \u22121 (S) is S T \u22121 , we find that",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "The cost of capital of all future capital requirements is used when valuing the liability at a particular time, which is in agreement with the Solvency II risk margin. An inductive argument would lead to:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "Hence, the fair value of the liability is composed of three terms: first the expected liability s 0 , a second term accounting for the dependence between the excess risky asset returns and the liability increments, and, third, is the cost-of-capital risk margin which takes into account the non-hedgeable risk. We note that the risk margin vanishes as c \u2192 1 since the liability can be completely hedged in this case.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Fair valuation by iterated two-step valuation"
+        },
+        {
+            "text": "Time-consistency is an important concept for characterising the relationship between different static valuations. It means that the same value is assigned to a liability regardless of whether it is calculated in one step or in two steps backwards in time.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time-consistency of the valuation framework"
+        },
+        {
+            "text": "Definition 3.1. A sequence of valuations (\u03c1 t )",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time-consistency of the valuation framework"
+        },
+        {
+            "text": ", for any liability S and t = 0, 1, . . . , T \u2212 2.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time-consistency of the valuation framework"
+        },
+        {
+            "text": "By construction, our valuation framework is time-consistent. Indeed, from (13) we see that the fair valuation at time t is obtained by applying the one-period two-step valuation on \u03c1 t+1 , which itself comes from the two-step valuation on \u03c1 t+2 and so on. Therefore, the time-consistency condition (15) is directly satisfied.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time-consistency of the valuation framework"
+        },
+        {
+            "text": "The backward recursive scheme presented above is similar to the one solving the local quadratic hedging problem (F\u00f6llmer and Schweizer, 1988) , which is usually implemented by dynamic programming. Since the optimal hedging strategy is a function of conditional expectations, a popular technique consists of constructing a Markov grid with the use of a multinomial tree model for the risky asset dynamics (see e.g. Augustyniak et al., 2017 , Coleman et al., 2006 and Godin, 2016 .",
+            "cite_spans": [
+                {
+                    "start": 112,
+                    "end": 141,
+                    "text": "(F\u00f6llmer and Schweizer, 1988)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 414,
+                    "end": 438,
+                    "text": "Augustyniak et al., 2017",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 439,
+                    "end": 461,
+                    "text": ", Coleman et al., 2006",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 462,
+                    "end": 477,
+                    "text": "and Godin, 2016",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Dynamic hedging by neural networks"
+        },
+        {
+            "text": "The Markov property is key to reduce the dimensionality of the dynamic programming algorithms, because it implies that conditional expectations with respect to F t reduce to conditional expectations with respect to assets prices at time t only, i.e. Y(t).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dynamic hedging by neural networks"
+        },
+        {
+            "text": "In this paper, we present a general procedure to solve the dynamic quadratic-quantile hedging problem in a Markovian setting. The procedure involves an iterated non-linear optimisation which is solved by neural networks. We note however that other non-linear regression methods (such as gradient boosted trees) can be used as well. Moreover, we present the algorithm for the mean-quantile valuation but, in principle, the whole procedure remains valid for any loss function .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Dynamic hedging by neural networks"
+        },
+        {
+            "text": "We recall that the iterated dynamic hedging problem is given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "for any t = T \u2212 1, . . . , 0, starting with \u03c1 T (S) = S and \u03b1 is the Koenker-Bassett error (7).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "From now on, we assume that there exists a m-dimensional process Z(t) which drives all the processes of interest. In an insurance context, Z(t) may represent for instance the risky asset processes and the number of policyholders alive at time t. The filtration F driving the information contains all observations about the process Z:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "To avoid path-dependence issues in the hedging framework and reduce the complexity of the dynamic hedging algorithm, we make the standard assumption that Z is Markovian. We note that many standard financial and actuarial processes do follow the Markov property.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "Assumption 1. Z has the Markov property with respect to the filtration F, i.e.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "By Assumption 1, the candidate hedging strategies in the dynamic hedging problem (16) can be expressed as \u03b2 = g(Z(t)) where g : R m \u2192 R n+1 is a function which takes the random process at time t as inputs and outputs the hedging positions in the (n + 1) assets. Since we cannot consider numerically any possible function g, we assume that the optimal function g belongs a family of non-linear functions G.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "Moreover, in order to approximate the expectation operator in (16), we use a Monte-Carlo sample by generating M random simulations. We denote by Z (i) (t), for i = 1, . . . , M , the M random observations of the random process at time t, for t = 0, 1, . . . , T . Therefore, the dynamic hedging problem (16) can be expressed by the following iterative algorithm:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "for any t = T \u22121, . . . , 0, starting with \u03c1 (i) T (S) = S (i) . We note that the algorithm (17) provides the fair valuation of S at any time t as well as the quadratic and quantile hedging strategies. Indeed, by Lemma 2.3, the quantile hedging strategy \u03be for \u03c1 t+1 (S) is the sum of the quadratic hedging strategy \u03b8 for \u03c1 t+1 (S) and the quantile hedging strategy \u03b7 for the residual loss. Algorithm 1 presents the procedure in its compact form.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "Algorithm 1 Backward resolution of the dynamic fair valuation problem 1: \u03c1 T \u2190 S 2: for t = T \u2212 1, T \u2212 2, ..., 0 do 3:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "General algorithm for the dynamic hedging problem"
+        },
+        {
+            "text": "In order to implement the Algorithm 1, we need to resort to a non-linear optimisation. In this paper, we implement the algorithm by the use of neural networks (NNs) as these are well suited for this problem. The universal approximation theorem of Hornik et al. (1989) states that networks can approximate any continuous function on a compact support arbitrarily well if we allow for arbitrarily many neurons q 1 \u2208 N in the hidden layer. From the universal approximation theorem, we do know that the optimal g function can be approached by a neural network with sufficient layers and neurons. The number of neurons and layers that we need is rather subjective and subject to empirical studies. Here, we follow the work of F\u00e9camp et al. (2019) and consider three hidden layers of 10 neurons with Relu activation functions. For completeness, we briefly explain the mathematical structure of a neural network in the next paragraph, see Goodfellow et al. (2016) for more details.",
+            "cite_spans": [
+                {
+                    "start": 247,
+                    "end": 267,
+                    "text": "Hornik et al. (1989)",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 721,
+                    "end": 741,
+                    "text": "F\u00e9camp et al. (2019)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 932,
+                    "end": 956,
+                    "text": "Goodfellow et al. (2016)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Implementation by neural networks"
+        },
+        {
+            "text": "The neural network takes an input of dimension m (the dimension of the risk process Z) and outputs a vector of dimension n + 1 (the number of units invested in the (n + 1) assets).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implementation by neural networks"
+        },
+        {
+            "text": "The network is characterised by a number of layers L + 1 \u2208 N\\{1, 2} with m , = 0, . . . , L, the number of neurons (units or nodes) on each layer: the first layer is the input layer with m 0 = m, the last layer is the output layer with m L = n + 1, and the L \u2212 1 layers between are called hidden layers, where we choose for simplicity the same dimension m = p, = 1, . . . , L \u2212 1. The neural network is then defined as the composition",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implementation by neural networks"
+        },
+        {
+            "text": "Here, A , = 1, . . . , L, are affine transformations represented by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implementation by neural networks"
+        },
+        {
+            "text": "for a matrix of weights W and a \"bias\" term \u03b2 . The non-linear function \u03d5 : R \u2192 R is called the activation function and is applied component-wise on the outputs of A , i.e., \u03d5 (x 1 , . . . , x p ) = (\u03d5 (x 1 ) , . . . , \u03d5 (x p )). Standard examples of activation functions are the sigmoid, the ReLU, the elu and tanh.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implementation by neural networks"
+        },
+        {
+            "text": "In this section, we determine the multi-period two-step valuation for a portfolio of equity-linked contracts, extending the one-period Example 2. We consider a portfolio of equity-linked life insurance contracts, which guarantee a survival benefit to all policyholders who are still alive at maturity time T . The insurance liability can be expressed by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "with N (t) a mortality process counting the number of survivors at time t among an initial population of l x policyholders of age x, Y (1) (t) a risky asset process, and K a fixed guarantee level. To account for the dependence between financial and actuarial risks, we assume that the dynamics of the stock process and the population force of mortality are given by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "with c, \u03b7, \u00b5 and \u03c3 positive constants, W 1 (t) = \u03b4W 2 (t) + \u221a 1 \u2212 \u03b4 2 X(t), and W 2 (t) and X(t) are independent standard Brownian motions. We note that the stochastic force of mortality \u03bb x (t)",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "represents the systematic mortality risk, namely the risk that the whole population lives more (or less) than expected. The Ornstein-Uhlenbeck process without mean reversion (20) was among others considered in Luciano and Vigna (2008) and Luciano et al. (2017) and was found to provide an appropriate fit to cohort life tables.",
+            "cite_spans": [
+                {
+                    "start": 210,
+                    "end": 234,
+                    "text": "Luciano and Vigna (2008)",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 239,
+                    "end": 260,
+                    "text": "Luciano et al. (2017)",
+                    "ref_id": "BIBREF33"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "The survival function is then defined by",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "where T x is the remaining lifetime of an individual who is aged x at time 0.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "Moreover, to express the unsystematic mortality risk and pooling effects, deaths of individuals are assumed to be independent events conditional on the population mortality. Further, if we denote D(t + 1) the number of deaths during year t + 1, the dynamics of the number of active contracts can be described as a nested binomial process as follows: N (t + 1) = N (t) \u2212 D(t + 1) with D(t + 1)|N (t), q x+t \u223c Bin(N (t), q x+t ). Here, q x+t represents the one-year death probability",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": ", for t = 0, . . . , T \u2212 1.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "Knowing the dynamics of N (t) and Y (1) (t), we can simulate M scenarios for the mortality and the equity risk factors for t = 1, . . . , T . It is clear that in this example, the observable processes of interest at time t are the stock price and the number of survivals: Z(t) := (Y 1 (t), N (t)).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "Therefore, we have two neural networks: . We observe that, as the maturity of the contract increases, the confidence intervals are wider due to the higher uncertainty. Moreover, we remark that the evolution of the fair value through time is smooth and provides a good match to the final payoff.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "So far, we did not discuss the rebalancing cost of the quantile hedging portfolio. We recall that, by construction, the hedging portfolio is rebalanced every year in order to satisfy the yearly solvency constraints:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "Therefore, if e.g. \u03b1 = 0.95, there is a probability of at most 0.05 that the hedging portfolio will not be sufficient to cover the (fair value of) liability. However, there is a priori no guarantee that the payoff of the hedging portfolio will be sufficient to cover the cost of the hedging portfolio for the next year. The rebalancing cost at time t is given by Total rebalancing cost =",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "First, we notice that intervals of the yearly costs are approximately centered around zero, meaning that there is no yearly rebalancing cost on average. Moreover, we can observe that with high probability, the rebalancing cost is lower than 40, which is approximately 3% of the expected liability. On the aggregate level, Figure 5 also shows that that, on average, the rebalancing cost is very low and with high probability (\u03b1 = 0.95), the total rebalancing cost will be no more than 10% of the expected liability. Therefore, the cost of the iterated quantile hedging appears to lie at reasonable levels. On Figure 6 , we show the final loss of the dynamic hedging strategy. We observe that, with high probability, the hedging portfolio will cover the liability S, which follows from the property (23) of quantile hedging.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 322,
+                    "end": 330,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 608,
+                    "end": 616,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF9"
+                }
+            ],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "The neural network estimation allows us to study the non-linearities in the quantile hedging strategy. By expression (22), the neural network delivers two outputs for any time t, corresponding to the investment in the risk-free asset Y 0 (t) and Y 1 (t), respectively. Figure 7 represents the number of assets held at time t = 5 as a function of the stock price at time 5. As expected, we notice that the investment in the stock is an increasing function of the stock price to better match the terminal liability. On the other hand, due to a compensating effect, the risk-free investment is a decreasing function of the stock price and reaches zero for high stock prices.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 269,
+                    "end": 277,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "Finally, we also studied key metrics of the quantile hedging residuals in order to assess the accuracy of the neural network algorithm. By Rockafellar et al. (2008) and Rockafellar and Uryasev (2013) , it is well-known that the quantile hedging strategy satisfies both relations:",
+            "cite_spans": [
+                {
+                    "start": 139,
+                    "end": 164,
+                    "text": "Rockafellar et al. (2008)",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 169,
+                    "end": 199,
+                    "text": "Rockafellar and Uryasev (2013)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "VaR \u03b1,t (\u03c1 t+1 (S) \u2212 \u03be(t + 1) \u00b7 Y(t + 1)) = 0, \u2200t \u2208 {0, 1, . . . , T \u2212 1}, E [ \u03b1 (\u03c1 t+1 (S) \u2212 \u03be(t + 1) \u00b7 Y(t + 1))] = dTVaR [\u03c1 t+1 (S) \u2212 \u03be(t + 1) \u00b7 Y(t + 1)] , for all t in {0, 1, . . . , T \u2212 1}. An appropriate quantile hedging algorithm should therefore have residuals with a VaR close to zero and the average Koenker-Bassett error close to the TVaR deviation. Table 2 reports the VaR of the residuals, the average Koenker-Bassett error and the TVaR deviation for all t. We observe that the empirical VaR is indeed close to zero and small compared to the expected payoff E [S] \u2248 1162. Moreover, the K-B error is close to the TVaR deviation, hence showing the accuracy of our algorithm. The remaining difference is essentially due to the estimation and simulation error of our approach, which can be further reduced by increasing the simulations or the complexity of the neural network at the cost of a more expensive computational time. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 362,
+                    "end": 369,
+                    "text": "Table 2",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Numerical example: Portfolio of equity-linked contracts"
+        },
+        {
+            "text": "We discussed the fair valuation of insurance liabilities in a multi-period discrete-time setting.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Concluding remarks"
+        },
+        {
+            "text": "As insurance liabilities are not directly traded in the financial market, the valuation requires a decomposition into a \"hedgeable part\" and a \"residual part\". For the first part, it seems that the quadratic objective has become a standard practice probably due to its analytical tractability and the fact that the resulting hedging portfolio targets the expected liability (Pelsser and Schweizer, 2016) . However, there is still an open debate on how to appropriately treat the residual part and define an appropriate \"risk margin\" (see e.g. Pelkiewicz et al., 2020 for a review on the Solvency II risk margin). In the literature, different approaches were considered to value the residual risk, either by an Esscher valuation operator (Deelstra et al., 2020) , a standard-deviation principle , Ghalehjooghi and Pelsser, 2020 , Chen et al., 2020 , Delong et al., 2019 , or a cost-of-capital principle (Pelsser, 2011) .",
+            "cite_spans": [
+                {
+                    "start": 374,
+                    "end": 403,
+                    "text": "(Pelsser and Schweizer, 2016)",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 737,
+                    "end": 760,
+                    "text": "(Deelstra et al., 2020)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 794,
+                    "end": 826,
+                    "text": ", Ghalehjooghi and Pelsser, 2020",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 827,
+                    "end": 846,
+                    "text": ", Chen et al., 2020",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 847,
+                    "end": 868,
+                    "text": ", Delong et al., 2019",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 902,
+                    "end": 917,
+                    "text": "(Pelsser, 2011)",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Concluding remarks"
+        },
+        {
+            "text": "Of the above valuation principles, the cost-of-capital approach takes account of the need to set up VaR-neutral portfolio; but in this approach VaR-neutrality becomes divorced from hedging considerations. Rather than using a cost-of-capital principle on the residual risk, we propose to quantile-hedge it. While both approaches lead to a VaR-neutral portfolio, our proposed approach has two noticeable advantages. First, the quantile hedging portfolio is a TVaR deviation risk minimiser and therefore better accounts for the tail risk (see Lemma 2.7, Examples 1, 2). Second, our quadratic-quantile approach shows that the residual risk can still be partially hedged if one switches from a quadratic to a quantile hedging objective. This is especially relevant when there is a non-linear relationship between the insurance liability and traded instruments.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Concluding remarks"
+        },
+        {
+            "text": "Moreover, we proposed a simulation-based general algorithm for the practical implementation of our approach. In this paper, we focused on a neural network implementation for quantile hedging but the algorithm can be easily adapted for a general loss function and other nonlinear optimisers.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Concluding remarks"
+        },
+        {
+            "text": "Karim Barigou acknowledges the financial support of the AXA research fund project on \"Niveaux et tendances d'am\u00e9lioration de la long\u00e9vit\u00e9: s\u00e9lection de mod\u00e8le pour les hypoth\u00e8ses \"Best Estimate\" et d\u00e9tection de rupture\u00e1 l'aide de tests s\u00e9quentiels, avec prise en compte du contexte covid-19\".",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Asset-liability management for long-term insurance business",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Albrecher",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bauer",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Embrechts",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Filipovi\u0107",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Koch-Medina",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Korn",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Loisel",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pelsser",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Schiller",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Schmeiser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "European Actuarial Journal",
+            "volume": "8",
+            "issn": "1",
+            "pages": "9--25",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Assessing the effectiveness of local and global quadratic hedging under garch models",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Augustyniak",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Godin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Simard",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Quantitative Finance",
+            "volume": "17",
+            "issn": "9",
+            "pages": "1305--1318",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Fair dynamic valuation of insurance liabilities: Merging actuarial judgement with market-and time-consistency",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Barigou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dhaene",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Insurance: Mathematics and Economics",
+            "volume": "88",
+            "issn": "",
+            "pages": "19--29",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Generalized quantiles as risk measures",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Bellini",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Klar",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "M\u00fcller",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Gianin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Insurance: Mathematics and Economics",
+            "volume": "54",
+            "issn": "",
+            "pages": "41--48",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "An old-new concept of convex risk measures: The optimized certainty equivalent",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ben-Tal",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Teboulle",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Mathematical Finance",
+            "volume": "17",
+            "issn": "3",
+            "pages": "449--476",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Equal risk option pricing with deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Carbonneau",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Godin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2002.08492"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Qis 5 technical specifications', European Commission, Annex to Call for Advice from CEIOPS on QIS5",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ceiops",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Dynamic programming and mean-variance hedging in discrete time",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cern\u1ef3",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Applied Mathematical Finance",
+            "volume": "11",
+            "issn": "1",
+            "pages": "1--25",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Hedging by sequential regressions revisited",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Cern\u1ef3",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kallsen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "An International Journal of Mathematics, Statistics and Financial Economics",
+            "volume": "19",
+            "issn": "4",
+            "pages": "591--617",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Fair dynamic valuation of insurance liabilities: a loss averse convex hedging approach",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dhaene",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Scandinavian Actuarial Journal",
+            "volume": "2020",
+            "issn": "9",
+            "pages": "792--818",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Hedging guarantees in variable annuities under both equity and interest rate risks",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Coleman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "M.-C",
+                    "middle": [],
+                    "last": "Patron",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "Insurance: Mathematics and Economics",
+            "volume": "38",
+            "issn": "2",
+            "pages": "215--228",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "The emperor has no clothes: Limits to risk modelling",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dan\u0131elsson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Journal of Banking & Finance",
+            "volume": "26",
+            "issn": "7",
+            "pages": "1273--1296",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Valuation of hybrid financial and actuarial products in life insurance by a novel three-step method",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Deelstra",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Devolder",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Gnameho",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hieber",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ASTIN Bulletin: The Journal of the IAA",
+            "volume": "50",
+            "issn": "3",
+            "pages": "709--742",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Risk measures with the cxls property",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Delbaen",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Bellini",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Bignozzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Ziegel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Finance and Stochastics",
+            "volume": "20",
+            "issn": "2",
+            "pages": "433--453",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Fair valuation of insurance liability cash-flow streams in continuous time: Theory",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Delong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dhaene",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Barigou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Insurance: Mathematics and Economics",
+            "volume": "88",
+            "issn": "",
+            "pages": "196--208",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "On convex principles of premium calculation",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Deprez",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "U"
+                    ],
+                    "last": "Gerber",
+                    "suffix": ""
+                }
+            ],
+            "year": 1985,
+            "venue": "Insurance: Mathematics and Economics",
+            "volume": "4",
+            "issn": "3",
+            "pages": "179--189",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Fair valuation of insurance liabilities: Merging actuarial judgement and market-consistency",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Dhaene",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Stassen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Barigou",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Linders",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Insurance: Mathematics and Economics",
+            "volume": "76",
+            "issn": "",
+            "pages": "14--27",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Risk management with machine-learning-based algorithms",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "F\u00e9camp",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Mikael",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Warin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1902.05287"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Quantile hedging",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "F\u00f6llmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Leukert",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Finance and Stochastics",
+            "volume": "3",
+            "issn": "3",
+            "pages": "251--273",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Efficient hedging: cost versus shortfall risk",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "F\u00f6llmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Leukert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Finance and Stochastics",
+            "volume": "4",
+            "issn": "2",
+            "pages": "117--146",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Convex measures of risk and trading constraints",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "F\u00f6llmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Schied",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Finance and Stochastics",
+            "volume": "6",
+            "issn": "4",
+            "pages": "429--447",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Hedging by sequential regression: An introduction to the mathematics of option trading",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "F\u00f6llmer",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schweizer",
+                    "suffix": ""
+                }
+            ],
+            "year": 1988,
+            "venue": "ASTIN Bulletin: The Journal of the IAA",
+            "volume": "18",
+            "issn": "2",
+            "pages": "147--160",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Optimal hedging when the underlying asset follows a regime-switching markov process",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Fran\u00e7ois",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Gauthier",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Godin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "European Journal of Operational Research",
+            "volume": "237",
+            "issn": "1",
+            "pages": "312--322",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Time-consistent and market-consistent actuarial valuation of the participating pension contract",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Ghalehjooghi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pelsser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Scandinavian Actuarial Journal",
+            "volume": "0",
+            "issn": "0",
+            "pages": "1--29",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Making and evaluating point forecasts",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Gneiting",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of the American Statistical Association",
+            "volume": "106",
+            "issn": "494",
+            "pages": "746--762",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Minimizing CVaR in global dynamic hedging with transaction costs",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Godin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Quantitative Finance",
+            "volume": "16",
+            "issn": "3",
+            "pages": "461--475",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Deep learning",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Goodfellow",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bengio",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Courville",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Best-estimate claims reserves in incomplete markets",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Happ",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Merz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "W\u00fcthrich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "European Actuarial Journal",
+            "volume": "5",
+            "issn": "1",
+            "pages": "55--77",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Utility indifference pricing-an overview",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Henderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hobson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Multilayer feedforward networks are universal approximators",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hornik",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Stinchcombe",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "White",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Neural Networks",
+            "volume": "2",
+            "issn": "5",
+            "pages": "359--366",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Quantile Regression",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Koenker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Single-and cross-generation natural hedging of longevity and financial risk",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Luciano",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Regis",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Vigna",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Risk and Insurance",
+            "volume": "84",
+            "issn": "3",
+            "pages": "961--986",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Mortality risk via affine stochastic intensities: calibration and empirical relevance",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Luciano",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Vigna",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Belgian Actuarial Bulletin",
+            "volume": "8",
+            "issn": "1",
+            "pages": "5--16",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Market-consistent valuation of insurance liabilities by cost of capital",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "M\u00f6hr",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "ASTIN Bulletin: The Journal of the IAA",
+            "volume": "41",
+            "issn": "2",
+            "pages": "315--341",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Asymmetric least squares estimation and testing",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Newey",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Powell",
+                    "suffix": ""
+                }
+            ],
+            "year": 1987,
+            "venue": "Econometrica: Journal of the Econometric Society",
+            "volume": "55",
+            "issn": "4",
+            "pages": "819--847",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "A review of the risk margin-Solvency II and beyond",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pelkiewicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Fulcher",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Reynolds",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Schneider",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Scott",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "British Actuarial Journal",
+            "volume": "25",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Pricing in incomplete markets', Netspar Panel Papers 25",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pelsser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "The difference between LSMC and replicating portfolio in insurance liability modeling",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pelsser",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schweizer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "European Actuarial Journal",
+            "volume": "6",
+            "issn": "2",
+            "pages": "441--494",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "The fundamental risk quadrangle in risk management, optimization and statistical estimation', Surveys in Operations Research and",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Rockafellar",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Uryasev",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Management Science",
+            "volume": "18",
+            "issn": "1-2",
+            "pages": "33--53",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Risk tuning with generalized linear regression",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Rockafellar",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Uryasev",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zabarankin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Mathematics of Operations Research",
+            "volume": "33",
+            "issn": "3",
+            "pages": "712--729",
+            "other_ids": {}
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Variance-optimal hedging in discrete time",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Schweizer",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "Mathematics of Operations Research",
+            "volume": "20",
+            "issn": "1",
+            "pages": "1--32",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Market value margin via mean-variance hedging",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Tsanakas",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "W\u00fcthrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "And\u010dern\u1ef3",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "ASTIN Bulletin: The Journal of the IAA",
+            "volume": "43",
+            "issn": "3",
+            "pages": "301--322",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Economic scenario generators and Solvency II",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Varnell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "British Actuarial Journal",
+            "volume": "16",
+            "issn": "1",
+            "pages": "121--159",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Market-Consistent Actuarial Valuation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "W\u00fcthrich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "EEA Series",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Financial modeling, actuarial valuation and solvency in insurance",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "W\u00fcthrich",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Merz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Cumulative distribution functions of the residual risks R(S, \u03b2) (left) and R(S, \u03be) (right), corresponding, respectively, to the Strategies A and B of Example 1.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Liability S (left) and residual R(S, \u03b8) (right) against value of the risky asset Y 1 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "2. \u03be: the result of quantile hedging of S, with \u03b1 = 0.99. 3. \u03be ( \u03c4 ) : the result of expectile hedging of S, with \u03c4 = 0.998. The value of \u03c4 was calibrated so that the Value-at-Risk and expectiles of S match, i.e. VaR \u03b1 (S) = \u0393 ( \u03c4 ) (S). 4. (VaR \u03b1 (R(S, \u03b8)), 0): investing the VaR of the residuals R(S, \u03b8) in the risk-free asset. 5. \u03b7: the result of quantile hedging of R(S, \u03b8). 6. \u03b7 ( \u03c4 ) : the result of expectile hedging of R(S, \u03b8).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Densities of residuals, for quadratic hedging of S, followed by investing the VaR of the residual in the risk-free asset (black); quantile hedging of S (blue); and expectile hedging of S (red).measuring the variability of residuals changes. For example, considering the standard deviation of residuals privileges quadratic regression, leading to \u03c3 R(S, \u03b8) \u2212 VaR \u03b1 (R(S, \u03b8)) = 49.0, while \u03c3 R(R(S, \u03b8), \u03b7) = 50.3; note though the difference between the two is small.Finally, we state the fair value of S, as calculated via the three different hedging approaches 4.-6., for cost-of-capital rate i = 0.1:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "an insurance liability S which matures at time T . The quadratic and quantile hedging strategies at time T \u2212 1 are determined by \u03b8(T ) = arg min \u03b2\u2208B(T )",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "corresponding to the quadratic and quantile hedging strategies for the portfolio of equity-linked contracts, respectively.Hereafter, we provide a numerical analysis for the fair dynamic valuation of the insurance liability S introduced above. Our numerical results are obtained by generating 200000 sample paths for N (t) and Y (1) (t), for t = 1, . . . , T. The benchmark parameters for the financial market are r = 0.01, \u00b5 = 0.02 \u03c3 = 0.1, K = 1, \u03b4 = \u22120.5 and Y (1) (0) = 1. The mortality parameters (\u03bb x (0) = 0.0087, c = 0.0750, \u03be = 0.000597) follow fromLuciano et al. (2017) and correspond to UK male individuals who are aged 55 at time 0. We assume that there are l x = 1000 initial contracts at time 0 with a maturity of T = 10 years.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "represents prediction intervals for the evolution of the fair valuations, \u03c1 t (S), for t = 0, . . . , T \u2212 1, obtained by the NN Algorithm 1 (left) along with the final payoff S (right)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Left: Evolution of the fair valuation from time 0 to maturity time T = 10. Right: Histogram of the final payoff S = N (T ) \u00d7 max Y (1) (T ), K . Shades in the fan represent prediction intervals at the 50%, 80% and 95% level. Based on our neural network approximation, Figure 5 depicts prediction intervals for the rebalancing cost of the hedging portfolio for any t = 1, . . . , T \u2212 1 along with the total rebalancing cost:",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Left: Rebalancing cost of the hedging portfolio at any rebalancing times t = 1, . . . , T \u22121. Right: total rebalancing cost. Shades in the fan represent prediction intervals at the 50%, 80% and 95% level.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "Histogram of the final loss S \u2212 \u03be(T ) \u00b7 Y(T ).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "Number of asset units bought at time t = 5 in the risk-free asset and risky asset under the quantile hedging strategy as function of the asset price Y (1) (5). This strategy corresponds to the expression (22): h 6 (Y 1 (5), N (t)) = \u03be(6), with fixed mortality N (t) = E[N (5)].",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Again, we drop the subscript to write \u03be ( ) , if no confusion ensues. Different choices of the loss function lead to the risk-neutrality (or unbiasedness) of the residual risk with respect to different",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Investment in risk-free and risky asset, from hedging strategies associated with the two-step valuation of S.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "This table reports Value-at-Risk (VaR), Koenker-Bassett error (K-B error) and Tail Value-at-Risk deviation (dTVaR) of quantile hedging residuals at confidence level \u03b1 = 0.95.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

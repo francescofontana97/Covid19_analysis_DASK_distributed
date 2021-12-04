@@ -1,0 +1,1758 @@
+{
+    "paper_id": "3d77896fed5447c2d412458d601ad7d65a1d438a",
+    "metadata": {
+        "title": "Understanding HPC Benchmark Performance on Intel Broadwell and Cascade Lake Processors",
+        "authors": [
+            {
+                "first": "Christie",
+                "middle": [
+                    "L"
+                ],
+                "last": "Alappat",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Johannes",
+                "middle": [],
+                "last": "Hofmann",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Erlangen-Nuremberg",
+                    "location": {
+                        "postCode": "91058",
+                        "settlement": "Erlangen",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Georg",
+                "middle": [],
+                "last": "Hager",
+                "suffix": "",
+                "affiliation": {},
+                "email": "georg.hager@fau.de"
+            },
+            {
+                "first": "Holger",
+                "middle": [],
+                "last": "Fehske",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Greifswald",
+                    "location": {
+                        "postCode": "17489",
+                        "settlement": "Greifswald",
+                        "country": "Germany"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Alan",
+                "middle": [
+                    "R"
+                ],
+                "last": "Bishop",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "Los Alamos National Laboratory",
+                    "institution": "",
+                    "location": {
+                        "settlement": "Los Alamos",
+                        "country": "USA"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Gerhard",
+                "middle": [],
+                "last": "Wellein",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Hardware platforms in high performance computing are constantly getting more complex to handle even when considering multicore CPUs alone. Numerous features and configuration options in the hardware and the software environment that are relevant for performance are not even known to most application users or developers. Microbenchmarks, i.e., simple codes that fathom a particular aspect of the hardware, can help to shed light on such issues, but only if they are well understood and if the results can be reconciled with known facts or performance models. The insight gained from microbenchmarks may then be applied to real applications for performance analysis or optimization. In this paper we investigate two modern Intel x86 server CPU architectures in depth: Broadwell EP and Cascade Lake SP. We highlight relevant hardware configuration settings that can have a decisive impact on code performance and show how to properly measure on-chip and off-chip data transfer bandwidths. The new victim L3 cache of Cascade Lake and its advanced replacement policy receive due attention. Finally we use DGEMM, sparse matrix-vector multiplication, and the HPCG benchmark to make a connection to relevant application scenarios.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Over the past few years the field of high performance computing (HPC) has received attention from different vendors, which led to a steep rise in the number of chip architectures. All of these chips have different performance-power-price points, and thus different performance characteristics. This trend is believed to continue in the future with more vendors such as Marvell, Huawei, and Arm entering HPC and related fields with new designs. Benchmarking the architectures to understand their characteristics is pivotal for informed decision making and targeted code optimization. However, with hardware becoming more diverse, proper benchmarking is challenging and error-prone due to wide variety of available but often badly documented tuning knobs and settings.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this paper we explore two modern Intel server processors, Cascade Lake SP and Broadwell EP, using carefully developed micro-architectural benchmarks, then show how these simple microbenchmark codes become relevant in application scenarios. During the process we demonstrate the different aspects of proper benchmarking like the importance of appropriate tools, the danger of black-box benchmark code, and the influence of different hardware and system settings. We also show how simple performance models can help to draw correct conclusions from the data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Our microbenchmarking results highlight the changes from the Broadwell to the Cascade Lake architecture and their impact on the performance of HPC applications. Probably the biggest modification in this respect was the introduction of a new L3 cache design.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This paper makes the following relevant contributions:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "-We show how proper microarchitectural benchmarking can be used to reveal the cache performance characteristics of modern Intel processors. We compare the performance features of two recent Intel processor generations and resolve inconsistencies in published data. -We analyze the performance impact of the change in the L3 cache design from Broadwell EP to Skylake/Cascade Lake SP and investigate potential implications for HPC applications (effective L3 size, scalability). -For DGEMM we show the impact of varying core and Uncore clock speed, problem size, and sub-NUMA clustering on Cascade Lake SP. -For a series of sparse matrix-vector multiplications we show the consequence of the nonscalable L3 cache and the benefit of the enhanced effective L3 size on Cascade Lake SP. -To understand the performance characteristics of the HPCG benchmark, we construct and validate the roofline model for all its components and the full solver for the first time. Using the model we identify an MPI desynchronization mechanism in the implementation that causes erratic performance of one solver component.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This paper is organized as follows. After describing the benchmark systems setup in Sect. 2, microarchitectural analysis using microbenchmarks (e.g., load and copy kernels and STREAM) is performed in Sect. 3 to 5. In Sect. 6 we then revisit the findings and see how they affect code from realistic applications. Section 7 concludes the paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "There is a vast body of research on benchmarking of HPC systems. The following papers present and analyze microbenchmark and application performance data in order to fathom the capabilities of the hardware.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work."
+        },
+        {
+            "text": "Molka et al. [17] used their BenchIT microbenchmarking framework to thoroughly analyze latency and bandwidth across the full memory hierarchy of Intel Sandy Bridge and AMD Bulldozer processors, but no application analysis or performance modeling was done. Hofmann et al. [9, 11] presented microbenchmark results for several Intel server CPUs. We extend their methodology towards Cascade Lake SP and also focus on application-near scenarios. Saini et al. [20, 21] compared a range of Intel server processors using diverse microbenchmarks, proxy apps, and application codes. They did not, however, provide a thorough interpretation of the data in terms of the hardware architectures. McIntosh-Smith et al. [15] compared the Marvell ThunderX2 CPU with Intel Broadwell and Skylake using STREAM, proxy apps, and full applications, but without mapping architectural features to microbenchmark experiments. Recently, Hammond et al. [6, 7] performed a benchmark analysis of the Intel Skylake and Marvell ThunderX2 CPUs, presenting results partly in contradiction to known hardware features: Cache bandwidths obtained with standard benchmark tools were too low compared to theoretical limits, the observed memory bandwidth with vectorized vs. scalar STREAM was not interpreted correctly, and matrix-matrixmultiplication performance showed erratic behavior. A deeper investigation of these issues formed the seed for the present paper. Finally, Marjanovi\u0107 et al. [13] attempted a performance model for the HPCG benchmark; we refine and extend their node-level model and validate it with hardware counter data.",
+            "cite_spans": [
+                {
+                    "start": 13,
+                    "end": 17,
+                    "text": "[17]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 271,
+                    "end": 274,
+                    "text": "[9,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 275,
+                    "end": 278,
+                    "text": "11]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 454,
+                    "end": 458,
+                    "text": "[20,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 459,
+                    "end": 462,
+                    "text": "21]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 704,
+                    "end": 708,
+                    "text": "[15]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 925,
+                    "end": 928,
+                    "text": "[6,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 929,
+                    "end": 931,
+                    "text": "7]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1453,
+                    "end": 1457,
+                    "text": "[13]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work."
+        },
+        {
+            "text": "All experiments were carried out on one socket each of Intel's Broadwell-EP (BDW) and Cascade Lake-SP (CLX) CPUs. These represent previous-and current-generation models in the Intel line of architectures, which encompass more than 85% of the November 2019 top500 list. Table 1 summarizes key specifications of the testbed. Measurements conducted on a Skylake-SP Gold-6148 (SKX) machine are not presented as the results were identical to CLX (successor) in all the cases.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 269,
+                    "end": 276,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Testbed and Environment"
+        },
+        {
+            "text": "The Broadwell-EP architecture has a three-level inclusive cache hierarchy. The L1 and L2 caches are private to each core and the L3 is shared. BDW supports the AVX2 instruction set, which is capable of 256-bit wide SIMD. The Cascade Lake-SP architecture has a shared non-inclusive victim L3 cache. The particular model in our testbed supports the AVX-512 instruction set and has 512-bit wide SIMD. Both chips support the \"Cluster on Die [CoD]\" (BDW) or \"Sub-NUMA Clustering [SNC]\" (CLX) feature, by which the chip can be logically split in two ccNUMA domains.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Testbed and Environment"
+        },
+        {
+            "text": "Unless otherwise specified, hardware prefetchers were enabled. For all microbenchmarks the clock frequency was set to the guaranteed attainable frequency of the processor when all the cores are active, i.e., 1.6 GHz for CLX and 2.0 GHz for BDW. For real application runs, Turbo mode was activated. The Uncore clock speed was always set to the maximum possible frequency of 2.4 GHz on CLX and 2.8 GHz on BDW.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Testbed and Environment"
+        },
+        {
+            "text": "Both systems ran Ubuntu version 18.04.3 (Kernel 4.15.0). The Intel compiler version 19.0 update 2 with the highest optimization flag (-O3) was used throughout. Unless otherwise stated, we added architecture-specific flags -xAVX (-xCORE-AVX512 -qopt-zmm-usage=high) for BDW (CLX). For experiments that use MKL and MPI libraries we used the version that comes bundled with the Intel compiler. The LIKWID tool suite in version 4.3 was used for performance counter measurements and benchmarking (likwid-perfctr and likwid-bench). Note that likwid-bench generates assembly kernels automatically, providing full control over the executed code. Influence of Machine and Environment Settings. The machine and environment settings are a commonly neglected aspect of benchmarking. Since they can have a decisive impact on performance, all available settings must be documented. Figure 1 (a) shows the influence of different operating system (OS) settings on a serial load-only benchmark running at 1.6 GHz on CLX for different data-set sizes in L3 and memory. With the default OS setting (NUMA balancing on and transparent huge pages (THP) set to \"madvise\"), we can see a 2\u00d7 hit in performance for big data sets. The influence of these settings can be seen for multi-core runs (see Fig. 1 (a) right) where a difference of 12% is observed between the best and default setting on a full socket. This behavior also strongly depends on the OS version. We observed it with Ubuntu 18.04.3 (see Table 1 ). Consequently, we use the setting that gives highest performance, i.e., NUMA balancing off and THP set to \"always,\" for all subsequent experiments. Modern systems have an increasing number of knobs to tune on system startup. Figure 1 (b) shows the consequences of the sub-NUMA clustering (SNC) feature on CLX for the load-only benchmark. With SNC active the single core has local access to only one sub-NUMA domain causing the shared L3 size to be halved. For accesses from main memory, disabling SNC slightly reduces the single core performance by 4% as seen in the inset of Fig. 1 ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 868,
+                    "end": 876,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1272,
+                    "end": 1278,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1478,
+                    "end": 1485,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1713,
+                    "end": 1721,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 2064,
+                    "end": 2070,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Testbed and Environment"
+        },
+        {
+            "text": "Single-core bandwidth analysis is critical to understand the machine characteristics and capability for a wide range of applications, but it requires great care especially when measuring cache bandwidths since any extra cycle will directly change the result. To show this we choose the popular bandwidth measurement tool lmbench [16] . Figure 2 shows the load-only (full-read or frd) bandwidth obtained by lmbench as a function of data set size on CLX at 1.6 GHz. Ten runs per size are presented in a box-and-whisker plot.",
+            "cite_spans": [
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[16]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 336,
+                    "end": 344,
+                    "text": "Figure 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Single-Core Bandwidth Analysis"
+        },
+        {
+            "text": "Theoretically, one core is capable of two AVX-512 loads per cycle for an L1 bandwidth of 128 byte/cy (204.8 Gbyte/s @ 1.6 GHz). However, with the compiler option -O2 (default setting) it deviates by a huge factor of eight (25.5 Gbyte/s) from the theoretical limit. The characteristic strong performance gap between L1 and L2 is also missing. Therefore, we tested different compiler flags and compilers to see the effect (see Fig. 2 ) and observed a large span of performance values. Oddly, increasing the level of optimization (-O2 vs -O3) dramatically decreases the performance. The highest bandwidth was attained for -O2 with the architecture-specific flags mentioned in Sect. Load-only bandwidth as a function of data set size on CLX. The plot compares the bandwidth obtained from likwid-bench with that of lmbench. likwid-bench is able to achieve 88% of the theoretical L1 bandwidth limit (128 byte/cy). The extreme sensitivity of lmbench benchmark results to compilers and compiler flags is also shown. The \"zmm-flag*\" refers to the compiler flag -qopt-zmm-usage=high.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 425,
+                    "end": 431,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                }
+            ],
+            "section": "Single-Core Bandwidth Analysis"
+        },
+        {
+            "text": "that this problem is due to compiler inefficiency and the nature of the benchmark. The frd benchmark performs a sum reduction on an integer array; in the source code, the inner loop is manually unrolled 128 times. With -O2 optimization, the compiler performs exactly 128 ADD operations using eight AVX-512 1 integer ADD instructions (vpaddd) on eight independent registers. After the loop, a reduction is carried out among these eight registers to accumulate the scalar result. However, with -O3 the compiler performs an additional 16-way unrolling on top of the 128-way manual unrolling and generates sub-optimal code with a long dependency chain and additional instructions (blends, permutations) inside the inner loop, degrading the performance. The run-to-run variability of the highest-performing lmbench variant is also high in the default setting (cyan line). This is due to an inadequate number of warmup runs and repetitions in the default benchmark setting; increasing the default values (to ten warmup runs and 100 repetitions) yields stable measurements (blue line).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A deeper investigation reveals"
+        },
+        {
+            "text": "We are forced to conclude that the frd benchmark does not allow any profound conclusions about the machine characteristics without a deeper investigation. Thus, lmbench results for frd (e.g., [6, 7, 20, 21] ) should be interpreted with due care. However, employing proper tools one can attain bandwidths close to the limits. This is demonstrated by the AVX-512 load-only bandwidth results obtained using likwid-bench [24] . As seen in Fig. 2 , with likwid-bench we get 88% of the theoretical limit in L1, the expected drops at the respective cache sizes, and much less run-to-run variations. Single-core bandwidth measurements in all memory hierarchy levels for loadonly and copy benchmarks (likwid-bench). The bandwidth is shown in byte/cy, which is a frequency-agnostic unit for L1 and L2 cache. For main memory, the bandwidth in Gbyte/s at the base AVX512/AVX clock frequency of 1.6 GHz/2 GHz for CLX/BDW is also indicated. Different SIMD widths are shown for CLX in L1. Horizontal lines denote theoretical upper bandwidth limits. Figure 3 shows application bandwidths 2 from different memory hierarchy levels of BDW and CLX (load-only and copy kernels). The core clock frequency was fixed at 1.6 and 2 GHz for CLX and BDW, respectively, with SNC/CoD switched on. The bandwidth is shown in byte/cy, which makes it independent of core clock speed for L1 and L2 caches. Conversion to Gbyte/s is done by multiplying the byte/cy value with the clock frequency in GHz. The effect of single-core L1 bandwidth for scalar and different SIMD width is also shown in Fig. 3 (a) for CLX. It can be seen that the bandwidth reduces by 2\u00d7 as expected when the SIMD width is halved each time.",
+            "cite_spans": [
+                {
+                    "start": 192,
+                    "end": 195,
+                    "text": "[6,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 196,
+                    "end": 198,
+                    "text": "7,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 199,
+                    "end": 202,
+                    "text": "20,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 203,
+                    "end": 206,
+                    "text": "21]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 417,
+                    "end": 421,
+                    "text": "[24]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 435,
+                    "end": 441,
+                    "text": "Fig. 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 1034,
+                    "end": 1042,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1559,
+                    "end": 1565,
+                    "text": "Fig. 3",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "A deeper investigation reveals"
+        },
+        {
+            "text": "From BDW to CLX there are no major observable changes to the behavior of L1 and L2 caches, except that the L2 cache size has been significantly extended in CLX. However, starting from Skylake (SKX) the L3 cache has been redesigned. In the following we study the effects of this newly designed non-inclusive victim L3 cache.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Intel's New Shared L3 Victim Cache"
+        },
+        {
+            "text": "A significant change with respect to the L3 cache concerns its replacement policy. Since SNB, which used a pseudo-LRU replacement strategy [1] , new Intel microarchitectures have implemented dynamic replacement policies [8] which continuously improved the cache hit rate for streaming workloads from generation to generation. Instead of applying the same pseudo-LRU policy to all workloads, post-SNB processors make use of a small amount of dedicated leader sets, each of which implements a different replacement policy. During execution, the processor constantly monitors which of the leader sets delivers the highest hit rate, and instructs all remaining sets (also called follower sets) to use the best-performing leader set's replacement strategy [19] .",
+            "cite_spans": [
+                {
+                    "start": 139,
+                    "end": 142,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 220,
+                    "end": 223,
+                    "text": "[8]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 751,
+                    "end": 755,
+                    "text": "[19]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "L3 Cache Replacement Policy"
+        },
+        {
+            "text": "Experimental analysis suggests that the replacement policy selected by the processor for streaming access patterns involves placing new cache lines only in one of the ways of each cache set; the same strategy is used when prefetching data using the prefetchnta instruction (cf. Section 7.6.2.1 in [1] ). Consequently, data in the remaining ten ways of the sets will not be preempted and can later be reused. Figure 4 (a) demonstrates the benefit of this replacement policy by comparing it to previous generations' L3 caches. The figure shows the L3-cache hit rate 3 for different data-set sizes on different processors for a load-only data access pattern. To put the focus on the impact of the replacement policies on the cache hit rate, hardware prefetchers were disabled during these measurements. Moreover, data-set sizes are normalized to compensate the processors' different L3-cache capacities. The data indicates that older generations' L3 caches offer no data reuse for data set sizes of two times the cache capacity, whereas CLX's L3 delivers hit rates of 20% even for data sets almost four times its capacity. Reuse can by detected even for data sizes more than ten times the L3 cache size on CLX.",
+            "cite_spans": [
+                {
+                    "start": 297,
+                    "end": 300,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 408,
+                    "end": 416,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "L3 Cache Replacement Policy"
+        },
+        {
+            "text": "The fact that this improvement can also be observed in practice is demonstrated in Fig. 4 (b), which shows measured bandwidth for the same load-only 0 2 4 6 8 10 12 14 16 18 data-access pattern on CLX. For this measurement, all hardware prefetchers were enabled. The data indicates that the L3-cache hit-rate improvements directly translate into higher-than-memory bandwidths for data sets well exceeding the L3 cache's capacity.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 83,
+                    "end": 89,
+                    "text": "Fig. 4",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "L3 Cache Replacement Policy"
+        },
+        {
+            "text": "Starting from Intel's Sandy Bridge architecture (created in 2011) the shared L3 cache of all the Intel architectures up to Broadwell is known to scale very well with the number of cores [11] . However, with SKX onwards the L3 cache architecture has changed from the usual ring bus architecture to a mesh architecture. Therefore in this section we test the scalability of this new L3 cache.",
+            "cite_spans": [
+                {
+                    "start": 186,
+                    "end": 190,
+                    "text": "[11]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "L3 Scalability"
+        },
+        {
+            "text": "In order to test the L3 scalability we use again the likwid-bench tool and run the benchmark with increasing number of cores. The data-set size was carefully chosen to be 2 MB per core to ensure that the size is sufficiently bigger than the L2 cache however small enough such that no significant data traffic is incurred from the main memory.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "L3 Scalability"
+        },
+        {
+            "text": "The application bandwidths of the three basic kernels load-only, copy and update are shown in Fig. 5 for CLX and BDW. As the update kernel has equal number of loads and stores it shows the maximum attainable performance on both architectures. Note that also within cache hierarchies write-allocate transfers occur leading to lower copy application bandwidth. The striking difference between CLX and BDW for load-only bandwidth can finally be explained by the bi-directional L2-L3 link on CLX which only has half the load-only bandwidth of BDW (see Table 1 ).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 94,
+                    "end": 100,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 548,
+                    "end": 555,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "L3 Scalability"
+        },
+        {
+            "text": "In terms of scalability we find that the BDW scales almost linearly and attains an efficiency within 90%, proving that the BDW has an almost perfectly scalable L3 cache. However, with CLX this behavior has changed drastically and the L3 cache saturates at higher core counts both with and without SNC enabled, yielding an efficiency of about 70%. Consequently, for applications that employ L3 cache blocking it might be worthwhile to consider L2 blocking instead on SKX and CLX. Applications that use the shared property of L3 cache like some of the temporal blocking schemes [12, 25] might exhibit a similar saturation effect as in Fig. 5 .",
+            "cite_spans": [
+                {
+                    "start": 576,
+                    "end": 580,
+                    "text": "[12,",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 581,
+                    "end": 584,
+                    "text": "25]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 633,
+                    "end": 639,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "L3 Scalability"
+        },
+        {
+            "text": "The effect of SNC/COD mode is also shown in Fig. 5 , with dotted lines corresponding to SNC off mode and solid to SNC on mode. For CLX with SNC off mode the bandwidth attained at half of the socket (ten threads) is higher than SNC on mode. This is due to the availability of 2\u00d7 more L3 tiles and controllers with SNC off mode.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 44,
+                    "end": 50,
+                    "text": "Fig. 5",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "L3 Scalability"
+        },
+        {
+            "text": "The STREAM benchmark [14] measures the achievable memory bandwidth of a processor. Although the code comprises four different loops, their performance is generally similar and usually only the triad (A(:)=B(:)+s*C(:)) is reported. The benchmark output is a bandwidth number in Mbyte/s, assuming 24 byte of data traffic per iteration. The rules state that the working set size should be at least four times the LLC size of the CPU. In the light of the new LLC replacement policies (see Sect. 4.1), this appears too small and we chose a 2 GB working set for our experiments.",
+            "cite_spans": [
+                {
+                    "start": 21,
+                    "end": 25,
+                    "text": "[14]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multi-core Scaling with STREAM"
+        },
+        {
+            "text": "Since the target array A causes write misses, the assumption of the benchmark about the code balance is wrong if write-back caches are used and write-allocate transfers cannot be avoided. X86 processors feature nontemporal store instructions (also known as streaming stores), which bypass the normal cache hierarchy and store into separate write-combine buffers. If a full cache line is to be written, the write-allocate transfer can thus be avoided. Nontemporal stores are only available in SIMD variants on Intel processors, so if the compiler chooses not to use them (or is forced to by a directive or a command line option), write-allocates will occur and the memory bandwidth available to the application is reduced. This is why vectorization appears to be linked with better STREAM bandwidth, while it is actually the nontemporal store that cannot be applied for scalar code. Note that a careful investigation of the impact of write-allocate policies is also required on other modern processors such as AMD-or ARM-based systems. 4 Figure 6 shows the bandwidth reported by the STREAM triad benchmark on BDW and CLX with (a,b) and without (c) CoD/SNC enabled. There are three data sets in each graph: full vectorization with the widest supported SIMD instruction set and standard stores (ST), scalar code, and full vectorization with nontemporal stores (NT). Note that the scalar and \"ST\" variants have very similar bandwidth, which is not surprising since they both cause write-allocate transfers for an overall code balance of 32 byte/it. The reported saturated bandwidth of the \"NT\" variant is higher because the memory interface delivers roughly the CoD/SNC disabled. \"NT\" denotes the use of nontemporal stores (enforced by the -qopt-streaming-stores always), with \"ST\" the compiler was instructed to avoid them (via -qopt-streaming-stores never), and the \"scalar\" variant used non-SIMD code (via -no-vec). The working set was 2 GB. Core/Uncore clock speeds were set to 1.6 GHz/2.4 GHz on CLX and 2.0 GHz/2.8 GHz on BDW to make sure that no automatic clock speed reduction can occur. Note that the \"scattered\" graphs start at two cores.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1037,
+                    "end": 1045,
+                    "text": "Figure 6",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Multi-core Scaling with STREAM"
+        },
+        {
+            "text": "same bandwidth but the code balance is only 24 byte/it. This means that the actual bandwidth is the same as the reported bandwidth; with standard stores, it is a factor of 4/3 higher. In case of BDW, the NT store variant thus achieves about the same memory bandwidth as the ST and scalar versions, while on CLX there is a small penalty. Note that earlier Intel processors like Ivy Bridge and Sandy Bridge also cannot attain the same memory bandwidth with NT stores as without. The difference is small enough, however, to still warrant the use of NT stores in performance optimization whenever the store stream(s) require a significant amount of bandwidth.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multi-core Scaling with STREAM"
+        },
+        {
+            "text": "The peculiar shape of the scaling curve with CoD or SNC enabled and \"compact\" pinning (filling the physical cores of the socket from left to right, see Fig. 6(a) ) is a consequence of the static loop schedule employed by the OpenMP runtime. If only part of the second ccNUMA domain is utilized (i.e., between 10 and 17 cores on BDW and between 11 and 19 cores on CLX), all active cores will have the same workload, but the cores on the first, fully occupied domain have less bandwidth available per core. Due to the implicit barrier at the end of the parallel region, these \"slow\" cores take longer to do their work than the cores on the other domain. Hence, over the whole runtime of the loop, i.e., including the waiting time at the barrier, each core on the second domain runs at the average performance of a core on the first domain, leading to linear scaling. A \"scattered\" pinning strategy as shown in Fig. 6 (b) has only one saturation curve, of course. Note that the available saturated memory bandwidth is independent of the CoD/SNC setting for both CPUs.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 152,
+                    "end": 161,
+                    "text": "Fig. 6(a)",
+                    "ref_id": "FIGREF8"
+                },
+                {
+                    "start": 908,
+                    "end": 914,
+                    "text": "Fig. 6",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Multi-core Scaling with STREAM"
+        },
+        {
+            "text": "In the previous sections we discussed microbenchmark analysis of the two Intel architectures. In the following we demonstrate how these results reflect in real applications by investigating important kernels such as DGEMM, sparse matrix-power-vector multiplication, and HPCG. According to settings used in production-level HPC runs, we use Turbo mode and switch off SNC unless specified otherwise. Statistical variations for ten runs are shown whenever the fluctuations are bigger than 5%.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Implications for Real-World Applications"
+        },
+        {
+            "text": "If implemented correctly, DGEMM is compute-bound on Intel processors. Each CLX core is capable of executing 32 floating-point operations (flops) per cycle (8 DP numbers per AVX-512 register, 16 flops per fused multiply-add (FMA) instruction, 32 flops using both AVX-512 FMA units). Running DGEMM on all twenty cores, the processor specimen from the testbed managed to sustain a frequency of 2.09 GHz. The upper limit to DGEMM performance is thus 1337.6 Gflop/s. Figure 7 (a) compares measured full-chip performance of Intel MKL's DGEMM implementation on CLX in Turbo mode (black line) to theoretical peak performance (dashed red line). The data indicates that small values of N are not suited to produce meaningful results. In addition to resulting in suboptimal performance, values of N below 10,000 lead to significant variance in measurements, as demonstrated for N = 4096 using a box-plot representation (and reproducing the results from [7] ). Figure 7 (b) shows measured DGEMM performance with respect to the number of active cores. When the frequency is fixed (in this case at 1.6 GHz, which is the frequency the processor guarantees to attain when running AVX-512 enabled code on all its cores), DGEMM performance scales all but perfectly with the number of active cores (black line). Consequently, the change of slope in Turbo mode stems solely from a reduction in frequency when increasing the number of active cores. Moreover, the data shows that SNC mode is slightly detrimental to performance (blue vs. green line).",
+            "cite_spans": [
+                {
+                    "start": 942,
+                    "end": 945,
+                    "text": "[7]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 462,
+                    "end": 470,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF10"
+                },
+                {
+                    "start": 949,
+                    "end": 957,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF10"
+                }
+            ],
+            "section": "DGEMM-Double-Precision General Matrix-Matrix Multiplication"
+        },
+        {
+            "text": "Similar performance behavior can be observed on Haswell-based processors, which have been studied in [10] . However, on Haswell a sensitivity of DGEMM performance to the Uncore frequency could be observed [11] : When running cores in Turbo mode, increasing the Uncore frequency resulted in a decrease of the share of the processor's TDP available to the cores, which caused them to lower their frequency. On CLX this is no longer the case. Running DGEMM on all cores in Turbo mode results in a clock frequency of 2.09 GHz independent of the Uncore clock. Analysis using hardware events suggests that the Uncore clock is subordinated to the core clock: Using the appropriate MSR (0x620), the Uncore clock can only be increased up to 2.4 GHz. There are, however, no negative consequences of this limitation. Traffic analysis in the memory hierarchy indicates that DGEMM is blocked for the L2 cache, so the Uncore clock (which influences L3 and memory bandwidth) plays no significant role for DGEMM.",
+            "cite_spans": [
+                {
+                    "start": 101,
+                    "end": 105,
+                    "text": "[10]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 205,
+                    "end": 209,
+                    "text": "[11]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DGEMM-Double-Precision General Matrix-Matrix Multiplication"
+        },
+        {
+            "text": "The SpMPV benchmark (see Algorithm 1) computes y = A p x, where A is a sparse matrix, as a sequence of sparse matrix-vector products. The SpMPV kernel is used in a wide range of numerical algorithms like Chebyshev filter diagonalization for eigenvalue solvers [18] , stochastic matrix-function estimators used in big data applications [22] , and numerical time propagation [23] .",
+            "cite_spans": [
+                {
+                    "start": 260,
+                    "end": 264,
+                    "text": "[18]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 335,
+                    "end": 339,
+                    "text": "[22]",
+                    "ref_id": null
+                },
+                {
+                    "start": 373,
+                    "end": 377,
+                    "text": "[23]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SpMPV -Sparse Matrix-Power-Vector Multiplication"
+        },
+        {
+            "text": "The sparse matrix is stored in the compressed row storage (CRS) format using double precision, and we choose p = 4 in our experiments. For the basic sparse matrix vector (SpMV) kernel we use the implementation in Intel MKL 19.0.2. The benchmark is repeated multiple times to ensure that it runs for at least one second, so we report the average performance over many runs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SpMPV -Sparse Matrix-Power-Vector Multiplication"
+        },
+        {
+            "text": "We selected five matrices from the publicly available SuiteSparse Matrix Collection [5] . The choice of matrices was motivated by some of the hardware properties (in particular L3 features) as investigated in previous sections via microbenchmarks. The details of the chosen matrices are listed in Table 2 . The matrices were pre-processed with reverse Cuthill-McKee (RCM) to attain better data locality; however, all performance measurements use the pure SpMPV execution time, ignoring the time taken for reordering.",
+            "cite_spans": [
+                {
+                    "start": 84,
+                    "end": 87,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 297,
+                    "end": 304,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "SpMPV -Sparse Matrix-Power-Vector Multiplication"
+        },
+        {
+            "text": "L3 Scalability. Figure 8a shows the performance scaling of the ct20stif matrix on CLX and BDW. This matrix is just 32 MB in size and fits easily into the caches of both processors. Note that even though CLX has just 27. 5 a non-inclusive victim cache. The applicable cache size using all cores is thus the aggregate L2/L3 cache size, 47.5 MiB. The L3 bandwidth saturation of CLX as shown in Sect. 4.2 is reflected by the performance saturation in the SpMPV benchmark. For this matrix, BDW performs better than CLX since the sparse matrix kernel is predominantly load bound and limited by the bandwidth of the load-only microbenchmark (see Fig. 5a ). Despite this advantage, the in-cache SpMPV scaling on BDW is not linear (parallel efficiency \u03b5 = 67.5% at all cores), which differs from the microbenchmark results in Fig. 5a . The main reason is the active Turbo mode, causing the clock speed to drop by 25% when using all cores (BDW: 3.6 GHz at single core to 2.7 GHz at full socket; CLX: 3.8 GHz at single core to 2.8 GHz at full socket).",
+            "cite_spans": [
+                {
+                    "start": 220,
+                    "end": 221,
+                    "text": "5",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 16,
+                    "end": 25,
+                    "text": "Figure 8a",
+                    "ref_id": "FIGREF11"
+                },
+                {
+                    "start": 639,
+                    "end": 646,
+                    "text": "Fig. 5a",
+                    "ref_id": "FIGREF6"
+                },
+                {
+                    "start": 817,
+                    "end": 824,
+                    "text": "Fig. 5a",
+                    "ref_id": "FIGREF6"
+                }
+            ],
+            "section": "SpMPV -Sparse Matrix-Power-Vector Multiplication"
+        },
+        {
+            "text": "L3 Cache Replacement Policy. We have seen in Sect. 4.1 that CLX has a more sophisticated adaptive L3 cache replacement policy, which allows it to extend the caching effect for working sets as big as ten times the cache size. Here we show that SpMPV can profit from this as well. We choose three matrices that are within five times the L3 cache size (index 2, 3, and 4 in Table 2 ) and a moderately large matrix that is 37 times bigger than the L3 cache (index 5 in Table 2 ). Figure 8b shows the full-socket performance and memory transfer volume for the four matrices. Theoretically, with a least-recently used (LRU) policy the benchmark requires a minimum memory data transfer volume of 12 + 28/N nzr bytes per non-zero entry of the matrix [3] . This lower limit is shown in Fig. 8b (right panel) with dashed lines. We can observe that in some cases the actual memory traffic is lower than the theoretical minimum, because the L3 cache can satisfy some of the cacheline requests. Even though CLX and BDW have almost the same amount of cache, the effect is more prominent on CLX.",
+            "cite_spans": [
+                {
+                    "start": 742,
+                    "end": 745,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 371,
+                    "end": 378,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                },
+                {
+                    "start": 465,
+                    "end": 472,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                },
+                {
+                    "start": 476,
+                    "end": 485,
+                    "text": "Figure 8b",
+                    "ref_id": "FIGREF11"
+                },
+                {
+                    "start": 777,
+                    "end": 784,
+                    "text": "Fig. 8b",
+                    "ref_id": "FIGREF11"
+                }
+            ],
+            "section": "SpMPV -Sparse Matrix-Power-Vector Multiplication"
+        },
+        {
+            "text": "On BDW it is visible only for the boneS01 matrix, which is 1.7\u00d7 bigger than its L3 cache, while on CLX it can be observed even for larger matrices. This is compatible with the microbenchmark results in Sect. 4.1. For some matrices the transfer volume is well below 12 bytes per entry, which indicates that not just the vectors but also some fraction of the matrix stays in cache. As shown in the left panel of Fig. 8b , the decrease in memory traffic directly leads to higher performance. For two matrices on CLX the performance is higher than the maximum predicted by the roofline model (dashed line) even when using the highest attainable memory bandwidth (load-only). This is in line with data presented in [3] .",
+            "cite_spans": [
+                {
+                    "start": 710,
+                    "end": 713,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 410,
+                    "end": 417,
+                    "text": "Fig. 8b",
+                    "ref_id": "FIGREF11"
+                }
+            ],
+            "section": "SpMPV -Sparse Matrix-Power-Vector Multiplication"
+        },
+        {
+            "text": "HPCG 5 (High Performance Conjugate Gradient) is a popular memory-bound proxy application which mimics the behavior of many realistic sparse iterative algorithms. However, there has been little work to date on analytic performance modeling of this benchmark. In this section we analyze HPCG using the roofline approach.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "HPCG -High Performance Conjugate Gradient"
+        },
+        {
+            "text": "The HPCG benchmark implements a preconditioned conjugate gradient (CG) algorithm with a multi-grid (MG) preconditioner. The linear system is derived from a 27-point stencil discretization, but the corresponding sparse matrix is explicitly stored. The benchmark uses the two BLAS-1 kernels DOT and WAXPBY and two kernels (SpMV and MG) involving the sparse matrix.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "HPCG -High Performance Conjugate Gradient"
+        },
+        {
+            "text": "The chip-level performance of HPCG should thus be governed by the memory bandwidth of the processor. Since the benchmark prints the Gflop/s performance of all kernels after a run, this should be straightforward to corroborate. However, the bandwidth varies a lot across different kernels in HPCG (see Table 3 3 Gbyte/s, respectively. The latter value is substantially higher than any STREAM value presented for BDW in Fig. 6 . In the following, we use performance analysis and measurements to explore the cause of this discrepancy, and to check whether the HPCG kernel bandwidths are in line with the microbenchmark analysis.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 301,
+                    "end": 308,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 418,
+                    "end": 424,
+                    "text": "Fig. 6",
+                    "ref_id": "FIGREF8"
+                }
+            ],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "Setup. For this analysis we use the recent reference variant of HPCG (version 3.1), which is a straightforward implementation using hybrid MPI+OpenMP parallelization. However, the local symmetric Gauss-Seidel (symGS) smoother used in MG has a distance-1 dependency and is not shared-memory parallel.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "The main loop of the benchmark is shown in Algorithm 2, where A is the sparse matrix stored in CRS format. As the symGS kernel consumes more than 80% of the entire runtime, the benchmark is run with pure MPI using one process per core. The code implements weak scaling across MPI processes; we choose a local problem size of 160 3 for a working set of about 1.3 GB per process. The maximum number of CG iteration was set at 25, the highest compiler optimization flag was used (see Table 1 ), and the contiguous storage of sparse matrix data structures was enabled (-DHPCG CONTIGUOUS ARRAYS).",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 481,
+                    "end": 488,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "Performance Analysis of Kernels. We use the roofline model to model each of the four kernels separately. Due to their strongly memory-bound characteristics, an upper performance limit is given by P x = b s /C x , where b s is the full-socket (saturated) memory bandwidth and C x is the code balance of the kernel x. As we have a mixture of BLAS-1 (N r iterations) and sparse (N nz iterations) kernels, C x is computed in terms of bytes required and work done per row of the matrix.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "The reference implementation has three DOT kernels (see Algorithm 2) . Two of them need two input vectors (lines 4 and 8 in Algorithm 2) and the other requires just one (norm computation in line 12), resulting in a total average code balance of C DOT = ((2 \u00b7 16 + 8)/3) byte/row = 13.3 byte/row. All three WAXPBY kernels need one input vector and one vector to be both loaded and stored, resulting in C WAXPBY = 24 byte/row. For sparse kernels, the total data transferred for the inner N nzr iterations has to be considered. As shown in Sect. 6.2, the optimal code balance for SpMV is 12 + 28/N nzr bytes per non-zero matrix entry, i.e., C SpMV = (12N nzr + 28) byte/row. Note that this is substantially different from the model derived in [13] : We assume that the RHS vector is loaded only once, which makes the model strictly optimistic but is a good approximation for well-structured matrices like the one in HPCG. For the MG preconditioner we consider only the finest grid since the coarse grids do not substantially contribute to the overall runtime. Therefore the MG consists mainly of one symGS pre-smoothing step followed by one SpMV and one symGS post-smoothing step. The symGS comprises a forward sweep (0:nrows) followed by a backward sweep (nrows:0). Both have the same optimal code balance as SpMV, which means that the entire MG operation has a code balance of five times that of SpMV:",
+            "cite_spans": [
+                {
+                    "start": 56,
+                    "end": 68,
+                    "text": "Algorithm 2)",
+                    "ref_id": null
+                },
+                {
+                    "start": 740,
+                    "end": 744,
+                    "text": "[13]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "The correctness of the predicted code balance can be verified using performance counters. We use the likwid-perfctr tool to count the number of main memory data transfers for each of the kernels. 7 Table 3 summarizes the predicted and measured code balance values for full-socket execution along with the reported performance and number of flops per row for the four kernels in HPCG. Except for DDOT, the deviation between predicted and measured code balance is less than 10%.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 198,
+                    "end": 205,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "MPI Desynchronization. Surprisingly, DDOT has a measured code balance that is lower than the model, pointing towards caching effects. However, a single input vector for DDOT has a size of 560 MB, which is more than ten times the available cache size. As shown in Sect. 4.1, even CLX is not able to show any significant caching effect with such working sets. Closer investigation revealed desynchronization of MPI processes to be the reason for the low code balance: In Algorithm 2 we can see that the DOT kernels can reuse data from previous Fig. 9 . Performance of different kernels in the HPCG benchmark (reference implementation) as a function of active cores. kernels. For example, the last DOT (line 12) reuses the r vector from the preceding WAXPBY. Therefore, if MPI processes desynchronize such that only some of them are already in DOT while the others are still in preceding kernels (like WAXPBY), then the processes in DOT can reuse the data, while the others just need to stream data as there is no reuse. To have a measurable performance impact of the desynchronization phenomenon, a kernel x should satisfy the following criteria:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 542,
+                    "end": 548,
+                    "text": "Fig. 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "-no global synchronization point between x and its preceding kernel(s), -some of the data used by x and its predecessor(s) are the same, -the common data used by the kernels should have a significant contribution in the code balance (C x ) of the kernel.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "In Algorithm 2, DOT is the only kernel that satisfies all these conditions and hence it shows the effect of desynchronization. This desynchronization effect is not predictable and will vary across runs and machines as can be observed in the significant performance fluctuation of DOT in Fig. 9 . To verify our assumption we added barriers before the DOT kernels, which caused the measured C DOT to go up to 13.3 byte/row, matching the expected value. The desynchronization effect clearly shows the importance of analyzing statistical fluctuations and deviations from performance models. Ignoring them can easily lead to false conclusions about hardware characteristics and code behavior. Desynchronization is a known phenomenon in memory-bound MPI code that can have a decisive influence on performance. See [2] for recent research.",
+            "cite_spans": [
+                {
+                    "start": 808,
+                    "end": 811,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 287,
+                    "end": 293,
+                    "text": "Fig. 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "Combining Kernel Predictions. Once the performance predictions for individual kernels are in place, we can combine them to get a prediction of the entire HPCG. This is done by using a time-based formulation of the roofline model and linearly combining the predicted kernel runtimes based on their call counts. If F x is the number of flops per row and I x the number of times the kernel x is invoked, the final prediction is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "where Table 3 gives an overview of F x , I x , and C x for different kernels and compares the predicted and measured performance on a full socket. The prediction is consistently higher than the model because we used the highest attainable bandwidth for the roofline model prediction. For Intel processors this is the load-only bandwidth b S = 115 Gbyte/s (68 Gbyte/s) for CLX (BDW), which is approximately 10% higher than the STREAM values (see Sect. 5). Figure 9 shows the scaling performance of the different kernels in HPCG. The typical saturation pattern of memory-bound code can be observed on both architectures.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 6,
+                    "end": 13,
+                    "text": "Table 3",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 455,
+                    "end": 463,
+                    "text": "Figure 9",
+                    "ref_id": null
+                }
+            ],
+            "section": "Algorithm 2. HPCG"
+        },
+        {
+            "text": "Two recent, state-of-the-art generations of Intel architectures have been analyzed: Broadwell EP and Cascade Lake SP. We started with a basic microarchitectural study concentrating on data access. The analysis showed that our benchmarks were able to obtain 85% of the theoretical bandwidth limits. For the first time, the performance effect of Intel's newly designed shared L3 victim cache was demonstrated. During the process of microbenchmarking we also identified the importance of selecting proper benchmark tools and the impact of various hardware, software, and OS settings, thereby proving the need for detailed documentation. We further demonstrated that the observations made in microbenchmark analysis are well reflected in real-world application scenarios.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Outlook"
+        },
+        {
+            "text": "To this end we investigated the performance characteristics of DGEMM, sparse matrix-vector multiplication, and HPCG. For the first time, a roofline model of HPCG and its components was established and successfully validated for both architectures. Performance modeling was used as a guiding tool throughout this work to get deeper insight and explain anomalies. Future work will include investigation of benchmarks for random and latencybound codes along with the development of suitable performance models. The existing and further upcoming wide range of architectures will bring more parameters and benchmarking challenges, which will be very interesting and worthwhile to investigate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions and Outlook"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Intel 64 and IA-32 Architectures Optimization Reference Manual",
+            "authors": [],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Desynchronization and wave pattern formation in MPI-parallel and hybrid memory-bound programs",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Afzal",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wellein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A recursive algebraic coloring technique for hardware-efficient symmetric sparse matrix-vector multiplication (2020)",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Alappat",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Transactions on Parallel Computing",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3399732"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "ARM: ARM Cortex-A75 Core Technical Reference Manual -Write streaming mode",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "26",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The University of Florida sparse matrix collection",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Davis",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "ACM Trans. Math. Softw",
+            "volume": "38",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Evaluating the Marvell ThunderX2 server processor for HPC workloads",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hammond",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "The 6th Special Session on High-Performance Computing Benchmarking and Optimization",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Evaluating the Intel Skylake Xeon processor for HPC workloads",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Hammond",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Vaughan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hughes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 International Conference on High Performance Computing Simulation (HPCS)",
+            "volume": "",
+            "issn": "",
+            "pages": "342--349",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/HPCS.2018.00064"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Intel Ivy Bridge Cache replacement policy",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Analysis of Intel's haswell microarchitecture using the ECM model and microbenchmarks",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hofmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fey",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Eitzinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wellein",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Hannig",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M P"
+                    ],
+                    "last": "Cardoso",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Pionteck",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fey",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Schr\u00f6der-Preikschat",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "ARCS 2016",
+            "volume": "9637",
+            "issn": "",
+            "pages": "210--222",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-319-30695-7_16"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "On the accuracy and usefulness of analytic energy models for contemporary multicore processors",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hofmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fey",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "High Performance 2018",
+            "volume": "10876",
+            "issn": "",
+            "pages": "22--43",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "An analysis of core-and chip-level architectural features in four generations of intel server processors",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hofmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wellein",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Fey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "ISC 2017",
+            "volume": "10266",
+            "issn": "",
+            "pages": "294--314",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-319-58667-0_16"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Multidimensional intratile parallelization for memory-starved stencil computations",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Malas",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Ltaief",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Keyes",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "ACM Trans. Parallel Comput",
+            "volume": "4",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "http:/doi.acm.org/10.1145/3155290"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Performance modeling of the HPCG benchmark",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Marjanovi\u0107",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Gracia",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Glass",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "PMBS 2014",
+            "volume": "8966",
+            "issn": "",
+            "pages": "172--192",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-319-17248-4_9"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Memory bandwidth and machine balance in current high performance computers",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Mccalpin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1995,
+            "venue": "IEEE Comput. Soc. Tech. Comm. Comput. Archit. (TCCA) Newsl",
+            "volume": "2",
+            "issn": "",
+            "pages": "19--25",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "A performance analysis of the first generation of HPC-optimized arm processors",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mcintosh-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Price",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Deakin",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Poenaru",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Concurr. Comput.: Pract. Exp",
+            "volume": "31",
+            "issn": "16",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Lmbench: portable tools for performance analysis",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Mcvoy",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Staelin",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Proceedings of the 1996 Annual Conference on USENIX Annual Technical Conference ATEC",
+            "volume": "",
+            "issn": "",
+            "pages": "23--23",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Main memory and cache performance of Intel Sandy Bridge and AMD Bulldozer",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Molka",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hackenberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sch\u00f6ne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the Workshop on Memory Systems Performance and Correctness MSPC 2014",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "http:/doi.acm.org/10.1145/2618128.2618129"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "High-performance implementation of Chebyshev filter diagonalization for interior eigenvalue computations",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Pieper",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "J. Comput. Phys",
+            "volume": "325",
+            "issn": "",
+            "pages": "226--243",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Adaptive insertion policies for high performance caching",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Qureshi",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Jaleel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Patt",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Steely",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Emer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Proceedings of the 34th Annual International Symposium on Computer Architecture ISCA 2007",
+            "volume": "",
+            "issn": "",
+            "pages": "381--391",
+            "other_ids": {
+                "DOI": [
+                    "http:/doi.acm.org/10.1145/1250662.1250709"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Performance evaluation of Intel Broadwell nodes based supercomputer using computational fluid dynamics and climate applications",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Saini",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hood",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 IEEE 19th International Conference on High Performance Computing and Communications Workshops (HPCCWS)",
+            "volume": "",
+            "issn": "",
+            "pages": "58--65",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/HPCCWS.2017.00015"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Performance evaluation of an Intel Haswell-and Ivy Bridge-based supercomputer using scientific and engineering applications",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Saini",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Hood",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Baron",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "2016 IEEE 18th International Conference on High Performance Computing and Communications; IEEE 14th International Conference on Smart City; IEEE 2nd International Conference on Data Science and Systems (HPCC/SmartCity/DSS)",
+            "volume": "",
+            "issn": "",
+            "pages": "1196--1203",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/HPCC-SmartCity-DSS.2016.0167"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Stochastic matrix-function estimators: scalable big-data kernels with high performance",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "W J"
+                    ],
+                    "last": "Staar",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "2016 IEEE International Parallel and Distributed Processing Symposium (IPDPS)",
+            "volume": "",
+            "issn": "",
+            "pages": "812--821",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/IPDPS.2016.34"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "An accurate polynomial approximation of exponential integrators",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Suhov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J. Sci. Comput",
+            "volume": "60",
+            "issn": "3",
+            "pages": "684--698",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10915-013-9813-x"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "likwid-bench: an extensible microbenchmarking platform for x86 multicore compute nodes",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Treibig",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wellein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Parallel Tools Workshop",
+            "volume": "",
+            "issn": "",
+            "pages": "27--36",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/978-3-642-31476-6_3"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Efficient temporal blocking for stencil computations by multicore-aware wavefront parallelization",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wellein",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Hager",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zeiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wittmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Fehske",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "33rd Annual IEEE International Computer Software and Applications Conference",
+            "volume": "1",
+            "issn": "",
+            "pages": "579--586",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/COMPSAC.2009.82"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF1": {
+            "text": "(a) Performance impact of NUMA balancing and transparent huge pages (THP) on a load-only streaming benchmark on CLX. The left figure in (a) shows the single core performance over different data set sizes for various OS settings. The right figure in (a) shows the performance influence of the best and worst setting for different number of cores with a data-set size of 3 GB per core. (b) Performance effect of sub-NUMA clustering (SNC) on single core for the same load-only benchmark. For the experiment in (a) SNC was enabled and in (b) NUMA balancing was disabled and THP set to \"always.\"",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Fig. 2. Load-only bandwidth as a function of data set size on CLX. The plot compares the bandwidth obtained from likwid-bench with that of lmbench. likwid-bench is able to achieve 88% of the theoretical L1 bandwidth limit (128 byte/cy). The extreme sensitivity of lmbench benchmark results to compilers and compiler flags is also shown. The \"zmm-flag*\" refers to the compiler flag -qopt-zmm-usage=high.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Fig. 3. Single-core bandwidth measurements in all memory hierarchy levels for loadonly and copy benchmarks (likwid-bench). The bandwidth is shown in byte/cy, which is a frequency-agnostic unit for L1 and L2 cache. For main memory, the bandwidth in Gbyte/s at the base AVX512/AVX clock frequency of 1.6 GHz/2 GHz for CLX/BDW is also indicated. Different SIMD widths are shown for CLX in L1. Horizontal lines denote theoretical upper bandwidth limits.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "(a) Demonstration of the implications of the change in cache-replacement policy across processor generations using the L3-cache hit rate. (b) Bandwidth for a load-only data-access pattern on CLX (using likwid-bench). In (a), data for the older Intel Ivy Bridge Xeon E5-2690 v2 (IVB) is included for reference.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "L3 bandwidth of load, copy, and update benchmarks measured on CLX and BDW. The saturation of L3 bandwidth on CLX architecture can be clearly seen. The parallel efficiency of each NUMA domain is further labeled in the plot.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "STREAM triad scaling on BDW (closed symbols) and CLX (open symbols) with (a) CoD/SNC enabled and compact pinning of threads to cores, (b) CoD/SNC enabled and scattered pinning of threads to cores, and (c)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF10": {
+            "text": "DGEMM performance subject to (a) problem size N and (b) number of active cores for N = 40,000. (Color figure online)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF11": {
+            "text": "SpMPV benchmark results on CLX and BDW (CoD/SNC off, Turbo mode). (a) Performance for the ct20stif matrix, which fits in the L3 cache. (b) Performance and memory data transfer volume for four different matrices. Dashed lines mark upper limits from a roofline model using the saturated load-only memory bandwidth.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF12": {
+            "text": "): For the WAXPBY kernel (w[i]=a*x[i]+y[i]), which has a code balance of 12 byte/flop 6 , the reported performance is 5.14 Gflop/s on a full socket of BDW. On the other hand, for the DOT kernel with a reported code balance of 8 byte/flop the benchmark reports a performance of 10.16 Gflop/s. According to the roofline model this translates into memory bandwidths of 61.7 Gbyte/s and 81.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Key specification of test bed machines.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "MiB of L3, it is Algorithm 1. SpMPV algorithm: y = A p x",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Details of the benchmark matrices. Nr is the number of matrix rows, Nnz is the number of nonzeros, and Nnzr = Nnz/Nr. The last column shows the total memory footprint of the matrix (in CRS storage format).",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Summary of the roofline performance model parameters and measurements for HPCG kernels. Predicted and measured values for code balance and performance are shown in columns three to six. The last two columns compare the predicted and measured performance of the entire solver. Kernels Code balance (Cx) Performance (Px) Flops (Fx) Calls (Ix) HPCG perf. byte/row byte/row Gflop/s Gflop/s flops/row Gflop/s Gflop/s",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We are indebted to Thomas Zeiser and Michael Meier (RRZE) for providing a reliable benchmarking environment. This work was partially funded via the ESSEX project in the DFG priority programme 1648 (SPPEXA) and by the German Ministry of Science and Education (BMBF) under project number 01IH16012C (SeASiTe).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments."
+        }
+    ]
+}

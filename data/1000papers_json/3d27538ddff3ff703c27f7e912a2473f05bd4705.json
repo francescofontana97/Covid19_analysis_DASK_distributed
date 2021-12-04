@@ -1,0 +1,712 @@
+{
+    "paper_id": "3d27538ddff3ff703c27f7e912a2473f05bd4705",
+    "metadata": {
+        "title": "Diffusion of DNA-Binding Species in the Nucleus: A Transient Anomalous Subdiffusion Model",
+        "authors": [
+            {
+                "first": "M",
+                "middle": [
+                    "J"
+                ],
+                "last": "Saxton",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "As I write this editorial for our special issue, Multiscale Modeling of Chromatin, we are surrounded in a world of concern and social distancing related to the coronavirus pandemic. I recall, as if in a dream, the seemingly carefree world of just one year ago, when we enjoyed an international gathering and breathtaking scenery in the French Alps during our wonderful BPS Thematic Meeting in Les Houches (see group photos in Figs. 1 and 2), which inspired this collection of articles. The meeting was coorganized by Thomas Bishop, Lars Nordenskiold, Andrzej Stasiak, and I. As I wrote in a summary of that meeting for the BPS Bulletin:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        },
+        {
+            "text": "With Mont Blanc in the background reminding participants of the lofty meeting goals, the meeting brought together 70 biologists, chemists, physicists, and mathematicians to discuss and launch collaborations and advance the field of chromatin structure, dynamics, function, and applications through new conceptual approaches and perspectives. Notably, the meeting merged experimentalists with theoreticians and modelers in the program seamlessly, emphasizing the interplay between techniques and ideas ... [The] themes underscored the complex multiscale features and properties of chromatin, from DNA to nuclear organization and interactions, inspiring scientists to discuss the development of models and experimental strategies on many spatial and temporal scales needed to address all relevant components of the chromatin folding problem and the epigenomic regulation of gene expression. Such multiscale approaches, combining experimental data and modeling and informatics, are necessary to extract and identify structure and function relationships on various scales, from individual base pairs to whole genomes, and to pursue important applications in medicine and genomics. ... While we enjoyed warm sunny spring weather for the first couple days, the third day brought a heavy winter snow storm, burying us in over a foot of snow and encouraging cozy indoor discussions",
+            "cite_spans": [
+                {
+                    "start": 505,
+                    "end": 510,
+                    "text": "[The]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        },
+        {
+            "text": "The enthusiastic reception of this meeting and its venerable subject, DNA, is reflected by this excellent collection of articles contributed to this issue of the Biophysical Journal. The articles range from theoretical modeling of knots in the human genome (1), and packaging of viral genomes in their protein capsids (2), to live-cell microscopy imaging of DNA damage (3), and human cells undergoing reprogramming (4) .",
+            "cite_spans": [
+                {
+                    "start": 415,
+                    "end": 418,
+                    "text": "(4)",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        },
+        {
+            "text": "The articles in this issue describe inventive algorithms and important applications where modeling and simulation are essential for generating biophysical insights. The works give us a glimpse into the supercoiling of the DNA in the nucleotide (5), differential staining patterns in antibody and chromatin interactions observed experimentally for monovalent versus divalent antibody systems (6), overlapping dinucleosome structures (7), architectural aspects of the self-organization of the cell nucleus (8), nuclear dynamic crowding related to transcriptional efficiency (9), large-scale rearrangements of chromatin during cell growth and death (10) , and Oct4 and nucleosome binding that regulates gene expression (11) .",
+            "cite_spans": [
+                {
+                    "start": 646,
+                    "end": 650,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 716,
+                    "end": 720,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        },
+        {
+            "text": "A perspective by Moller and de Pablo describes various approaches to multiscale chromatin modeling (12) . In addition, many novel algorithms are described for modeling the biophysical properties of nucleosomes associated with cancer cells (13) , tracking beads in singlemolecule biophysical experiments (14) , computing interaction strengths among chromatin units compatible with measured values in chromosome conformation experiments (15) , analyzing the spatial arrangement of tRNA genes in budding yeast to help interpret experimental discrepancies (16), simulating and visualizing genome elements from their constituent DNA components (17) , analyzing dynamic 3D genome organization inferred from Hi-C data (18) , simulating sequence-dependent DNA mechanics involved in nucleosome unspooling (19) , and capturing the diffusion of DNA binding species (20).",
+            "cite_spans": [
+                {
+                    "start": 99,
+                    "end": 103,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 239,
+                    "end": 243,
+                    "text": "(13)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 303,
+                    "end": 307,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 435,
+                    "end": 439,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 639,
+                    "end": 643,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 711,
+                    "end": 715,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 796,
+                    "end": 800,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        },
+        {
+            "text": "As Anthony Fauci, Director of the National Institute of Allergy and Infectious Diseases, said recently while discussing various model predictions regarding COVID-19 infection and death numbers in the United States, ''All models are as good as the assumptions that you put into the model.'' Fortunately, in our field, the increasing abun-dance of experimental data helps ground the models. Further, the great variety and ingenuity of the models and applications described in this collection highlight the numerous areas of genomic organization that await exploration. The community is hoping to move forward with a proposal for a new BPS Subgroup devoted to the subject and more meetings to follow. Stay tuned and be well.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        },
+        {
+            "text": "Tamar Schlick 1,* 1 Department of Chemistry, Courant Institute of Mathematical Sciences, New York University, New York, New York",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Multiscale Genome Organization: Dazzling Subject and Inventive Methods"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Chromatin Is Frequently Unknotted at the Megabase Scale",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Goundaroulis",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Aiden",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Stasiak",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Quantitative study of the chiral organization of the phage genome induced by the packaging motor",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Cruz",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Vazquez",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Structural and Dynamical Signatures of Local DNA Damage in Live Cells",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Eaton",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zidovska",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Tracking and Predicting Human Somatic Cell Reprogramming Using Nuclear Characteristics",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Molugu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Harkness",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Saha",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Bacterial Nucleoid: Interplay of DNA Demixing and Supercoiling",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Joyeux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Mesoscale Modeling of Nucleosome-Binding Antibody PL2-6: Mono-versus Bivalent Chromatin Complexes",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Myers",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Olins",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Schlick",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Structural Studies of Overlapping Dinucleosomes in Solution",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Matsumoto",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Sugiyama",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kono",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Nonequilibrium Biophysical Processes Influence the Large-Scale Architecture of the Cell Nucleus",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Agrawal",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Ganai",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Menon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Dynamic Crowding Regulates Transcription",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Shim",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Nap",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Szleifer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Mesoscale Liquid Model of Chromatin Recapitulates Nuclear Order of Eukaryotes",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Laghmach",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "Di"
+                    ],
+                    "last": "Pierro",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Potoyan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Nucleosomal DNA Dynamics Mediate Oct4 Pioneer Factor Binding",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huertas",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Maccarthy",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Cojocaru",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Bottom-Up Meets Top-Down: The Crossroads of Multiscale Chromatin Modeling",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "De Pablo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Moller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Minimal Cylinder Analysis Reveals the Mechanical Properties of Oncogenic Nucleosomes",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Pitman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Dalal",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Papoian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Multiplexed Nanometric 3D Tracking of Microbeads Using an FFT-Phasor Algorithm",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Brouwer",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hermans",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Van Noort",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Computing 3D chromatin configurations from contact probability maps by Inverse Brownian Dynamics",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Kumari",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Ravi"
+                    ],
+                    "last": "Duenweg",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Prakash",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Quantitative Analysis of Spatial Distributions of All tRNA Genes in Budding Yeast",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Tokuda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Genome Dashboards: Framework and Examples",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Bishop",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Microrheology for Hi-C Data Reveals the Spectrum of the Dynamic 3D Genome Organization",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Shinkai",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sugawara",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Onami",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Ensembles of Breathing Nucleosomes: A Computational Study",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Van Deelen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Schiessel",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "De Bruin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Biophys. J",
+            "volume": "118",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Group Photo Three Days Later. To see this photo in color, go online.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Group Photo of Meeting Participants. To see this photo in color, go online.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": []
+}

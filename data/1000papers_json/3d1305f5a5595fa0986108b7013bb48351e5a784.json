@@ -1,0 +1,783 @@
+{
+    "paper_id": "3d1305f5a5595fa0986108b7013bb48351e5a784",
+    "metadata": {
+        "title": "Control dynamics of the COVID-19 pandemic in China and South Korea",
+        "authors": [
+            {
+                "first": "Jo\u00e3o",
+                "middle": [],
+                "last": "Manoel",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Modelagem e Ci\u00eancias Sociais Aplicadas Programa de P\u00f3s-gradua\u00e7\u00e3o em Energia Universidade Federal do ABC Santo Andr\u00e9",
+                    "location": {
+                        "region": "SP",
+                        "country": "Brazil"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Losada",
+                "middle": [],
+                "last": "Moreira",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Modelagem e Ci\u00eancias Sociais Aplicadas Programa de P\u00f3s-gradua\u00e7\u00e3o em Energia Universidade Federal do ABC Santo Andr\u00e9",
+                    "location": {
+                        "region": "SP",
+                        "country": "Brazil"
+                    }
+                },
+                "email": "joao.moreira@ufabc.edu.br"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Social isolation measures reduce the population's infection rate with the COVID-19 virus, but its effectiveness is difficult to quantify. The successful control of the pandemic carried out by China and South Korea is studied using a scheme based on the net relative rate of infection which is very sensitive to sudden changes in the epidemic evolution. The net relative rate of infection for China and South Korea without containment measures, that is, with free proliferation of the virus, lies between 10 and 40 %/day or doubling times of infected persons between 3.5 and 2 days. After measures of containment it dropped and stabilized. South Korea stabilized it around 1 %/day and China around 0.05 %/day with doubling times of 70 days and 1400 days, respectively. A discussion is provided about their processes of control and stabilization of the epidemic process and about the scheme used to study them.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Studies are already found in the literature about the dynamics of the COVID-19 pandemic in its early stages in China and its evolution in that country [1] [2] [3] [4] . These studies estimated the basic number of reproduction of the infection showing that it was significantly greater than one and indicated that necessity to use social control measures to reduce its infection growth rate. Other works presented events in China until their final control, highlighted the importance of social isolation measures, and estimated that the average number of daily reproduction of infection in Wuhan fell 34 % after the introduction of travel restrictions on 23 th January 2020. At the end of March the authors reported a general situation of the spread of the epidemic in several countries, indicating its transformation into a pandemic [5] . The epicenter of the pandemic migrated to Europe and the United States with several countries acknowledging management problems to handle the growing demand of hospital services to treat the COVID-19 patients.",
+            "cite_spans": [
+                {
+                    "start": 151,
+                    "end": 154,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 155,
+                    "end": 158,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 159,
+                    "end": 162,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 163,
+                    "end": 166,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 833,
+                    "end": 836,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "At the end of March, some studies appeared considering processes to contain the pandemic, such as social isolation actions, identification of infection agents, dealing with incomplete information, and about projections and scenarios for the evolution of the epidemic. The basic approach was adopting variations of the SIR model with agents divided into 3 groups: susceptible to infection, infected (infection agents) and recovered (inert agents) [6] .",
+            "cite_spans": [
+                {
+                    "start": 446,
+                    "end": 449,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Monitoring exponential processes are common practice in the industry [8, 9] . In this work we study evolution of the pandemic in China and South Korea monitoring the exponential evolution of the number of confirmed cases accumulated over time. We take the time series of this variable as the one that can provide information about the dynamic behavior of the pandemic. To interpret the results, a scheme based on the SIR model [6, 10] is developed to take into account actions to contain the advance of the pandemic.",
+            "cite_spans": [
+                {
+                    "start": 69,
+                    "end": 72,
+                    "text": "[8,",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 73,
+                    "end": 75,
+                    "text": "9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 427,
+                    "end": 430,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 431,
+                    "end": 434,
+                    "text": "10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "This article begins presenting the data, methods and details of the theoretical basis for interpreting the results. Following, we simulate the successful control of the pandemic carried out by China and South Korea and finally we present the conclusions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The COVID-19 epidemic spreads across a region and is detected through tests with different efficiencies. The relationship between the total number of infected individuals in a region at day tn, In, and the number of infected individuals counted or detected by the tests applied to the population, Cn, is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data and methods"
+        },
+        {
+            "text": "where \u03b5 is the overall efficiency of the infection detection system (counts of confirmed cases in the region/true number of infected individuals in the region). If this efficiency is known it is possible to obtain Nn over time monitoring Cn. If the efficiency is unknown, but constant over time, it is possible to obtain true relative rates of change of Nn because in the calculation the efficiency cancels out.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data and methods"
+        },
+        {
+            "text": "Thus, as long as the efficiency \u03b5 is invariant over time and adequately covers the region affected by the pandemic (good sample of the universe) the relative infection rate can be estimated correctly through Cn. If the detection efficiency varies, it is still possible to obtain true net relative rates of infection taking into account such variations. Additionally, ratios such as lethality rate, can provide good estimates of hospital demands and other important time varying information. In this work we take the relative rate of change of Cn, to model the pandemic temporal evolution.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data and methods"
+        },
+        {
+            "text": "The data were obtained from the health systems of China and South Korea organized as time series in the Worldometer site [11] . In the rest of the article we use the words pandemic and epidemic interchangeably.",
+            "cite_spans": [
+                {
+                    "start": 121,
+                    "end": 125,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Data and methods"
+        },
+        {
+            "text": "We consider in the SIR model [6, 10] only the balance of the number of infected individuals according to the SIR model), i. e.,",
+            "cite_spans": [
+                {
+                    "start": 29,
+                    "end": 32,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 33,
+                    "end": 36,
+                    "text": "10]",
+                    "ref_id": "BIBREF9"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Temporal model based on the relative rate of change of the number of cases of COVID-19"
+        },
+        {
+            "text": "This simplification of the SIR model is due to the fact that the time series for the confirmed number of infected individuals, Cn, is the most accurate one produced by the coronavirus . CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Temporal model based on the relative rate of change of the number of cases of COVID-19"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 6, 2020. . https://doi.org/10.1101/2020.05.01.20087650 doi: medRxiv preprint testing executed the health systems. In this monitoring model, the infection rate by coronavirus is assumed to be proportional to the number of infected individuals on day t, I(t), who act as spreading agents of the infection. We can define a probability of new infection per unit time and per infected individual to determine the infection rate. The rate of removal of infected individuals depends on recovery from the infection, death occurrences or isolation from society. If we assume that this removal rate is also proportional to the number of infected individuals , we can also define a probability of removal of infected individuals per unit time and per infected individual. If we put together the two effects (new infection and removal) we obtain a probability of the net result of infection and removal per unit time and infected individual. Thus Eq. 2 can be written as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "where ( ) is the probability of net infection accounting for new infection of individuals and removal of infected individuals from society and NC(t) is the net rate of infections appearing in the society (region).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "Taking the time interval of one day, the solution of Eq. 3 is given by an exponential evolution of the number of infected individuals, that is,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "where tn is the nth day, is the average value of a(t) on the nth day, and Nn is the number of people infected in the region on day tn, and \u0394t = tn-tn -1 or 1 day.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "is an indicator of the rate of spread or transmission of the epidemic, because when its value is positive In grows exponentially, when its value is negative, In falls exponentially and when it is null In is constant over time. This probability of net infection per unit of time and per infected individual can be obtained from the total number of confirmed cases time series, Cn, if the efficiency \u03b5 of detection of infected individuals is invariant over time and adequately covers the region affected by the epidemic. Thus",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "It should be noted that given by Eq. 5 is nothing more than the net relative rate of change in the number of infected individuals calculated considering continuous time variation. In the rest of this article we refer to interchangeably as the net probability of infection per unit of time or net relative rate of infection and is expressed in %/day. The doubling time of infection, tdn, is related to the net rate of infection as = 0,7 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The main approximation of this model is to consider the efficiency of detection of infections case is approximately constant throughout the study. The number of cases of infection shows great statistical variation at the beginning of the spread of the virus. To reduce the variation, a 3-day moving average was applied to the data before obtaining the net relative infection rates.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 6, 2020. Figure 1 shows the net relative infection rate for China and South Korea obtained through Eq. 5 using the time series of the number of confirmed cases of infection of these countries [11] . The x-axis shows the days and the day 0 corresponds to 2020/01/31. The y-axis is presented on a logarithmic scale to ease comparing the rates of change in China and South Korea along the studied period. Note that if the efficiency of the detecting systems of both countries has been invariant along the period, Figure 1 shows their true epidemic net relative rate of infection. More importantly, Figure 1 shows that the logarithm of the net relative rate of infection is very sensitive to sudden changes of the epidemic evolution. Thus it can be used to monitor the effectiveness of containment actions of the epidemic. Additionally, it presents clear trends of the epidemic process and thus can be used to project future scenarios for the epidemic evolution.",
+            "cite_spans": [
+                {
+                    "start": 255,
+                    "end": 259,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 72,
+                    "end": 80,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 573,
+                    "end": 581,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 658,
+                    "end": 666,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The evolution of the control process of the pandemic in China and South Korea was presented using a scheme based on the net relative rate of infection. For these two countries, the net rate of infection without containment measures, that is, with free proliferation of the virus, is between 20 and 40 %/day or doubling times of infected persons between 3.5 and 2 days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": ". CC-BY 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "The copyright holder for this preprint this version posted May 6, 2020. . https://doi.org/10.1101/2020.05.01.20087650 doi: medRxiv preprint After actions to contain the spread of the virus were applied this parameter started to fall indicating that the containment actions taken to control the pandemic were effective. The stabilization limit depends on the capacity of each country to take care of its fellow citizens and the confirmed number of persons infected. If the latter grows significantly, the effort to contain the spread of the virus is greater. South Korea stabilized the process in ~ 15 days and China in ~ 50 days.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        },
+        {
+            "text": "The scheme is not a model that simulates the epidemic but a monitoring scheme that infer the current net relative rate of infection based on reported confirmed cases of infection. The logarithm of the net relative rate of infection is very sensitive to sudden changes in the epidemic evolution and can be used to monitor the effectiveness of containment actions of the epidemic. Additionally, it presents clear trends of the epidemic process and can be used to project future scenarios for the epidemic evolution.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "(which was not certified by peer review)"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Early dynamics of transmission and control of COVID-19: a mathematical modelling study",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kucharski",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Russell",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Diamond",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Edmunds",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Funk",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Eggo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet Infectious Diseases",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/S1473-3099(20)30144-4"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Global epidemiology of coronavirus disease 2019 (COVID-19): disease incidence, daily cumulative index, mortality, and their association with country healthcare resources and economic status",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hsueh",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ko",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hsueh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Antimicrobial Agents",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Novel coronavirus 2019-ncov: early estimation of epidemiological parameters and epidemic predictions. medRxiv",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Read",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "R E"
+                    ],
+                    "last": "Bridgen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A T"
+                    ],
+                    "last": "Cummings",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ho",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Jewell",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "https:/www.medrxiv.org/content/10.1101/2020.01.23.20018549v2"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Preliminary estimation of the basic reproduction number of novel coronavirus (2019-nCoV) in China, from 2019 to 2020: A data-driven analysis in the early phase of the outbreak",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ran",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Musa",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Lou",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Infectious Diseases",
+            "volume": "92",
+            "issn": "",
+            "pages": "214--217",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) and coronavirus disease-2019 (COVID-19): The epidemic and the challenges",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Shih",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ko",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Hsueh",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "International Journal of Antimicrobial Agents",
+            "volume": "55",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "An SEIR Infectious Disease Model with Testing and Conditional Quarantine. Working paper",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Berger",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Herkenhoff",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Mongey",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Washington Center for Equitable Growth",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Simulating malaria model for different treatment intensities in a variable environment",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "P P"
+                    ],
+                    "last": "Wyse",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Bevilacqua",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rafikov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Ecological Modelling",
+            "volume": "206",
+            "issn": "",
+            "pages": "322--330",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Space-Time Analysis of Reactor-Control-Rod-Worth Measurements",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "; J C"
+                    ],
+                    "last": "Moreira",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                }
+            ],
+            "year": 1984,
+            "venue": "Nuclear Science and Engineering",
+            "volume": "86",
+            "issn": "",
+            "pages": "91--105",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Fundamentals of Reactor Physics. (kinetics chapter",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Lewis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "115--138",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Three Basic Epidemiological Models",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Hethcote",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Applied Mathematical Ecology. Biomathematics",
+            "volume": "18",
+            "issn": "",
+            "pages": "119--144",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "COVID-19 coronavirus pandemic",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Worldometer",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Net relative infection rate as a function of time for China and South Korea. The net relative rate of infection allows us to monitor the effectiveness of measures to contain the spread of the virus (how fast the relative rate of infection falls). South Korea stabilized around 1 %/day and China around 0.05 %/day. In China, where the epidemic originated, in January 2020 the net probability of infection or net relative rate of infection was 40 %/day and that country started its measures to control the spread of infection in their society. At this time, the doubling time of the number of infected persons was between 2 and 3 days. The measures of social isolation were very strong and produced a continuous reduction of . On February 25 th , the rate was already less than 1 %/day (70 days of doubling time) and on March 8, less than 0.1 %/day (700 days of doubling time or about 2 years). On 03/27/2020 the confirmed number of infected people in China was 81394, the net relative infection rate was 0.06 %/day and the number of new cases per day, very small. The infection reached the other countries strongly in March 2020. In South Korea, the infection process started a little earlier and the country took drastic measures to contain the spread of the virus, including social isolation. In early March, South Korea's net relative infection rate was just below 20 %/day (3.5 days of doubling time). After March 15 th it stabilized around 1 %/day (70 days of doubling time) and on 03/27/2020 the confirmed number of infected persons was 9332. Why did this country decide to stabilize its infection rate around 1 %/day and not around 0.05 %/day as China did?",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "compares the number of new cases per day estimated by Eq. 3 with the new cases obtained from the reported data. NCn given by Eq. 3 is a good approximation of the true number of new confirmed cases per day. The mean relative discrepancy for China was 4.8 % and for South Korea, 12 %.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Comparison between the number of detected new cases reported in the data and the rate of detected new cases estimated by Eq. 3.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "shows that between 50 and 60 (2 nd half of March) the number of new cases in China was around 55 and in South Korea, around 90. These figures were already very similar although the number of confirmed cases in China was 10 times greater. The answer to the above question is that in China the net probability of infection per unit of time was 10 times smaller than that in South Korea. The important variable was NCn, the rate of new confirmed cases per day, obtained from the product which can be directly correlated to hospital demands. A figure between 50 and 100 new confirmed cases per day was suitable for their health and epidemic control systems.",
+            "latex": null,
+            "type": "figure"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The author thanks the Brazilian agency Coordena\u00e7\u00e3o de Aperfei\u00e7oamento de Pessoal de N\u00edvel Superior (CAPES) for financial support and acknowledges it had no interference on data collection, interpretation, or decision to submit the work for publication.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

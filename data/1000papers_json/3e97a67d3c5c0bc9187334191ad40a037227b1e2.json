@@ -1,0 +1,1325 @@
+{
+    "paper_id": "3e97a67d3c5c0bc9187334191ad40a037227b1e2",
+    "metadata": {
+        "title": "Classification of COVID-19 Chest CT Images Based on Ensemble Deep Learning",
+        "authors": [
+            {
+                "first": "Xiaoshuo",
+                "middle": [],
+                "last": "Li",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Northeastern University",
+                    "location": {
+                        "postCode": "110189",
+                        "settlement": "Shenyang",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Wenjun",
+                "middle": [],
+                "last": "Tan",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Northeastern University",
+                    "location": {
+                        "postCode": "110189",
+                        "settlement": "Shenyang",
+                        "country": "China"
+                    }
+                },
+                "email": "tanwenjun@cse.neu.edu.cn"
+            },
+            {
+                "first": "Pan",
+                "middle": [],
+                "last": "Liu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Northeastern University",
+                    "location": {
+                        "postCode": "110189",
+                        "settlement": "Shenyang",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Qinghua",
+                "middle": [],
+                "last": "Zhou",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Northeastern University",
+                    "location": {
+                        "postCode": "110189",
+                        "settlement": "Shenyang",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Jinzhu",
+                "middle": [],
+                "last": "Yang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Northeastern University",
+                    "location": {
+                        "postCode": "110189",
+                        "settlement": "Shenyang",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Novel coronavirus pneumonia (NCP) has become a global pandemic disease, and computed tomography-based (CT) image analysis and recognition are one of the important tools for clinical diagnosis. In order to assist medical personnel to achieve an efficient and fast diagnosis of patients with new coronavirus pneumonia, this paper proposes an assisted diagnosis algorithm based on ensemble deep learning. e method combines the Stacked Generalization ensemble learning with the VGG16 deep learning to form a cascade classifier, and the information constituting the cascade classifier comes from multiple subsets of the training set, each of which is used to collect deviant information about the generalization behavior of the data set, such that this deviant information fills the cascade classifier. e algorithm was experimentally validated for classifying patients with novel coronavirus pneumonia, patients with common pneumonia (CP), and normal controls, and the algorithm achieved a prediction accuracy of 93.57%, sensitivity of 94.21%, specificity of 93.93%, precision of 89.40%, and F1-score of 91.74% for the three categories. e results show that the method proposed in this paper has good classification performance and can significantly improve the performance of deep neural networks for multicategory prediction tasks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "In March 2020, COVID-19 caused by SARS-CoV-2 has reached global pandemic levels. As of January 2021, the World Health Organization issued a bulletin showing that the cumulative number of confirmed cases worldwide exceeds 91 million, the cumulative number of deaths exceeds 1.9 million deaths, and up to 300,000 new confirmed cases per day, and artificial intelligence methods are one of the important tools for the diagnosis of clinical novel coronavirus pneumonia [1, 2] . In clinical practice, etiological tests including sputum, pharyngeal swabs, and lower respiratory secretions, such as reverse transcriptionpolymerase chain reaction (RT-PCR) and gene sequences, are the gold standard for the diagnosis of COVID-19, and nucleic acid testing is widely considered to be the main criterion for discharge after treatment. However, the current epidemiological situation of COVID-19 is dramatically increasing, and a large number of COVID-19 infections are being confirmed every day. Diagnostic methods of nucleic acid testing are faced with long waiting times for test results, certain false negatives, and shortage of testing reagents, and CT image analysis of the chest is also considered an important adjunctive diagnostic tool. For example, almost all patients with COVID-19 have some typical radiological features of chest CT, including ground-glass opacities, multifocal patchy consolidation, and/or interstitial changes in a peripheral distribution [3] [4] [5] [6] [7] [8] . erefore, until definitive results are obtained, rapid differentiation of patient type, based on chest CT images, may be a useful tool to improve diagnosis and to better characterise disease effects.",
+            "cite_spans": [
+                {
+                    "start": 465,
+                    "end": 468,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 469,
+                    "end": 471,
+                    "text": "2]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1456,
+                    "end": 1459,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1460,
+                    "end": 1463,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1464,
+                    "end": 1467,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 1468,
+                    "end": 1471,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1472,
+                    "end": 1475,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1476,
+                    "end": 1479,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Deep learning is a part of machine learning whose concept originated from the study of artificial neural networks. Deep learning discovers distributed feature representations of data by combining lower-level features to form more abstract higher-level representations of attribute categories or features . Researchers have made  important research progress in previous work by implementing deep learning algorithms to predict and classify  pneumonia such as COVID-19 based on chest medical  images and other biological indicators. According to Table 1 , the existing studies on COVID-19 face the following problems: Wang [10] used a three-dimensional deep neural network to classify COVID-19 and a weakly supervised approach to localize lesion regions by combining the activated regions and unsupervised connected components in the classification network, obtaining 90.1% accuracy and 95.5% ROC. However, this 3D classification model has problems such as long training time. Han [11] designed an attention mechanism-based pooling method applied to 3D data instance prediction that achieved 97.9% accuracy and 99% AUC in COVID-19, CP, and normal classification tasks, but there are problems of limited test set size, for instance, prediction based on 3D data. HORRY [12] proposed a COVID-19 detection method based on migration learning and multimodal image data, but the performance of the generated classification model is insufficient. Pathak [17] proposed a deep bidirectional long-short memory network with a hybrid density network model (DBM) for COVID-19 and non-COVID-19 classification tasks achieving 98.37% accuracy and 98.32% AUC; its dataset size is small with only 1790 sheets. Wang et al. [21] designed an X-ray migration learning and model integration deep learning method for COVID-19, which achieved good results of 96.1% in triclassification prediction tasks, but there are only 140 images of COVID-19 patients in the dataset, and more than 7000 images of common pneumonia patients and normal controls; but this dataset is small and unbalanced.",
+            "cite_spans": [
+                {
+                    "start": 621,
+                    "end": 625,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 979,
+                    "end": 983,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1265,
+                    "end": 1269,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1444,
+                    "end": 1448,
+                    "text": "[17]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1701,
+                    "end": 1705,
+                    "text": "[21]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 304,
+                    "end": 551,
+                    "text": ". Researchers have made  important research progress in previous work by implementing deep learning algorithms to predict and classify  pneumonia such as COVID-19 based on chest medical  images and other biological indicators. According to Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "To address the problems of insufficient accuracy, long training time, and insufficient dataset size in multiclassification prediction tasks [27] [28] [29] , a COVID-19-assisted diagnosis algorithm based on integrated deep learning is proposed in this paper. e algorithm aims to train deep learning models for small data sets to reduce the training time and the requirements for machine performance. Meanwhile, the integrated learning algorithm integrates multiple deep learning models to improve the performance of multiclassification prediction tasks. e CT image data on this experiment were obtained from a large CT dataset constructed by the China Consortium for Chest CT Image Survey (CC-CCI), including 61,775 CT images from 4,154 patients [1] . Zhang compared them with the assistance of senior radiologists in his study, and the experimental results showed that the AI algorithm showed 92.49% accuracy in many hospitals with practical applications and 98.13% AUROC and also showed good sensitivity in diagnosing COVID-19.",
+            "cite_spans": [
+                {
+                    "start": 140,
+                    "end": 144,
+                    "text": "[27]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 145,
+                    "end": 149,
+                    "text": "[28]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 150,
+                    "end": 154,
+                    "text": "[29]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 745,
+                    "end": 748,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "For the deep learning model, the prediction performance of the classifier changes when the size of the training set and the number of prediction types of the classifiers change. In Table 2 , all classifier types with the corresponding accuracies are shown; the best accuracy is achieved by the classifier M24, which is a binary classifier for classifying COVID-19 and common pneumonia; the worst accuracy is achieved by the classifier M31, which is a triclassifier for classifying COVID-19, common pneumonia, and normal control under subtraining set U1. We can learn that all binary classifiers trained on the subtraining set using the VGG16 deep neural network have better performance, while the multiclassifiers generated on the subtraining set have poor prediction performance. erefore, our method integrates a triple classifier and five binary classifiers to form a cascaded classifier. Finally, by analyzing the performance differences among the classifiers, we reduce the deviation before the predicted and true values by the stacked idea and thus output the prediction results to improve the classification performance. e overall flow chart is shown in Figure 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 181,
+                    "end": 188,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1160,
+                    "end": 1168,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Ensemble Deep Learning Models."
+        },
+        {
+            "text": "In order to improve the performance of the classification model trained by deep neural network for the recognition of three different types of patients such as new coronavirus pneumonia, our algorithm proposes to combine the stacked algorithm with the VGG16 deep learning pretraining model. Firstly, the training set is partitioned into several disjoint subtraining sets, and several binary classifiers and a triple classifier based on the VGG16 model are trained on different subtraining sets; secondly, all classifiers are integrated by stacked idea in ensemble learning to form a cascade classifier; and finally, the prediction results are output according to the cascade classifier. In this paper, the training set is divided into six subtraining sets and a triclassifier, and five binary classifiers are trained, where the discriminant type of each classifier is shown in Table 2 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 877,
+                    "end": 884,
+                    "text": "Table 2",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Ensemble Deep Learning Models."
+        },
+        {
+            "text": "University's Visual Geometry Group and Google DeepMind researchers [30] . e network is a related research work on Large Scale Visual Recognition Challenge 2014. Its main work is to prove that increasing the depth of the network can affect the final performance of the network to a certain extent. VGG has two main structures: VGG16 and VGG19. An important improvement on VGG16 is that several continuous 3 \u00d7 3 convolution kernels replace the larger convolution kernels in AlexNet. For a given receptive field, it is better to use an accumulated small convolution kernel than a large convolution kernel because a multilayer nonlinear layer can increase the depth of the network to ensure learning more complex patterns, and the cost is relatively small.",
+            "cite_spans": [
+                {
+                    "start": 67,
+                    "end": 71,
+                    "text": "[30]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "VGG (Visual Geometry Group). VGG is a classic deep convolution neural network jointly developed by Oxford"
+        },
+        {
+            "text": "Transfer learning means to transfer or extend the representations learned by the CNN in previous tasks to new tasks or new fields [31] . is paper is based on the VGG16 deep neural network, and the VGG16 model has been pretrained on large tagged natural image data sets such as ImageNet, so that the train time and the amount of calculation can be significantly reduced. At the same time, in order to better extract features, the size of the training and test images input to the VGG16 model in this experiment is not adjusted to the model preset 224 * 224, but the size of the original chest CT image is maintained, which is 512 * 512.",
+            "cite_spans": [
+                {
+                    "start": 130,
+                    "end": 134,
+                    "text": "[31]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Transfer Learning."
+        },
+        {
+            "text": "Stacked generalization is an important ensemble learning idea proposed by David H. Wolpert in 1992 [32] . Stacking generalization refers to the scheme of providing information from one group of classifiers to another group of classifiers before forming the final prediction result. e prominent feature of stacking generalization is that the information constituting the classifier network comes from multiple subsets of the training set, and the original training set is divided into multiple subsets of training sets. Each subtraining set is used to collect bias information about the generalization behavior of the data set so that this bias information fills the classifier network. Stacking generalization is a method to estimate and correct the deviation from the constituent classifier to the training set provided.",
+            "cite_spans": [
+                {
+                    "start": 83,
+                    "end": 103,
+                    "text": "Wolpert in 1992 [32]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Stacked Generalization."
+        },
+        {
+            "text": "Based on the idea of stacked generalization in ensemble learning, the total set U is divided Figure 1 : Overall flow of the algorithm. Train multiple deep learning models by dividing subsets, integrate models by stacked idea, and finally output classifier prediction results by setting the threshold probability to 0.5. Journal of Healthcare Engineering into m subsets, U i are the subsets, and intersection of all subsets is null; the number of subsets U i is the number of total set U divided by m:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 93,
+                    "end": 101,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Training Set Partition."
+        },
+        {
+            "text": "(1) ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Training Set Partition."
+        },
+        {
+            "text": "is method used accuracy, precision, recall (or sensitivity), F1-score, and specificity to measure and analyze the performance of the ensemble learning model. Accuracy is the classifier's ability to correctly predict all samples, and precision is the classifier's ability not to predict negative samples as positive. Recall is the classifier's ability to classify all those with the disease correctly (true positive rate). F1-score is the weighted average of precision and recall. Specificity is the ability of the classifier to correctly identify patients without the disease (true negative rate). TP is true positives, TN is true negatives, FP is false positives, and FN is false negatives. e formulas of the measures are given below:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Evaluation Measures."
+        },
+        {
+            "text": "is method trains and tests a triclassifier based on VGG16 deep neural network only and a triclassifier based on VGG16 deep neural network with Table 3: Introduction to dataset size.   Cohort  COVID-19  Common pneumonia  Normal  Patients  Scans  Slices  Patients  Scans  Slices  Patients  Scans  Slices  Train  115  183  4800  128  303  4800  85  108  4800  Validate  115  183  480  128  303  480  85  108  480  Test  675  1180  76000  256  441  18852  158  364  45000  Total  790  1363  80800  384  744  23652  243  472 integrated learning under the same training set conditions, respectively. e performance of each method is compared by accuracy, specificity, and sensitivity on the test dataset. According to Figure 2 , it can be seen that even the triclassifier trained solely based on the VGG16 model showed good results in identifying neocoronary pneumonia, common pneumonia, and normal controls, while the performance of the cascade model combining the deep neural network and the integrated learning algorithm was significantly improved. e experimental results in this paper show that the cascade classifier constructed by combining the deep learning algorithm with the integrated learning algorithm can significantly improve the multiclassification prediction accuracy of the model. According to Figure 3 , it can be seen that among the prediction results using only the triclassifier M31, the normal control group is predicted as common pneumonia and new coronary pneumonia is predicted as common pneumonia, and these two false predictions occur more frequently, with the false prediction rates of 14.43% and 12.47%, respectively. For these two classification cases with high error rates, two classifiers M24 and M25 with prediction performance over 95% were trained in this paper by the subtraining sets U5 and U6 for improving the predictions with high error rates, and the number of these two errors was significantly reduced to 1.99% and 7.20%, respectively, thus greatly improving the prediction accuracy of the normal control group and new coronary pneumonia, especially new coronary pneumonia identified as normal pneumonia was greatly reduced in the error rate. In the cascade classifier, the number of discrimination errors increases when the original discrimination errors are less, such as judging normal control as new coronary pneumonia and judging new coronary pneumonia as the normal control group. As can be seen from Figure 2 , the incorrect discrimination error rate of judging normal pneumonia as neocoronary pneumonia only increased from 0.27% to 0.78%, and there was no significant increase in the incorrect discrimination rate.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 143,
+                    "end": 519,
+                    "text": "Table 3: Introduction to dataset size.   Cohort  COVID-19  Common pneumonia  Normal  Patients  Scans  Slices  Patients  Scans  Slices  Patients  Scans  Slices  Train  115  183  4800  128  303  4800  85  108  4800  Validate  115  183  480  128  303  480  85  108  480  Test  675  1180  76000  256  441  18852  158  364  45000  Total  790  1363  80800  384  744  23652  243  472",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 711,
+                    "end": 719,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1304,
+                    "end": 1312,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 2443,
+                    "end": 2451,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Results and Discussion."
+        },
+        {
+            "text": "According to Figure 3 , the accuracy, specificity, sensitivity, precision, and F1-score of the integrated model based on the combination of VGG16 deep neural network and integrated learning algorithm are 93.57%, 93.93%, 94.21%, 89.40%, and 91.74%, respectively, while the accuracy, specificity, sensitivity, precision, and F1-score of the single triclassifier trained based on VGG16 algorithm are 88.12%, 88.38%, 89.19%, 84.04%, and 86.54%, respectively. Compared with the single multiclassifier, the accuracy increased by 5.45%, the specificity increased by 5.55%, the sensitivity increased by 5.02%, the precision increased by 5.36%, and the F1-score increased by 5.2%; all the indicators were significantly improved.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 13,
+                    "end": 21,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Results and Discussion."
+        },
+        {
+            "text": "In this paper, we propose an algorithm based on the combination of VGG16 deep neural network and ensemble learning with the aim of improving the performance of deep neural networks for multiclassification prediction tasks. e experimental results show that the VGG16 deep neural network combined with the integrated learning approach can significantly improve the classification performance compared with the VGG16 deep neural network-based integrated learning algorithm under the same conditions, which plays an important role in the rapid identification of patients with novel coronavirus pneumonia. e method proposed in this paper has the following drawbacks: (1) the training and testing of the classification model is only utilized on 2D images, while the rich spatial information preserved in the 3D structure is not utilized; (2) only the VGG model is used and some new network techniques are not tried; and (3) the publicly available dataset used in this method is not the original DICOM data format, and the image is lost in the process of data format conversion pixel information. Data Availability e data used to support the findings of this study are available at http://ncov-ai.big.ac.cn/download?lang\ufffden.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        },
+        {
+            "text": "e authors declare that there are no conflicts of interest regarding the publication of this paper.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Clinically applicable AI system for accurate diagnosis, quantitative measurements, and prognosis of COVID-19 pneumonia using computed tomography",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cell",
+            "volume": "181",
+            "issn": "6",
+            "pages": "1423--1433",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Epidemiological and clinical characteristics of 99 cases of 2019 novel coronavirus pneumonia in Wuhan. China: a descriptive study",
+            "authors": [
+                {
+                    "first": "Y.-Hua",
+                    "middle": [],
+                    "last": "Li Geng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yan-Ni",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "92",
+            "issn": "4",
+            "pages": "424--432",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Epidemiological and clinical characteristics of 99 cases of 2019 novel coronavirus pneumonia in Wuhan, China: a descriptive study",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Nan-Shan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Lancet",
+            "volume": "395",
+            "issn": "10223",
+            "pages": "507--513",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Initial clinical features of suspected coronavirus disease 2019 in two emergency departments outside of Hubei, China",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Medical Virology",
+            "volume": "92",
+            "issn": "9",
+            "pages": "1525--1532",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Clinical and CT imaging features of 2019 novel coronavirus disease (COVID-19)",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z.-H",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y.-L",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Infection",
+            "volume": "81",
+            "issn": "1",
+            "pages": "147--178",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Imaging manifestations and diagnosis of pneumonia in atypical novel coronavirus (2019GnCoV) infection: with analysis of 14 cases",
+            "authors": [
+                {
+                    "first": "W.-Guo",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Hou",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Medical New Knowledge",
+            "volume": "30",
+            "issn": "1",
+            "pages": "7--9",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Fleischner society: glossary of terms for thoracic imaging",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Hansell",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Bankier",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Macmahon",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Mcloud",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "M\u00fcller",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Remy",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Radiology",
+            "volume": "246",
+            "issn": "3",
+            "pages": "697--722",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Implementation of XGBoost-based intelligent detection system for new crown pneumonia",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "China Digital Medicine",
+            "volume": "15",
+            "issn": "11",
+            "pages": "123--127",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "A weakly-supervised framework for COVID-19 classification and lesion localization from chest CT",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2615--2625",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Accurate screening of COVID-19 using attention-based deep 3D multiple instance learning",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2584--2594",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "COVID-19 detection through transfer learning using multimodal imaging data",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Mike",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Subrata",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Paul",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Access",
+            "volume": "8",
+            "issn": "",
+            "pages": "149808--149824",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "CovidGAN: data augmentation using auxiliary classifier gan for improved Covid-19 detection",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Waheed",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Goyal",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Khanna",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Al-Turjman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Pinheiro",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Access",
+            "volume": "8",
+            "issn": "",
+            "pages": "91916--91923",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Available: [15] \"Covid19 Radiography Database",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "COVID-19 chest X-ray dataset initiative",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Deep bidirectional classification model for COVID-19 disease infected patients",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Pathak",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ppiyush-Kumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "K.-V",
+                    "middle": [],
+                    "last": "Arya",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE/ACM Transactions on Computational Biology and Bioinformatics",
+            "volume": "192",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Classification of COVID-19 patients from chest ct images using multi-objective differential evolution-based convolutional neural networks",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Singh",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Kumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kaur",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "European Journal of Clinical Microbiology &In-fectious Disease",
+            "volume": "39",
+            "issn": "7",
+            "pages": "1--11",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Deep learning COVID-19 features on CXR using limited training data sets",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Oh",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Park",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2688--2700",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Development of a digital image database for chest radiographs with and without a lung nodule",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Shiraishi",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Katsuragawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ikezoe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "American Journal of Roentgenology",
+            "volume": "174",
+            "issn": "1",
+            "pages": "71--74",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Deep learning for the detection of COVID-19 using transfer learning and model integration",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Proceedings of the 2020 IEEE 10th International Conference on Electronics Information and Emergency Communication (ICEIEC)",
+            "volume": "",
+            "issn": "",
+            "pages": "281--284",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Covid-19 image data collection",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Cohen",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Morrison",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Dao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "COVID-CT-dataset: A CT scan dataset about COVID-19",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Xie",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Dual-sampling attention network for diagnosis of COVID-19 from community acquired pneumonia",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Ouyang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Huo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2595--2605",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Covid-19 classification using X-ray imaging with ensemble learning",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Siswantining",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Parlindungan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Journal of Physics: Conference Series",
+            "volume": "1722",
+            "issn": "",
+            "pages": "12072--012080",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A five-layer deep convolutional neural network with stochastic pooling for chest CT-based COVID-19 diagnosis",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Suresh",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Shuai-Qi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2021,
+            "venue": "Machine Vision and Applications",
+            "volume": "32",
+            "issn": "1",
+            "pages": "14--34",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Clinical characteristics and imaging manifestations of the 2019 novel coronavirus disease (COVID-19): a multi-center study in Wenzhou city",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Q",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "81",
+            "issn": "",
+            "pages": "147--178",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Dual-sampling attention network for diagnosis of COVID-19 from community acquired pneumonia",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Adam",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Xue-Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "IEEE Transactions on Medical Imaging",
+            "volume": "39",
+            "issn": "8",
+            "pages": "2595--2605",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Very deep convolutional networks for large-scale image recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Simonyan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zisserman",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "e Technical Writer's Handbook, University Science",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Young",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Stacked generalization",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Wolpert",
+                    "suffix": ""
+                }
+            ],
+            "year": 1992,
+            "venue": "Neural Networks",
+            "volume": "5",
+            "issn": "2",
+            "pages": "241--259",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "RSNA pneumonia detection challenge",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "North America",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Compare the accuracy, sensitivity, precision, F1-score, and specificity under deep learning based on VGG16 and based on the combination of ensemble learning and VGG16.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Results of COVID-19, CP, and normal evaluated under two methods. (a) Accuracy evaluation of a triclassifier model based on VGG16. (b) Accuracy evaluation of a triclassifier model based on a combination of integrated learning and VGG16.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Functions and accuracy of all classifiers.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Overview of methods and quantitative results toward COVID-19 classification.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "In the process of experiment and writing, the contributors get a lot of writing suggestions and work guidance from editors and readers, which helps the authors to make the content more rigorous and easier to understand. Here, the authors would like to express their most sincere thanks to them.is work was supported by the National Natural Science Foundation of China (61971118) and Fundamental Research Funds for the Central Universities (N182410001).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        }
+    ]
+}

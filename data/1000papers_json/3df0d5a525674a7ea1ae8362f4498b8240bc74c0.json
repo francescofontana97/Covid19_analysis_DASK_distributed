@@ -1,0 +1,2081 @@
+{
+    "paper_id": "3df0d5a525674a7ea1ae8362f4498b8240bc74c0",
+    "metadata": {
+        "title": "Zero-Shot Terrain Generalization for Visual Locomotion Policies",
+        "authors": [
+            {
+                "first": "Alejandro",
+                "middle": [],
+                "last": "Escontrela",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "George",
+                "middle": [],
+                "last": "Yu",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Peng",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Atil",
+                "middle": [],
+                "last": "Iscen",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Jie",
+                "middle": [],
+                "last": "Tan",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Legged robots have unparalleled mobility on unstructured terrains. However, it remains an open challenge to design locomotion controllers that can operate in a large variety of environments. In this paper, we address this challenge of automatically learning locomotion controllers that can generalize to a diverse collection of terrains often encountered in the real world. We frame this challenge as a multi-task reinforcement learning problem and define each task as a type of terrain that the robot needs to traverse. We propose an end-to-end learning approach that makes direct use of the raw exteroceptive inputs gathered from a simulated 3D LiDAR sensor, thus circumventing the need for ground-truth heightmaps or preprocessing of perception information. As a result, the learned controller demonstrates excellent zeroshot generalization capabilities and can navigate 13 different environments, including stairs, rugged land, cluttered offices, and indoor spaces with humans.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The ability to traverse unstructured terrains make legged robots an appealing solution to a wide variety of tasks, including disaster relief, last-mile delivery, industrial inspection, and planetary exploration [1] , [2] . To deploy robots in these settings successfully, we must design controllers that work well across many different terrains. Due to the diversity of environments that a legged robot can operate in, hand-engineering such a controller presents unique challenges. Deep Reinforcement Learning (DRL) has proven itself capable of automatically acquiring control policies to accomplish a large variety of challenging locomotion tasks. However, many of these approaches learn control policies that succeed in a single type of terrain with limited variations. This approach limits the robot's ability to generalize to new or unseen environments, which is a crucial feature of a useful locomotion controller.",
+            "cite_spans": [
+                {
+                    "start": 211,
+                    "end": 214,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 217,
+                    "end": 220,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "In this paper, we develop an end-to-end reinforcement learning system that enables legged robots to traverse a large variety of terrains. To facilitate learning generalizable policies, we make two purposeful design decisions for our learning system. First, we formulate the problem as a Multi-Task Partially Observable Markov Decision Problem and show that the robot learns a robust policy that works well across a wide variety of tasks (terrains). To this end, we develop a novel procedural terrain generation method, which can efficiently generate a large variety of terrains for training. Second, we design an end-to-end neural network architecture that can handle both perception and locomotion. We call this parameterization a visual-locomotion policy. While many 1 Google Brain Robotics, {georgeyu,pengxu,atil,jietan}@google.com 2 Georgia Institute of Technology, aescontrela@gatech.edu Work performed while Alejandro was an intern at Google Brain. prior works in the legged robot literature focused on blind walking, which does not involve exteroceptive sensors (e.g., camera, LiDAR), we find that exteroceptive perception is essential for robots to navigate in diverse environments. Our end-to-end visual-locomotion policy takes both exteroceptive (a LiDAR scan) and proprioceptive information of the robot and outputs low-level motor commands. We embed the Policies Modulating Trajectory Generator (PMTG) [3] framework into our policy architecture to generate cyclic and smooth actuation patterns, and to facilitate the learning of robust locomotion policies. We evaluate our learning system using a high-fidelity physics simulator [4] and visually-realistic indoor scans [5] ( Figure 1 ). We test the learned policy in thirteen different and realistic simulation environments (five training and eight testing). Our system learns highly generalizable locomotion policies, which demonstrate zero-shot generalization to unseen testing environments. We also show that our visuallocomotion policy's parameterization is key to generalization and yields far better performance than commonly-used reactive policies. This paper's main contributions include an end-to-end visual-locomotion policy parameterization and a complete multi-task learning system, with which a quadruped robot learns a single locomotion policy that can traverse a diverse set of terrains.",
+            "cite_spans": [
+                {
+                    "start": 1414,
+                    "end": 1417,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1641,
+                    "end": 1644,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1681,
+                    "end": 1684,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1687,
+                    "end": 1695,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "I. INTRODUCTION"
+        },
+        {
+            "text": "Locomotion controllers can be developed using trajectory optimization [6] , whole-body control [7] , model predictive control [8] , and state-machines [9] . While the controllers developed by these techniques can generalize to a certain degree, expertise and manual tuning are often needed to adapt them to different terrains.",
+            "cite_spans": [
+                {
+                    "start": 70,
+                    "end": 73,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 95,
+                    "end": 98,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 126,
+                    "end": 129,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 151,
+                    "end": 154,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Legged Locomotion"
+        },
+        {
+            "text": "In contrast, Deep Reinforcement Learning [10] can automatically learn agile and robust locomotion skills [11] , [12] , [13] , [14] . Prior work in RL has learned policies that are specific for a single environment [15] , or generalize to variations of a single type of terrain [16] , [17] , [18] . Recently, Lee et. al. [14] combined various techniques, such as Actu-atorNet [13] , PMTG [3] , curriculum learning and \"learning by cheating\" [19] , which successfully performed zero-shot transfer from simulation to many challenging terrains in the real world. While our paper's high-level goal is similar to this prior work, our approach incorporates exteroceptive sensors that enable the robot to navigate in cluttered indoor environments where blind walking may have difficulties.",
+            "cite_spans": [
+                {
+                    "start": 41,
+                    "end": 45,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 105,
+                    "end": 109,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 112,
+                    "end": 116,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 119,
+                    "end": 123,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 126,
+                    "end": 130,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 214,
+                    "end": 218,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 277,
+                    "end": 281,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 284,
+                    "end": 288,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 291,
+                    "end": 295,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 320,
+                    "end": 324,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 375,
+                    "end": 379,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 387,
+                    "end": 390,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 440,
+                    "end": 444,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Legged Locomotion"
+        },
+        {
+            "text": "Multi-task reinforcement learning (MTRL) [20] is a promising approach to train generalizable policies that can accomplish a wide variety of tasks. Hessel et. al. [21] learned a single policy that achieves state-of-the-art performance on 57 Atari games. Yu et al. [22] evaluated the performance of various RL algorithms on a grasping and manipulation benchmark and demonstrated that a single control policy is capable of completing a variety of complex robotic manipulation tasks. In this paper, we apply MTRL to develop a learning system for locomotion that enables legged robots to navigate in a large variety of environments.",
+            "cite_spans": [
+                {
+                    "start": 41,
+                    "end": 45,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 162,
+                    "end": 166,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 263,
+                    "end": 267,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "B. Multi-Task Reinforcement Learning"
+        },
+        {
+            "text": "In this work, we frame legged locomotion as a multitask reinforcement learning problem (MTRL) and define each task as a type of terrain that the legged robot (agent) must traverse. To learn generalizable locomotion policies, our learning system consists of a procedural terrain generator that can efficiently generate diverse training environments, and an end-to-end visual-locomotion policy architecture that directly maps the robot's exteroceptive and proprioceptive observations to motor commands.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "III. METHODS"
+        },
+        {
+            "text": "Given a distribution of tasks M, each task M i \u2208 M is a Partially Observable Markov Decision Process (POMDP). A POMDP is tuple,",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Multi-Task Reinforcement Learning Formulation"
+        },
+        {
+            "text": "is the transition probability function, and R : S \u00d7 A \u2192 R is the reward function. During training, the agent is presented with randomly sampled tasks M i \u2208 M (Section III-B). The solution of the multi-task POMDP is a stochastic policy \u03c0 : O \u00d7 A \u2192 R + that maximizes the expected accumulated reward over the episode length T .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Multi-Task Reinforcement Learning Formulation"
+        },
+        {
+            "text": "Our problem is partially observable because of the limited sensors onboard the robot 1 . The robot is equipped with a LiDAR sensor to perceive the distances d to the surrounding environment. Proprioceptive information comes from a simulated IMU sensor, which includes measurement of the roll \u03c6, pitch \u03b8, and the angular velocity of the torso \u03b2 \u03c9 = (\u03c6,\u03b8,\u03c8), and from motor encoders that measure the robot's 12 joint angles q. The complete observation at timestep t is",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Multi-Task Reinforcement Learning Formulation"
+        },
+        {
+            "text": "] are the sensor observations, g d and g h are the distance and relative heading to the target, a t\u22121 is the action at the last timestep, and s T TG are the parameters of the trajectory generator (Section III-C). Unlike some prior work in MTRL, where the task ID is part of the observation [22] , [23] , we purposefully choose not to leverage such information, because identifying tasks automatically in the real world is challenging. Instead, we would like to train a policy that can rely on its own perception input and demonstrates zero-shot generalization to new tasks, without knowing the task ID explicitly. In section IV, we demonstrate our perception is crucial in learning policies which generalize well to new tasks. The output action a t of the policy specifies the desired joint angles, which are tracked by PD controllers by the simulated robot.",
+            "cite_spans": [
+                {
+                    "start": 290,
+                    "end": 294,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 297,
+                    "end": 301,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Multi-Task Reinforcement Learning Formulation"
+        },
+        {
+            "text": "We employ a simple reward function, which encourages the agent to navigate to a target location g = (x g , y g , z g ) (the red ball in Figure 1 ):",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 136,
+                    "end": 144,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "A. Multi-Task Reinforcement Learning Formulation"
+        },
+        {
+            "text": "where g d,t is the Euclidean distance from the robot to the target location at timestep t, and \u2206t is the timestep duration. This reward can be interpreted as the speed that the robot is moving towards the target location. Once the robot's center of mass is within a threshold distance to the target location, the task is complete.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "A. Multi-Task Reinforcement Learning Formulation"
+        },
+        {
+            "text": "We develop a procedural terrain generator to generate diverse and challenging terrains that provide the robot with a large quantity of rich training data. The environment is composed of m\u00d7n pillars, each pillar having cross-sectional dimensions of l, w, and height h. We denote H = {h i,j } \u2208 ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "B. Terrain Parameterization and Procedural Task Generation"
+        },
+        {
+            "text": "Obstacles Number of obstacles: n obstacle height: h R m\u00d7n as the height field for all the pillars. During training, we select a task M i and adjust each pillar's heights to reflect the chosen task. Each task is a set of randomly generated terrains that belongs to the same type (e.g., flat, stairs). Each type of terrain is described by a parameter vector \u03c6 i , which provides the lower and upper bounds for the random sampling. The terrain generator constructs the heightfield H from the given parameter vector \u03c6. For example, the parameter vector \u03c6 for the rugged terrain task (Fig. 3b) includes the minimum and maximum values of the heightfield; for the stairs task, the parameter vector defines the height and length of each step. Table I summarizes the parameters and terrain generator for selected terrain types. With this simple parameterization, we can generate over ten different types of terrains that a robot may encounter in the real world. Our procedural terrain generation algorithm provides a rich set of training data essential for generalizable policies to emerge.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 579,
+                    "end": 588,
+                    "text": "(Fig. 3b)",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 735,
+                    "end": 742,
+                    "text": "Table I",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "B. Terrain Parameterization and Procedural Task Generation"
+        },
+        {
+            "text": "Exteroceptive perception plays a crucial role when legged robots need to navigate different terrains and environments with obstacles and humans [24] , [25] . As such, we aim to incorporate perception into our policy architecture such that information from the robot's surroundings can modulate locomotion. Additionally, the policy's low-level actuation commands need to be smooth and realizable on the physical robot. To this end, we seek to restrict the search space of possible gaits to be cyclic and smooth while still expressive enough so that the perception can modulate locomotion sufficiently to work on different terrains.",
+            "cite_spans": [
+                {
+                    "start": 144,
+                    "end": 148,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 151,
+                    "end": 155,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [],
+            "section": "C. Visual-Locomotion Policy Architecture"
+        },
+        {
+            "text": "In our visual-locomotion policy architecture (Fig. 2) , we use two separate neural network encoders to process the proprioceptive and exteroceptive inputs. The upper branch of Fig. 2a processes the LiDAR input, while the lower branch takes care of proprioceptive information. The learned lower-dimensional features are concatenated with the target information before being passed to the policy's locomotion component. We chose to use Policies Modulating Trajectory Generators (PMTG) [3] as our locomotion component architecture (Fig. 2b) . PMTG encourages the policy to learn smooth and cyclic locomotion behaviors. PMTG outputs a desired trajectory for the legs that is modulated by a learned policy \u03c0 \u03b8 (\u00b7): The policy observes the state of the trajectory generator (TG), s tg , and the robot's observation s t , then outputs parameters of the TG, p tg , including gait frequency, swing height, and stride length, and a residual action term \u00b5 f b . The final output action of our visual-locomotion policy is the combination of the trajectory generator and the residual action: a t = \u00b5 tg + \u00b5 f b . Please refer to the original paper [3] for more details. As detailed in [16] , our visual-locomotion policy architecture achieves a separation of concerns between the basic locomotion skills and terrain perception, which enables the robot to adapt its smooth locomotion behaviors according to its surrounding environments.",
+            "cite_spans": [
+                {
+                    "start": 483,
+                    "end": 486,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1135,
+                    "end": 1138,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1172,
+                    "end": 1176,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 45,
+                    "end": 53,
+                    "text": "(Fig. 2)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 176,
+                    "end": 183,
+                    "text": "Fig. 2a",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 528,
+                    "end": 537,
+                    "text": "(Fig. 2b)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "C. Visual-Locomotion Policy Architecture"
+        },
+        {
+            "text": "We design experiments to validate the proposed system's ability to learn a visual locomotion policy that generalizes well to terrains not encountered during training. In particular, we would like to answer the following two questions: \u2022 Can our system learn visual locomotion policies that demonstrate zero-shot generalization to new terrains? \u2022 Can our policy architecture effectively use LiDAR input and PMTG parameterization to improve the generalization performance over unseen terrains?",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "IV. EXPERIMENTAL RESULTS"
+        },
+        {
+            "text": "To answer the above questions, we evaluate our system using a simulated Unitree Laikago quadruped robot [26] , (a) Visual-locomotion policy architecture.",
+            "cite_spans": [
+                {
+                    "start": 104,
+                    "end": 108,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Experiment Details"
+        },
+        {
+            "text": "(b) The locomotion component using PMTG [3] for smooth and cyclic actuation patterns. which weighs approximately 22kg and is actuated by 12 motors. We simulate the onboard Velodyne VLP-16 (Puck) LiDAR sensor, which provides the perception of the surrounding environment (See Figure 2b) . The LiDAR measures the distance from the surrounding obstacles and terrain to the robot. This sensor supports 16 channels, a 360 \u2022 horizontal field of view, and a 30 \u2022 vertical field of view. We add Gaussian noise to the ground-truth distance readings in simulation to mimic the real-world noise model. The 3D LiDAR scan matrix D is normalized to range [0, 1] and flattened to a vector d.",
+            "cite_spans": [
+                {
+                    "start": 40,
+                    "end": 43,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 275,
+                    "end": 285,
+                    "text": "Figure 2b)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "A. Experiment Details"
+        },
+        {
+            "text": "Our policy computes joint target positions (a t ), which are converted to target joint torques by a PD controller running at 1kHz. Rigid body dynamics and contacts are also simulated at 1kHz. In other words, the position and velocity (provided by PyBullet [4] ) and the desired torque (provided by the PD controller) are sent to the actuator model every 1ms. The actuator model then computes 10 internal 100\u00b5s steps and provides the effective output torque of the actuator, which is then used by PyBullet to compute joint accelerations. The simulation environment is configured to use an action repeat of 10 steps, which means that our policy computes a new action a t and receive a state s t every 10ms (100Hz).",
+            "cite_spans": [
+                {
+                    "start": 256,
+                    "end": 259,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Experiment Details"
+        },
+        {
+            "text": "We train the visual-locomotion policy using the MTRL formulation with simulated environments randomly generated using our procedural task generation method (Section III-B). We choose a distributed version of the Proximal Policy Optimization (PPO) [27] in TF-Agents [28] for training. We use a 2-layer fully-connected neural network of dimensions (512, 256) to parameterize the value function and another network of dimensions (256, 128) to parameterize the policy. The policy outputs the parameters of a multivariate Gaussian distribution, which we sample actions from during training. We use a greedy policy during evaluation by executing the mean of the multivariate Gaussian distribution provided by the policy network. The dimensions of the exteroceptive and proprioceptive input encoders are both (32, 16, 4), respectively. We use the ReLU activation function for all layers in both networks [29] . The advantages are estimated using Generalized Advantage Estimation [30] .",
+            "cite_spans": [
+                {
+                    "start": 247,
+                    "end": 251,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 265,
+                    "end": 269,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 897,
+                    "end": 901,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 972,
+                    "end": 976,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "A. Experiment Details"
+        },
+        {
+            "text": "We then evaluate the trained policies on a suite of testing environments not encountered during training. Figure  1 illustrates a subset of these testing environments. These high-fidelity simulated environments are created in PyBullet physics engine [4] with Gibson scenes [5] . A policy's ability to successfully navigate across a given terrain is measured using the task completion rate, tcr, which measures how close the agent gets to the target relative to its starting position:",
+            "cite_spans": [
+                {
+                    "start": 250,
+                    "end": 253,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 273,
+                    "end": 276,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 106,
+                    "end": 115,
+                    "text": "Figure  1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "A. Experiment Details"
+        },
+        {
+            "text": "where g d,T is the final Euclidean distance between the robot and the target when the robot falls or completes the task, and g d,0 is the distance at the beginning of the episode. A task completion rate of 1 indicates successful navigation to the target, whereas tcr close to zero means that the robot cannot navigate across the terrain. Table II shows the generalization performance of our visual-locomotion policy trained on different types of terrains (rows) and tested in unseen environments (columns), including a maze (Maze), a steep and rugged mountain (Mountain), two indoor scenarios (Office 1 and Office 2), an office space with moving humans (Dynamic Env), a forest scene with rugged terrain and obstacles (Forest), a winding path with a cliff on both sides (Cliff), and a randomlygenerated continuous mesh (Continuous). Policies trained on a single type of terrain achieve a low task completion rate in the testing environments due to a lack of diverse training data. In contrast, our approach achieves much higher generalization performance. For instance, our method on average achieves a task completion rate of 67% on the mountain task, while policies trained in a single type of terrain only achieve 28% at best (See Figure 4 for a snapshot of our policy navigating up the rugged mountain trail). These results indicate that our MTRL formulation using procedural task generation, and visual-locomotion policy architecture, results in superior generalization performance. The policy ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 338,
+                    "end": 346,
+                    "text": "Table II",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1233,
+                    "end": 1241,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "A. Experiment Details"
+        },
+        {
+            "text": "We perform three ablation studies to understand the importance of each design decision in our system. Table III summarizes their impacts on the resulting generalization performance of the policy. a) PMTG: We replace the locomotion component of the visual-locomotion policy with a reactive policy that does not have a trajectory generator. Our PMTG-parameterized visual-locomotion policy performs 28%-218% better than a pure reactive locomotion component. We find that PMTG produces smoother actions and leads to improved zero-shot generalization to new terrains. b) Exteroceptive input: We remove the LiDAR input from the visual-locomotion policy. Observing Table III , it is clear that the exteroceptive information plays a critical role in learning generalizable locomotion policies that can adapt to a wide variety of terrains. This finding agrees with results from the field of experimental psychology, which establish the importance of exteroceptive observations in guiding foot placement when navigating over complex terrains [25] , [24] . Figure 5 visualizes the trajectory produced by our visual locomotion policy in a terrain with obstacles. When walking over flat terrain, the robot's foot height is constant and cyclic, only varying when turning to avoid obstacles. In contrast, on rugged terrain (Figure 6 ), the robot carefully places its feet to adapt to the geometry of the terrain to maintain balance. This careful foot placement is essential for challenging terrains and requires a visual feedback loop, which our learning system can provide. c) MTRL training scheme: Our system generates a new random locomotion task at each episode for all the distributed workers. This ensures a steady stream of rich training data to the agent. In this study, we lower the variety of tasks supplied in a single training step by proving tasks sequentially. That is, the agent learns one task for a fixed number of training steps before switching the task. The policy trained in a sequential fashion performs poorly due to catastrophic forgetting [31] .",
+            "cite_spans": [
+                {
+                    "start": 1032,
+                    "end": 1036,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1039,
+                    "end": 1043,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 2049,
+                    "end": 2053,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 102,
+                    "end": 111,
+                    "text": "Table III",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 658,
+                    "end": 667,
+                    "text": "Table III",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 1046,
+                    "end": 1054,
+                    "text": "Figure 5",
+                    "ref_id": "FIGREF5"
+                },
+                {
+                    "start": 1308,
+                    "end": 1317,
+                    "text": "(Figure 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "C. Ablation Studies"
+        },
+        {
+            "text": "These ablation studies confirm the importance of each component of our system, including the exteroceptive input and PMTG used in the visual-locomotion policy architecture, as well as our multi-task POMDP training formulation. By Fig. 6 . Visualization of trajectory generated by our method in a rugged terrain. Foot Z positions for the left hind, right hind, left forward, and right forward feet are shown. The rugged terrain requires that the robot carefully place its feet to maintain balance. combining these components, our system can learn locomotion policies that work on various terrains and demonstrate zero-shot generalization to new environments.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 230,
+                    "end": 236,
+                    "text": "Fig. 6",
+                    "ref_id": null
+                }
+            ],
+            "section": "C. Ablation Studies"
+        },
+        {
+            "text": "We introduce a learning system that enables legged robots to traverse various environments and demonstrates zero-shot generalization to new terrains. Our system consists of a novel multi-task reinforcement learning formulation of the locomotion problem, a visual locomotion policy architecture that encourages smooth actions and incorporates perception to modulate locomotion, and a novel procedural terrain generation algorithm that provides the agent with rich training data from a variety of simulated terrains. Our results on a suite of simulated environments show that treating legged locomotion as a multi-task POMDP leads to increased generalization performance. Additionally, we show that providing the policy with a strong prior over the space of gaits further enhances its ability to generalize to unseen terrains. In future work, we plan to evaluate our work on a real-world robot.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "V. CONCLUSION"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Real-time motion planning in unknown environments for legged robotic planetary exploration",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Albee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Hernandez",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Jia-Richards",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Espinoza",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "2020 IEEE Aerospace Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Advances in real-world applications for legged robots",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Bellicoso",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Bjelonic",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wellhausen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Holtmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "G\u00fcnther",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Tranzatto",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Fankhauser",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Field Robotics",
+            "volume": "35",
+            "issn": "8",
+            "pages": "1311--1326",
+            "other_ids": {
+                "DOI": [
+                    "https:/onlinelibrary.wiley.com/doi/abs/10.1002/rob.21839"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Policies modulating trajectory generators",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Iscen",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Caluwaerts",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Coumans",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Sindhwani",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vanhoucke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Journal of Machine Learning Research, ser. Proceedings of Machine Learning",
+            "volume": "87",
+            "issn": "",
+            "pages": "916--926",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Pybullet, a python module for physics simulation for games, robotics and machine learning",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Coumans",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "2016--2019",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Gibson env: real-world perception for embodied agents",
+            "authors": [
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Zamir",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z.-Y",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sax",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Malik",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Savarese",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Computer Vision and Pattern Recognition (CVPR)",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Gait and trajectory optimization for legged systems through phase-based endeffector parameterization",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Winkler",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Bellicoso",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Buchli",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Robotics and Automation Letters",
+            "volume": "3",
+            "issn": "3",
+            "pages": "1560--1567",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Stabilizing series-elastic point-foot bipeds using whole-body operational space control",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Fernandez",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Sentis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "IEEE Transactions on Robotics",
+            "volume": "32",
+            "issn": "6",
+            "pages": "1362--1379",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Feedback mpc for torque-controlled legged robots",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Grandia",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Farshidian",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Ranftl",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Mit cheetah 3: Design and control of a robust, dynamic quadruped robot",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bledt",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Powell",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Katz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Carlo",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wensing",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Reinforcement learning: An introduction",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Sutton",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Barto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Sim-to-real: Learning agile locomotion for quadruped robots",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Coumans",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Iscen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bai",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Hafner",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bohez",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vanhoucke",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Learning to walk via deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Haarnoja",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ha",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Tucker",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Robotics: Science and Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Learning agile and dynamic motor skills for legged robots",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hwangbo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dosovitskiy",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Bellicoso",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Tsounis",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Koltun",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Science Robotics",
+            "volume": "4",
+            "issn": "26",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Learning quadrupedal locomotion over challenging terrain",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hwangbo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Wellhausen",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Koltun",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Science Robotics",
+            "volume": "5",
+            "issn": "47",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Learning to walk in the real world with minimal human effort",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ha",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Emergence of locomotion behaviours in rich environments",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Heess",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Tb",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Sriram",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lemmon",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Merel",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Wayne",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Tassa",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Erez",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M A"
+                    ],
+                    "last": "Eslami",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Riedmiller",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Silver",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Deeploco: Dynamic locomotion skills using hierarchical deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Berseth",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Van De Panne",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proc. SIGGRAPH 2017)",
+            "volume": "36",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Deepgait: Planning and control of quadrupedal gaits using deep reinforcement learning",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Tsounis",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Alge",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Farshidian",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hutter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Learning by cheating",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Koltun",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Kr\u00e4henb\u00fchl",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Multitask learning: A knowledge-based source of inductive bias",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Caruana",
+                    "suffix": ""
+                }
+            ],
+            "year": 1993,
+            "venue": "Proceedings of the Tenth International Conference on International Conference on Machine Learning, ser. ICML'93",
+            "volume": "",
+            "issn": "",
+            "pages": "41--48",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Multi-task deep reinforcement learning with popart",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Hessel",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Soyer",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Espeholt",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Czarnecki",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Schmitt",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Van Hasselt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Meta-world: A benchmark and evaluation for multi-task and meta reinforcement learning",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Quillen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Julian",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hausman",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Finn",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Multi-task reinforcement learning without interference",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Jumar",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Gupta",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hausmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Finn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Gaze and the control of foot placement when walking in natural terrain",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Matthis",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Yates",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Hayhoe",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Current Biology",
+            "volume": "28",
+            "issn": "8",
+            "pages": "1224--1233",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Visual control of foot placement when walking over complex terrain",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Matthis",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Fajen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "J Exp Psychol Hum Percept Perform",
+            "volume": "40",
+            "issn": "1",
+            "pages": "106--115",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Laikago: Let's challenge new possibilities",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Unitree",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Proximal policy optimization algorithms",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schulman",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Wolski",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Dhariwal",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Radford",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Klimov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "TF-Agents: A library for reinforcement learning in tensorflow",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Guadarrama",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Korattikara",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Ramirez",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Castro",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Holly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Fishman",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Gonina",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Kokiopoulou",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Sbaiz",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Bart\u00f3k",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Berent",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Harris",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Vanhoucke",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Brevdo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "What matters in on-policy reinforcement learning? a large-scale empirical study",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Andrychowicz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Raichuk",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sta\u0144czyk",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Orsini",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Girgin",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Marinier",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Hussenot",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Geist",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Pietquin",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Michalski",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Gelly",
+                    "suffix": ""
+                },
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Bachem",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Highdimensional continuous control using generalized advantage estimation",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schulman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Moritz",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Levine",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jordan",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Abbeel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Catastrophic interference in connectionist networks: The sequential learning problem",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Mccloskey",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Cohen",
+                    "suffix": ""
+                }
+            ],
+            "year": 1989,
+            "venue": "Psychology of Learning and Motivation -Advances in Research and Theory",
+            "volume": "24",
+            "issn": "C",
+            "pages": "109--165",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "A Laikago robot navigating a variety of complex terrains not encountered during training.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Set column lengths to l H(i + 1, :) = H(i, :) + h",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Overview of the visual-locomotion policy architecture.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "A Laikago robot deployed in various procedurally generated training environments. The red sphere represents goal g and success radius rg.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Snapshot of a laikago robot navigating through mountainous terrain not encountered during training. Please refer to the supplementary video for more examples of the agent navigating challenging terrains. learned with our system can be successfully deployed in new unseen environments.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Visualization of trajectory generated by our method in an environment with many obstacles. Foot Z positions for the left hind, right hind, left forward, and right forward feet are shown.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "TERRAIN PARAMETERIZATION AND GENERATION FOR SELECTEDEXAMPLES.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "PERFORMANCE OF OUR VISUAL-LOCOMOTION POLICY.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "OF OUR PROPOSED METHOD TO OTHER POLICIES DEPLOYED IN A MTRL TRAINING REGIME. THE PERFORMANCE DECREASES WHEN THE POLICY DOES NOT USE A PMTG PARAMETERIZATION, WHEN THE POLICY IS NOT PROVIDED EXTEROCEPTIVE INPUTS FROM THE LIDAR, AND WHEN MULTI-TASK TRAINING IS PERFORMED IN A SEQUENTIAL MANNER.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

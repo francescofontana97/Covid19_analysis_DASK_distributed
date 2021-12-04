@@ -1,0 +1,942 @@
+{
+    "paper_id": "3e9dbf92133c74c0c896b5122c619990f1bb3bbd",
+    "metadata": {
+        "title": "A curated collection of COVID-19 online datasets",
+        "authors": [
+            {
+                "first": "Isa",
+                "middle": [],
+                "last": "Inuwa-Dutse",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Ioannis Korkontzelos I.Inuwa-Dutse@herts",
+                    "location": {}
+                },
+                "email": ".ac.ukyannis.korkontzelos@edgehill.ac.uk"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "One of the defining moments of the year 2020 is the outbreak of Coronavirus Disease (Covid-19), a deadly virus affecting the body's respiratory system to the point of needing a breathing aid via ventilators. As of June 21, 2020 there are 12,929,306 confirmed cases and 569,738 confirmed deaths across 216 countries, areas or territories. The scale of spread and impact of the pandemic left many nations grappling with preventive and curative approaches. The infamous lockdown measure introduced to mitigate the virus spread has altered many aspects of our social routines in which demand for online-based services skyrocketed. As the virus propagate, so does misinformation and fake news around it via online social media, which seems to favour virality over veracity. With a majority of the populace confined to their homes for a long period, vulnerability to the toxic impact of online misinformation is high. A case in point is the various myths and disinformation associated with the Covid-19, which, if left unchecked, could lead to a catastrophic outcome and hamper the fight against the virus.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "While the scientific community is actively engaged in identifying the virus treatment, there is a growing interest in combating the associated harmful infodemic. To this end, researchers have been curating and documenting various datasets about Covid-19. In line with existing studies, we provide an expansive collection of curated datasets to support the fight against the pandemic, especially concerning misinformation. The collection consists of 3 categories of Twitter data, information about standard practices from credible sources and a chronicle of global situation reports. We describe how to retrieve the hydrated version of the data and proffer some research problems that could be addressed using the data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Since the beginning of 2020, the dominant issue for the public is the coronavirus disease (COVID-19) 1 , which is caused by a new strain of zoonotic 2 coronavirus (SARS-CoV-2), that was first reported by the World Health Organisation (WHO) on December 31, 2019, in Wuhan, China. The latest update from the WHO at the time of writing this paper reported 12,929,306 confirmed cases and 569,738 confirmed deaths across 216 countries, areas or territories 3 . As cases for the Covid-19 increase, so does the associated infodemic. It can be argued that the need for online-based services has never been in higher demand as being witnessed in the Covid-19induced lockdown era. In this technology-driven society, online social networks support various forms of interactions that play a crucial role in enabling global connectivity. Because various aspects of our social lives have been affected during the pandemic with substantial reliance on online-based services, people are more vulnerable to misleading online information. While various credible bodies strive to contain the outbreak with sound and cautious approaches, various misinformation and fake news sources exist, playing a role in misleading the public. The proliferation of misinformation and uncensored posts on social media platforms 4 are being supported by a communication system that is focused on generating a huge amount of data (virality) at the expenses of vitality. Despite the efforts to curtail the spread of unsubstantiated claims, such as Twitter's new feature of flagging posts, it is still difficult to ascertain the veracity of the information we consume. As a result, there is huge interest at various levels to combat the pandemic.",
+            "cite_spans": [
+                {
+                    "start": 452,
+                    "end": 453,
+                    "text": "3",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "While the scientific community is actively engaged in identifying a lasting cure for the virus causing Covid-19, i.e. SARS-Cov-2, there is a growing interest of the computer science research community in addressing the negative impact of the corresponding infodemic. This opens up another frontier of challenge in the fight against the virus in the form of misinformation, fake news and unfounded claims. To this end, researchers have been curating and documenting various datasets about Covid-19. We observe that there is limited availability of curated ground-truth data that could be used to debunk myths and misinformation around the pandemic. Moreover, the existing tweet-based corpora, discussed in Section 1.1, need to comprise of various relevant stakeholders. This paper aims at addressing this gap by making available various datasets about Covid-19. The data collection 5 consists of 3 categories of Twitter data, information about standard practices from credible sources and a chronicle of global situation reports from WHO. The central goal of making these datasets available is to enable the study of how the spread of misinformation and rumours could be mitigated. We describe how to retrieve the hydrated version of the data and proffer some research problems that could be addressed using the data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Within a short span of the outbreak, we have witnessed a plethora of Covid-19-related studies covering various aspects of the pandemic. We provide a cursory discussion on relevant studies and published datasets from online social networks. The interested reader may refer to [1] , which offers a review of related studies and a comprehensive list of relevant datasets across various domains. The earliest data in social networks about the virus can be traced back to January 22, 2020 by [2] . The dataset consists of tweets collected using some specific hashtags and credible accounts. The work of [3] reported a collection of image-based data about Covid-19 from Instagram. To understand the digital response in online social media, infodemics observatory [4] documents a large collection of public messages 6 related to Covid-19. The data have been classified and categorised accordingly with informative visualisations about the scale of the pandemic. The work of [5] provides a large collection of Covid-19 datasets in Arabic and details about Covid-19 related articles across Wikipedia projects are being documented online 7 . Recently, Twitter made available a dedicated Application Programming Interface (API) that can be used to retrieve tweets related to Covid-19 [6] .",
+            "cite_spans": [
+                {
+                    "start": 275,
+                    "end": 278,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 487,
+                    "end": 490,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 598,
+                    "end": 601,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 757,
+                    "end": 760,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 967,
+                    "end": 970,
+                    "text": "[5]",
+                    "ref_id": null
+                },
+                {
+                    "start": 1273,
+                    "end": 1276,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "The remaining of this paper is structured as follows: Section 2 presents a detailed description of the data collection and processing. Section 3 offers longitudinal and exploratory analyses of the data and proffer some research problems worthy of investigation using the datasets. Section 4 concludes the study and discusses some future work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Related Work"
+        },
+        {
+            "text": "One of the main goals of this study is to contribute diverse datasets to support research on Covid-19 and related pandemics. Thus, the onus is on identifying relevant stakeholders as the basis for the collection. Our datasets can be divided into two broad classes according to their sources: the tweet-based collection, consisting of three categories of selected tweets, and the non-tweet collection, comprising of information about standard practices from credible sources and a chronicle of global situation reports. Regarding the first category, we collected Twitter data from both monitored and unmonitored accounts using relevant terms within a period of 5 weeks: March 23 to May 13, 2020. Some of the data collection terms are captured in the following regular expressions to pull out tweets of interest. For instance, retrieving tweets matching all possible variations of referring to covid-19 using: ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Curated Datasets"
+        },
+        {
+            "text": "The tweet-based collection contains tweet objects retrieved from Twitter via the Twitter Standard Search API based on a set of relevant keywords, as shown in Table 1 . A tweet object is a complex data object composed of numerous descriptive fields, which enables the extraction of various features for further analysis. Based on the method that was used for collection, the tweet-based data consist of the following data categories:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 158,
+                    "end": 165,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Tweet-based collection"
+        },
+        {
+            "text": "Account-based collection. Users on Twitter are broadly classified as verified or unverified. To prevent fake users masquerading celebrities or other popular individuals, Twitter performs a verification to authenticate users before appending the verified label to the account handle. We monitored several accounts for a period of five weeks and retrieved tweets related to the pandemic. More details about the accounts that were monitored are shown in Table 1 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 451,
+                    "end": 458,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Tweet-based collection"
+        },
+        {
+            "text": "Random collection. This set consists of a generic collection of daily tweets spanning numerous topics related to the pandemic collected via Twitter's Streaming API. The rationale is to capture a wide discussion topics surrounding the prevailing pandemic. Owing to the huge amount of the retrieved tweets and noting how a hashtag represents an umbrella covering many tweets related to a topic, we retain only original posts associated with a relevant hashtag and we exclude retweets in the collection. A tweet associated with a hashtag stands a better chance of attracting much attention. This hashtag-based collection of tweets may also contain tweets in languages other than English, which have at least 100 tweets related to the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Tweet-based collection"
+        },
+        {
+            "text": "Miscellaneous collection. Noting the misinformation and myths surrounding the pandemic, we use terms associated with such myths to collect the data, as shown in Table 1 . This category is motivated by the growing scepticism surrounding Covid-19. We manually identify users who openly dismisses Covid-19 related information put forward by credible sources such as the WHO. On that basis, each data is categorised to reflect the inclination of the user based on the content and its associated sentiment. We annotate the datasets by computing the sentiment of the users associated with the posts. The data from WHO, dubbed proWHO, and the antiWHO, dismissing WHO's guidelines on combating Covid-19 pandemic, are the two broad sub-categories under the miscellaneous collection that can be used for various studies. Such studies could involve community detection and a critical analysis of users perceptions about measures taken in curtailing the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 161,
+                    "end": 168,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Tweet-based collection"
+        },
+        {
+            "text": "There is no gainsay that well-documented information about Covid-19 has been and is still made publicly available. Such endeavour is work in progress as new insights are being found. Consequently, we report a curated collection of datasets from credible sources concerned with combating the pandemic. We focus on the following sources: the World Health Organisation (WHO), UK's National Health Service (NHS-UK), the Nigeria Centre for Disease Control (NCDC-NG), and USA's Centre for Disease Control and Prevention (CDC-USA). The collection aims to provide informative material for a robust factual analysis and broad scope comparison. Through a combination of manual processing and web scrapping 8 , we obtain useful data from applicable websites. The rationale of using these datasets is to expand the analysis scope and enable researchers to find responses to a wide range of questions related to Covid-19. While all the sources have similar content, the data from the WHO consist of both standard practices 9 and a chronicle of global situation reports.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Non-tweet collection"
+        },
+        {
+            "text": "The seed users in Table 1 were used to further identify users who share common interest or opinion with the seed users. A survey of the accounts of the seed users depicts an open dismissal of WHO's guidance on combating the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 18,
+                    "end": 25,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Non-tweet collection"
+        },
+        {
+            "text": "Getting the hydrated tweets. The full version of the tweet-based collections cannot be made available due to Twitters policy on content redistribution 10 . Instead of the full tweets, we provide the relevant IDs, that can be used to retrieve the data, and some meta-information about each tweet 11 . Moreover, we include a short Jupyter notebook with a description of how to retrieve the hydrated data and how it can be transformed onto a usable format. Alternatively, interested users may use the hydrator package [7] .",
+            "cite_spans": [
+                {
+                    "start": 151,
+                    "end": 153,
+                    "text": "10",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 295,
+                    "end": 297,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 515,
+                    "end": 518,
+                    "text": "[7]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Non-tweet collection"
+        },
+        {
+            "text": "This section presents some longitudinal and exploratory analyses of the data including a pointer to relevant research problems worthy of investigation using the datasets.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Meta-analysis"
+        },
+        {
+            "text": "Data pre-processing. Due to the multifaceted nature of the datasets, we use the following approach to transform them so that they all conform to a unified format for redistribution. The tweet-based collections are messy and difficult to use directly [8] , hence the need for data cleaning. We carried out a rudimentary cleaning process involving tokenisation, stopwords removal and text formatting. To separate content words from function words and improve analysis, we normalise each contracted term to its expanded version. Finally, lemmatisation, the process of converting the inflected form of words back to their base forms, is performed on the normalised content words. 8 using the BeautifulSoup package, available at www.crummy.com/software/BeautifulSoup 9 This ranges from debunking myths to protective measures. 10 see https://developer.twitter.com/en/developer-terms/agreement-and-policy 11 The data presented in this paper are available at https://github.com/ijdutse/covid19-datasets 4 we query the following accounts as the seed users: @PlanB1975, @simondolan, @LonsdaleKeith, @angiebUK, @HotelLubyanka, @jcho710 Collection 4 Non-tweet-based collection Data Source WHO, NHS-UK, NCDC-NGN, and CDC-US Popular accounts and hashtags. Figure 1 shows a timeline of popular tweets over time during the collection period. The y-axis denotes the frequency of tweets and the x-axis denotes the popular hashtags and the corresponding dates in the title. While some of the hashtags are expected, many derogatory ones stand out in the miscellaneous collection, as shown in Figure 3 . With Figure 1 showing the popularity of the sources or hashtags, many questions can be answered. For instance, how does the online popularity corroborate with offline relevance? For the tweets posted by the monitored accounts, in the account-based collection, we determine its online pres- Ranking Hashtags. Because of the prevalence of many related hashtags in the collection, as demonstrated in Figure 1 and Figure 2 , we retain only the most frequent ones in the posts to enable a complete textual analysis. As a result, each tweet is merged with its corresponding hashtag text and a form of synonym resolution is performed on the hashtags. For instance #covid-19 and #CoronaVirus would be similar after the resolution. We apply Latent Semantic Analysis (LSA) [9, 10] , a popular topic modelling method, to analyse further the full context of tweets in the corpus and hashtags ranking. Topic models such as the LSA and Latent Dirichlet Allocation (LDA) [11] are widely used in various tasks involving texts [12, 13, 14] . The set of original hashtags are compared with the output of the ranked hashtag computed by the LSA and are replaced accordingly. For instance, since the LSA produces a ranked subset of the most relevant hashtags from the original set, we make a comparison and replace the set of hashtag with a single highly ranked hashtag as the best representative of the set. For those without exact representation, the first hashtag in the list is used. Figures 1, 2 and 3 show some relevant hashtags in the tweetbased collection.",
+            "cite_spans": [
+                {
+                    "start": 250,
+                    "end": 253,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 676,
+                    "end": 677,
+                    "text": "8",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 898,
+                    "end": 900,
+                    "text": "11",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 2346,
+                    "end": 2349,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 2350,
+                    "end": 2353,
+                    "text": "10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 2539,
+                    "end": 2543,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 2593,
+                    "end": 2597,
+                    "text": "[12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 2598,
+                    "end": 2601,
+                    "text": "13,",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 2602,
+                    "end": 2605,
+                    "text": "14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1242,
+                    "end": 1250,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1572,
+                    "end": 1580,
+                    "text": "Figure 3",
+                    "ref_id": null
+                },
+                {
+                    "start": 1588,
+                    "end": 1596,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1980,
+                    "end": 1988,
+                    "text": "Figure 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 1993,
+                    "end": 2001,
+                    "text": "Figure 2",
+                    "ref_id": null
+                },
+                {
+                    "start": 3050,
+                    "end": 3068,
+                    "text": "Figures 1, 2 and 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "Meta-analysis"
+        },
+        {
+            "text": "Relevant Themes and Sentiments. To identify relevant themes, we begin by aggregating a finite collection of textual content, T , from each tweet-based collection to discover relevant themes 12 We extract sentiment using the VADER package, available at https://pypi.org/project/vaderSentiment. and to analyse lexically and for sentiment. For any given stream of texts t 1 , ....t n \u2208 T , each t i \u2208 T consists of n-gram features 13 given by: f i1 , ..., f im \u2208 t i \u2208 T . Accordingly, we provide a summary of the relevant themes or topics and the corresponding sentiment in Figures 5 to 7 . Due to the high frequency of terms related to the pandemic, e.g., covid-19 and coronavirus, we remove such variations to avoid the extinction of other relevant terms in the data. Alongside the themes, we present the sentiment associated with the posts, reporting on different levels of polaritynegative, neutral, positive and overall sentiment. Negative topics often relate to reports about fatalities and confirmed cases. The positive collection contains many instances about reported cases from different regions, as shown in the word clouds 14 , in Figures 5 to 7) .",
+            "cite_spans": [
+                {
+                    "start": 190,
+                    "end": 192,
+                    "text": "12",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 428,
+                    "end": 430,
+                    "text": "13",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 572,
+                    "end": 586,
+                    "text": "Figures 5 to 7",
+                    "ref_id": "FIGREF3"
+                },
+                {
+                    "start": 1141,
+                    "end": 1156,
+                    "text": "Figures 5 to 7)",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Meta-analysis"
+        },
+        {
+            "text": "Lexical Richness. With respect to the tweet-based collections, we analyse lexical richness to understand the diversity of lexicons used across them. Our intuition is that content irrelevant to Covid-19 will have be richer lexically, because the narration and conspiracies surrounding the pandemic keep changing, hence employing diverse wording in the discourse. On the other hand, content from recognised sources, such as the WHO, would remain relatively consistent and slow 13 n is any positive integer, e.g. 1, 2 and 3 for unigrams, bigrams and trigrams, respectively. 14 Word cloud visualisation is based on: https://github.com/amueller/word_cloud to change due to the formal process and other health-related protocols or standard practices that apply before posting. Moreover, lexical richness can be viewed as a measure of consistency in the narration about the pandemic. A longitudinal analysis of the richness of content may provide a glimpse of what is happening. Figure 4 shows both sentiment intensity, in the first three subplots, and lexical richness, in the last sub-plot, across the tweet-based collections. Indeed, the observed result confirmed our intuition, showing low richness in the account-based collection, which contains tweets that mostly come from credible sources (see Table 1 ). Figures 5, 6 and 7 show some examples from the topic analysis in form of the most relevant terms in the collections.",
+            "cite_spans": [
+                {
+                    "start": 475,
+                    "end": 477,
+                    "text": "13",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1306,
+                    "end": 1316,
+                    "text": "Figures 5,",
+                    "ref_id": null
+                },
+                {
+                    "start": 1317,
+                    "end": 1324,
+                    "text": "6 and 7",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 972,
+                    "end": 980,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1295,
+                    "end": 1302,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Meta-analysis"
+        },
+        {
+            "text": "In this section, we identify relevant areas and research problems that could be studied using the datasets. The increasing number of uncensored posts, partly due their short size and the speed of communication via posts on virtually anything, facilitates the proliferation of content that affects the credibility of information on social media. Despite the measures taken by social media platforms to curtail irrelevant content, many sources of misleading information and rumours still exist. Concerning the Covid-19 pandemic, there exist various misinformation and conspiracy sources capable of misleading the public. We identify the following relevant areas and high-level research problems that could be investigated using the datasets presented in this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "content classification: to distinguish genuine content in an ecosystem cluttered with spurious content content validation: the focus is to ascertain the veracity of a tweet or document using a large collection of ground-truth data from credible sources.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "tone of misinformation: of interest is to analyse the tone of misinformation in comparison to the genuine counterparts -emotional, negative, neutral, positive.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "misinformation diffusion: to understand the propagation of news, virus infection, rumour, fake news and unfounded claims. It would be worthwhile to study the propagation of information related to the pandemic and study how to optimise methods to ensure that relevant content dominates and irrelevant content is suppressed.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "thematic analysis: the use of a streaming API returns a huge collection of somewhat irrelevant data. It would be useful to streamline the work to focus on a fixed number of tweets from each account and then perform textual analysis to understand the topics being discussed. It is worth noting that a single tweet is usually limited in conveying sufficient information about a topic, making it difficult to fully understand the discussion context. Future work could be extended to understand the specific topics being discussed and compare the degrees of similarity among documents. 8",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "evaluation of lockdown policy: It would be interesting to assess or gauge users' acceptance of lockdown measures. This would enable the quantification of various lockdown policy measures. For instance, each lockdown measure ca be associated to the sentiment of users. Furthermore, it would make sense to track sentiment over time and see how attitude changes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "community detection: the miscellaneous collection consists of two broad categories of users annotated as proWHO and antiWHO based on their inclinations towards the pandemic. Because this is a high-level categorisation, we postulate that many overlapping communities may exist. For instance, the proWHO group may consists of users who dismisses the content posted by the group. This is also true in the antiWHO group. The dataset can be used for various studies such as community detection and an indepth analysis of users' perceptions about the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Utility of the datasets"
+        },
+        {
+            "text": "The prevailing technological advancements culminated in the computerisation and automation of various tasks, which leads to a complex ecosystem of information exchange mostly via social media platforms. The architecture of social media networks simplifies the spread of information to a wide audience making it a useful facility for instant information update and socialisation; this also results in an increasing number of uncensored posts on virtually anything. The prevailing Covid-19 pandemic in the age of social media has reveal to us that as the virus propagate, so is false or misleading information about it leading to infodemic. A case in point is the various myths associated with the Covid-19, which often left the public bewildered concerning what preventive measures to take and which information to believe. Misinformation about Covid-19 can be considered along the dimensions of the origin of the virus, the symptoms, preventive measures and cure. The latter is probably the most crucial since an ill-formed medical advice will be catastrophic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "Because misleading information can have catastrophic consequences and hampers the fight about applying containment measures, it is pertinent to combat the pandemic from all possible fronts. Consequently, our work contributed a curated collection of relevant datasets to support multi-faceted research works interested in the Covid-19 infodemic and related tasks. We provide a basic but useful analyses of the datasets and proffer direction/relevant areas to study using them. The datasets from various credible sources can be used as benchmark to assess the veracity of information related to the pandemic. The data will further enrich existing databases for debunking misinformation and fact-checking avenues, such as the International Fact-Checking Network 15 and AFP 16 . The datasets can help in understanding how to optimise or ensure that relevant content dominates and irrelevant content is suppressed, especially during critical times of the pandemic.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Leveraging data science to combat covid-19: A comprehensive review",
+            "authors": [
+                {
+                    "first": "Siddique",
+                    "middle": [],
+                    "last": "Latif",
+                    "suffix": ""
+                },
+                {
+                    "first": "Muhammad",
+                    "middle": [],
+                    "last": "Usman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sanaullah",
+                    "middle": [],
+                    "last": "Manzoor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Waleed",
+                    "middle": [],
+                    "last": "Iqbal",
+                    "suffix": ""
+                },
+                {
+                    "first": "Junaid",
+                    "middle": [],
+                    "last": "Qadir",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gareth",
+                    "middle": [],
+                    "last": "Tyson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ignacio",
+                    "middle": [],
+                    "last": "Castro",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adeel",
+                    "middle": [],
+                    "last": "Razi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Maged N Kamel",
+                    "middle": [],
+                    "last": "Boulos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Adrian",
+                    "middle": [],
+                    "last": "Weller",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Covid-19",
+            "authors": [
+                {
+                    "first": "Emily",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kristina",
+                    "middle": [],
+                    "last": "Lerman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Emilio",
+                    "middle": [],
+                    "last": "Ferrara",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The first public coronavirus twitter dataset",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2003.07372"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "A first instagram dataset on covid-19",
+            "authors": [
+                {
+                    "first": "Koosha",
+                    "middle": [],
+                    "last": "Zarei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Reza",
+                    "middle": [],
+                    "last": "Farahbakhsh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Noel",
+                    "middle": [],
+                    "last": "Crespi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gareth",
+                    "middle": [],
+                    "last": "Tyson",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2004.12226"
+                ]
+            }
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Covid19 infodemics observatory. DOI: 10. 17605/ OSF. IO/ N6UPX",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Gallotti",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Castaldo",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Valle",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sacco",
+                    "suffix": ""
+                },
+                {
+                    "first": "De",
+                    "middle": [],
+                    "last": "Domenico",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "file:/localhost/opt/grobid/grobid-home/tmp/10.17605/OSF.IO/N6UPX"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Covid-19 stream",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Twitter",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Detection of spam-posting accounts on twitter",
+            "authors": [
+                {
+                    "first": "Isa",
+                    "middle": [],
+                    "last": "Inuwa-Dutse",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Liptrott",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ioannis",
+                    "middle": [],
+                    "last": "Korkontzelos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Neurocomputing",
+            "volume": "315",
+            "issn": "",
+            "pages": "496--511",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Latent semantic analysis",
+            "authors": [
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Wiemer-Hastings",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wiemer-Hastings",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Graesser",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Proceedings of the 16th international joint conference on Artificial intelligence",
+            "volume": "",
+            "issn": "",
+            "pages": "1--14",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Finding structure with randomness: Probabilistic algorithms for constructing approximate matrix decompositions",
+            "authors": [
+                {
+                    "first": "Nathan",
+                    "middle": [],
+                    "last": "Halko",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joel",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Per-Gunnar Martinsson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tropp",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "SIAM review",
+            "volume": "53",
+            "issn": "2",
+            "pages": "217--288",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Latent dirichlet allocation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Blei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Andrew",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael I Jordan",
+                    "middle": [],
+                    "last": "Ng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Journal of machine Learning research",
+            "volume": "3",
+            "issn": "",
+            "pages": "993--1022",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Mixed membership stochastic blockmodels",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Edoardo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Airoldi",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stephen",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Blei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eric",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Fienberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Journal of machine learning research",
+            "volume": "9",
+            "issn": "",
+            "pages": "1981--2014",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "A biterm topic model for short texts",
+            "authors": [
+                {
+                    "first": "Xiaohui",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiafeng",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yanyan",
+                    "middle": [],
+                    "last": "Lan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xueqi",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceedings of the 22nd international conference on World Wide Web",
+            "volume": "",
+            "issn": "",
+            "pages": "1445--1456",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "A biterm-based dirichlet process topic model for short texts",
+            "authors": [
+                {
+                    "first": "Pan",
+                    "middle": [],
+                    "last": "Yali",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yin",
+                    "middle": [],
+                    "last": "Jian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Liu",
+                    "middle": [],
+                    "last": "Shaopeng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li",
+                    "middle": [],
+                    "last": "Jing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "3rd International Conference on Computer Science and Service System",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "(r'[Cc]ovid(?<=)\\w+|[cC]orona[vV]irus|pandemic')",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Most of the common hashtags in the account-based collection relate to sensitisation and provision of genuine information about preventing the virus spread. Common hashtags in the random collection ence by analysing the proportion of retweets, favourite counts, statuses count follower/followee and sentiment 12 associated with the texts.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Common hashtags in the miscellaneous collection Sentiment and lexical richness across tweet-based collections",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Sample texts in the account-based collection.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Sample texts in the miscellaneous set.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Sample negative terms across all collections. The visualisation is based on the learned topics using the LSA.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Summary of data collection sources and corresponding description",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The second author has participated in this research work as part of the TYPHON Project, which has received funding from the European Unions Horizon 2020 Research ",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgements"
+        }
+    ]
+}

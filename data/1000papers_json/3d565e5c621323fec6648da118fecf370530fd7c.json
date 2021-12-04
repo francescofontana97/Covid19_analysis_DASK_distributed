@@ -1,0 +1,2571 @@
+{
+    "paper_id": "3d565e5c621323fec6648da118fecf370530fd7c",
+    "metadata": {
+        "title": "RKT : Relation-Aware Self-Attention for Knowledge Tracing",
+        "authors": [
+            {
+                "first": "Shalini",
+                "middle": [],
+                "last": "Pandey",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Minnesota Twin Cities",
+                    "location": {
+                        "region": "Minnesota",
+                        "country": "USA"
+                    }
+                },
+                "email": "pande103@umn.edu"
+            },
+            {
+                "first": "Jaideep",
+                "middle": [],
+                "last": "Srivastava",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "University of Minnesota Twin Cities",
+                    "location": {
+                        "region": "Minnesota",
+                        "country": "USA"
+                    }
+                },
+                "email": "srivasta@umn.edu"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "The world has transitioned into a new phase of online learning in response to the recent Covid19 pandemic. Now more than ever, it has become paramount to push the limits of online learning in every manner to keep flourishing the education system. One crucial component of online learning is Knowledge Tracing (KT). The aim of KT is to model student's knowledge level based on their answers to a sequence of exercises referred as interactions. Students acquire their skills while solving exercises and each such interaction has a distinct impact on student ability to solve a future exercise. This impact is characterized by 1) the relation between exercises involved in the interactions and 2) student forget behavior. Traditional studies on knowledge tracing do not explicitly model both the components jointly to estimate the impact of these interactions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        },
+        {
+            "text": "In this paper, we propose a novel Relation-aware self-attention model for Knowledge Tracing (RKT). We introduce a relation-aware self-attention layer that incorporates the contextual information. This contextual information integrates both the exercise relation information through their textual content as well as student performance data and the forget behavior information through modeling an exponentially decaying kernel function. Extensive experiments on three real-world datasets, among which two new collections are released to the public, show that our model outperforms state-ofthe-art knowledge tracing methods. Furthermore, the interpretable attention weights help visualize the relation between interactions and temporal patterns in the human learning process.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "Real-world education service systems, such as massive open online courses (MOOCs) and online platforms for intelligent tutoring Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than ACM must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org. CIKM '20, October 19-23, 2020 systems on the web offers millions of online courses and exercises which have attracted attention from the public [1, 19] . These online systems allow students to learn and do their exercises independently, and at their own pace [11] . However, such a system requires a mechanism to help students realize their strengths and weaknesses so that they can practice accordingly. In addition to helping students, the mechanism can aid the teachers and system creators to proactively suggest remedial material and recommend exercises based on student needs [18] . For developing such a mechanism, knowledge tracing (KT) is considered to be crucial and is defined as the task of modeling students' knowledge state over time [11] . It is an inherently difficult problem as it is dependent on the factors such as complexity of the human brain and ability to acquire knowledge [28] . Figure 1 shows an example of a student solving exercises sequentially. When the student encounters a new exercise (e.g. 'e 5 ') she applies her knowledge corresponding to the Knowledge Concept (e.g., Quadratic Equations) to answer it. The mastery of a particular KC is determined by the past interactions which have a distinct impact on the target KC. Besides, the impact is distinct under different circumstances. Typically, two factors account for determining the impact of past interactions in the prediction task: (1) exerciserelation (reflecting the relation between past exercises and the new exercise ), and (2) the time elapsed since the past interactions. Intuitively, if the two exercises in the interactions are related to each other then the performance on one affects the other. Additionally, the knowledge gained while solving an exercise in the interaction decays with time, which is attributed to the forget behavior of students. It is important to use this information to contextualize the KT models.",
+            "cite_spans": [
+                {
+                    "start": 709,
+                    "end": 733,
+                    "text": "'20, October 19-23, 2020",
+                    "ref_id": null
+                },
+                {
+                    "start": 848,
+                    "end": 851,
+                    "text": "[1,",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 852,
+                    "end": 855,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 963,
+                    "end": 967,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1285,
+                    "end": 1289,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1451,
+                    "end": 1455,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1601,
+                    "end": 1605,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1608,
+                    "end": 1616,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "To model the evolution of student knowledge with interaction, Hidden Markov Models were traditionally used in Bayesian Knowledge Tracing (BKT) [11] and its variants [5, 40] . Recently, the progress in sequential modeling using deep learning has inspired Deep Knowledge Tracing (DKT) [28] , Dynamic Key-Value Memory Network (DKVMN) [41] and Self-attentive Knowledge Tracing (SAKT) [24] that are designed to capture long term dependencies between interactions. Models such as [9, 17] have shown the importance of explicitly incorporating the relations between KCs as input to the KT model. In particular, [17] uses Dynamic Bayesian Network to model the pre-requisite relations between KCs while [9] incorporate the same in DKT model. However, they assume that the relation between KCs is known apriori. In fact, manual labeling of relations is labor-intensive work. To automatically estimate the relations between exercises, [20] estimates a mapping between each exercise and corresponding KCs and considers the exercise belonging to the same KC as related. While, [22, 33] leverage the textual content of exercises to model semantic similarity relation between exercises. However, these models do not take into account temporal component which affects the importance of past interactions, owing to the dynamic behavior of the student learning process.",
+            "cite_spans": [
+                {
+                    "start": 143,
+                    "end": 147,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 165,
+                    "end": 168,
+                    "text": "[5,",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 169,
+                    "end": 172,
+                    "text": "40]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 283,
+                    "end": 287,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 331,
+                    "end": 335,
+                    "text": "[41]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 380,
+                    "end": 384,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 474,
+                    "end": 477,
+                    "text": "[9,",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 478,
+                    "end": 481,
+                    "text": "17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 603,
+                    "end": 607,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 693,
+                    "end": 696,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 923,
+                    "end": 927,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1063,
+                    "end": 1067,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1068,
+                    "end": 1071,
+                    "text": "33]",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "The temporal factors in knowledge tracing have been addressed in [23, 27, 29] . These methods mainly focus on the time elapsed since the last interaction with the same KC or previous interaction without modeling the relation between exercises involved in those interactions. However, as discussed, the previous interactions have a distinct impact on prediction task which is attributed to both exercise relation and temporal dynamics of the learning.",
+            "cite_spans": [
+                {
+                    "start": 65,
+                    "end": 69,
+                    "text": "[23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 70,
+                    "end": 73,
+                    "text": "27,",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 74,
+                    "end": 77,
+                    "text": "29]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "In this paper, we propose a novel Relation-aware self-attention model for Knowledge Tracing (RKT) that adapts the self-attention [37] mechanism for KT task. Specifically, we introduce a relationaware self-attention layer that incorporates the contextual information and meanwhile, maintains the simplicity and flexibility of the self-attention mechanism. To this end, we employ a representation to capture the relation information, called relation coefficients. In particular, the relation coefficients are obtained from exercise relation modeling and forget behavior modeling. The former extracts relation between exercises from their textual content and student performance data. While the latter employs a kernel function with a decaying curve with respect to time to model student tendency to forget. Our experiments reveal that our model outperforms stateof-the-art algorithms on three real-world datasets. Additionally, we conduct a comprehensive ablation study of our model show the effect of key components and visualize the attention weights to qualitatively reveal the model\u00e2\u0102\u0179s behavior. The contribution of our paper are:",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 133,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "\u2022 We argue that each interaction in the sequence has an adaptive impact on future interaction, where both the relation between the exercises and the forgetting behavior should be taken together into consideration. \u2022 We develop a method to learn the underlying relations between exercises using the textual content and student performance on the exercises which have not been explored before.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "\u2022 We customize the self-attention model to incorporate the contextual information, thus enabling a fundamental adaptation of the model for KT. \u2022 We perform extensive experiments on three real-world datasets and also illustrate that our model in addition to showing superior performance, provides an explanation for its prediction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Cognitive models refer to the models designed to discover latent mastery of each student on defined knowledge points. Widely-used approaches could be divided into two categories: one-dimensional models and multi-dimensional models. Among these models, Rasch model [30] (also known as 1PL IRT) is a typical one-dimensional model and computes the probability of getting an exercise correct using logistic regression based on student's ability and exercise (item) difficulty. To improve prediction results, other onedimensional models include additive factor models [7, 26] which assumed KCs \"additively\" affect performance. These models include a student's proficiency parameter to account for the variability in student's learning abilities. Comparatively, multi-dimensional models, such as Deterministic Inputs, Noisy-And gate model, characterized students by a binary latent vector which described whether or not she mastered the KCs with the given Q-matrix prior [12] . Similar to cognitive models, RKT also models the affect of past interactions on student performance. However, modeling human knowledge from past interaction is a complex task and we leverage the attention mechanism to capture the complexity involved in dynamics of past interactions for prediction task.",
+            "cite_spans": [
+                {
+                    "start": 264,
+                    "end": 268,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 563,
+                    "end": 566,
+                    "text": "[7,",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 567,
+                    "end": 570,
+                    "text": "26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 965,
+                    "end": 969,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "RELATED WORK 2.1 Cognitive Diagnosis"
+        },
+        {
+            "text": "The KT task evaluates the knowledge state of a student based on her performance data. A Hidden Markov based model, BKT, was proposed in [11] . It models latent knowledge state of a learner as a set of binary variables, each of which represents understanding or non-understanding of a single concept. A Hidden Markov Model (HMM) is used to update the probabilities across each of these binary variables, as a student answers exercises. Further extension of BKT includes, incorporating individual student's prior knowledge [40] , slip and guess probabilities for each concept [5] and the difficulty of each exercise [25] . Some approaches [34, 36] use factorization methods to map each student into a latent vector that depicts her knowledge state. To capture the change of student's knowledge evolution over time, [35] proposed a tensor factorization method by adding time as an additional dimension. Another line of research includes methods based on recurrent neural networks such as Deep Knowledge Tracing (DKT) [28] , which exploits Long Short Term Memory (LSTM) to model student's knowledge state. Deep Knowledge Tracing plus (DKT+) [39] is an extension of DKT to address the issue faced by DKT such as not being able to reconstruct the input and predicted KCs not being smooth across the time. Dynamic Key-Value Memory Networks (DKVMN) [41] introduced a Memory Augmented Neural Network [31] to solve KT with key being the exercises practices and values being the mastery of students. Recently, Self-Attentive Knowledge Tracing (SAKT) [24] model was developed that first identifies the KCs from the student's past activities that are relevant to the target KC for which performance is to be predicted. SAKT then utilizes the information of performance on the past KCs to predict the student mastery at the next KC.",
+            "cite_spans": [
+                {
+                    "start": 136,
+                    "end": 140,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 521,
+                    "end": 525,
+                    "text": "[40]",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 574,
+                    "end": 577,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 614,
+                    "end": 618,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 637,
+                    "end": 641,
+                    "text": "[34,",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 642,
+                    "end": 645,
+                    "text": "36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 813,
+                    "end": 817,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 1014,
+                    "end": 1018,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1137,
+                    "end": 1141,
+                    "text": "[39]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1341,
+                    "end": 1345,
+                    "text": "[41]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 1391,
+                    "end": 1395,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 1539,
+                    "end": 1543,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Knowledge Tracing"
+        },
+        {
+            "text": "Our method is an extension of SAKT such that we also take into account the relations between exercises involved in the interactions and time elapsed since the last interaction to inform the self-attention mechanism.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Knowledge Tracing"
+        },
+        {
+            "text": "Exercise Relation Modeling: Exercise Relation Modeling has been widely studied in the educational psychology. Some researchers have utilized Q-matrix to map exercises with Knowledge Concepts [6, 12] . Two exercises are related if they belong to the same KC. In addition to Q-matrix based method, recently researchers have started to focus on deriving relations between exercises using the content of exercises. For example, [21, 22, 33] utilize the content of exercises to predict the relation between exercises. After predicting the semantic similarity scores between the exercises [22, 33] use these scores as attention weights to scale the importance of the past interactions. To the best of our knowledge, incorporating exercise relation modeling in KT is an under-explored area. To this end, we explored methods for modeling exercise relations using textual content of exercises and student performance data. Forget Behavior Modeling: There has been some research exploring the forget behavior of students [10, 23] . Forget curve theory introduced in [13] and employed in [10] which claims that student memory decays with time at an exponential rate and the rate of decay is determined by the strength of student cognitive abilities. Recently, DKT-Forget [23] introduce different time-based features in DKT model. DKT-Forgetting considers repeated and sequence time gap, as well as the number of past trials, which is a state-ofthe-art method with temporal information. In our work, we take Interaction sequence of a student:",
+            "cite_spans": [
+                {
+                    "start": 191,
+                    "end": 194,
+                    "text": "[6,",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 195,
+                    "end": 198,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 424,
+                    "end": 428,
+                    "text": "[21,",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 429,
+                    "end": 432,
+                    "text": "22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 433,
+                    "end": 436,
+                    "text": "33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 583,
+                    "end": 587,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 588,
+                    "end": 591,
+                    "text": "33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 1011,
+                    "end": 1015,
+                    "text": "[10,",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1016,
+                    "end": 1019,
+                    "text": "23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1056,
+                    "end": 1060,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1077,
+                    "end": 1081,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1260,
+                    "end": 1264,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Relation Modeling in KT"
+        },
+        {
+            "text": "advantage of both exercise relation modeling and forget behavior modeling in KT task which has not been done before.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Relation Modeling in KT"
+        },
+        {
+            "text": "Attention mechanism [37] is shown to be effective in tasks involving sequence modeling. The idea behind this mechanism is to focus on relevant parts of the input when predicting the output. It makes the models often more interpretable as one can find the weights of specific input that resulted in making a specific prediction. It was introduced for machine translation task to retrieve the words in the input sequence for generating next word in the target sentence. Similarly, it is used in recommendation systems to predict the next item a person will buy based on his history of purchase. Some models [16, 38] have recognized that augmenting self-attention layer with contextual information improves the performance of the model. Such contextual information include the co-occurrence of items for item recommendation [16] and syntactic and semantic information of a sentence for machine translation [38] . In our task, we use the self-attention mechanism to learn the attention weights corresponding to the previous interaction for predicting whether a student will provide correct answer to the next exercise. We then augment the exercise relations and forget behavior of students to enhance the model performance.",
+            "cite_spans": [
+                {
+                    "start": 20,
+                    "end": 24,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 605,
+                    "end": 609,
+                    "text": "[16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 610,
+                    "end": 613,
+                    "text": "38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 821,
+                    "end": 825,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 903,
+                    "end": 907,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Attention Mechanism"
+        },
+        {
+            "text": "Knowledge Tracing predicts whether a student will be able to answer the next exercise e n based on his/her previous interaction",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "PROPOSED METHOD"
+        },
+        {
+            "text": "1} is the correctness of the student answer, and t i \u2208 R + is the time at which the interaction occurred. For accurate prediction, it is important to identify the underlying relation between e n attempted at time t n and the previous interactions. As shown in Figure 1 the importance of a past interaction in predicting whether the student will be able to answer the next exercise correctly is determined by two factors: 1) the relation between the exercises solved in the past interaction and the next exercise, and 2) time elapsed since the past interaction. Motivated by this, we develop a Relation-aware Knowledge Tracing model which incorporates the relations as contextual information and propagates it to the attention weights computed using self-attention mechanism [37] . The updated attention weights are then used to compute the weighted sum of the representation of the past interactions which represents the output corresponding to the nth interaction. To learn the parameters, we employ a binary cross entropy loss as our objective function. The mathematical notations used in this paper are summarized in Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 774,
+                    "end": 778,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 260,
+                    "end": 268,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1120,
+                    "end": 1127,
+                    "text": "Table 1",
+                    "ref_id": "TABREF1"
+                }
+            ],
+            "section": "PROPOSED METHOD"
+        },
+        {
+            "text": "We learn a semantic representation of each exercise from its textual content. For this, we exploit word embedding technique and learn a function f : M \u2192 R d , where M represents the dictionary of words and f is a parameterized function which maps words to d-dimensional distributed vectors. In the look-up layer, exercise content are represented as a matrix of word embeddings. Then the embedding of an exercise i, E i \u2208 R d is obtained by taking weighted combination of embedding of all the words present in the text of the exercise i using Smooth Inverse Frequency (SIF) [2] . SIF downgrades unimportant words such as but, just, etc., and keeps the information that contributes the most to the semantics of the exercise. Thus, the exercise embedding for an exercise i is obtained as:",
+            "cite_spans": [
+                {
+                    "start": 573,
+                    "end": 576,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Exercise Representation"
+        },
+        {
+            "text": "where a is a trainable parameter, s i represents the text of ith exercise, and p(w) is the probability of word w.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise Representation"
+        },
+        {
+            "text": "An important innovation of our model is that we explore methods of identifying the underlying relations between exercises. Since the relations between exercises are not explicitly known, we first infer these relations from the data and build a exercise relation matrix, exercise i incorrect correct total exercise j incorrect n 00 n 01 n 0 * correct n 10 n 11 n 1 * total n * 0 n * 1 n A \u2208 R E\u00d7E such that A i, j represents the importance that performance on exercise j has on the performance on exercise i. We leverage two sources of information for discovering the relations between exercises: student's performance data and textual content of exercises. The former is used to capture the relevance of knowledge gained in solving exercise j for solving exercise i, while the latter captures the semantic similarity between the two exercises.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise-Relation Matrix Computation"
+        },
+        {
+            "text": "We will now describe how learner's performance data can be used to obtain the relevance of the knowledge gained from exercise j to solve exercise i. We first build a contingency table as shown in table 2 by considering only the pairs of i and j, where j occurs before i in the learning sequence. If there are multiple occurrences of j in the learning sequence before i, we only consider the latest occurrence. Then, we compute the Phi coefficient which is popularly used as a measure of association for two binary variables. Mathematically the Phi coefficient that describes the relation from j to i is calculated as, \u03d5 i, j = n 11 n 00 \u2212 n 01 n 10 \u221a n 1 * n 0 * n * 1 n * 0 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise-Relation Matrix Computation"
+        },
+        {
+            "text": "The value of \u03d5 i, j lies between \u22121 and 1 and a high \u03d5 i, j score means students' performance at j play an important role in deciding their performance at i. We choose Phi coefficients among other correlation metrics to compute the relation between exercises because: 1) it is easy to interpret, and 2) it explicitly penalizes when the two variables are not equal.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise-Relation Matrix Computation"
+        },
+        {
+            "text": "Another source of data we use for computing relation between two exercises is the textual content of exercises which informs the semantic similarity of two exercises. We first obtain the exercise embedding of i, E i and j, E j from section 3.1, then compute the similarity between exercises using cosine similarity of the embeddings. Formally, similarity between exercises is calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise-Relation Matrix Computation"
+        },
+        {
+            "text": "Finally, the relation of exercise j with exercise i is calculated as :",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise-Relation Matrix Computation"
+        },
+        {
+            "text": "where \u03b8 is a threshold that controls sparsity of relation matrix.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Exercise-Relation Matrix Computation"
+        },
+        {
+            "text": "Here we model the contextual information to compute the relevance of past interaction, represented as relation coefficients, for predicting student performance at next exercise. Specifically, we incorporate the exercise relation modeling and forget behavior modeling described below at this step. Exercise Relation Modeling: This component involves modeling the relation between exercises involved in interaction. Given the past exercises solved by a student, (e 1 , e 2 , . . . , e n\u22121 ) and the next exercise e n for which we want to predict its performance, we compute the exercise-based relation coefficients from the e n th row of exercise relation matrix, A e n as R E = [A e n ,e 1 , A e n ,e 2 , . . . , A e n ,e n\u22121 ]. Forget behavior modeling: Learning theory has revealed that students forget the knowledge learnt with time [3, 13] , known as forgetting curve theory, which plays an important role in knowledge tracing. Naturally, if a student forgets the knowledge gained after a particular interaction i, the relevance of that interaction for predicting student performance at the next interaction should be diminished, irrespective of the relation between exercises involved. The challenge is to identify the interactions whose knowledge the student has forgotten. Since students forget with time, we employ a kernel function that models the importance of interaction with respect to time interval. The kernel function is designed as an exponentially decaying curve with time to reduce the importance of interaction as time interval increases following the idea from forgetting curve theory. Specifically, given the time sequence of interaction of a student t = (t 1 , t 2 , . . . , t n\u22121 ) and the time at which the student attempts next exercise t n , we compute the relative time interval between the next interaction and the ith interaction as \u2206 i = t n \u2212 t i . Thus, we compute forget behavior based relation coef-",
+            "cite_spans": [
+                {
+                    "start": 835,
+                    "end": 838,
+                    "text": "[3,",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 839,
+                    "end": 842,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Personalized Relation Modeling"
+        },
+        {
+            "text": "where S u refers to relative strength of memory of student u and is a trainable parameter in our model. Following [38] , we also obtain revised importance of the past interaction by simply adding the weights obtained from individual sources of information. Thus, we compute the relation coefficients as",
+            "cite_spans": [
+                {
+                    "start": 114,
+                    "end": 118,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Personalized Relation Modeling"
+        },
+        {
+            "text": "The relation coefficient corresponding to more relevant interaction is higher.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Personalized Relation Modeling"
+        },
+        {
+            "text": "The raw data of interactions only consists of tuple representing exercise, correctness and time of interaction. We need to embed this information of interactions and positions of interactions. To obtain an embedding of a past interaction j, (e j , r j , t j ), we first obtain the corresponding exercise representation using Equation (1) . To incorporate the correctness score r j , we extend it to a feature vector r j = [r j , r j , . . . , r j ] \u2208 R d and concatenate it to the exercise embedding. Also, we define a positional embedding matrix as P \u2208 R l \u00d72d , to introduce the sequential ordering information of the interactions, where l is the maximum allowed sequence length. The position embedding is particularly important in knowledge tracing problem because a student's knowledge state at a particular time instance should not show wavy transitions [39] .",
+            "cite_spans": [
+                {
+                    "start": 334,
+                    "end": 337,
+                    "text": "(1)",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 859,
+                    "end": 863,
+                    "text": "[39]",
+                    "ref_id": "BIBREF38"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Input Embedding Layer"
+        },
+        {
+            "text": "Afterward, we feed the inputs to RKT, and these inputs should convey the representation of interactions and positions in the sequences. Thus, the interaction embedding is obtained as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input Embedding Layer"
+        },
+        {
+            "text": "Finally, the input interaction sequence is expressed asX = [x 1 ,x 2 , . . .x n ] by combining the interaction embedding E, and the positional embedding P.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Input Embedding Layer"
+        },
+        {
+            "text": "The core component of RKT is the attention structure that incorporates relation structure. For this, we modify the alignment score of the attention mechanism to attend more to the relevant interactions identified by the relation coefficient, R. Let \u03b1 be the attention weights learned using scaled dot-product attention mechanism [37] such that",
+            "cite_spans": [
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Relation-Aware Self-attention Layer"
+        },
+        {
+            "text": "where W Q \u2208 R d \u00d7d and W K \u2208 R d \u00d7d are projection matrices for query and key, respectively. Finally we combine the attention weights with the relation coefficients, by adding the two weights:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Relation-Aware Self-attention Layer"
+        },
+        {
+            "text": "where R j is the jth element of the relation coefficient R. We used addition operation to avoid any significant increase in computation cost. \u03bb is a tunable parameter. The representation of output at the ith interaction, o \u2208 R d , is obtained by the weighted sum of linearly transformed interaction embedding and position embedding:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Relation-Aware Self-attention Layer"
+        },
+        {
+            "text": "where W V \u2208 R d \u00d7d is the projection matrix for value space. Point-Wise Feed-Forward Layer: We apply the PointWise Feed-Forward Layer (FFN) to the output of RKT by each position. The FFN helps incorporate non-linearity in the model and considers the interactions between different latent dimensions. It consists of two linear transformations with a ReLU nonlinear activation function between the linear transformations. The final output of FFN is F = ReLU(oW (1) + b (1) )W (2) + b (2) , where W (1) \u2208 R d \u00d7d , Besides of the above modeling structure, we added residual connections [14] after both self-attention layer and Feed forward layer to train a deeper network structure. We also applied the layer normalization [4] and the dropout [32] to the output of each layer, following [37] .",
+            "cite_spans": [
+                {
+                    "start": 482,
+                    "end": 485,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 582,
+                    "end": 586,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 719,
+                    "end": 722,
+                    "text": "[4]",
+                    "ref_id": null
+                },
+                {
+                    "start": 739,
+                    "end": 743,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 783,
+                    "end": 787,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Relation-Aware Self-attention Layer"
+        },
+        {
+            "text": "Finally, to obtain student ability to answer exercise e n correctly, we pass the learned representation F obtained above through the fully connected network with Sigmoid activation to predict the performance of the student.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Prediction Layer"
+        },
+        {
+            "text": "where p is a scalar and represents the probability of student providing correct response to exercise e n , and \u03c3 (z) = 1/(1 + e \u2212z ).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Prediction Layer"
+        },
+        {
+            "text": "Since the self-attention model works with sequence of fixed length, we convert the input sequence, X = (x 1 , x 2 , . . . , x |X | ), into sequence of fixed length l before feeding it to RKT. If the sequence length, |X | is less than l, we repetitively add a padding to the left of the sequence. However, if |X | is greater than l, we partition the sequence into subsequences of length l. The objective of training is to minimize the negative log likelihood of the observed sequence of student responses under the model. The parameters are learned by minimizing the cross entropy loss between p and r at every interaction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Network Training"
+        },
+        {
+            "text": "where I denotes all the interactions in the training set. 1 ",
+            "cite_spans": [
+                {
+                    "start": 58,
+                    "end": 59,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Network Training"
+        },
+        {
+            "text": "In this section, we present our experimental settings to answer the following questions: RQ1 Can RKT outperform the state-of-the-art methods for Knowledge Tracing? RQ2: What is the influence of various components in the RKT architecture? RQ3 Are the attention weights able to learn meaningful patterns in computing the embeddings? 1 The corresponding code and dataset available at https://github.com/shalini1194/RKT",
+            "cite_spans": [
+                {
+                    "start": 331,
+                    "end": 332,
+                    "text": "1",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "EXPERIMENTAL SETTINGS"
+        },
+        {
+            "text": "To evaluate our model, we used three real-world datasets.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "\u2022 ASSISTment2012(ASSIST2012) 2 : This dataset is provided by ASSISTment online tutoring platform and is widely used for KT tasks. We also utilized the problem bodies to conduct our experiments. \u2022 JunyiAcademy (Junyi) 3 This dataset was collected by Jun-yiAcademy 4 in 2015 [8] . The available dataset only contains the exercising records of students. To obtain the textual content we scraped the data from their website. Overall, this dataset contains 838 distinct exercises and we removed exercises which do not contain textual content. For all these datasets, we first removed the students who attempted fewer than two exercises and then removed those exercises which were attempted by fewer than two students. The complete statistical information for all the datasets can be found in Table 3 . The code and dataset is available at https://github.com/shalini1194/RKT.",
+            "cite_spans": [
+                {
+                    "start": 273,
+                    "end": 276,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 787,
+                    "end": 794,
+                    "text": "Table 3",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Datasets"
+        },
+        {
+            "text": "Embeddings. The first step in our method is to embed exercise content and initializing each word of the exercise content. All exercises are truncated to no more than 200 words. However, mathematical exercises consists of words not found in traditional English articles such as, news. For example it is common to find formulas like \" (x) + 1\" in mathematical exercise which carry important information about the exercise. Therefore, to preserve the mathematics semantics, we transform each formula into its TEX code features (\" (x)+1\" is transformed to \" sqrt x + 1\"). After initialization, each exercise is represented with sequence with vocabulary words and TEX tokens. The model is trained by embedding each word into an embedding vector with 50 dimensions (i.e., d = 50) by using word2vec 6 .",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Word"
+        },
+        {
+            "text": "We now specify the network initializations in our model. We set the model dimension in self-attention as 64 and the maximum allowed sequence length l as 50. The model is trained with a mini-batch size of 128. We use Adam optimizer with a learning rate of 0.001. The dropout rate is set to 0.1 to reduce overfitting. The L2 weight decay is set to 0.00001. All the model parameters are normally initialized with 0 mean and 0.01 standard deviation. The value of sparcity controlling threshold, \u03b8 used in Eq. (4) is 0.8 in our experiments. We trained the model with 80% of the dataset and test it on the remaining. We perform 5-fold cross validation to evaluate all the models, in which folds are split based on students.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Framework Setting."
+        },
+        {
+            "text": "The prediction of student performance is considered in a binary classification setting i.e., answering an exercise correctly or not. Hence, we compare the performance using the Area Under Curve (AUC) and Accuracy (ACC) metric. Similar to evaluation procedure employed in [23, 28] , we train the model with the interactions in the training phase and during the testing phase, we update the model after each exercise response is received. The updated model is then used to perform the prediction on the next exercise. Generally, the value 0.5 of AUC or ACC represents the performance prediction result by randomly guessing, and the larger, the better.",
+            "cite_spans": [
+                {
+                    "start": 271,
+                    "end": 275,
+                    "text": "[23,",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 276,
+                    "end": 279,
+                    "text": "28]",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Metrics"
+        },
+        {
+            "text": ". We compare our model against the state-of-the-art KT methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Knowledge Tracing (KT)"
+        },
+        {
+            "text": "\u2022 DKT [28] : This is a seminal method that uses single layer LSTM model to predict the student's performance. In our implementation of DKT, we used norm-clipping and early stopping to improve the performance as has been employed in [41] . \u2022 SAKT [24] This model employs self-attention mechanism [37] to assigns weights to the previously answered exercises for predicting the performance of the student on a particular exercise.",
+            "cite_spans": [
+                {
+                    "start": 6,
+                    "end": 10,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 232,
+                    "end": 236,
+                    "text": "[41]",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 246,
+                    "end": 250,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 295,
+                    "end": 299,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Knowledge Tracing (KT)"
+        },
+        {
+            "text": "Neural Network based method where in the relation between different KCs are represented by the key matrix and the student's mastery of each KC by the value matrix. \u2022 DKT+Forget [23] : This is an extension of DKT method which predicts student performance using both the student's learning sequence and fogetting behavior. \u2022 EERNN [33] : This model utilizes both the textual content of exercises and student's exercising records to predict student performance. They use RNN as the underlying model to learn the exercise embedding and the student knowledge representation. Furthermore, they attend over the past interactions using the cosine similarity between the past interactions and the next exercise. \u2022 EKT [22] : This model is an extension of the EERNN model which also tracks student knowledge acquisition on multiple skills. Specifically, it models the relation between the underlying Knowledge Concepts to enhance the EERNN model. Table 4 shows the performance of all baseline methods and our RKT model. We have the following observations: Different kinds of baselines demonstrate noticeable performance gaps. SAKT model shows improvement over DKT and DKVMN model which can be traced to the fact that SAKT identifies the relevance between past interactions and next exercise. DKT-Forget further gains improvements most of the time, which demonstrates the importance of taking temporal factors into consideration. Further, EERNN and EKT incorporate textual content of exercises to identify which interaction history is more relevant and hence perform better than the those models which do not take into account these Table 4 : Performance comparison. The best performing method is boldfaced, and the second best method in each row is underlined. Gains are shown in the last row. relations. RKT performs consistently better than all the baselines. Compared with other baselines, RKT is able to explicitly captures the relations between exercises based on student performance data and text content. Additionally, it models learner forget behavior using a kernel function which is more interpretable and proven way to model human memory [13] compared to DKT+forget model. Second, the performance gain is lowest for Junyi dataset. We believe that a possible reason of low improvement on Junyi is that since the number of exercises in Junyi is fairly small the relation between exercises can be modeled by sequential models such as RNN and self-attention mechanism. It does not need explicit relation learning based on the content.",
+            "cite_spans": [
+                {
+                    "start": 177,
+                    "end": 181,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 329,
+                    "end": 333,
+                    "text": "[33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 709,
+                    "end": 713,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 2139,
+                    "end": 2143,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 937,
+                    "end": 944,
+                    "text": "Table 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1622,
+                    "end": 1629,
+                    "text": "Table 4",
+                    "ref_id": null
+                }
+            ],
+            "section": "\u2022 DKVMN [41]: This is a Memory Augmented Recurrent"
+        },
+        {
+            "text": "We would also like to point out that, combining the model with contextual information in RKT does not lead to any significant increase in runtime of the model and it remains as scalable as SAKT model. SAKT and RKT are more scalable than other sequential models because of its parallelization capability [24] . 5.1.1 Performance comparison w.r.t. interaction sparsity. One benefit of exploiting the relations between interactions is that it makes our model robust towards sparsity of dataset. Exploiting the relation between different exercises can help in estimating student performance at related exercises, thus alleviating the sparsity issue.",
+            "cite_spans": [
+                {
+                    "start": 303,
+                    "end": 307,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Student Performance Prediction (RQ1)"
+        },
+        {
+            "text": "To verify this, we perform an experiment over student groups with different number of interactions. In particular, we generate four groups of students based on interaction number per user, thus generating groups with less than 10, 100, 1000, 10000 interactions, respectively. The performance of all the methods is displayed in Figure 3 . We find that RKT outperforms the baseline models in all the cases, signifying the importance of leveraging relation information for predicting performance. Also, the performance gain of RKT for student groups with less number of interactions is more significant. Thus, we can reach to a conclusion that RKT which exploits the relation between interactions is effective for learning knowledge representation of students even with less interactions.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 327,
+                    "end": 335,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Student Performance Prediction (RQ1)"
+        },
+        {
+            "text": "To get deep insights on the RKT model, we investigate the contribution of various components involved in the model. Therefore, we conduct some ablation experiments to show how each part of Table 5 , there are seven variations of RKT, each of which takes out one or more opponents from the full model. Specifically:PE, TE, RE refer to RKT without position encoding, forget behavior modeling and exercise relation modeling, respectively. PE+TE, PE+RE, TE+RE refer to removal two components simultaneously, i.e. position encoding and forget behavior modeling, position encoding and exercise relation modeling, and exercise relation modeling and forget behavior modeling, respectively. And finally, PE+RE+TE refers to RKT that does not model the position encoding, forget behavior modeling and exercise relation modeling for interaction representation. The result in Table 5 indeed shows many interesting conclusions. First, the more information a model encodes, the better the performance, which agrees with the intuition. Second for all datasets removing exercise relation modeling causes the most drastic drop in performance. This validates our argument that explicitly learning exercise relations is important for improving the performance of KT model. Thirdly, incorporating the forget behavior model in RKT which of students causes more improvement in ASSIST2012 and Junyi datasets than POJ. We hypothesize that this can be attributed to the fact that the concepts involved in solving POJ exercises are less diverse than those involved in high school maths course (Junyi and ASSIST2012 dataset). As a result in majority cases the reason of wrong answer on POJ is the confusion in the students, rather than their forgetting behavior. To explore the impact of exercise relation matrix computation, we consider the variants of RKT that uses different settings. We explore the following methods for computing exercise relation matrix:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 189,
+                    "end": 196,
+                    "text": "Table 5",
+                    "ref_id": "TABREF4"
+                },
+                {
+                    "start": 863,
+                    "end": 870,
+                    "text": "Table 5",
+                    "ref_id": "TABREF4"
+                }
+            ],
+            "section": "Ablation Study (RQ2)"
+        },
+        {
+            "text": "(1) Previous work such as [15, 20] , considered that two exercises are related if they belong to the same KC. We also employ this technique and build an exercise relation matrix with boolean values such that A i, j = 1 if i and j belong to the same KC otherwise 0. (2) Use only the textual content of two exercises to estimate the relation between them. We compute the relation between two exercises with Equation (3) only. (3) Use the student performance data to compute the relation between two exercises. Only Equation (2) is employed to compute the relation between two exercises. (4) Use both textual content and student performance data to compute the similarity between two exercises. We compute the relation coefficients using Equation (4).",
+            "cite_spans": [
+                {
+                    "start": 26,
+                    "end": 30,
+                    "text": "[15,",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 31,
+                    "end": 34,
+                    "text": "20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Ablation Study (RQ2)"
+        },
+        {
+            "text": "We do not have information about the exercise-to-KC mapping for POJ data and hence can not apply method (1) for POJ. Specifically Table 6 summarizes the experimental results. The findings are: Firstly, Method (1) performs the worst among all the four methods. This can be attributed to the fact that linking exercises only based KCs ignores the fact there exists relation among exercises which do not belong to the same KC. Method (3) also shows performance gain over method (2) as student performance data is a good indicator of how relations between exercises are perceived by the students. Even if textual content of two exercises are not similar the association of knowledge involved in solving the two exercises could be high. Finally, method (4) that leverages both student performance data and exercise textual content data outperforms the other methods.",
+            "cite_spans": [
+                {
+                    "start": 475,
+                    "end": 478,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 130,
+                    "end": 137,
+                    "text": "Table 6",
+                    "ref_id": "TABREF5"
+                }
+            ],
+            "section": "Ablation Study (RQ2)"
+        },
+        {
+            "text": "Benefiting from a purely attention mechanism, RKT and SAKT models are highly interpretable for explaining the prediction result.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Attention weights visualization (RQ3)"
+        },
+        {
+            "text": "To this end, we compared the attention weights obtained from both these models. We selected one student from Junyi dataset and obtain the attention weights corresponding to the past interactions for predicting her performance at exercise e 15 . Figure 4 shows the weights assigned by both SAKT and RKT. We see that compared to SAKT, RKT places more weights on e 2 which belongs to same KC as e 15 and have stronger relation. Since the student gave wrong answer to e 2 , she has not yet mastered \"Quadratic Equations\". As a result, RKT predicts that the student will not be able to answer e 15 . Thus, it is beneficial to consider relations between exercises for KT. We also performed experiment to visualize the attention weights assigned by RKT on different datasets. Recall that at time step t i , the relation-aware self-attention layer in our model revise the attention weights on the previous interactions depending on the time elapsed since the interaction and the relations between the exercises involved. To this end, we examine all sequences and seek to reveal meaningful patterns by showing the average attention weights on the previous interactions. Figure 5 shows the heatmap of attention weight matrix where (i, j)th element represents the attention weight on jth element when predicting performance at ith interaction. Note that when we calculate the average weight, the denominator is the number of valid weights, so as to avoid the influence of padding for short sequences. We consider a few comparisons among the heatmaps:",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 245,
+                    "end": 253,
+                    "text": "Figure 4",
+                    "ref_id": null
+                },
+                {
+                    "start": 1161,
+                    "end": 1169,
+                    "text": "Figure 5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Attention weights visualization (RQ3)"
+        },
+        {
+            "text": "\u2022 (b), (c), (d): The heatmap representing the attention weights pertaining to different datasets reveals that recent interactions are given the higher weights compared to other interaction. It can be attributed to the forget behavior of learning process such that only the recent interactions can inform the student knowledge state. \u2022 (b) vs. (c): This comparison shows the weights assigned by RKT on two different types of dataset. In ASSIST2012 dataset, the exercises are sequenced for skill-building, i.e., they are organized so that a student can master one skill first and then learn the next skill. As a result in ASSIST2012 the exercises adjacent to each other are related. While, in POJ dataset, student chooses exercises based on their needs. As a result, the heatmap corresponding to ASSIST2012 dataset has attention weights concentrated towards the diagonal elements, while for POJ the attention weights are spread across the interactions. \u2022 (a) vs. (b): This comparison shows the effect of relation information for revising the attention weights. Without relation information the attention weights are more distributed over previous interaction, while the relation information concentrates the attention weights closer to diagonal as adjacent interactions in ASSIST2012 have higher relations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Attention weights visualization (RQ3)"
+        },
+        {
+            "text": "In this work, we proposed a Relation-aware Self-attention mechanism for KT task, RKT. It models a student's interaction history and predicts her performance on the next exercise by considering contextual information obtained from its relation with the past exercises and the forget behavior of the student. The relation between exercises is computed using the student performance data and the textual content of exercises. The forget behavior is modeled using a time decaying kernel function. The contextual information is then incorporated in a self-attention layer which we call relation-aware self-attention. Extensive experimentation on real-world datasets shows that our model can outperform the state-of-the-art methods.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION AND FUTURE WORK"
+        },
+        {
+            "text": "Owing to the purely self-attention mechanism RKT is interpretable. As part of future work, we plan to model the relation between exercises instead of computing them from the data. This can help in predicting the relation of a new exercise. Besides, we can learn a representation of student knowledge as an embedding and use this embedding to track student proficiency at various KCs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION AND FUTURE WORK"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Engaging with massive online courses",
+            "authors": [
+                {
+                    "first": "Ashton",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Huttenlocher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jon",
+                    "middle": [],
+                    "last": "Kleinberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jure",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 23rd international conference on World wide web",
+            "volume": "",
+            "issn": "",
+            "pages": "687--698",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "A simple but tough-to-beat baseline for sentence embeddings",
+            "authors": [
+                {
+                    "first": "Sanjeev",
+                    "middle": [],
+                    "last": "Arora",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yingyu",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tengyu",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "The form of the forgetting curve and the fate of memories",
+            "authors": [
+                {
+                    "first": "Lee",
+                    "middle": [],
+                    "last": "Averell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [],
+                    "last": "Heathcote",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Journal of Mathematical Psychology",
+            "volume": "55",
+            "issn": "",
+            "pages": "25--35",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "The state of educational data mining in 2009: A review and future visions",
+            "authors": [
+                {
+                    "first": "Sjd",
+                    "middle": [],
+                    "last": "Ryan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kalina",
+                    "middle": [],
+                    "last": "Baker",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Yacef",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "JEDM| Journal of Educational Data Mining",
+            "volume": "1",
+            "issn": "",
+            "pages": "3--17",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "The Q-matrix method: Mining student response data for knowledge",
+            "authors": [
+                {
+                    "first": "Tiffany",
+                    "middle": [],
+                    "last": "Barnes",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Learning factors analysis-a general method for cognitive model evaluation and improvement",
+            "authors": [
+                {
+                    "first": "Kenneth",
+                    "middle": [],
+                    "last": "Hao Cen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [],
+                    "last": "Koedinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Junker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2006,
+            "venue": "International Conference on Intelligent Tutoring Systems",
+            "volume": "",
+            "issn": "",
+            "pages": "164--175",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Modeling Exercise Relationships in E-Learning: A Unified Approach",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Haw-Shiuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hwai-Jung",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kuan-Ta",
+                    "middle": [],
+                    "last": "Hsu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Prerequisite-driven deep knowledge tracing",
+            "authors": [
+                {
+                    "first": "Penghe",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Vincent",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yang",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "2018 IEEE International Conference on Data Mining (ICDM)",
+            "volume": "",
+            "issn": "",
+            "pages": "39--48",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Tracking knowledge proficiency of students with educational priors",
+            "authors": [
+                {
+                    "first": "Yuying",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhenya",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Le",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Enhong",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Runze",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guoping",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 2017 ACM on Conference on Information and Knowledge Management",
+            "volume": "",
+            "issn": "",
+            "pages": "989--998",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Knowledge tracing: Modeling the acquisition of procedural knowledge. User modeling and user-adapted interaction",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Albert",
+                    "suffix": ""
+                },
+                {
+                    "first": "John R",
+                    "middle": [],
+                    "last": "Corbett",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "",
+            "volume": "4",
+            "issn": "",
+            "pages": "253--278",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "The generalized DINA model framework",
+            "authors": [
+                {
+                    "first": "Jimmy",
+                    "middle": [],
+                    "last": "De",
+                    "suffix": ""
+                },
+                {
+                    "first": "La",
+                    "middle": [],
+                    "last": "Torre",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Psychometrika",
+            "volume": "76",
+            "issn": "",
+            "pages": "179--199",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Memory: A contribution to experimental psychology",
+            "authors": [
+                {
+                    "first": "Hermann",
+                    "middle": [],
+                    "last": "Ebbinghaus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Annals of neurosciences",
+            "volume": "20",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Deep residual learning for image recognition",
+            "authors": [
+                {
+                    "first": "Kaiming",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiangyu",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shaoqing",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jian",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "volume": "",
+            "issn": "",
+            "pages": "770--778",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Learning or Forgetting? A Dynamic Approach for Tracking the Knowledge Proficiency of Students",
+            "authors": [
+                {
+                    "first": "Zhenya",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuying",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Le",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Keli",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Enhong",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Haiping",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guoping",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "ACM Trans. Inf. Syst",
+            "volume": "38",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/3379507"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Yoon-Yeong Kim, and Il-Chul Moon",
+            "authors": [
+                {
+                    "first": "Mingi",
+                    "middle": [],
+                    "last": "Ji",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weonyoung",
+                    "middle": [],
+                    "last": "Joo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kyungwoo",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Sequential Recommendation with Relation-Aware Kernelized Self-Attention",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1911.06478"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Beyond knowledge tracing: Modeling skill topologies with bayesian networks",
+            "authors": [
+                {
+                    "first": "Tanja",
+                    "middle": [],
+                    "last": "K\u00e4ser",
+                    "suffix": ""
+                },
+                {
+                    "first": "Severin",
+                    "middle": [],
+                    "last": "Klingler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexander",
+                    "middle": [
+                        "Gerhard"
+                    ],
+                    "last": "Schwing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Markus",
+                    "middle": [],
+                    "last": "Gross",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "International conference on intelligent tutoring systems",
+            "volume": "",
+            "issn": "",
+            "pages": "188--198",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Student success in college: Creating conditions that matter",
+            "authors": [
+                {
+                    "first": "Jillian",
+                    "middle": [],
+                    "last": "George D Kuh",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kinzie",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "John",
+                    "suffix": ""
+                },
+                {
+                    "first": "Elizabeth",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Schuh",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Whitt",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Time-varying learning and content analytics via sparse factor analysis",
+            "authors": [
+                {
+                    "first": "Christoph",
+                    "middle": [],
+                    "last": "Andrew S Lan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Studer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Baraniuk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 20th ACM SIGKDD international conference on Knowledge discovery and data mining",
+            "volume": "",
+            "issn": "",
+            "pages": "452--461",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Sparse factor analysis for learning and content analytics",
+            "authors": [
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Andrew S Lan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Christoph",
+                    "middle": [],
+                    "last": "Waters",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Studer",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Baraniuk",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "The Journal of Machine Learning Research",
+            "volume": "15",
+            "issn": "",
+            "pages": "1959--2008",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Finding similar exercises in online education systems",
+            "authors": [
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zai",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhenya",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chuanren",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Enhong",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guoping",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining",
+            "volume": "",
+            "issn": "",
+            "pages": "1821--1830",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "EKT: Exercise-aware Knowledge Tracing for Student Performance Prediction",
+            "authors": [
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhenya",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Enhong",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hui",
+                    "middle": [],
+                    "last": "Xiong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guoping",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1906.05658"
+                ]
+            }
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Augmenting Knowledge Tracing by Considering Forgetting Behavior",
+            "authors": [
+                {
+                    "first": "Koki",
+                    "middle": [],
+                    "last": "Nagatani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qian",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Masahiro",
+                    "middle": [],
+                    "last": "Sato",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan-Ying",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francine",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tomoko",
+                    "middle": [],
+                    "last": "Ohkuma",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "The World Wide Web Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "3101--3107",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "A Self-Attentive model for Knowledge Tracing",
+            "authors": [
+                {
+                    "first": "Shalini",
+                    "middle": [],
+                    "last": "Pandey",
+                    "suffix": ""
+                },
+                {
+                    "first": "George",
+                    "middle": [],
+                    "last": "Karypis",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1907.06837"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "KT-IDEM: Introducing item difficulty to the knowledge tracing model",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zachary",
+                    "suffix": ""
+                },
+                {
+                    "first": "Neil T",
+                    "middle": [],
+                    "last": "Pardos",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Heffernan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "International conference on user modeling, adaptation, and personalization",
+            "volume": "",
+            "issn": "",
+            "pages": "243--254",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Performance Factors Analysis-A New Alternative to Knowledge Tracing",
+            "authors": [
+                {
+                    "first": "Hao",
+                    "middle": [],
+                    "last": "Philip I Pavlik",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kenneth",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Cen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Koedinger",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Online Submission",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Modeling Students' Memory for Application in Adaptive Educational Systems",
+            "authors": [
+                {
+                    "first": "Radek",
+                    "middle": [],
+                    "last": "Pel\u00e1nek",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Deep knowledge tracing",
+            "authors": [
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Piech",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Bassen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jonathan",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Surya",
+                    "middle": [],
+                    "last": "Ganguli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mehran",
+                    "middle": [],
+                    "last": "Sahami",
+                    "suffix": ""
+                },
+                {
+                    "first": "Leonidas",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Guibas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jascha",
+                    "middle": [],
+                    "last": "Sohl-Dickstein",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "505--513",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Does Time Matter? Modeling the Effect of Time with Bayesian Knowledge Tracing. EDM 2011 -Proceedings of the 4th International Conference on Educational Data Mining",
+            "authors": [
+                {
+                    "first": "Yumeng",
+                    "middle": [],
+                    "last": "Qiu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yingmei",
+                    "middle": [],
+                    "last": "Qi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hanyuan",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zachary",
+                    "middle": [],
+                    "last": "Pardos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Neil",
+                    "middle": [],
+                    "last": "Heffernan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "139--148",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Item response theory. The Encyclopedia of",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Steven P Reise",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Clinical Psychology",
+            "volume": "",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Meta-learning with memory-augmented neural networks",
+            "authors": [
+                {
+                    "first": "Adam",
+                    "middle": [],
+                    "last": "Santoro",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sergey",
+                    "middle": [],
+                    "last": "Bartunov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Botvinick",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daan",
+                    "middle": [],
+                    "last": "Wierstra",
+                    "suffix": ""
+                },
+                {
+                    "first": "Timothy",
+                    "middle": [],
+                    "last": "Lillicrap",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "In International conference on machine learning",
+            "volume": "",
+            "issn": "",
+            "pages": "1842--1850",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Dropout: a simple way to prevent neural networks from overfitting. The journal of machine learning research",
+            "authors": [
+                {
+                    "first": "Nitish",
+                    "middle": [],
+                    "last": "Srivastava",
+                    "suffix": ""
+                },
+                {
+                    "first": "Geoffrey",
+                    "middle": [],
+                    "last": "Hinton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alex",
+                    "middle": [],
+                    "last": "Krizhevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ilya",
+                    "middle": [],
+                    "last": "Sutskever",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruslan",
+                    "middle": [],
+                    "last": "Salakhutdinov",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "15",
+            "issn": "",
+            "pages": "1929--1958",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Exercise-enhanced sequential modeling for student performance prediction",
+            "authors": [
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qingwen",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhenya",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Enhong",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Ding",
+                    "suffix": ""
+                },
+                {
+                    "first": "Si",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Guoping",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Thirty-Second AAAI Conference on Artificial Intelligence",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Recommender system for predicting student performance",
+            "authors": [
+                {
+                    "first": "Lucas",
+                    "middle": [],
+                    "last": "Nguyen Thai-Nghe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Artus",
+                    "middle": [],
+                    "last": "Drumond",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lars",
+                    "middle": [],
+                    "last": "Krohn-Grimberghe",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Schmidt-Thieme",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Procedia Computer Science",
+            "volume": "1",
+            "issn": "",
+            "pages": "2811--2819",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Factorization Models for Forecasting Student Performance",
+            "authors": [
+                {
+                    "first": "Tom\u00e1s",
+                    "middle": [],
+                    "last": "Nguyen Thai-Nghe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lars",
+                    "middle": [],
+                    "last": "Horv\u00e1th",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Schmidt-Thieme",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Collaborative Filtering Applied to Educational Data Mining",
+            "authors": [
+                {
+                    "first": "Andreas",
+                    "middle": [],
+                    "last": "T\u00f6scher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Jahrer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Attention is all you need",
+            "authors": [
+                {
+                    "first": "Ashish",
+                    "middle": [],
+                    "last": "Vaswani",
+                    "suffix": ""
+                },
+                {
+                    "first": "Noam",
+                    "middle": [],
+                    "last": "Shazeer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Niki",
+                    "middle": [],
+                    "last": "Parmar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jakob",
+                    "middle": [],
+                    "last": "Uszkoreit",
+                    "suffix": ""
+                },
+                {
+                    "first": "Llion",
+                    "middle": [],
+                    "last": "Jones",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aidan",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Gomez",
+                    "suffix": ""
+                },
+                {
+                    "first": "\u0141ukasz",
+                    "middle": [],
+                    "last": "Kaiser",
+                    "suffix": ""
+                },
+                {
+                    "first": "Illia",
+                    "middle": [],
+                    "last": "Polosukhin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "5998--6008",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Context-aware self-attention networks",
+            "authors": [
+                {
+                    "first": "Baosong",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jian",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Derek",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lidia",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Chao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xing",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhaopeng",
+                    "middle": [],
+                    "last": "Tu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Proceedings of the AAAI Conference on Artificial Intelligence",
+            "volume": "33",
+            "issn": "",
+            "pages": "387--394",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Addressing two problems in deep knowledge tracing via prediction-consistent regularization",
+            "authors": [
+                {
+                    "first": "Chun-Kit",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dit-Yan",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "In Proceedings of the Fifth Annual ACM Conference on Learning at Scale",
+            "volume": "",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Individualized bayesian knowledge tracing models",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Michael V Yudelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Geoffrey",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kenneth R Koedinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gordon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "International conference on artificial intelligence in education",
+            "volume": "",
+            "issn": "",
+            "pages": "171--180",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Dynamic keyvalue memory networks for knowledge tracing",
+            "authors": [
+                {
+                    "first": "Jiani",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xingjian",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Irwin",
+                    "middle": [],
+                    "last": "King",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dit-Yan",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Proceedings of the 26th international conference on World Wide Web",
+            "volume": "",
+            "issn": "",
+            "pages": "765--774",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Overview of RKT model: Leftmost figure shows a student performance data and table shows textual content and knowledge concepts of exercises which constitute the input of RKT. Middle figure shows the relation between exercises and forget behavior of student which serve as contextual information for RKT. Rightmost figure shows that contextual information encoded as relation coefficients informs the attention weight to revised attention weights.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "The overall architecture of RKT. We first compute the exercise relation matrix A. Then we use A to compute the relation coefficients based on the relation between past exercises (e 1 , e 2 , . . . e n\u22121 ) and the next exercise e n and the time elapsed since the interaction (\u2206 1 , \u2206 2 , . . . , \u2206 n\u22121 ). The relation coefficients are propagated to the transformer model which modifies the attention weights to take into account the contextual information.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Peking Online Judge (POJ) This dataset is collected from Peking online platform of coding practices and consists of computer programming questions.We scraped the publicly available data from the website 5 .",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Plot of prediction performance over different student groups based on sparsity of interaction levels. Our model, RKT significantly outperforms every baseline.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "of Exercise Relation matrix computation.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "Attention visualization in RKT model of an example student from Junyi. We predict her performance on e 15 based on her past 15 interaction (we only show the first 4 interactions for better illustration). Right bars show the attention weights of two RKT (blue) and SAKT (red) Visualization of attention weights on different datasets. Each subfloat depicts the average attention weights of different sequences of the corresponding datasets.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": ", Virtual Event, Ireland \u00a9 2020 Association for Computing Machinery. ACM ISBN 978-1-4503-6859-9/20/10. . . $15.00 https://doi.org/10.1145/3340531.3411994",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Notations",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "A contingency table for two exercises i and j.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Dataset Details",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF4": {
+            "text": "Ablation Study",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF5": {
+            "text": "Comparison of four exercise relation matrix computation methods.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": []
+}

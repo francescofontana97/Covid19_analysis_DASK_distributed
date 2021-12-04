@@ -1,0 +1,1351 @@
+{
+    "paper_id": "3df4ba194f332472704e9fa673422533aa79f91a",
+    "metadata": {
+        "title": "",
+        "authors": []
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "feature Toward structure-based drug design against the epidermal growth factor receptor (EGFR) Yazan Hadda 1,2 , Marek Remes 1,2 , Vojtech Adam 1,2 and Zbynek Heger 1,2 , heger@mendelu.cz Most of the available crystal structures of epidermal growth factor receptor (EGFR) kinase domain, bound to drug inhibitors, originated from ligand-based drug design studies. Here, we used variations in 110 crystal structures to assemble eight distinct families highlighting the C-helix orientation in the Nlobe of the EGFR kinase domain. The families shared similar mutational profiles and similarity in the ligand R-groups (chemical composition, geometry, and charge) facing the C-helix, mutation sites, and DFG domain. For structure-based drug design, we recommend a systematic decision-making process for choice of template, guided by appropriate pairwise fitting and clustering before the molecular docking step. Alternatively, the binding site shape/volume can be used to filter and select the compound libraries.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": ""
+        },
+        {
+            "text": "Over the past few decades, drug design has shifted from a computer-aided (i.e., computer graphics [1] ) paradigm into a computer-directed or guided process. Depending on the elementary molecule used for computational design, two state-of-the-art strategies have advanced in this field, namely ligand-based and structure-based design. On the ligand-based side, quantitative structure-activity relationship (QSAR) was successfully used for nearly half a century to build reliable statistical models to predict the properties of new chemical compounds. The method is based on the study of quantitative relationships between physicochemical properties of chemical compounds and their biological activities [2] . Structurebased drug design is concerned with how ligands bind to the protein structure and methods of binding energy estimation. The historic analogy of protein and ligand with 'lock and key' was later replaced with the 'hand and glove' concept to mimic the flexibility of both the protein and ligand [3] . However, covalent inhibitors (in which the glove is permanently linked to the hand) need to first form a stable noncovalent complex in their search for optimal conditions to form covalent links in the final complex [4] . A structure-based virtual screening is performed via bottleneck rounds of high-throughput characterization, analysis, filtering, and selection. The protocol is summarized as follows: (i) selection of target protein structure(s) from crystal structure repositories (e.g., Protein Data Bank; PDB) or from computational models constructed via homology modeling or molecular dynamics (MD) simulations; (ii) characterization of the binding site; (iii) compound library construction, which involves several processes of characterization, filtering, and clustering; (iv) molecular docking of target with compounds supplemented with known actives and decoys followed by scoring; and (v) final evaluation and validation [5] . Given the dynamic nature of targets (which is required for them to function in physiological conditions), the binding site of the target-ligand complex is often adapted to new conformations involving either the protein side-chains or even the backbone [6] .",
+            "cite_spans": [
+                {
+                    "start": 98,
+                    "end": 101,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 702,
+                    "end": 705,
+                    "text": "[2]",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1009,
+                    "end": 1012,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                },
+                {
+                    "start": 1230,
+                    "end": 1233,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                },
+                {
+                    "start": 1947,
+                    "end": 1950,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 2205,
+                    "end": 2208,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Drug design (ligand-based versus structure-based)"
+        },
+        {
+            "text": "Many specialized methods for optimizing and improving the accuracy of ligand-based and structure-based drug design have been developed, such as scaffold hopping and Rgroup replacement of lead compounds [7] , the introduction of machine learning to QSAR for Features PERSPECTIVE Drug Discovery Today Volume 00, Number 00 October 2020 PERSPECTIVE modeling of chemical features in compound libraries [8] , and rotamer dynamics for monitoring side-chain flexibility in the molecular simulations of proteins [9] . The most accurate predictions can arise from using a MD simulation approach to screen libraries of compounds, such as the recent attempt to screen 8000 compounds utilizing the SUMMIT supercomputer at Oak Ridge National Laboratory, against the viral spike protein in Coronavirus 2019 (COVID-19) [10] . However, such an extreme amount of computational resource is not available to the average researcher. Docking software has recently improved in terms of its ability to accommodate side-chain flexibility [3] . Nevertheless, here we show that there are greater changes to be anticipated in the structure-based drug design targeting EGFR, a well-established receptor in many types of cancer.",
+            "cite_spans": [
+                {
+                    "start": 202,
+                    "end": 205,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 397,
+                    "end": 400,
+                    "text": "[8]",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 503,
+                    "end": 506,
+                    "text": "[9]",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 803,
+                    "end": 807,
+                    "text": "[10]",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1013,
+                    "end": 1016,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Drug design (ligand-based versus structure-based)"
+        },
+        {
+            "text": "EGFR tyrosine kinase inhibitors EGFR (Fig. 1a) is the main druggable oncogenic target in nonsmall lung cancer (NSCLC), with nearly 50% of Asian patients and 15% of Caucasian patients presenting with growth-activating mutations. Most of these mutations are exon 19 deletions and L858R point mutations [11, 12] . Almost Pharmaceutical Industries, Israel) and erlotinib (Tarceva1 by Astellas Pharma US, Inc., and Genentech, Inc., USA)], which were characterized by reversible binding to EGFR, were followed by a second-generation TKIs [afatinib (BIBW2992; Gilotrif1 by Boehringer Ingelheim, Germany)] with irreversible binding to EGFR (and HER2 homolog) by TKI binding to Cys797. Yet, resistance to therapy continued. A selective mutation causing a key substitution (T790M) in the kinase domain of EGFR contributed to nearly half of chemoresistant cases. This led to the development of the third-generation TKIs [osimertinib (AZD9291; Tagrisso1 by AstraZeneca, UK); rociletinib (CO-1686); olmutinib (HM61713); and nazartinib (EGF816)], which are still challenged by the development of chemoresistance [11, 13] . Approximately 10-26% of cases develop resistance to second-line osimertinib treatment because of the EGFR C797S mutation, making it the most common tertiary EGFR mutation. When osimertinib was used as a front-line treatment, C797S mutation was reported in 7% of cases, making it the second most frequent mechanism of drug resistance behind MET amplification. Furthermore, C797S mutation is predicted to interfere with binding of other third-generation TKIs, such as rociletinib, olmutinib, and nazartinib [12] . One recent alternative strategy was to develop C797-targeting covalent inhibitors that do not lose their potency (and affinity) in the presence of C797S mutants [14] ; however, there was still a need to develop therapeutics using alternative mechanisms of action.",
+            "cite_spans": [
+                {
+                    "start": 300,
+                    "end": 304,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 305,
+                    "end": 308,
+                    "text": "12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 311,
+                    "end": 317,
+                    "text": "Almost",
+                    "ref_id": null
+                },
+                {
+                    "start": 1098,
+                    "end": 1102,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1103,
+                    "end": 1106,
+                    "text": "13]",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1614,
+                    "end": 1618,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1782,
+                    "end": 1786,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 37,
+                    "end": 46,
+                    "text": "(Fig. 1a)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Drug design (ligand-based versus structure-based)"
+        },
+        {
+            "text": "Fourth-generation TKIs were developed by targeting EGFR away from the ATP-binding site. The first allosteric inhibitor compound (called EAI001 or EGFR allosteric inhibitor-1) was discovered by screening a library of $2.5 million compounds against a mutant peptide derived from EGFR in the presence of ATP. Following optimization for selectivity, the new EAI045 inhibitor was found to have high potency and selectivity as an allosteric, non-ATP competitive inhibitor of L858R/T790M mutant EGFR [15] . The allosteric binding pocket is far from the C797S site and, although EAI045 is ineffective alone because of receptor dimerization, it is promising for use in combination with cetuximab against T790M and C797S mutants [16] . JBJ-04-125-02 is another example of fourthgeneration allosteric TKIs that shows promising potency when used in combination with osimertinib [17] ; however, when used alone, its efficiency drops because of EGFR dimerization. C797S mutation is not the only reason for TKI drug resistance [12] . Resistance also arises from other EGFR mutations (e.g., G796X), and other acquired alterations, such as gene amplification (e.g., MET, HER2, etc.), oncogenic fusions, and MAPK-PI3K mutations.",
+            "cite_spans": [
+                {
+                    "start": 493,
+                    "end": 497,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 719,
+                    "end": 723,
+                    "text": "[16]",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 866,
+                    "end": 870,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1012,
+                    "end": 1016,
+                    "text": "[12]",
+                    "ref_id": "BIBREF11"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Drug design (ligand-based versus structure-based)"
+        },
+        {
+            "text": "Unfortunately, there is no standard or systematic treatment following the failure of the four generations of TKIs. The navigation of this 'no man's land' is sometimes managed by lytic-inducing strategies or onco-immunologic methods; however, many alternative strategies are under investigation [18] . Recent clinical trials on the combination of chemotherapy and osimertinib have shown promising progress, possibly because of the better toxicological profile of osimertinib compared with previous generation TKIs [19] . A recent meta-analysis on the outcomes of $4465 patients with EGFR-mutant NSCLC receiving TKI treatment showed that particular cohorts can have more benefits than others; for example, females over males, nonsmokers over smokers, and exon 19 deletion over L858R mutation [11] . Whether it is a sign of TKI development slow down or a natural development, 'precision medicine' has become an important step for management of the disease by stratification of patient cohorts into optimized treatment regimens according to molecular, pathophysiological and 'omics profiling [20] . In addition to conventional therapies targeting EGFR, such as TKIs (provisionally via ligand-based drug design) and monoclonal antibodies (e.g., cetuximab, panitumumab, and necitumumab); a third strategy is now targeting EGF directly via EGFR-derived peptide-based inhibitors, anti-EGF vaccines, and single-domain antibodies (nanobodies) [21] .",
+            "cite_spans": [
+                {
+                    "start": 294,
+                    "end": 298,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 513,
+                    "end": 517,
+                    "text": "[19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 790,
+                    "end": 794,
+                    "text": "[11]",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1088,
+                    "end": 1092,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1433,
+                    "end": 1437,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Drug design (ligand-based versus structure-based)"
+        },
+        {
+            "text": "Structure-based drug design of EGFR TKIs has been attracting global attention among researchers (Table S1 in the supplemental information online). NMR and X-ray crystals were used to validate structures of ligands only rather than complexes. Whereas most studies used a single structure (e.g., 1M17) for screening, few studies used two models (wildtype versus mutant) for drug design, such as [22, 23] . Interestingly, Sun et al. [24] used clusters of 19 EGFR-TKIs complexed structures for docking in an effort to create an ensemble that can be applied in ligand-based drug design. In 40 surveyed studies (Table S1 in the supplemental information online), structure-based drug design was mainly used as a supporting method to estimate ligand pose or interaction energy. Therefore, all MD simulations validations were too short to predict large movements in the EGFR protein.",
+            "cite_spans": [
+                {
+                    "start": 393,
+                    "end": 397,
+                    "text": "[22,",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 398,
+                    "end": 401,
+                    "text": "23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 430,
+                    "end": 434,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 605,
+                    "end": 614,
+                    "text": "(Table S1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Drug design (ligand-based versus structure-based)"
+        },
+        {
+            "text": "The development of EGFR TKIs is evolving quickly. At the time of writing, >71 900 ISIimpacted papers had been published on EGFR and over 200 X-ray crystalized protein 3D structures had been studied, mainly complexed with TKI ligands. Here, we analyzed a representative number of EGFR crystal structures to address the following questions: (i) how many different structural variations occur in the EGFR kinase-binding site? (ii) What are their causes based on TKIs and mutations? (iii) How big a role does the scaffold (i.e., core) of the TKIs have in binding compared with the R-groups? (iv) How can inhibitors be classified that reflects their effect? Nearly all the $40 publications of the 110 crystal structures described here were ligandbased drug design studies complemented with pharmacokinetics and X-ray crystallography to discover the mode of action. Nevertheless, it might be difficult to select which 3D structure to use. In other words, is there a subset of structures that are suitable for each TKI study? Despite being state-of-the-art, X-ray crystallography experiments take a relatively long time and are not expected to cover the most recent trends in EGFR TKIs. Therefore, it is likely that we have only mapped a small fraction of the conformational landscape of known EGFR TKIs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "There are nearly 110 representative EGFR kinase 3D structures spanning the amino acid range 714-950 (numeration according to Uniprot ID P00533-1) and complexed with ligands. The kinase domain is divided into the N-lobe (714-795) and C-lobe (796-950), which clench the TKI ligands (in almost planar geometry) from both sides like a sandwich (Fig. 1a ). There were 83 ligands salvaged in these structures, classified according to the core heterocycle of the scaffold into the following classes (numbers in brackets describe the represented PDB structures): one antibiotic (2), two benzimidazoles (3), six furopyrimidines (6), two indolocarbazoles (5), seven purines (11), one pyrazine (1), seven pyrazolopyrimidines (7), three pyridones (4), 34 pyrimidines (37), one pyrimidopyridone (1), eight pyrrolopyrimidines (13), seven quinazolines (16), one quinoline (2), and two thiazoles (2) ( Table S2 in the supplemental information online). Pyrimidine compounds were further classified into the following groups based on their secondary heterocycles: 13 imidazopyridines, one imidazothiazole, two indazoles, two indoles, two pyrazoles, one pyrazolopyridine, two pyridones, four pyrrolopyridines, and seven without secondary heterocycles. Other compounds did not Dendrogram showing weighted pair-group average clustering of the N-lobe of epidermal growth factor receptor (EGFR) based on a distance matrix. Structurestructure alignment was used to compare 110 3D structures and resulted in two distinct clans that can be divided further into two to three families each. The largest clan of 78 structures was highly similar and divided into family A (22 structures with one or no mutations in EGFR), family B (31 structures with mostly double EGFR mutations), and family C (25 structures with one or two EGFR mutations, divided into subfamily 1 with 21 structures and subfamily 2 with four structures). The other clan was more divergent and was divided into family D (17 structures divided into subfamily 1 with seven wild-type EGFR structures and subfamily 2 with ten triple-mutated EGFR structures) and family E (15 highly divergent structures divided into two subfamilies of ten and five structures). Method: Using the keyword 'EGFR' , a RCSB protein databank (www.rcsb.org) database search resulted in 260 structures. Structures were ordered according to best resolution (\u00c5), and then entries that did not cover the kinase domain of EGFR were excluded. Thirteen entries were without mutations and also without have classifiable heterocycles. This impressive diversity has been achieved in one decade when previously all kinase inhibitors were dominated by quinazoline-based TKIs [25] . Four apo-EGFR entries (resolution in \u00c5) were without mutations or additional compounds: 1M14 (2.6 \u00c5), 2GS2 (2.8 \u00c5), 3GOP (2.8 \u00c5), and 4TKS (3.2017 \u00c5). The entry 3GOP was chosen as the reference structure because of its length coverage and good resolution. However, it is the only apo-EGFR entry with a C-helix-out (inactive kinase) conformation, whereas the remainder were presented in the C-helix-in (active kinase) conformation (Fig. 1B) .",
+            "cite_spans": [
+                {
+                    "start": 2675,
+                    "end": 2679,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 340,
+                    "end": 348,
+                    "text": "(Fig. 1a",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 886,
+                    "end": 894,
+                    "text": "Table S2",
+                    "ref_id": null
+                },
+                {
+                    "start": 3112,
+                    "end": 3121,
+                    "text": "(Fig. 1B)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "The 110 EGFR 3D structures spanning the full range of the kinase domain were divided into five major family clusters at average weighted distances: 21.4069, 20.6099, 16.6741, and 9.4959 (Fig. S1 in the supplemental information online). There was no clear distribution of ligand classes among these families; however, EGFR mutations were relatively distributed among families in triple, double, single or no EGFR mutations. To identify local structural regions of divergence, the 3D structures of the two lobes in EGFR kinase were compared separately. Surprisingly, the C-lobe displayed relatively low divergence compared with the full-range and the N-lobe structures, with a maximum weighted distance of 5.0684 (Fig. S2 in the supplemental information online). This led to the conclusion that major structural variations must reside in the Nlobe, which requires further investigation.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 186,
+                    "end": 194,
+                    "text": "(Fig. S1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 711,
+                    "end": 719,
+                    "text": "(Fig. S2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "Of the 110 EGFR kinase N-Lobe crystal structures, two distinct clans (78 and 32 structures) were separated at an average weighted distance of 20.83, with the highest reported root-meansquare deviation (RMSD) against reference of 4.242 \u00c5 by 3LZB structure and lowest of 1.438 \u00c5 by 2JIT structure (Fig. 2 ; Table S3 in the supplemental information online) with different C-helix orientations (Fig. 3) . Nearly 50 structures within the largest clan were at a distance below 5.0, whereas the other clan showed higher divergence. At least eight distinct families were classified in clusters that were irrelevant to the core of the molecules and similar in the R-groups (their composition, geometry, and charge) facing the Chelix and P-loop. The influence of mutations and similarities in pharmacological properties was also observed in different families (Figs. 1b and 2 ). X-ray crystallography showed that the ATPbinding cleft between the N-lobe and C-lobe can be wider or narrower as a result of different crystal packing [26] , which we assume can influence the flexibility of the glycine-rich P-loop. Our comparative analysis shows highly distinct conformational landscapes for each of the mutant combinations. The most evident cluster of mutants was the triple T790M/L858R/V948R mutant in Family D2 in the N-lobe (Fig. 2) and at average weighted distance of 20.6099 in the whole kinase (Fig. S2 in the supplemental information online).",
+            "cite_spans": [
+                {
+                    "start": 1020,
+                    "end": 1024,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 295,
+                    "end": 302,
+                    "text": "(Fig. 2",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 305,
+                    "end": 313,
+                    "text": "Table S3",
+                    "ref_id": null
+                },
+                {
+                    "start": 390,
+                    "end": 398,
+                    "text": "(Fig. 3)",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 850,
+                    "end": 865,
+                    "text": "(Figs. 1b and 2",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1314,
+                    "end": 1322,
+                    "text": "(Fig. 2)",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 1387,
+                    "end": 1395,
+                    "text": "(Fig. S2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "Most ligands in each family were characterized by a secondary amide (scaffold-NH-R 1 ) group projecting from the scaffold and bent at the second bond at a torsional angle of 45-75 toward the base of the C-helix. This conforms -R 1 group in a new plane where its aromatic parts (if any) are sandwiched between Leu788 and Thr790 (or Met790 in T790M mutant). In families C, D, and E, the -R 1 group is further extended to make more contacts with Leu777 and Leu788 (Fig. 3c-f) , thus shifting the whole ligand molecule backwards (more precisely outwards) with the bent plane sandwiched between Thr790 and Lys745 (instead of Leu788). The narrow nature of that back-pocket has been a major challenge for R-group replacement in the past. Xu et al. [27] described a method where they first screened the -R 1 group for potent ligands targeting the narrow pocket at the base of C-helix, and then] screened for ligands selective for EGFR against ERBB2 by modifying the ligand from the opposite side (facing solvent). Several compounds with high potency to EGFR displayed low receptor selectivity. The shift toward mutation selectivity has been a game changer over the past decade. Structural selectivity of gefitinib and erlotinib for the L858R mutant is attributed to their specific recognition of the active kinase state and to weaker ATP binding by L858R EGFR (higher ATP Km value of the mutant EGFR relative to the wild-type). Therefore, the emergence of drug resistance because of the secondary mutation T790M is the result of the restoration of the ATP Km value of the double-mutant enzyme to wild-type levels [28] . An alternative strategy that targets the kinase entrance far from T789M focused on the hydrophobic clamp formed between N-lobe (L718 and V726) and C-lobe (L844). The insight behind this approach was from several EGFRligand co-crystals such as 5XDK, 3IKA, and 5X2C [30] . The latest generation of TKIs has no contact or effect on the C-helix.",
+            "cite_spans": [
+                {
+                    "start": 741,
+                    "end": 745,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1605,
+                    "end": 1609,
+                    "text": "[28]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1876,
+                    "end": 1880,
+                    "text": "[30]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 461,
+                    "end": 472,
+                    "text": "(Fig. 3c-f)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "EGFR is activated through the formation of asymmetric dimer, where the C-lobe of an activator interacts with the N-lobe of a receiver, causing its C-helix to fold inwards (i.e., C-helix-in) [31] . EGFR inhibition via a phenomenon called 'DFG-in-C-helix-out' was observed in the families C2, D1, D2, and E1 and has been previously described particularly for irreversible TKIs [32, 33] . The new conformation of a stable outward C-helix results in a larger and more hydrophobic pocket to accommodate an aromatic moiety from the TKI. In the crystal structures 3IKA and 5GNK, the C-helix is pushed farther from the pocket in the latter structure, but forms hydrogen bonds with Asp855, whereas the acrylamide group in the ligands forms a covalent bond with Cys797 [32] . Although the DFG-in-Chelix-out conformation can provide a selective advantage for EGFR kinases, mechanisms that stabilize the C-helix-in conformation would lead to drug resistance [31] . Indeed, oncogenic mutations causing resistant C-helix-in have been reported in HER2, BRAF, and EGFR exon 19 deletions, targeting particularly inhibitors of the C-helix-out families [34] . The role of C-helix rotation in forming inactive conformation has been well studied. The process is mediated by Leu858 (Fig. 1a) , which forms a helical turn and hydrophobic interactions with other residues in the N-lobe, thus displacing the C-helix from the active site and rotating it outwards into an inactive conformation [35] .",
+            "cite_spans": [
+                {
+                    "start": 190,
+                    "end": 194,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 375,
+                    "end": 379,
+                    "text": "[32,",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 380,
+                    "end": 383,
+                    "text": "33]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 759,
+                    "end": 763,
+                    "text": "[32]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 946,
+                    "end": 950,
+                    "text": "[31]",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 1134,
+                    "end": 1138,
+                    "text": "[34]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1467,
+                    "end": 1471,
+                    "text": "[35]",
+                    "ref_id": "BIBREF34"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1260,
+                    "end": 1269,
+                    "text": "(Fig. 1a)",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "The DFG motif (Asp855-Gly857) in the C-lobe has been targeted by alternative TKI in two different receptors. Covalent ligands were reported to target Cys797 of EGFR L858R in the DFG-in conformation and Cys477 of FGFR4 V550L in the DFG-out conformation [36] . Examples of DFG motif targeting include the crystal structures 4JQ7, 4JQ8, 4JR3, and 4JRV [37] . , and BindingMOAD (bindingmoad.org) databases. *Data for the same ligand but the sequence identity of crystal structure was <100% indicating other mutant variants. The structure-structure alignment was done by the same method described in Fig. 1 in the main text.",
+            "cite_spans": [
+                {
+                    "start": 252,
+                    "end": 256,
+                    "text": "[36]",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 349,
+                    "end": 353,
+                    "text": "[37]",
+                    "ref_id": "BIBREF36"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 595,
+                    "end": 601,
+                    "text": "Fig. 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "Comparative overview of EGFR crystal structures"
+        },
+        {
+            "text": "In their review, Lionta et al. [5] proposed a protocol for drug design in cases where the target structure exhibits many conformations to: (i) perform RMSD pairwise fitting comparison of the receptor confor-mations; (ii) perform clustering analysis of fitted models; and (iii) study the changes in the binding site regarding shape and volume and use it to filter out unsuitable ligands from the library. We suggest that it is important to clarify some peculiarities in using RMSD in comparative modeling. RMSD, which is commonly used among modelers, can provide a biased estimation of model similarity particularly when an entire subdomain in the structure (such as the case of C-helix in EGFR kinase) is shifted without complete changes inside that subdomain. To solve this bias, RMSD will have to be limited to isolated fragments (of local regions) of the structure [38] , or instead, a score that considers local regions and includes local/global fitting can be used, such as the global distance test (GDT) [39] . Another widely accepted alternative is the template modeling scores (TM-score and TM-align), which, in additional to local/global fitting, take the length of polypeptide into consideration [40] . Weprovidethevaluesfor the TM-score and GDT scores of the N-lobe fittings of EGFR structures in Table S4 in the supplemental information online.",
+            "cite_spans": [
+                {
+                    "start": 31,
+                    "end": 34,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 868,
+                    "end": 872,
+                    "text": "[38]",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1010,
+                    "end": 1014,
+                    "text": "[39]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1206,
+                    "end": 1210,
+                    "text": "[40]",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1308,
+                    "end": 1316,
+                    "text": "Table S4",
+                    "ref_id": null
+                }
+            ],
+            "section": "Concluding remarks and recommendations"
+        },
+        {
+            "text": "Here, we have clarified some of the confusion regarding EGFR structure-based design and have provided a rationale for the applications for which these structure families can be used. For example, 3D structures of the A, B, and C1 families are Chelix-in with two mutations or less. They are suitable for all three generations of TKIs with minimum interactions with the C-helix. The remaining families are C-helix-out conformations with three or less mutations per structure, which are most suitable for targeting of the hydrophobic pocket formed by the C-helix-out conformation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Concluding remarks and recommendations"
+        },
+        {
+            "text": "Uncited references [29] .",
+            "cite_spans": [
+                {
+                    "start": 19,
+                    "end": 23,
+                    "text": "[29]",
+                    "ref_id": "BIBREF28"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Concluding remarks and recommendations"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Structurebased drug design: progress, results and challenges",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "L M J"
+                    ],
+                    "last": "Verlinde",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "G J"
+                    ],
+                    "last": "Hol",
+                    "suffix": ""
+                }
+            ],
+            "year": 1994,
+            "venue": "Structure",
+            "volume": "2",
+            "issn": "",
+            "pages": "577--587",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Quantitative structureactivity relationship in ligand based drug design: concepts and applications",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Kanakaveti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Protein interactions: computational methods, analysis and applications (Gromiha, M.M",
+            "volume": "",
+            "issn": "",
+            "pages": "333--349",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Protein structure-based drug design: from docking to molecular dynamics",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Sledz",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Caflisch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Curr Opin Struct Biol",
+            "volume": "48",
+            "issn": "",
+            "pages": "93--102",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Hope and disappointment: covalent inhibitors to overcome drug resistance in non-small cell lung cancer",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Engel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "ACS Med Chem Lett",
+            "volume": "7",
+            "issn": "",
+            "pages": "2--5",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Structure-based virtual screening for drug discovery: principles, applications and recent advances",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Lionta",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Curr Top Med Chem",
+            "volume": "14",
+            "issn": "",
+            "pages": "1923--1938",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Structure-based virtual screening for drug discovery: a problem-centric review",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "AAPS J",
+            "volume": "14",
+            "issn": "",
+            "pages": "133--141",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Bioisosteric replacement and scaffold hopping in lead generation and optimization",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Langdon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Mol Inform",
+            "volume": "29",
+            "issn": "",
+            "pages": "366--385",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Machine learning in chemoinformatics and drug discovery",
+            "authors": [
+                {
+                    "first": "Y.-C",
+                    "middle": [],
+                    "last": "Lo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Drug Discov Today",
+            "volume": "23",
+            "issn": "",
+            "pages": "1538--1546",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Rotamer dynamics: analysis of rotamers in molecular dynamics simulations of proteins",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Haddad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Biophys J",
+            "volume": "116",
+            "issn": "",
+            "pages": "2062--2072",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Repurposing therapeutics for COVID-19: supercomputer-based docking to the SARS-CoV-2 viral spike protein and viral spike protein-human ACE2 interface",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Smith",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.26434/chemrxiv.11871402.v4"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Predictors of outcomes in patients with EGFR-mutated non-small cell lung cancer receiving EGFR tyrosine kinase inhibitors: a systematic review and meta-analysis",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Buonerba",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Cancers",
+            "volume": "11",
+            "issn": "",
+            "pages": "1--18",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Resistance mechanisms to osimertinib in EGFR-mutated non-small cell lung cancer",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Leonetti",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Br J Cancer",
+            "volume": "121",
+            "issn": "",
+            "pages": "725--737",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Third generation EGFR TKIs: current data and future directions",
+            "authors": [
+                {
+                    "first": "C.-S",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Mol Cancer",
+            "volume": "17",
+            "issn": "",
+            "pages": "1--14",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Inhibition of osimertinibresistant epidermal growth factor receptor EGFR-T790M/C797S",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lategahn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Chem Sci",
+            "volume": "10",
+            "issn": "46",
+            "pages": "10789--10801",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Overcoming EGFR(T790M) and EGFR (C797S) resistance with mutant-selective allosteric inhibitors",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Jia",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nature",
+            "volume": "534",
+            "issn": "7605",
+            "pages": "129--132",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "EAI045: The fourth-generation EGFR inhibitor overcoming T790M and C797S resistance",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Cancer Lett",
+            "volume": "385",
+            "issn": "",
+            "pages": "51--54",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Single and dual targeting of mutant EGFR with an allosteric inhibitor",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "To",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Cancer Discov",
+            "volume": "9",
+            "issn": "",
+            "pages": "926--943",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Navigating the 'No Man's Land' of TKI-failed EGFR-mutated non-small cell lung cancer (NSCLC): a review",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Oronsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Neoplasia",
+            "volume": "20",
+            "issn": "",
+            "pages": "92--98",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Combination of EGFR-TKIs and chemotherapy in advanced EGFR mutated NSCLC: Review of the literature and future perspectives",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Rebuzzi",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Crit Rev Oncol Hematol",
+            "volume": "146",
+            "issn": "",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Molecular profiling in precision medicine oncology",
+            "authors": [
+                {
+                    "first": "Le",
+                    "middle": [],
+                    "last": "Tourneau",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nat Med",
+            "volume": "25",
+            "issn": "",
+            "pages": "711--712",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "A third shot at EGFR: new opportunities in cancer therapy",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Guardiola",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Trends Pharmacol Sci",
+            "volume": "40",
+            "issn": "",
+            "pages": "941--955",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Discovery of new thieno 3,2-d pyrimidine derivatives targeting EGFR(L858R/T790M) NSCLCs by the conformation constrained strategy",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Eur J Med Chem",
+            "volume": "199",
+            "issn": "",
+            "pages": "1--13",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Development of triple mutant T790M/C797S allosteric EGFR inhibitors: a computational approach",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Karnik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "J Biomol Struct Dyn",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1080/07391102.2020.1786460"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Structure-based ensemble-QSAR model: a novel approach to the study of the EGFR tyrosine kinase and its inhibitors",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [
+                        "Q"
+                    ],
+                    "last": "Sun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Acta Pharmacol Sin",
+            "volume": "35",
+            "issn": "",
+            "pages": "301--310",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Novel mutant-selective EGFR kinase inhibitors against EGFR T790M",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Nature",
+            "volume": "462",
+            "issn": "7276",
+            "pages": "1070--1074",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Structural pharmacological studies on EGFR T790M/C797S",
+            "authors": [
+                {
+                    "first": "L.-L",
+                    "middle": [],
+                    "last": "Kong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Biochem Biophys Res Commun",
+            "volume": "488",
+            "issn": "",
+            "pages": "266--272",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Discovery of novel 4-amino-6-arylaminopyrimidine-5-carbaldehyde oximes as dual inhibitors of EGFR and ErbB-2 protein tyrosine kinases",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Bioorg Med Chem Lett",
+            "volume": "18",
+            "issn": "",
+            "pages": "3495--34999",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Insights into the aberrant activity of mutant EGFR kinase domain and drug recognition",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Gajiwala",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Structure",
+            "volume": "21",
+            "issn": "",
+            "pages": "209--219",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Inhibition of osimertinibresistant epidermal growth factor receptor EGFR-T790M/C797S",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lategahn",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Chem Sci",
+            "volume": "10",
+            "issn": "46",
+            "pages": "10789--10701",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Structural insights into drug development strategy targeting EGFR T790M/C797S",
+            "authors": [
+                {
+                    "first": "S.-J",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Oncotarget",
+            "volume": "9",
+            "issn": "17",
+            "pages": "13652--13665",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Overcoming resistance to HER2 inhibitors through state-specific kinase binding",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Novotny",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nat Chem Biol",
+            "volume": "12",
+            "issn": "",
+            "pages": "923--930",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Discovery of (R)-1-(3-(4-amino-3-(3-chloro-4-(pyridin-2-ylmethoxy) phenyl)-1 Hpyrazolo [3,4-d] pyrimidin-1-yl) piperidin-1-yl) prop-2-en-1-one (CHMFL-EGFR-202) as a novel irreversible EGFR mutant kinase inhibitor with a distinct binding mode",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "J Med Chem",
+            "volume": "60",
+            "issn": "",
+            "pages": "2944--2962",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Discovery and characterization of a novel irreversible EGFR mutants selective and potent kinase inhibitor CHMFL-EGFR-26 with a distinct binding mode",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Oncotarget",
+            "volume": "8",
+            "issn": "",
+            "pages": "18359--18372",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Activation mechanism of oncogenic deletion mutations in BRAF, EGFR, and HER2",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Foster",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Cancer Cell",
+            "volume": "29",
+            "issn": "",
+            "pages": "477--493",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Structures of lung cancerderived EGFR mutants and inhibitor complexes: mechanism of activation and insights into differential inhibitor sensitivity",
+            "authors": [
+                {
+                    "first": "C.-H",
+                    "middle": [],
+                    "last": "Yun",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Cancer Cell",
+            "volume": "11",
+            "issn": "",
+            "pages": "217--227",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Development of covalent inhibitors that can overcome resistance to first-generation FGFR kinase inhibitors",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proc Natl Acad Sci U S A",
+            "volume": "111",
+            "issn": "45",
+            "pages": "4869--4877",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Protein kinase inhibitor design by targeting the Asp-Phe-Gly (DFG) motif: the role of the DFG motif in the design of epidermal growth factor receptor inhibitors",
+            "authors": [
+                {
+                    "first": "Y.-H",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "J Med Chem",
+            "volume": "56",
+            "issn": "",
+            "pages": "3889--3903",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Ten quick tips for homology modeling of high-resolution protein 3D structures",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Haddad",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "PLoS Comp Biol",
+            "volume": "16",
+            "issn": "",
+            "pages": "1--19",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "LGA: a method for finding 3D similarities in protein structures",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Zemla",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Nucleic Acids Res",
+            "volume": "31",
+            "issn": "13",
+            "pages": "3370--3374",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "TM-align: a protein structure alignment algorithm based on the TM-score",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Skolnick",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Nucleic Acids Res",
+            "volume": "33",
+            "issn": "",
+            "pages": "2302--2309",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Title. (a) 3D structure of the epidermal growth factor receptor (EGFR) kinase domain complexed with third-generation drug osimertinib showing the C-lobe (blue) and N-lobe (green). Distinct mutation sites are highlighted in orange, whereas the DFG domain is highlighted in red. (b) Dendrogram showing weighted pair-group average clustering of the N-lobe of EGFR based on distance matrix. Structure-structure alignment was used to compare four wild-type apo EGFR with representative structures from classified families of co-complexed EGFR with ligands. Method: The structure-structure multiple-alignment using aln.malign3d() function in Modeller (9.17, r10881) was used to perform throughout (N\u00c01) dynamic programming where each new structure is compared to the average of the previous structures in each new cycle. Default settings were used [off diagonal = 100, gap penalties 3d = (0.0, 1.75), fit atoms = 'CA']. Dendrogram was built in Modeller with a cluster cutoff of \u00c01.0.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "FIGURE 2",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "superposition of N-lobe of epidermal growth factor receptor (EGFR) kinase domain (gray ribbons) and complexed ligands (green wire with HETATOM coloring). Residues within a 3-\u00c5 distance are shown as gray sticks with HETATOM coloring. Subfamilies are colored accordingly. (a) Family A (22 structures with one or no mutations in EGFR) showing the C-helix in proximity to ligands (arrow) and contacts with Glu762. (b) Family B (31 structures with mostly double EGFR mutations) showing T790M mutants and the C-helix in proximity to ligands (arrow) by contacts with Glu762. (c) Family C1 in gray (21 structures with one or two EGFR mutations) showing T790M mutants and the C-helix in proximity to ligands by contacts with Glu762. Family C2 in purple (four structures) showing shifting of the C-helix away from ligands because of a steric effect. (d) Family D1 in brown (seven wild-type EGFR structures)showing steric effect of ligands (brown wire inside the red circle) and the C-helix is shifting away with no contacts against Glu762. Family D2 in gray (ten triple-mutated EGFR structures) showing shifting of the C-helix away from ligands possibly because of effects of mutations. (e) Family E1 in gray (ten structures) showing the steric effect of ligands and the C-helix shifting away with no contacts against Glu762. (F) Family E1 and E2 superposed (in gray and gold, respectively). Family E2 (five highly divergent structures) showing a back-shift in the C-helix with ligand contacts against Glu762 and Ile759. Visualization of protein and ligand 3D Structures was performed using UCSF Chimera (version 1.10.2). The matchmaker plugin was used for superposition of all heavy atoms via the BLOSUM-62 scoring matrix and Needleman-Wunsch alignment algorithm.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF1": {
+            "text": "Please cite this article in press as: Hadda, Y. et al. Toward structure-based drug design against the epidermal growth factor receptor (EGFR), Drug Discov Today (2020), https://doi.org/ 10.1016/j.drudis.2020.10.007",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Please cite this article in press as: Hadda, Y. et al. Toward structure-based drug design against the epidermal growth factor receptor (EGFR), Drug Discov Today (2020), https://doi.org/ 10.1016/j.drudis.2020.10.007",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "We gratefully acknowledge the Czech Science Foundation (project no. 18-10251S) and CEITEC 2020 (LQ1601) with financial support from the Ministry of Education, Youth and Sports of the Czech Republic under the National Sustainability Programme II for financial support of this work.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgments"
+        },
+        {
+            "text": "Supplementary material related to this article can be found, in the online version, at https:// doi.org/10.1016/j.drudis.2020.10.007.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Appendix A. Supplementary data"
+        }
+    ]
+}

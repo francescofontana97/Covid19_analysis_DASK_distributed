@@ -1,0 +1,3904 @@
+{
+    "paper_id": "3dee1b2c7705da32139eb1e5b426982154c74292",
+    "metadata": {
+        "title": "Network-based Virus-Host Interaction Prediction with Application to SARS-CoV-2",
+        "authors": [
+            {
+                "first": "Hangyu",
+                "middle": [],
+                "last": "Du",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Brandeis University",
+                    "location": {
+                        "settlement": "Waltham",
+                        "region": "Massachusetts",
+                        "country": "United States"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Feng",
+                "middle": [],
+                "last": "Chen",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Brandeis University",
+                    "location": {
+                        "settlement": "Waltham",
+                        "region": "Massachusetts",
+                        "country": "United States"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Hongfu",
+                "middle": [],
+                "last": "Liu",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Brandeis University",
+                    "location": {
+                        "settlement": "Waltham",
+                        "region": "Massachusetts",
+                        "country": "United States"
+                    }
+                },
+                "email": "hongfuliu@brandeis.edu"
+            },
+            {
+                "first": "Pengyu",
+                "middle": [],
+                "last": "Hong",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Brandeis University",
+                    "location": {
+                        "settlement": "Waltham",
+                        "region": "Massachusetts",
+                        "country": "United States"
+                    }
+                },
+                "email": "hongpeng@brandeis.edu"
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "Severe Acute Respiratory Syndrome Coronavirus-2 (SARS-CoV-2), a novel virus causing the COVID-19 disease, was first reported in Wuhan, China, in December of 2019. Since then, it has quickly become a global health crisis (1) with over 50 million people infected and 1,250,000 death over 200 countries as of November of 2020 (2) . The impact of SARS-CoV-2 has significantly surpassed previous outbreakings of coronaviruses, such as Severe Acute Respiratory Syndrome Coronavirus (SARS-CoV) in 2003 and the Middle East Respiratory Syndrome Coronavirus (MERS-CoV) in 2012. Besides humans, SARS-CoV-2 has also been confirmed to infect several other mammals closely related to human activities, including dogs (3), cats (4), tigers (5) , and golden Syrian hamsters (6) . It is important to identify a comprehensive set of such mammals because they can potentially serve as covert means to exacerbate the spread of COVID-19. Moreover, identifying interactions between SARS-CoV-2 proteins and host proteins can deepen our understanding of the viral invasion processes and may help design treatments and vaccines. In general, we want to promptly achieve the above two goals for new zoonotic viruses, which we believe can be done by leveraging the knowledge and data about known viruses highly relevant to the new ones.",
+            "cite_spans": [
+                {
+                    "start": 323,
+                    "end": 326,
+                    "text": "(2)",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 725,
+                    "end": 728,
+                    "text": "(5)",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 758,
+                    "end": 761,
+                    "text": "(6)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The research community has accumulated a great deal of knowledge about several other human coronaviruses (including SARS-CoV (7) (8) (9) (10) (11) (12) (13) (14) (15) , HCoV-HKU1 (15) , HCoV-OC43 (16, 17) , HCoV-NL63 (18) , MERS-CoV (19) (20) (21) (22) (23) ) and has collected a large amount of data about them. For example, it was shown that human Angiotensin-Converting Enzyme 2 (ACE2) was the primary host receptor used by the S protein (S-protein) of SARS-CoV-2 for the virus to gain entry into human cells (24) (Figure S1 ). ACE2 is also the host receptor used by SARS-CoV (14) and HCoV-NL63 (18) . The S-protein of SARS-CoV-2 binds significantly tighter to ACE2 than its counterpart in SARS-CoV (25) . After the virus enters host cells, interferon-stimulated genes (ISGs) are essential for a host to defend against viral infection ( Figure S2 ). This knowledge and data can be utilized to investigate the infection spectrum of SARS-CoV-2 and its interactions with hosts at the protein level. Finally, we built a Virus-Host Interaction Network (VHIN) of seven viruses and seventeen hosts that summarizes the existing protein-protein interaction (PPI) and infection relationships among them ( Figure 1A , more details in Figures S3, S4 and S5).",
+            "cite_spans": [
+                {
+                    "start": 125,
+                    "end": 128,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 129,
+                    "end": 132,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 133,
+                    "end": 136,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 137,
+                    "end": 141,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 142,
+                    "end": 146,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 147,
+                    "end": 151,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 152,
+                    "end": 156,
+                    "text": "(13)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 157,
+                    "end": 161,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 162,
+                    "end": 166,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 179,
+                    "end": 183,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 196,
+                    "end": 200,
+                    "text": "(16,",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 201,
+                    "end": 204,
+                    "text": "17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 217,
+                    "end": 221,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 233,
+                    "end": 237,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 238,
+                    "end": 242,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 243,
+                    "end": 247,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 248,
+                    "end": 252,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 253,
+                    "end": 257,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 512,
+                    "end": 516,
+                    "text": "(24)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 579,
+                    "end": 583,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 598,
+                    "end": 602,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 702,
+                    "end": 706,
+                    "text": "(25)",
+                    "ref_id": "BIBREF24"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 517,
+                    "end": 527,
+                    "text": "(Figure S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 840,
+                    "end": 849,
+                    "text": "Figure S2",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 1198,
+                    "end": 1207,
+                    "text": "Figure 1A",
+                    "ref_id": null
+                },
+                {
+                    "start": 1226,
+                    "end": 1240,
+                    "text": "Figures S3, S4",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "We have developed a network-based multi-level virus-host interaction modeling and prediction, termed Infection Mechanism and Spectrum Prediction (IMSP) ( Figure 1B , details in the Method section), which uses machine learning technique to learn from the constructed VHIN and then predict novel virus-host interactions at both the protein (i.e., Mechanism) and organism (i.e., Spectrum) levels. IMSP predicts that the SARS-CoV-2 S-protein can bind well with ACE2 receptors in seven mammalian hosts, which have not been reported. Among those hosts, five of them are predicted to have high risks of being infected by SARS-CoV-2. Moreover, IMSP identifies eight new interactions between SARS-CoV-2 proteins and human proteins. To our best knowledge, our work is the first to apply machine learning techniques for predicting virus-host interactions at both protein and organism levels. Previous works (26, 27) on predicting virus-host interactions focus on the relationships between SARS-CoV-2 proteins and human proteins, which ignore other hosts that might be infected by SARS-CoV-2.",
+            "cite_spans": [
+                {
+                    "start": 896,
+                    "end": 900,
+                    "text": "(26,",
+                    "ref_id": null
+                },
+                {
+                    "start": 901,
+                    "end": 904,
+                    "text": "27)",
+                    "ref_id": "BIBREF27"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 154,
+                    "end": 163,
+                    "text": "Figure 1B",
+                    "ref_id": null
+                }
+            ],
+            "section": "Introduction"
+        },
+        {
+            "text": "The virus-host interaction network. Nodes represent proteins, viruses, and hosts; interactions represent relationships (i.e., PPI, infect, similarity, belong). The color of a node indicates its organism. The thickness of a similarity relationship indicates its level of similarity. For the full network, refer to the viral entry graph ( Figure S3 ), interferon signaling pathway graph ( Figure S4 ), and infection graph ( Figure S5 ). (B) IMSP learns a representation for each potential interaction, which contains a structural embedding and a content embedding. The structural embedding captures the local structural features of an interaction. The content embedding captures the attributes that reveal biological aspects of an interaction. The representation of each interaction is derived by concatenating its structural and content embeddings, where S stands for a structural embedding element, and C stands for a content embedding element. A Multi-layer Perceptron (MLP) is trained to classify the relationship between two nodes into PPI, infection, or no interaction. See the Methods section for calculating the structural and content embeddings. (C) Exemplar predicted interactions are highlighted and colored accordingly to their types. Existing interactions are dimmed.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 337,
+                    "end": 346,
+                    "text": "Figure S3",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 387,
+                    "end": 396,
+                    "text": "Figure S4",
+                    "ref_id": "FIGREF2"
+                },
+                {
+                    "start": 422,
+                    "end": 431,
+                    "text": "Figure S5",
+                    "ref_id": null
+                }
+            ],
+            "section": "Fig. 1. Infection Mechanism and Spectrum Prediction. (A)"
+        },
+        {
+            "text": "Here, we explain the construction of our virus-host interaction network in detail, highlight the predicted interactions by SARS-CoV-2, and present the overall performance evaluation of our interaction prediction model IMSP.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The Virus-Host Interaction Network consists of two layers (an organism layer and a protein layer). The organism layer contains a set of viruses (including SARS-CoV-2, SARS-CoV, HCoV-229E, HCoV-HKU1, HCoV-OC43, HCoV-NL63, and MERS-CoV) and a set of hosts (including human, mouse, rat, dog, cat, camel, squirrel, cattle, chimpanzee, red junglefowl, rabbit, horse, monkey, rat, sheep, pig, and golden Syrian hamster). At the protein layer, we focus on proteins that are known to be involved in viral invasion as well as immune system response and suppression. The network contains 17 host protein homolog groups obtained from NCBI: ACE2, Dipeptidyl Peptidase 4 (DPP4), IRF3, IRF7, IRF9, Mitochondrial Anti-Viral-signaling protein (MAVS), Melanoma Differentiation-Associated protein 5 (MDA5), Nuclear Factor Kappa-light-chain-enhancer of activated B (NF-\u03baB), Protein Kinase interferon-inducible double-stranded RNA dependent Activator (PRKRA), TANK Binding Kinase 1 (TBK1), Retinoic Acid-Inducible Gene I (RIG-I), Signal Transducer and Activator of Transcription 1 (STAT1) and Signal Transducer and Activator of Transcription 2 (STAT2)). The viral proteins include homologs of Sprotein, Membrane (M) protein, Nucleocapsid (N) protein, nsp1, nsp15, ORF3b, ORF4a, ORF4b, ORF6, and Papainlike protease (PLpro). There are four types of interactions between nodes: Protein-Protein Interactions, infection, belonging, and similarity between protein homologs. Similarities between homologs were calculated using the Protein BLAST algorithm provided by NCBI. PPIs and infection relationships are gathered from academic publications (7) (8) (9) (10) (11) (12) (13) (14) (15) (16) (17) (18) (19) (20) (21) (22) (23) .",
+            "cite_spans": [
+                {
+                    "start": 1620,
+                    "end": 1623,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 1624,
+                    "end": 1627,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1628,
+                    "end": 1631,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1632,
+                    "end": 1636,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 1637,
+                    "end": 1641,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 1642,
+                    "end": 1646,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1647,
+                    "end": 1651,
+                    "text": "(13)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 1652,
+                    "end": 1656,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 1657,
+                    "end": 1661,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1662,
+                    "end": 1666,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1667,
+                    "end": 1671,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 1672,
+                    "end": 1676,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1677,
+                    "end": 1681,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1682,
+                    "end": 1686,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1687,
+                    "end": 1691,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1692,
+                    "end": 1696,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1697,
+                    "end": 1701,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Virus-Host Interaction Network"
+        },
+        {
+            "text": "We applied IMSP on SARS-CoV-2 and other six human coronaviruses to get high-confidence predictions of PPIs and infections. Figure S1 shows the interactions between S proteins and ACE2. Figure S2 shows the interactions between virus proteins and IFN proteins in hosts. Figure S3 shows the network between the host group and the virus group in the organism layer. The virus-host network's complete information, built with two layers of data containing 246 nodes and 1,766 interactions, is displayed in Node Table S4 and Interaction Table S5 . All 65 infections and 457 PPIs predictions are shown in Table S6 and S7.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 123,
+                    "end": 132,
+                    "text": "Figure S1",
+                    "ref_id": null
+                },
+                {
+                    "start": 185,
+                    "end": 194,
+                    "text": "Figure S2",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 268,
+                    "end": 277,
+                    "text": "Figure S3",
+                    "ref_id": "FIGREF1"
+                },
+                {
+                    "start": 505,
+                    "end": 538,
+                    "text": "Table S4 and Interaction Table S5",
+                    "ref_id": null
+                },
+                {
+                    "start": 597,
+                    "end": 605,
+                    "text": "Table S6",
+                    "ref_id": null
+                }
+            ],
+            "section": "SARS-CoV-2 -Host Interaction Predictions"
+        },
+        {
+            "text": "The ability of SARS-CoV-2's S-protein to bind to the host ACE2 receptors is a key factor deciding the infection capability of SARS-CoV-2. IMSP predicts that the S-protein of SARS-CoV-2 has a high probability of binding well with the ACE2 receptors in mice, rats, sheep, chimpanzees, cattle, squirrels, and horses ( Figure 2a ). Mice and rats have been recognized to be susceptible to several other human coronaviruses, such as, SARS-CoV (7), MERS-CoV (28), HCoV-OC43 (17) and HCoV-HKU1 (29, 30) . The chimpanzee has the ACE2 with 99.38% similarity with human ACE2, which has a high possibility to bind with the same S-protein. The overall similarity of ACE2 for the horse, squirrel, sheep, and cattle is 93.45%, 91.82%, 90.81%, and 90.56% compared to human ACE2, respectively. These predictions still require more practical research is required to determine the binding affinity of these mammals' ACE2 with SARS-CoV-2's S-protein. It has been shown that ACE2 can tolerate up to seven amino acids changes out of 20 critical ones that contact with the S-protein, without losing the functionality as SARS-CoV-2's receptor (31) . This means that similarity might not be the only factor that influences the binding affinity between ACE2 and SARS-CoV-2's S-protein.",
+            "cite_spans": [
+                {
+                    "start": 467,
+                    "end": 471,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 486,
+                    "end": 490,
+                    "text": "(29,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 491,
+                    "end": 494,
+                    "text": "30)",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 1119,
+                    "end": 1123,
+                    "text": "(31)",
+                    "ref_id": "BIBREF31"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 315,
+                    "end": 324,
+                    "text": "Figure 2a",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "SARS-CoV-2 S-protein Binding Predictions"
+        },
+        {
+            "text": "The Interferon (IFN) pathway plays a critical role in the human immune response. After the virus infection is detected, the innate immune system will induce the IFN signaling, and the expression of IFN genes will increase the cellular resistance to viral invasion. Viruses have developed various strategies to inhibit IFN signaling to facilitate a successful viral invasion (32) . SARS-CoV and MERS-CoV have been studied quite comprehensively in counteracting the IFN signaling responses compared with SARS-CoV-2. From IMSP, eight interactions between three SARS-CoV-2 proteins and human proteins in the innate immune pathway have been identified, shown in Figure 2 (b)-(d). These interactions have a high probability of playing crucial roles in the SARS-CoV-2's suppression of the host's innate immune system.",
+            "cite_spans": [
+                {
+                    "start": 374,
+                    "end": 378,
+                    "text": "(32)",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 657,
+                    "end": 665,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "SARS-CoV-2 and human interferon pathway interactome prediction"
+        },
+        {
+            "text": "PLpro was predicted to interact with the nuclear factor kappa-light-chain-enhancer of activated B (NF-\u03baB) in humans, shown in Figure 2 (b). In SARS-CoV (33) and MERS-CoV (34), PLpro have been identified as being capable of reducing the NF-\u03baB reporter activity and further suppressing IRF3. From our prediction, it might also be highly possible for SARS-CoV-2's PLpro to have similar functions.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 126,
+                    "end": 134,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "SARS-CoV-2 and human interferon pathway interactome prediction"
+        },
+        {
+            "text": "ORF6 and nsp15 in SARS-CoV-2 have been discovered as crucial viral interferon antagonists of SARS-CoV-2. These two proteins inhibit the localization of IRF3 by interacting with RIG-I (35), as a similar function is found for SARS-CoV ORF6 (36), shown in Figure 2 (c)&(d). ORF6 in SARS-CoV has also been shown to interact with STAT1 and STAT2 (37) . From IMSP's prediction, ORF6 and nsp15 in SARS-CoV-2 were suggested to have potential interactions with MDA5 and MAVS. Since MAVS works as the adaptor molecule for MDA5 (38) , it is possible that a viral protein interacts with either one of these two would also have the interaction with the other. Besides, MAVS and MDA5, ORF6 was also predicted to interact with STAT1 and STAT2, the same function as in the SARS-CoV. As nsp15 and ORF6 both function in nuclear transport machinery after the viral entry (26) , it is reasonable that, for these two proteins, similar interactions with innate immune pathways are predicted. Careful experiments should be conducted to identify nsp15 and ORF6's impact on the innate immune system.",
+            "cite_spans": [
+                {
+                    "start": 341,
+                    "end": 345,
+                    "text": "(37)",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 517,
+                    "end": 521,
+                    "text": "(38)",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 852,
+                    "end": 856,
+                    "text": "(26)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 253,
+                    "end": 261,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "SARS-CoV-2 and human interferon pathway interactome prediction"
+        },
+        {
+            "text": "Based on the protein-level interaction prediction, we concluded five predicted infections for SARS-CoV-2 that is highly possible, as these mammals are not only predicted to be infected but also to have a successful SARS-CoV-2 virus binding with the host receptors. As shown in Figure 3 , these animals include mice, rats, sheep, cattle, and squirrels.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 277,
+                    "end": 285,
+                    "text": "Figure 3",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "SARS-CoV-2 infection prediction"
+        },
+        {
+            "text": "Mice and rats are similar in every protein that we took into consideration in IMSP: all of the proteins have above 85% similarity, and the receptor ACE2 even has 94% similarity. Mouse has been identified as a host for all betacoronaviruses: SASR-CoV (7), MERS-CoV (28), HCoV-OC43 (17) and HCoV-HKU1 (29, 30) . SARS-CoV-2 also falls into the category of beta-coronavirus (39) , which has a high possibility to infect mice and rats.",
+            "cite_spans": [
+                {
+                    "start": 280,
+                    "end": 284,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 299,
+                    "end": 303,
+                    "text": "(29,",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 304,
+                    "end": 307,
+                    "text": "30)",
+                    "ref_id": "BIBREF30"
+                },
+                {
+                    "start": 370,
+                    "end": 374,
+                    "text": "(39)",
+                    "ref_id": "BIBREF39"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SARS-CoV-2 infection prediction"
+        },
+        {
+            "text": "Cattle are hosts for both MERS-CoV (21) and a bovine coronavirus which is exceptionally similar to HCoV-OC43 (over 94% similarity) (16) . This means that cattle can be the host for other coronaviruses. Cattle, along with sheep and squirrels, are closely related to the human living environment or daily diet. They could be potential mammalian hosts that again transmit the virus back to human society. The investigation of these highly possible infections could help identify the virus's path and further control the transmission SARS-CoV-2 from mammalian hosts. Further research on these potential hosts might be crucial to social health and safety.",
+            "cite_spans": [
+                {
+                    "start": 131,
+                    "end": 135,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                }
+            ],
+            "ref_spans": [],
+            "section": "SARS-CoV-2 infection prediction"
+        },
+        {
+            "text": "We compared IMSP to five other representative baseline models on our dataset in a cross-validation experiment. We conducted 30 runs in total for the experiment. The baseline models include two famous random-walk based models (Deepwalk (41) and Node2vec (43)), two neural-networkbased models (Large-scale Information Network Embedding (LINE) (42) and Structural Deep Network Embedding (SDNE) (44)), and a classical matrix-based model, Graph Factorization (GF) (40) . In each cross-validation run, we reserved 20% of each interaction type as the positive test set while ensuring the remaining network to be a connected one. To ensure input balance, we collected negative interactions (unconnected node pairs) to match the number of positive interactions in both training and testing sets. Firstly, we extracted known negative interactions as true negatives, which consisted of spike-receptor interactions that were demonstrated as not existed, such as between SARS-CoV-2's Sprotein and the host receptor DPP4 (the target host receptor of MERS-CoV). We split known negative interactions by a ratio of 8:2 to add to the training and testing sets. Then, since we still lack some number of negative interactions in both sets, we randomly selected unconnected node pairs as negative interactions to add to the training and testing sets. In this way, we confirmed that the training set's composition was the same as the test set's composition in terms of interaction type. We then applied IMSP and other models on the training set to perform network learning on the same training set and measure the test set's interaction prediction performances. We repeated the entire measurement process for 30 runs to minimize the measurement randomness. Finally, we performed two-sample heteroscedastic T-test at the 0.01 significance level to test the significance of our model's performance improvement compared to other models. Table 1 shows the performance comparison, measured in several commonly used evaluation metrics, between IMSP and other existing tools. IMSP achieved an overall interaction prediction accuracy of 94.9% with a standard deviation of 0.004, which demonstrated a 6.0% gain compared to the second-best model. Our model also excelled in its weighted F1-score, achieving 0.944 with a standard deviation of 0.008, which transcended the second-best model by 7.3%. The pvalues for these two metrics were all smaller than 0.01, which indicated significant improvement for our model. In terms of the performance on specific types of interactions, i.e., infection and PPI predictions (See Fig. 4) , IMSP achieved an F1-score of 0.808 with 0.119 standard deviation for infection predictions, a 14.9% increase compared to the second-best model. The p-value was also smaller than 0.01, indicating a significant improvement in our model. For PPI predictions, our model achieved an F1-score of 0.909 with 0.029 standard deviation, a 6.6% increment compared to the secondbest tool. The p-value also demonstrated a significant im- During performance measurement, we generated two independent sets, training and testing sets, from the network. We set the ratio between the training and the test set to be 8:2. We ensured that the composition of positive interactions in the training set was the same as the test set. To guarantee input balance, we gathered negative interactions (unconnected node pairs) to correspondingly match the number of positive interactions in both training and testing sets. Part of negative samples was extracted from known negative interactions (true negatives), which consisted of spike-receptor interactions that were demonstrated as not existed. The remaining part of negative samples was randomly selected from other unconnected node pairs which were assumed as not existed. To eliminate performance randomness, we executed the comparison algorithm by 30 runs and recorded each run's performance. We generated new training and test sets during each run and evaluated all models on the same test set. Then, we performed two-sample heteroscedastic T-tests for these six overall performance evaluation metrics to test the significance of IMSP's improvement. Lastly, we reported the average with standard deviation. provement for IMSP. In conclusion, our model showed statistically significant improvements compared to all existing models in all 12 evaluation metrics. IMSP's high performance might result from its ability to take full advantage of well-studied knowledge and data from previous biology research with protein-level variations being considered. Thanks to our virus-host interaction network's novel design, such cross-organism information and multi-class linkage information can be well-preserved. Another reason behind IMSP's performance improvement is that it factors essential biological metadata as textualized features for nodes. In this way, two connected nodes' vectorized content substantially helps the classifier output a correct predicted class when formulating interaction representations. However, around 10% PPI predictions were unlikely by our definition, such as PPIs between S-protein and nonreceptor proteins. To minimize unlikely predictions, we incorporated the node's function and existing biological metadata as part of the node feature. This change significantly reduced unlikely PPI predictions to around 2%. We further pushed the boundaries by utilizing known negative interactions in the protein layer to constitute part of the training and testing sets-this finally reduced the unlikely PPI predictions to less than 1%.",
+            "cite_spans": [
+                {
+                    "start": 235,
+                    "end": 239,
+                    "text": "(41)",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 341,
+                    "end": 345,
+                    "text": "(42)",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 459,
+                    "end": 463,
+                    "text": "(40)",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1912,
+                    "end": 1919,
+                    "text": "Table 1",
+                    "ref_id": null
+                },
+                {
+                    "start": 2587,
+                    "end": 2594,
+                    "text": "Fig. 4)",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Interaction Prediction Evaluation"
+        },
+        {
+            "text": "In conclusion, IMSP exhibited robust and stable performance in both top-level and detailed evaluation metrics, which is substantially improved compared to existing tools. When analyzing newly emerged viruses with limited available information, namely SARS-CoV-2, IMSP can provide reasonable and reliable predictions.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Interaction Prediction Evaluation"
+        },
+        {
+            "text": "This study assembled 246 nodes (viruses, virus proteins, hosts, and host proteins) and 1,766 known interactions among these nodes, including four types of interactions: similarities, infections, interactions, and belongings. Two main parts for virus-host protein-level interactions were taken into consideration: viral entry and innate immune pathway interactions. Accompanied by these two parts, we predicted the potential host for viruses and undiscovered novel PPIs. Among seven human coronaviruses, SARS-CoV and MERS-CoV were well studied about their binding with the receptors and interacting with the innate immune pathway, whereas HCoV-OC43, HCoV-NL63, HCov-HKU1, HCoV-229E, and newly emerged SARS-CoV-2 remained relatively unknown. Based on protein similarity and known interactions, 322 PPIs were predicted with this model. The actual PPIs need to be investigated further based on the prediction result.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Established discoveries about SARS-CoV-2's viral interaction with host proteins are scarce. SARS-CoV-2 has been highly suspected of suppressing the innate immune response and reducing the production of IFN. In this way, IMSP's findings could help discover the relations between virus invasion and host response and therefore provide clues to developing therapeutic strategies for the treatment of this disease.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "More broadly, IMSP could be applied to any other analysis of the virus-host interaction network predictions. This net- work would be built based on the information of the proteinprotein relations, protein-host relations, and host-host relations. Based on these attributes in the network and currently known relationships between some of the proteins, IMSP could predict the high-possibility interactions. We hope to use this pipeline as a tool to build a guideline for investigating various similar viruses and their mechanisms with hosts.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Our IMSP model requests three different inputs, including pairwise similarity matrices for all host proteins and virus proteins, a set of known PPIs and infection relationships, and proteins' biological metadata. For instance, appropriate protein metadata can include a protein's name, layer, host, and function. Given these three inputs, the model constructs a virus-host interaction network. Then, in the network learning phase, IMSP learns and combines the structural information and the content information of interactions to represent the heterogeneous network comprehensively. Lastly, in the prediction phase, IMSP trains a neural-network-based classifier, Multi-layer Perceptron classifier, along with strict filtering procedures, to output high-possibility undiscovered interactions. Specifically, our model generated PPI and infection predictions with each prediction's likelihood. In the following, we elaborated on the details of our IMSP model's two main steps in terms of network construction and learning, and interaction prediction with result validation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Infection Mechanism and Spectrum Prediction"
+        },
+        {
+            "text": "We utilized layers and groups to mark and separate different nodes during virus-host interaction network construction, and used interactions to represent PPI/infection/similarity/belonging relationship between nodes. For modeling the network, we constructed a weighted and undirected heterogeneous network using NetworkX (45) . The network contained four groups of nodes: host, host proteins, virus proteins, and virus. We organize the virus group and the host group into the same layer, i.e., the organism layer, and we put two groups of proteins into the protein layer. By nature, the network contained four types of interactions: PPI (between virus proteins groups and host proteins groups), infection (between viruses group and hosts group), similarity (between homologs of proteins) and",
+            "cite_spans": [
+                {
+                    "start": 321,
+                    "end": 325,
+                    "text": "(45)",
+                    "ref_id": "BIBREF45"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "belonging (between organism layer and protein layer). Similarity and belonging relationships were innately connected. Other types of interactions were connected based on proven molecular level knowledge from existing research (7) (8) (9) (10) (11) (12) (13) (14) (15) (16) (17) (18) (19) (20) (21) (22) (23) . The virus-host interaction network comprised of 246 nodes and 1,766 interactions. After the network structure was built, we used W i,j to represent the biological closeness between V i and V j . Specifically, if I i,j denoted the relationship between two protein homologs, we used the full-sequence similarity between V i and V j from pairwise similarity matrices to represent W i,j . For other types of relationship, we obtained the embeddings of node content, denoted as R C i for V i by passing textualized node content to the Word2vec model (46), a famous and powerful neural-network-based word embedding model. Then, we utilized the TS-SS similarity metric (47), a robust and reliable similarity measurement in the field of textual mining, to calculate the similarity between R C i and R C j to assign to W i,j . Precisely, for interactions other than similarity relations, we calculated the T S-SS i,j for all i and j if I i,j \u2282 E as the following:",
+            "cite_spans": [
+                {
+                    "start": 226,
+                    "end": 229,
+                    "text": "(7)",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 230,
+                    "end": 233,
+                    "text": "(8)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 234,
+                    "end": 237,
+                    "text": "(9)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 238,
+                    "end": 242,
+                    "text": "(10)",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 243,
+                    "end": 247,
+                    "text": "(11)",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 248,
+                    "end": 252,
+                    "text": "(12)",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 253,
+                    "end": 257,
+                    "text": "(13)",
+                    "ref_id": "BIBREF12"
+                },
+                {
+                    "start": 258,
+                    "end": 262,
+                    "text": "(14)",
+                    "ref_id": "BIBREF13"
+                },
+                {
+                    "start": 263,
+                    "end": 267,
+                    "text": "(15)",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 268,
+                    "end": 272,
+                    "text": "(16)",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 273,
+                    "end": 277,
+                    "text": "(17)",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 278,
+                    "end": 282,
+                    "text": "(18)",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 283,
+                    "end": 287,
+                    "text": "(19)",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 288,
+                    "end": 292,
+                    "text": "(20)",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 293,
+                    "end": 297,
+                    "text": "(21)",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 298,
+                    "end": 302,
+                    "text": "(22)",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 303,
+                    "end": 307,
+                    "text": "(23)",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "where M D(R C i , R C j ) (47) is defined as the magnitude difference between R C i and R C j , which is calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "and \u03b8 is defined as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "Note that \u03b8 is increased by 10 degrees to overcome the problem of overlapping vectors. Then, W i,j is calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "where \u03c3 is the sigmoid function, and T S-SS denotes the av-",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "For network learning, we captured the network's heterogeneity by adding the network's heterogeneous content information to its structural information. Specifically, we performed network structural embedding assuming the network is homogeneous. Then, we added the content embedding on top of structural embedding to model its heterogeneity.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "Firstly, for network structural embedding, we used a powerful network feature learning model, Node2vec (43) , to learn the structural embedding for nodes. Node2vec is a stateof-the-art model for homogeneous network embedding. We took full advantage of Node2vec's biased searching algorithm during our application. Precisely, the Node2vec model performed a fixed-length random walk for sampling, which takes weight into account. Let c m denote the m-th node in walk with c 0 denoting the starting node of the current random walk. Nodes c m are generated by the following distribution:",
+            "cite_spans": [
+                {
+                    "start": 103,
+                    "end": 107,
+                    "text": "(43)",
+                    "ref_id": "BIBREF43"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "where m 1, Z is the normalizing constant, and \u03c0 V j ,V i is the unnormalized transition probability between V i and V j , which is calculated as",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": ", termed as search bias, is calculated as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "where d V t ,V i denotes the shortest path between V i and V j , assuming that we have just traversed from V t to V i and are now evaluating the transition probability leaving V i . In Eq. (6), p and q are Node2vec's hyperparameters that can be adjusted to influence the probability to go back to V i after visiting V j and the probability to explore undiscovered components of the network. In this way, we were able to finetune the structural embedding model, Node2vec, to generate a conclusive embedding for our network.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "Secondly, to create content representations, CE i,j for all I i,j in the network, we combined the textualized node content of V i and V j along with expected interaction type such as interacts/infects/similar/belongs, and input them into the Word2vec model (46) to generate vectorized interaction representations. Then, the full interaction representations for interaction I i,j are formulated as follows:",
+            "cite_spans": [
+                {
+                    "start": 257,
+                    "end": 261,
+                    "text": "(46)",
+                    "ref_id": "BIBREF46"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "Note that by Word2vec's nature, the input documents' order does not affect its output, meaning that CE i,j is the same as CE j,i . By finishing this step, we obtained all interaction representations, IE i,j , for all V i and V j \u2282 V and i = j.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction network construction and learning"
+        },
+        {
+            "text": "In the interaction prediction phase, we utilized a classifier to perform a multi-class classification task on the interaction representations to learn from the existing network and suggest potential undiscovered interactions. Specifically, for all I i,j \u2282 E, we classified IE i,j into three classes, i.e. PPI/infections/no-interaction. Scikit-learn's Multi-layer Perceptron (MLP) classification model (48) was used for this multi-class interaction classification.",
+            "cite_spans": [
+                {
+                    "start": 401,
+                    "end": 405,
+                    "text": "(48)",
+                    "ref_id": "BIBREF48"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Virus-host interaction prediction"
+        },
+        {
+            "text": "We conducted cross-validation experiments to fine-tune the model, where 20% of each interaction type was reserved as a positive test set. In this process, we also balanced the test set by inserting an equal number of negative interactions containing both known negatives and unknown negatives. Specifically, known negative interactions (true negatives) were generated from proven unconnected node pairs, such as the interaction between MERS-CoV's S-protein and mammalian hosts' ACE2 receptors. Unknown negative interactions were randomly sampled from the network, which was assumed as not existing. Then, by using the fine-tuned hyperparameters from cross-validation experiments, all positive interactions with an equal number of negative interactions were used for training the classifier. IMSP later took all other unused unconnected node pairs as input data and classified them into the class of PPI/infection/no interaction.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction prediction"
+        },
+        {
+            "text": "During prediction result correction, we defined rules from both computational and biological perspectives to mark and remove unlikely predictions. Computationally, because there exist two representations for I i,j , i.e., IE i,j and IE j,i , we defined the prediction for I i,j as a strong one if and only if IE i,j and IE j,i were all classified into the same type of interaction other than the no-interaction. Biologically, we assumed that each virus's S-protein only interacts/binds with its target receptor. Thus, all other interactions with S-protein are considered unlikely. For example, the predicted interaction, if any, between SARS-CoV-2's S-protein and DPP4 (the target receptor for MERS-CoV's S-protein) would be eliminated. Thirdly, we also defined that an infection interaction was likely only when the corresponding interaction between the virus' S-protein and an appropriate host receptor was predicted. In this way, we ensured that all the remaining predictions are both computationally and biologically meaningful and practically useful to guide further research.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Virus-host interaction prediction"
+        },
+        {
+            "text": "All data and codes are available at Github repositories: IMSP model, its predictions and performance evaluations can be found at https://github.com/SupremeEthan/IMSP; Data and data parsing code can be found at https://github.com/SupremeEthan/IMSP-Parser.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Resource Availability"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Early transmission dynamics in wuhan, china, of novel coronavirus-infected pneumonia",
+            "authors": [
+                {
+                    "first": "Qun",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuhua",
+                    "middle": [],
+                    "last": "Guan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peng",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoye",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lei",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yeqing",
+                    "middle": [],
+                    "last": "Tong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ruiqi",
+                    "middle": [],
+                    "last": "Ren",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Kathy",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Leung",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Eric",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jessica",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Lau",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "World Health Organization et al. Coronavirus disease (covid-19) situation dashboard. World Health Organization website",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Infection of dogs with sars-cov-2",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sit",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Christopher",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Brackman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "Sin",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ip",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Karina",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tam",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Pierra",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Law",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Esther",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "To",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Veronica",
+                    "suffix": ""
+                },
+                {
+                    "first": "Leslie",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sims",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Dominic",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tsang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Daniel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "1--6",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Transmission of sars-cov-2 in domestic cats",
+            "authors": [
+                {
+                    "first": "Masato",
+                    "middle": [],
+                    "last": "Peter J Halfmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shiho",
+                    "middle": [],
+                    "last": "Hatta",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tadashi",
+                    "middle": [],
+                    "last": "Chiba",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shufang",
+                    "middle": [],
+                    "last": "Maemura",
+                    "suffix": ""
+                },
+                {
+                    "first": "Makoto",
+                    "middle": [],
+                    "last": "Fan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Noriko",
+                    "middle": [],
+                    "last": "Takeda",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kinoshita",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuko",
+                    "middle": [],
+                    "last": "Shin-Ichiro Hattori",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kiyoko",
+                    "middle": [],
+                    "last": "Sakai-Tagawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Iwatsuki-Horimoto",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "New England Journal of Medicine",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Complete genome sequence of sars-cov-2 in a tiger from a us zoological collection",
+            "authors": [
+                {
+                    "first": "Leyi",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Patrick",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mitchell",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Paul",
+                    "suffix": ""
+                },
+                {
+                    "first": "Susan",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Calle",
+                    "suffix": ""
+                },
+                {
+                    "first": "Denise",
+                    "middle": [],
+                    "last": "Bartlett",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mary",
+                    "middle": [
+                        "Lea"
+                    ],
+                    "last": "Mcaloose",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fangfeng",
+                    "middle": [],
+                    "last": "Killian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ying",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Laura",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [],
+                    "last": "Goodman",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Fredrickson",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Microbiology Resource Announcements",
+            "volume": "9",
+            "issn": "22",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Pathogenesis and transmission of sars-cov-2 in golden hamsters",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sin Fun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li-Meng",
+                    "middle": [],
+                    "last": "Sia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alex",
+                    "middle": [
+                        "Wh"
+                    ],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kevin",
+                    "middle": [],
+                    "last": "Chin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ka-Tim",
+                    "middle": [],
+                    "last": "Fung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alvina",
+                    "middle": [
+                        "Yl"
+                    ],
+                    "last": "Choy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Prathanporn",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kaewpreedee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Apm",
+                    "middle": [],
+                    "last": "Ranawaka",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Perera",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Leo",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Poon",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nicholls",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "583",
+            "issn": "7818",
+            "pages": "834--838",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Dysregulated type i interferon and inflammatory monocyte-macrophage responses cause lethal pneumonia in sars-cov-infected mice",
+            "authors": [
+                {
+                    "first": "Rudragouda",
+                    "middle": [],
+                    "last": "Channappanavar",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Anthony",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rahul",
+                    "middle": [],
+                    "last": "Fehr",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matthias",
+                    "middle": [],
+                    "last": "Vijay",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jincun",
+                    "middle": [],
+                    "last": "Mack",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "David",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stanley",
+                    "middle": [],
+                    "last": "Meyerholz",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Perlman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Cell host & microbe",
+            "volume": "19",
+            "issn": "2",
+            "pages": "181--193",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Sars coronavirus and innate immunity",
+            "authors": [
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Frieman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Heise",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ralph",
+                    "middle": [],
+                    "last": "Baric",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Virus research",
+            "volume": "133",
+            "issn": "1",
+            "pages": "101--112",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "The sars coronavirus papain like protease can inhibit irf3 at a post activation step that requires deubiquitination activity",
+            "authors": [
+                {
+                    "first": "Krystal",
+                    "middle": [],
+                    "last": "Matthews",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexandra",
+                    "middle": [],
+                    "last": "Sch\u00e4fer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alissa",
+                    "middle": [],
+                    "last": "Pham",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Frieman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Virology journal",
+            "volume": "11",
+            "issn": "1",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Sars coronavirus pathogenesis: host innate immune responses and viral antagonism of interferon. Current opinion in virology",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Allison",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ralph",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Totura",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Baric",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "",
+            "volume": "2",
+            "issn": "",
+            "pages": "264--275",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Sars coronavirus nucleocapsid inhibits type i interferon production by interfering with trim25-mediated rig-i ubiquitination",
+            "authors": [
+                {
+                    "first": "Yong",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ting",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yanwen",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ping",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qingjun",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xuan",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cheng",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Journal of Virology",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Sars coronavirus papain-like protease inhibits the type i interferon signaling pathway through interaction with the sting-traf3-tbk1 complex",
+            "authors": [
+                {
+                    "first": "Xiaojuan",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xingxing",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yang",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yudong",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yaling",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhongbin",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Protein & cell",
+            "volume": "5",
+            "issn": "5",
+            "pages": "369--381",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Host immune responses to sars coronavirus in humans",
+            "authors": [
+                {
+                    "first": "Chris",
+                    "middle": [],
+                    "last": "Ka",
+                    "suffix": ""
+                },
+                {
+                    "first": "-Fai",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaoning",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Molecular biology of the SARS-coronavirus",
+            "volume": "",
+            "issn": "",
+            "pages": "259--278",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Angiotensin-converting enzyme 2 is a functional receptor for the sars coronavirus",
+            "authors": [
+                {
+                    "first": "Wenhui",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "Natalya",
+                    "middle": [],
+                    "last": "Moore",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jianhua",
+                    "middle": [],
+                    "last": "Vasilieva",
+                    "suffix": ""
+                },
+                {
+                    "first": "Swee",
+                    "middle": [
+                        "Kee"
+                    ],
+                    "last": "Sui",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Michael",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mohan",
+                    "middle": [],
+                    "last": "Berne",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Somasundaran",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "John",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katherine",
+                    "middle": [],
+                    "last": "Sullivan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Luzuriaga",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Thomas",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Greenough",
+                    "suffix": ""
+                }
+            ],
+            "year": 2003,
+            "venue": "Nature",
+            "volume": "426",
+            "issn": "6965",
+            "pages": "450--454",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Mavs-mediated apoptosis and its inhibition by viral proteins",
+            "authors": [
+                {
+                    "first": "Yu",
+                    "middle": [],
+                    "last": "Lei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chris",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Moore",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rachael",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Liesman",
+                    "suffix": ""
+                },
+                {
+                    "first": "P O&apos;",
+                    "middle": [],
+                    "last": "Brian",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Connor",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Daniel",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bergstralh",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhijian",
+                    "suffix": ""
+                },
+                {
+                    "first": "Raymond",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jenny P-Y",
+                    "middle": [],
+                    "last": "Pickles",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ting",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "PloS one",
+            "volume": "4",
+            "issn": "5",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Canine respiratory coronavirus, bovine coronavirus, and human coronavirus oc43: receptors and attachment factors",
+            "authors": [
+                {
+                    "first": "Artur",
+                    "middle": [],
+                    "last": "Szczepanski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katarzyna",
+                    "middle": [],
+                    "last": "Owczarek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Monika",
+                    "middle": [],
+                    "last": "Bzowska",
+                    "suffix": ""
+                },
+                {
+                    "first": "Katarzyna",
+                    "middle": [],
+                    "last": "Gula",
+                    "suffix": ""
+                },
+                {
+                    "first": "Inga",
+                    "middle": [],
+                    "last": "Drebot",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marek",
+                    "middle": [],
+                    "last": "Ochman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Beata",
+                    "middle": [],
+                    "last": "Maksym",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zenon",
+                    "middle": [],
+                    "last": "Rajfur",
+                    "suffix": ""
+                },
+                {
+                    "first": "Judy",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mitchell",
+                    "suffix": ""
+                },
+                {
+                    "first": "Krzysztof",
+                    "middle": [],
+                    "last": "Pyrc",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Viruses",
+            "volume": "11",
+            "issn": "4",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Non-invasive bioluminescence imaging of hcov-oc43 infection and therapy in the central nervous system of live mice",
+            "authors": [
+                {
+                    "first": "Junwei",
+                    "middle": [],
+                    "last": "Niu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Liang",
+                    "middle": [],
+                    "last": "Shen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Baoying",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fei",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "Li",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Huijuan",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yao",
+                    "middle": [],
+                    "last": "Deng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenjie",
+                    "middle": [],
+                    "last": "Tan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Antiviral research",
+            "volume": "173",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Human coronavirus nl63 employs the severe acute respiratory syndrome coronavirus receptor for cellular entry",
+            "authors": [
+                {
+                    "first": "Heike",
+                    "middle": [],
+                    "last": "Hofmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "Krzysztof",
+                    "middle": [],
+                    "last": "Pyrc",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lia",
+                    "middle": [],
+                    "last": "Van Der",
+                    "suffix": ""
+                },
+                {
+                    "first": "Martina",
+                    "middle": [],
+                    "last": "Hoek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ben",
+                    "middle": [],
+                    "last": "Geier",
+                    "suffix": ""
+                },
+                {
+                    "first": "Stefan",
+                    "middle": [],
+                    "last": "Berkhout",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "P\u00f6hlmann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2005,
+            "venue": "Proceedings of the National Academy of Sciences",
+            "volume": "102",
+            "issn": "22",
+            "pages": "7988--7993",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Middle east respiratory syndrome coronavirus in dromedary camels: an outbreak investigation. The Lancet infectious diseases",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Bart",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Haagmans",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chantal",
+                    "middle": [],
+                    "last": "Dhahiry",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bem Reusken",
+                    "suffix": ""
+                },
+                {
+                    "first": "Monica",
+                    "middle": [],
+                    "last": "Stalin Raj",
+                    "suffix": ""
+                },
+                {
+                    "first": "Richard",
+                    "middle": [],
+                    "last": "Galiano",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gert-Jan",
+                    "middle": [],
+                    "last": "Myers",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marcel",
+                    "middle": [],
+                    "last": "Godeke",
+                    "suffix": ""
+                },
+                {
+                    "first": "Elmoubasher",
+                    "middle": [],
+                    "last": "Jonges",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ayman",
+                    "middle": [],
+                    "last": "Farag",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Diab",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "",
+            "volume": "14",
+            "issn": "",
+            "pages": "140--145",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "The receptor binding domain of the new middle east respiratory syndrome coronavirus maps to a 231-residue region in the spike protein that efficiently elicits neutralizing antibodies",
+            "authors": [
+                {
+                    "first": "Huihui",
+                    "middle": [],
+                    "last": "Mou",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Stalin Raj",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Frank",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Van Kuppeveld",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Peter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bart",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Rottier",
+                    "suffix": ""
+                },
+                {
+                    "first": "Berend Jan",
+                    "middle": [],
+                    "last": "Haagmans",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bosch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Journal of virology",
+            "volume": "87",
+            "issn": "16",
+            "pages": "9379--9383",
+            "other_ids": {}
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Middle east respiratory syndrome coronavirus infection in non-camelid domestic mammals. Emerging microbes & infections",
+            "authors": [
+                {
+                    "first": "Ahmed",
+                    "middle": [],
+                    "last": "Kandeil",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mokhtar",
+                    "middle": [],
+                    "last": "Gomaa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mahmoud",
+                    "middle": [],
+                    "last": "Shehata",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ahmed",
+                    "middle": [],
+                    "last": "El-Taweel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ahmed",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Kayed",
+                    "suffix": ""
+                },
+                {
+                    "first": "Awatef",
+                    "middle": [],
+                    "last": "Abiadh",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jamel",
+                    "middle": [],
+                    "last": "Jrijer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yassmin",
+                    "middle": [],
+                    "last": "Moatasim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Omnia",
+                    "middle": [],
+                    "last": "Kutkat",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ola",
+                    "middle": [],
+                    "last": "Bagato",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "8",
+            "issn": "",
+            "pages": "103--108",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Crystal structure of the middle east respiratory syndrome coronavirus (merscov) papain-like protease bound to ubiquitin facilitates targeted disruption of deubiquitinating activity to demonstrate its role in innate immune suppression",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ben",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Bailey-Elkin",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Robert",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Knaap",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Garrett",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tim",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Johnson",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Dalebout",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Dennis",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Ninaber",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Puck B Van Kasteren",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Peter",
+                    "suffix": ""
+                },
+                {
+                    "first": "Eric",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Bredenbeek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Marjolein",
+                    "middle": [],
+                    "last": "Snijder",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Kikkert",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mark",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Journal of Biological Chemistry",
+            "volume": "289",
+            "issn": "50",
+            "pages": "34667--34682",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Middle east respiratory syndrome coronavirus m protein suppresses type i interferon expression through the inhibition of tbk1-dependent phosphorylation of irf3. Emerging microbes & infections",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Pak-Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lok-Yin Roy",
+                    "middle": [],
+                    "last": "Lui",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cheuk-Lai",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kam-Leung",
+                    "middle": [],
+                    "last": "Fung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Man-Lung",
+                    "middle": [],
+                    "last": "Siu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kit-San",
+                    "middle": [],
+                    "last": "Yeung",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chi-Ping",
+                    "middle": [],
+                    "last": "Yuen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Patrick",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Chiu-Yat",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kwok-Yung",
+                    "middle": [],
+                    "last": "Woo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dong-Yan",
+                    "middle": [],
+                    "last": "Yuen",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "5",
+            "issn": "",
+            "pages": "1--9",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Angiotensin-converting enzyme 2 (ace2) as a sars-cov-2 receptor: molecular mechanisms and potential therapeutic target",
+            "authors": [
+                {
+                    "first": "Haibo",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Josef",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Penninger",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yimin",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nanshan",
+                    "middle": [],
+                    "last": "Zhong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Arthur",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Slutsky",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Intensive care medicine",
+            "volume": "46",
+            "issn": "4",
+            "pages": "586--590",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Structural basis of receptor recognition by sars-cov-2",
+            "authors": [
+                {
+                    "first": "Jian",
+                    "middle": [],
+                    "last": "Shang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gang",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ke",
+                    "middle": [],
+                    "last": "Shi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yushun",
+                    "middle": [],
+                    "last": "Wan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chuming",
+                    "middle": [],
+                    "last": "Luo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hideki",
+                    "middle": [],
+                    "last": "Aihara",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qibin",
+                    "middle": [],
+                    "last": "Geng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ashley",
+                    "middle": [],
+                    "last": "Auerbach",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fang",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "581",
+            "issn": "7807",
+            "pages": "221--224",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "A sars-cov-2 protein interaction map reveals targets for drug repurposing",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Kris",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "White",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Matthew",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "O&apos;meara",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Veronica",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [
+                        "Z"
+                    ],
+                    "last": "Rezelj",
+                    "suffix": ""
+                },
+                {
+                    "first": "Danielle",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Swaney",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "",
+            "issn": "",
+            "pages": "1--13",
+            "other_ids": {}
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Covid-19: viral-host interactome analyzed by network based-approach model to study pathogenesis of sars-cov-2 infection",
+            "authors": [
+                {
+                    "first": "Francesco",
+                    "middle": [],
+                    "last": "Messina",
+                    "suffix": ""
+                },
+                {
+                    "first": "Emanuela",
+                    "middle": [],
+                    "last": "Giombini",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chiara",
+                    "middle": [],
+                    "last": "Agrati",
+                    "suffix": ""
+                },
+                {
+                    "first": "Francesco",
+                    "middle": [],
+                    "last": "Vairo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ascoli",
+                    "middle": [],
+                    "last": "Tommaso",
+                    "suffix": ""
+                },
+                {
+                    "first": "Samir",
+                    "middle": [
+                        "Al"
+                    ],
+                    "last": "Bartoli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mauro",
+                    "middle": [],
+                    "last": "Moghazi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Franco",
+                    "middle": [],
+                    "last": "Piacentini",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gary",
+                    "middle": [],
+                    "last": "Locatelli",
+                    "suffix": ""
+                },
+                {
+                    "first": "Markus",
+                    "middle": [],
+                    "last": "Kobinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Maeurer",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Journal of Translational Medicine",
+            "volume": "18",
+            "issn": "1",
+            "pages": "1--10",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "A mouse model for mers coronavirus-induced acute respiratory distress syndrome",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Adam",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Cockrell",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Boyd",
+                    "suffix": ""
+                },
+                {
+                    "first": "Trevor",
+                    "middle": [],
+                    "last": "Yount",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kara",
+                    "middle": [],
+                    "last": "Scobey",
+                    "suffix": ""
+                },
+                {
+                    "first": "Madeline",
+                    "middle": [],
+                    "last": "Jensen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Anne",
+                    "middle": [],
+                    "last": "Douglas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xian-Chun",
+                    "middle": [],
+                    "last": "Beall",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Wayne",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Marasco",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Mark",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ralph",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Heise",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Baric",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Nature microbiology",
+            "volume": "2",
+            "issn": "2",
+            "pages": "1--11",
+            "other_ids": {}
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Human coronavirus and acute respiratory illness in older adults with chronic obstructive pulmonary disease",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Geoffrey",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Gorse",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Theresa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Susan",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "O&apos;connor",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joseph",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Hall",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kristin",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Vitale",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Nichol",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "The Journal of infectious diseases",
+            "volume": "199",
+            "issn": "6",
+            "pages": "847--857",
+            "other_ids": {}
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Human coronaviruses: a review of virus-host interactions",
+            "authors": [
+                {
+                    "first": "Yvonne",
+                    "middle": [
+                        "Xinyi"
+                    ],
+                    "last": "Lim",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yan",
+                    "middle": [
+                        "Ling"
+                    ],
+                    "last": "Ng",
+                    "suffix": ""
+                },
+                {
+                    "first": "James",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Tam",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ding Xiang",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Diseases",
+            "volume": "4",
+            "issn": "3",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Comparison of severe acute respiratory syndrome coronavirus 2 spike protein binding to ace2 receptors from human, pets, farm animals, and putative intermediate hosts",
+            "authors": [
+                {
+                    "first": "Xiaofeng",
+                    "middle": [],
+                    "last": "Zhai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiumeng",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ziqing",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jie",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jin",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zongzheng",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wan-Ting",
+                    "middle": [],
+                    "last": "He",
+                    "suffix": ""
+                },
+                {
+                    "first": "Michael",
+                    "middle": [],
+                    "last": "Veit",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shuo",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "Journal of virology",
+            "volume": "94",
+            "issn": "15",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Viral evasion strategies in type i ifn signaling-a summary of recent developments",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Katharina",
+                    "suffix": ""
+                },
+                {
+                    "first": "Karen",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Schulz",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Mossman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Frontiers in immunology",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Severe acute respiratory syndrome coronavirus papain-like protease ubiquitin-like domain and catalytic domain regulate antagonism of irf3 and nf-\u03bab signaling",
+            "authors": [
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Frieman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kiira",
+                    "middle": [],
+                    "last": "Ratia",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Johnston",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Mesecar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ralph",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Baric",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Journal of virology",
+            "volume": "83",
+            "issn": "13",
+            "pages": "6689--6705",
+            "other_ids": {}
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Mers-cov papain-like protease has deisgylating and deubiquitinating activities",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Anna",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andy",
+                    "middle": [],
+                    "last": "Mielech",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Kilianski",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Yahira",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrew",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Baez-Santos",
+                    "suffix": ""
+                },
+                {
+                    "first": "Susan",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Mesecar",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Baker",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Virology",
+            "volume": "450",
+            "issn": "",
+            "pages": "64--70",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "Sars-cov-2 nsp13, nsp14, nsp15 and orf6 function as potent interferon antagonists",
+            "authors": [
+                {
+                    "first": "Chun-Kit",
+                    "middle": [],
+                    "last": "Yuen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Joy-Yan",
+                    "middle": [],
+                    "last": "Lam",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wan-Man",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                },
+                {
+                    "first": "Long-Fung",
+                    "middle": [],
+                    "last": "Mak",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiaohui",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hin",
+                    "middle": [],
+                    "last": "Chu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jian-Piao",
+                    "middle": [],
+                    "last": "Cai",
+                    "suffix": ""
+                },
+                {
+                    "first": "Dong-Yan",
+                    "middle": [],
+                    "last": "Jin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kelvin Kai-Wang",
+                    "middle": [],
+                    "last": "To",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jasper Fuk-Woo",
+                    "middle": [],
+                    "last": "Chan",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Emerging Microbes & Infections",
+            "volume": "",
+            "issn": "",
+            "pages": "1--29",
+            "other_ids": {}
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Severe acute respiratory syndrome coronavirus open reading frame (orf) 3b, orf 6, and nucleocapsid proteins function as interferon antagonists",
+            "authors": [
+                {
+                    "first": "Luis",
+                    "middle": [],
+                    "last": "Sarah A Kopecky-Bromberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Mart\u00ednez-Sobrido",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Frieman",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Ralph",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Baric",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Palese",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Journal of virology",
+            "volume": "81",
+            "issn": "2",
+            "pages": "548--557",
+            "other_ids": {}
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Severe acute respiratory syndrome coronavirus orf6 antagonizes stat1 function by sequestering nuclear import factors on the rough endoplasmic reticulum/golgi membrane",
+            "authors": [
+                {
+                    "first": "Matthew",
+                    "middle": [],
+                    "last": "Frieman",
+                    "suffix": ""
+                },
+                {
+                    "first": "Boyd",
+                    "middle": [],
+                    "last": "Yount",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Heise",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sarah",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Kopecky-Bromberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Palese",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ralph",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Baric",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Journal of virology",
+            "volume": "81",
+            "issn": "18",
+            "pages": "9812--9824",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "How rig-i like receptors activate mavs. Current opinion in virology",
+            "authors": [
+                {
+                    "first": "Bin",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Sun",
+                    "middle": [],
+                    "last": "Hur",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "",
+            "volume": "12",
+            "issn": "",
+            "pages": "91--98",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Genomic characterisation and epidemiology of 2019 novel coronavirus: implications for virus origins and receptor binding",
+            "authors": [
+                {
+                    "first": "Roujian",
+                    "middle": [],
+                    "last": "Lu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Xiang",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Juan",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peihua",
+                    "middle": [],
+                    "last": "Niu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bo",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Honglong",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenling",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hao",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Baoying",
+                    "middle": [],
+                    "last": "Huang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Na",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "The Lancet",
+            "volume": "395",
+            "issn": "",
+            "pages": "565--574",
+            "other_ids": {}
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Distributed large-scale natural graph factorization",
+            "authors": [
+                {
+                    "first": "Amr",
+                    "middle": [],
+                    "last": "Ahmed",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nino",
+                    "middle": [],
+                    "last": "Shervashidze",
+                    "suffix": ""
+                },
+                {
+                    "first": "Shravan",
+                    "middle": [],
+                    "last": "Narayanamurthy",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vanja",
+                    "middle": [],
+                    "last": "Josifovski",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexander",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Smola",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "Proceedings of the 22nd international conference on World Wide Web",
+            "volume": "",
+            "issn": "",
+            "pages": "37--48",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Deepwalk: Online learning of social representations",
+            "authors": [
+                {
+                    "first": "Bryan",
+                    "middle": [],
+                    "last": "Perozzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Rami",
+                    "middle": [],
+                    "last": "Al-Rfou",
+                    "suffix": ""
+                },
+                {
+                    "first": "Steven",
+                    "middle": [],
+                    "last": "Skiena",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Proceedings of the 20th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, KDD '14",
+            "volume": "",
+            "issn": "",
+            "pages": "701--710",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2623330.2623732"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Line: Largescale information network embedding",
+            "authors": [
+                {
+                    "first": "Jian",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Meng",
+                    "middle": [],
+                    "last": "Qu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mingzhe",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jun",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiaozhu",
+                    "middle": [],
+                    "last": "Mei",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "WWW",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "node2vec: Scalable feature learning for networks",
+            "authors": [
+                {
+                    "first": "Aditya",
+                    "middle": [],
+                    "last": "Grover",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jure",
+                    "middle": [],
+                    "last": "Leskovec",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 22nd ACM SIGKDD international conference on Knowledge discovery and data mining",
+            "volume": "",
+            "issn": "",
+            "pages": "855--864",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Structural deep network embedding",
+            "authors": [
+                {
+                    "first": "Daixin",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peng",
+                    "middle": [],
+                    "last": "Cui",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wenwu",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 22Nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, KDD '16",
+            "volume": "",
+            "issn": "",
+            "pages": "1225--1234",
+            "other_ids": {
+                "DOI": [
+                    "10.1145/2939672.2939753"
+                ]
+            }
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Exploring network structure, dynamics, and function using networkx",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Aric",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hagberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pieter",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Schult",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Swart",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Proceedings of the 7th Python in Science Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "11--15",
+            "other_ids": {}
+        },
+        "BIBREF46": {
+            "ref_id": "b46",
+            "title": "Efficient estimation of word representations in vector space",
+            "authors": [
+                {
+                    "first": "Tomas",
+                    "middle": [],
+                    "last": "Mikolov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kai",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Greg",
+                    "middle": [],
+                    "last": "Corrado",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [],
+                    "last": "Dean",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1301.3781"
+                ]
+            }
+        },
+        "BIBREF47": {
+            "ref_id": "b47",
+            "title": "A hybrid geometric approach for measuring similarity level among documents and document clustering",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Heidarian",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Dinneen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "IEEE Second International Conference on Big Data Computing Service and Applications",
+            "volume": "",
+            "issn": "",
+            "pages": "142--151",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/BigDataService.2016.14"
+                ]
+            }
+        },
+        "BIBREF48": {
+            "ref_id": "b48",
+            "title": "API design for machine learning software: experiences from the scikit-learn project",
+            "authors": [
+                {
+                    "first": "Lars",
+                    "middle": [],
+                    "last": "Buitinck",
+                    "suffix": ""
+                },
+                {
+                    "first": "Gilles",
+                    "middle": [],
+                    "last": "Louppe",
+                    "suffix": ""
+                },
+                {
+                    "first": "Mathieu",
+                    "middle": [],
+                    "last": "Blondel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fabian",
+                    "middle": [],
+                    "last": "Pedregosa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andreas",
+                    "middle": [],
+                    "last": "Mueller",
+                    "suffix": ""
+                },
+                {
+                    "first": "Olivier",
+                    "middle": [],
+                    "last": "Grisel",
+                    "suffix": ""
+                },
+                {
+                    "first": "Vlad",
+                    "middle": [],
+                    "last": "Niculae",
+                    "suffix": ""
+                },
+                {
+                    "first": "Peter",
+                    "middle": [],
+                    "last": "Prettenhofer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexandre",
+                    "middle": [],
+                    "last": "Gramfort",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jaques",
+                    "middle": [],
+                    "last": "Grobler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Layton",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jake",
+                    "middle": [],
+                    "last": "Vanderplas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Arnaud",
+                    "middle": [],
+                    "last": "Joly",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [],
+                    "last": "Holt",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ga\u00ebl",
+                    "middle": [],
+                    "last": "Varoquaux",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "ECML PKDD Workshop: Languages for Data Mining and Machine Learning",
+            "volume": "",
+            "issn": "",
+            "pages": "108--122",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Interaction prediction for SARS-CoV-2. (A) shows the known and predicted bindings between the S-protein in SARS-CoV-2 and ACE2 in mammalian hosts. Host names are displayed in their abbreviation form: Hom.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "Infection prediction for SARS-CoV-2.This figure shows SARS-CoV-2's known and predicted infected mammalian hosts. The predicted infected mammalian hosts without a predicted or proven corresponding receptor binding relationship with SARS-CoV-2's S-protein were excluded.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "Performance on PPI and Infection Predictions. This figure demonstrates IMSP's performance on PPI and infection predictions in comparison with five other models. The ocean-blue columns represent the performance of our IMSP model derived from the average of 30 independent runs. As a result, the IMSP model achieved 0.808 for the Infection F1-score and 0.910 for the PPI F1-score. Compared to other models, our model outperformed other models in all the evaluation metrics. Specifically, in terms of infection F1-score, our model outperformed the second-best model SDNE (44) by 14.9%. In terms of PPI F1-score. Our model also surpassed the second-best model Deepwalk (41) by 6.6%.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Sap. is Homo sapiens; Mus.Mus. is Mus musculus; Fel.Cat. is Felis catus; Can.Lup. is Canis lupus familiaris; Ovi.Ari. is Ovis aries; Rat.Nor. is Rattus norvegicus; Mac.Mul. is Macaca mulatta; Rhi.Fer. is Rhinolophus ferrumequinum; Mes.Aur. is Mesocricetus auratus; Bos.Tau. is Bos taurus; Ict.Tri. is Ictidomys tridecemlineatus; Equ.Cab. is Equus caballus; Pan.Tro. is Pantroglodytes. (B)-(D)show the known and predicted interactions of PLpro, nsp15, ORF6, and N protein in SARS-CoV-2 with proteins in the human IFN signaling pathway that contribute to the IFN signaling pathway suppression.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Table 1. Interaction Prediction Overall Performance Evaluation and Comparison. This table gives six evaluation metrics regarding interaction prediction.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This work was partially supported NSF OAC 1920147.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgement"
+        },
+        {
+            "text": "Further information and requests for code and data should be directed to and will be fulfilled by the Lead Contact, Pengyu Hong (hongpeng@brandeis.edu).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Lead Contact"
+        },
+        {
+            "text": "The authors declare no competing interests.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Declaration of Interests"
+        }
+    ]
+}

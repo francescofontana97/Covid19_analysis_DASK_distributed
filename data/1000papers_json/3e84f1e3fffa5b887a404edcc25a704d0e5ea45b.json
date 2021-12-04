@@ -1,0 +1,2792 @@
+{
+    "paper_id": "3e84f1e3fffa5b887a404edcc25a704d0e5ea45b",
+    "metadata": {
+        "title": "NEUBOrg: Artificially Induced Pluripotent Stem Cell-Derived Brain Organoid to Model and Study Genetics of Alzheimer's Disease Progression",
+        "authors": [
+            {
+                "first": "Daisuke",
+                "middle": [],
+                "last": "Ito",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Ranjie",
+                "middle": [],
+                "last": "Xu",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Sandra",
+                "middle": [],
+                "last": "Brazil",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            },
+            {
+                "first": "Wayne",
+                "middle": [
+                    "R"
+                ],
+                "last": "Danter",
+                "suffix": "",
+                "affiliation": {},
+                "email": "wdanter@gmail.com"
+            },
+            {
+                "first": "Sally",
+                "middle": [],
+                "last": "Esmail",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Alzheimer's disease (AD) is the most common type of neurodegenerative diseases. There are over 44 million people living with the disease worldwide. While there are currently no effective treatments for AD, induced pluripotent stem cell-derived brain organoids have the potential to provide a better understanding of Alzheimer's pathogenesis. Nevertheless, developing brain organoid models is expensive, time consuming and often does not reflect disease progression. Using accurate and inexpensive computer simulations of human brain organoids can overcome the current limitations. Induced whole brain organoids (aiWBO) will greatly expand our ability to model AD and can guide wet lab research. In this study, we have successfully developed and validated artificially induced a whole brain organoid platform (NEUBOrg) using our previously validated machine learning platform, DeepNEU (v6.1). Using NEUBorg platform, we have generated aiWBO simulations of AD and provided a novel approach to test genetic risk factors associated with AD progression and pathogenesis.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "The modern era of human stem cell research was launched with a publication by Professor Yamanaka's group in 2007 (Takahashi et al., 2007) . This landmark paper demonstrated conclusively that human fibroblasts could be transformed, with four transcription factors and optimal conditions, into cells closely resembling human pluripotent stem cells (hPSC). These transformed cells have become widely referred to as induced pluripotent stem cells (iPSC). Since 2007 iPSCs have become a mainstay technology for disease modeling, stem cell therapies, drug discovery and specific cell line differentiation. More recently iPSCs have been used to develop tissue specific spheroids and more complex organoids show some early promise both as research tools and disease specific transplant options (Hattori, 2014; Lancaster and Knoblich, 2014; Lancaster and Huch, 2019 ). An organoid has been defined as an artificially grown mass of cells or tissue that resembles an organ. While still in its infancy, the science of human organoids has been used successfully to develop multiple organoid types including intestine, heart, pancreas, liver, lung, and brain to name a few (Kim et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 113,
+                    "end": 137,
+                    "text": "(Takahashi et al., 2007)",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 786,
+                    "end": 801,
+                    "text": "(Hattori, 2014;",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 802,
+                    "end": 831,
+                    "text": "Lancaster and Knoblich, 2014;",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 832,
+                    "end": 856,
+                    "text": "Lancaster and Huch, 2019",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1159,
+                    "end": 1177,
+                    "text": "(Kim et al., 2020)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Cerebral organoids have been produced with some early successes (Hattori, 2014; Lancaster and Knoblich, 2014) . Cerebral organoids continue to evolve as useful tools for modeling more common chronic and degenerative neurologic diseases like Alzheimer's disease, Parkinson's disease, and rarer neurological disorders like RETT syndrome, Huntington's disease and Zika microcephaly are also amenable to cerebral organoid modeling (Logan et al., 2011; Chen et al., 2019) . In general, any neurologic disease that can be represented in an induced stem cell model can theoretically also be represented in a cerebral organoid. To date, two main approaches have been employed to produce cerebral organoids from human stem cells (Qian et al., 2019) . These two methods have been labeled as unguided and guided. The unguided approach relies on the tendency of iPSC to develop toward neural precursors if given enough time and an optimal cellular environment. The guided method uses sequential combinations of small molecules and modified media to generate cerebral organoids. Both methods produce organoids that take many months to mature, result in recognizable and semi-organized cerebral tissue with similar limitations. Growing cerebral organoids in vitro has been challenging in several important ways. For example, modeling cerebral vasculature and a functional blood brain barrier remain problematic (Zhao et al., 2015; Lancaster and Huch, 2019; Qian et al., 2019; Marx, 2020; Workman and Svendsen, 2020) . In addition, the in vitro organoids lack a blood supply and this important deficit results in a variable amount of central necrosis as the organoids outgrow the ability of diffusion to deliver oxygen, nutrients, and remove toxic waste by products (Wang, 2018) .",
+            "cite_spans": [
+                {
+                    "start": 64,
+                    "end": 79,
+                    "text": "(Hattori, 2014;",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 80,
+                    "end": 109,
+                    "text": "Lancaster and Knoblich, 2014)",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 427,
+                    "end": 447,
+                    "text": "(Logan et al., 2011;",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 448,
+                    "end": 466,
+                    "text": "Chen et al., 2019)",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 720,
+                    "end": 739,
+                    "text": "(Qian et al., 2019)",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1397,
+                    "end": 1416,
+                    "text": "(Zhao et al., 2015;",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1417,
+                    "end": 1442,
+                    "text": "Lancaster and Huch, 2019;",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1443,
+                    "end": 1461,
+                    "text": "Qian et al., 2019;",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1462,
+                    "end": 1473,
+                    "text": "Marx, 2020;",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1474,
+                    "end": 1501,
+                    "text": "Workman and Svendsen, 2020)",
+                    "ref_id": "BIBREF43"
+                },
+                {
+                    "start": 1751,
+                    "end": 1763,
+                    "text": "(Wang, 2018)",
+                    "ref_id": "BIBREF42"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "More complex whole brain organoids represent a logical advancement of cerebral organoids. This technology attempts to reproduce forebrain, midbrain, and hindbrain structures with rostral-caudal as well as ventral-dorsal organization. The development of whole brain organoids has been advanced by combining regionally specific organoids in vitro like cerebral, cerebellar, retinal organoids, and directing the development of functional vascular elements (Chen et al., 2020) . Rotating bioreactors with complex media have provided additional improvement in evolving whole brain organoids (Qian et al., 2018) . Overall, this process is technologically demanding and requires considerable time and expense to achieve modest results. A recent study has concluded that at present, whole brain organoids do not faithfully reproduce all elements of the human brain (Bhaduri et al., 2020) . This is particularly true regarding the internal architecture and neural connections. One suggested explanation for the observed differences could be the significant and multiple stresses that occur during the growth and development of iPSC and avascular organoids over protracted periods of time. This suggestion is supported by the observation that transplanted brain organoids tend to become more organized and representative of the native neural tissue (Bhaduri et al., 2020) .",
+            "cite_spans": [
+                {
+                    "start": 453,
+                    "end": 472,
+                    "text": "(Chen et al., 2020)",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 586,
+                    "end": 605,
+                    "text": "(Qian et al., 2018)",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 857,
+                    "end": 879,
+                    "text": "(Bhaduri et al., 2020)",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1339,
+                    "end": 1361,
+                    "text": "(Bhaduri et al., 2020)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "We believe that the future for whole brain organoid research including novel therapeutic possibilities is quite promising and to date remarkable progress has been achieved (Kim et al., 2020) . Given the considerable cost and limitations of current in vitro derived whole brain organoids we also believe that validated, easily customizable and relatively inexpensive computer simulations of artificially induced whole brain organoids (aiWBO) could represent an important step forward. Such a technology could be an important tool for simulating many neurological diseases and lead to important new therapeutic insights to guide wet lab research in a timely and cost-effective manner.",
+            "cite_spans": [
+                {
+                    "start": 172,
+                    "end": 190,
+                    "text": "(Kim et al., 2020)",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "INTRODUCTION"
+        },
+        {
+            "text": "Alzheimer's disease (AD) is the most common chronic neurodegenerative disease characterized by progressive loss of cognition and disruption of basic functions, such as swallowing, walking, attention, and memory (Alzheimer's Association, 2019). AD is the sixth leading cause of death in the United States and the fifth leading cause of death among seniors (Alzheimer's Association, 2020). Increasing evidence has suggested that loss or dysfunction of different brain cell types likely contribute to AD progression (De Strooper and Karran, 2016) . Thus, modeling these cells and examining their interactions will shed mechanistic insights into AD pathogenesis. Accordingly, significant efforts have been put to building models that incorporate multiple iPSC-derived brain cell types. However, the ability to obtain iPSC-derived brain cells that mimic human brain remains a significant challenge. Validated whole brain organoid simulations could represent an important tool for enabling neurodegenerative disease modeling, biomarker identification and drug discovery.",
+            "cite_spans": [
+                {
+                    "start": 513,
+                    "end": 543,
+                    "text": "(De Strooper and Karran, 2016)",
+                    "ref_id": "BIBREF10"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modeling Alzheimer Disease Using iPSC-Derived Brain Cells"
+        },
+        {
+            "text": "The main purpose of this project was to extend our previous DeepNEU research (Danter, 2019; Danter, 2019, 2020) by developing and validating aiWBO using the latest validated version of the DeepNEU (v6.1) machine learning platform. In this study, the DeepNEU platform was used to generate aiWBO simulations of AD. To our knowledge this is the first time that a simulation of a Whole Brain Organoid has been attempted. These aiWBO simulations have been named NEUBOrg.",
+            "cite_spans": [
+                {
+                    "start": 77,
+                    "end": 91,
+                    "text": "(Danter, 2019;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 92,
+                    "end": 111,
+                    "text": "Danter, 2019, 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Modeling Alzheimer Disease Using iPSC-Derived Brain Cells"
+        },
+        {
+            "text": "The DeepNEU stem cell simulation platform is a literature validated hybrid deep-machine learning system with elements of fully connected recurrent neural networks (RNN), cognitive maps (CM), support vector machines (SVM), and evolutionary systems (GA). The detailed methodology for simulation development and validation plus the description of the evolving DeepNEU database used in these experiments is described in detail in Supplementary Appendix 1 and previously in Danter (2019), Danter (2019, 2020) .",
+            "cite_spans": [
+                {
+                    "start": 484,
+                    "end": 503,
+                    "text": "Danter (2019, 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "MATERIALS AND METHODS"
+        },
+        {
+            "text": "The current DeepNEU database (v6.1) contains the information found in the previous version (v5.0) plus an important information upgrade in the form of new genotypic concepts, phenotypic concepts and relationships. Most of these new organoid concepts and relationships were used to generate signatures for identifying specific cell types, brain regions, cortical layers, the blood brain barrier, provide evidence of a rudimentary circulation and cellular stresses. For example, the previous DeepNEU database (v5.0) contained 4,206 gene/proteins or phenotypic concepts and 37,223 non-zero relationships while the current version (6.1) contains 4,516 gene/proteins or phenotypic concepts and 41,493 non-zero relationships. This represents more than 4,700 new relationships specifically relevant to developing whole brain organoids. Each gene/protein and phenotypic concept in DeepNEU (v6.1) has on average more than nine gene/protein or phenotypic inputs and outputs.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "MATERIALS AND METHODS"
+        },
+        {
+            "text": "The NEUBOrg Whole Brain Organoid (aiWBO) Simulations",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The DeepNEU Simulations"
+        },
+        {
+            "text": "The main purpose of this project was to extend our previous DeepNEU research by developing and validating a whole brain organoid simulation (aiWBO) using the latest version of the DeepNEU (v6.1) machine learning platform. To accomplish this, we used an approach similar to that described by Takahashi et al. (2007) to transform human fibroblasts into induced pluripotent stems cells (iPSC). Several important modifications to the original 2007 protocol were required to promote differentiation from aiPSC to aiWBO. The modified protocol began with the activation of four transcription factors OCT4, cMYC, KLF4, and SOX2. In addition, we used a simulated B27 neural media with supplementary zinc and ascorbic acid in the presence of doxycycline and normal levels of ambient oxygen (21%) and increased carbon dioxide (5%). The aiPSC to aiWBO transformation using the above cocktail was carried out in a simulated slow rotating low shear bioreactor, which has been shown to improve the production of WBO from iPSCs. A bioreactor is a vessel that creates an optimal environment that facilitates biological reactions and is used to culture aerobic cells and organoids. The simulated bioreactor environment used in this project was based on protocols for organoid development described in detail elsewhere (Lancaster and Knoblich, 2014; Qian et al., 2018) . For all simulations age was fixed at 65 years. AGE is an input value that varies between \u22121 and +1 and can be set by the experimenter or evolved by the simulation. A value of \u22121 represents time of birth, 0 represents 50 years and +1 represents an age \u2265 100 years of age. All aiWBO simulation experiments were carried out in triplicate. The complete cocktail is summarized below in Table 1 .",
+            "cite_spans": [
+                {
+                    "start": 291,
+                    "end": 314,
+                    "text": "Takahashi et al. (2007)",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 1300,
+                    "end": 1330,
+                    "text": "(Lancaster and Knoblich, 2014;",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1331,
+                    "end": 1349,
+                    "text": "Qian et al., 2018)",
+                    "ref_id": "BIBREF32"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 1733,
+                    "end": 1740,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "The DeepNEU Simulations"
+        },
+        {
+            "text": "The aiWBO were designed to simulate the (i) diverse neural cell types, (ii) rostral caudal brain regions, (iii) ventral dorsal regions where possible and the (iv) six horizontal layers of the cerebral cortex, and (v) the four layers of the cerebellar cortex. The spinal cord was not simulated in the current project. The main cell types included are neural precursor cells (NPC/NSC) found primarily in the radial glial (RG) layer, neurons, astrocytes, oligodendrocyte precursors (OPC), oligodendrocytes, interneurons, and microglial cells. Additional cell types include endothelial cells and pericytes which are important components of the blood brain barrier (BBB). The rostral caudal regions simulated include forebrain, midbrain and hindbrain. The ventral dorsal regions include ventral forebrain, etc. The horizontal layers of the cerebral cortex arranged from outer to inner include Layers 1-6 and the 4 main layers of the cerebellar cortex from outer to inner are also simulated. NEUBOrg platform, aiWBO simulations, was built based on the following comprehensive literature to provide genotypic and phenotypic markers for identifying cell types, brain regions and cortical layers (Ahn et al., 2004; Logan et al., 2011 Logan et al., , 2020 Santos et al., 2011; Kirsch et al., 2012; Hattori, 2014; Lancaster and Knoblich, 2014; Lippmann et al., 2015; Zemke et al., 2015; Zhao et al., 2015; Tkachenko et al., 2016; Espuny-Camacho et al., 2018; Krefft et al., 2018; McKenzie et al., 2018; Qian et al., 2018 Qian et al., , 2019 Wang, 2018; Chen et al., 2019 Chen et al., , 2020 Do and Hong, 2019; Gerakis and Hetz, 2019; Kim et al., 2019 Kim et al., , 2020 Lancaster and Huch, 2019; Velasco et al., 2019; Bhaduri et al., 2020; Papaspyropoulos et al., 2020) . A compilation of relevant markers is presented in Supplementary Tables S1-S5.",
+            "cite_spans": [
+                {
+                    "start": 1187,
+                    "end": 1205,
+                    "text": "(Ahn et al., 2004;",
+                    "ref_id": "BIBREF1"
+                },
+                {
+                    "start": 1206,
+                    "end": 1224,
+                    "text": "Logan et al., 2011",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 1225,
+                    "end": 1245,
+                    "text": "Logan et al., , 2020",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 1246,
+                    "end": 1266,
+                    "text": "Santos et al., 2011;",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 1267,
+                    "end": 1287,
+                    "text": "Kirsch et al., 2012;",
+                    "ref_id": "BIBREF20"
+                },
+                {
+                    "start": 1288,
+                    "end": 1302,
+                    "text": "Hattori, 2014;",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 1303,
+                    "end": 1332,
+                    "text": "Lancaster and Knoblich, 2014;",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 1333,
+                    "end": 1355,
+                    "text": "Lippmann et al., 2015;",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 1356,
+                    "end": 1375,
+                    "text": "Zemke et al., 2015;",
+                    "ref_id": "BIBREF44"
+                },
+                {
+                    "start": 1376,
+                    "end": 1394,
+                    "text": "Zhao et al., 2015;",
+                    "ref_id": "BIBREF45"
+                },
+                {
+                    "start": 1395,
+                    "end": 1418,
+                    "text": "Tkachenko et al., 2016;",
+                    "ref_id": "BIBREF40"
+                },
+                {
+                    "start": 1419,
+                    "end": 1447,
+                    "text": "Espuny-Camacho et al., 2018;",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 1448,
+                    "end": 1468,
+                    "text": "Krefft et al., 2018;",
+                    "ref_id": "BIBREF21"
+                },
+                {
+                    "start": 1469,
+                    "end": 1491,
+                    "text": "McKenzie et al., 2018;",
+                    "ref_id": "BIBREF29"
+                },
+                {
+                    "start": 1492,
+                    "end": 1509,
+                    "text": "Qian et al., 2018",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 1510,
+                    "end": 1529,
+                    "text": "Qian et al., , 2019",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 1530,
+                    "end": 1541,
+                    "text": "Wang, 2018;",
+                    "ref_id": "BIBREF42"
+                },
+                {
+                    "start": 1542,
+                    "end": 1559,
+                    "text": "Chen et al., 2019",
+                    "ref_id": "BIBREF8"
+                },
+                {
+                    "start": 1560,
+                    "end": 1579,
+                    "text": "Chen et al., , 2020",
+                    "ref_id": "BIBREF7"
+                },
+                {
+                    "start": 1580,
+                    "end": 1598,
+                    "text": "Do and Hong, 2019;",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 1599,
+                    "end": 1622,
+                    "text": "Gerakis and Hetz, 2019;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 1623,
+                    "end": 1639,
+                    "text": "Kim et al., 2019",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 1640,
+                    "end": 1658,
+                    "text": "Kim et al., , 2020",
+                    "ref_id": "BIBREF19"
+                },
+                {
+                    "start": 1659,
+                    "end": 1684,
+                    "text": "Lancaster and Huch, 2019;",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 1685,
+                    "end": 1706,
+                    "text": "Velasco et al., 2019;",
+                    "ref_id": "BIBREF41"
+                },
+                {
+                    "start": 1707,
+                    "end": 1728,
+                    "text": "Bhaduri et al., 2020;",
+                    "ref_id": "BIBREF5"
+                },
+                {
+                    "start": 1729,
+                    "end": 1758,
+                    "text": "Papaspyropoulos et al., 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "The DeepNEU Simulations"
+        },
+        {
+            "text": "Once validated, the unguided aiWBO were used to simulate a whole brain organoid affected by Alzheimer's disease. To accomplish the disease simulations (aiWBO-APOE4) two concepts were modified. First, APOE4 was locked ON to simulate an APOE4 duplication/GOF mutation. To simulate an important inhibitory effect of an APOE4 mutation, beta amyloid clearance was locked OFF. The cocktail and process were otherwise identical to that outlined above for the developing the wild type aiWBO simulations. All aiWBO-APOE4 (AD) simulation experiments were carried out in triplicate.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The NEUBOrg Whole Brain Organoid Simulations Applied to Alzheimer's Disease"
+        },
+        {
+            "text": "A detailed literature review of genotypic and phenotypic features was used to develop a profile of Alzheimer's Disease that we used to evaluate the performance of the AD simulations compared to the aiWBO (Romito-DiGiacomo et al., 2007; Santos et al., 2011; Raja et al., 2016; Arbor, 2017; Gerakis and Hetz, 2019; Madadi et al., 2019; Brighi et al., 2020; Papaspyropoulos et al., 2020; Ribeiro et al., 2020; Silva et al., 2020) . Negative inputs inhibit the feature while positive inputs promote the feature. A compilation of the large number and status of inputs that constitute the AD feature profile is presented in Table 2 below. We also analyzed the aiWBO simulation data for evidence of cellular stress and neuron death that have commonly been observed in organoids and is thought to impair organoid development (Bhaduri et al., 2020) . The same paper was used to develop a genotypic and phenotypic features profile of organoid cellular stress and neuron cell death. Negative inputs inhibit the feature while positive inputs promote the feature. A compilation of the inputs that constitute a cell stress and neuron cell death profile is presented in Table 3 below.",
+            "cite_spans": [
+                {
+                    "start": 204,
+                    "end": 235,
+                    "text": "(Romito-DiGiacomo et al., 2007;",
+                    "ref_id": "BIBREF36"
+                },
+                {
+                    "start": 236,
+                    "end": 256,
+                    "text": "Santos et al., 2011;",
+                    "ref_id": "BIBREF37"
+                },
+                {
+                    "start": 257,
+                    "end": 275,
+                    "text": "Raja et al., 2016;",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 276,
+                    "end": 288,
+                    "text": "Arbor, 2017;",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 289,
+                    "end": 312,
+                    "text": "Gerakis and Hetz, 2019;",
+                    "ref_id": "BIBREF15"
+                },
+                {
+                    "start": 313,
+                    "end": 333,
+                    "text": "Madadi et al., 2019;",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 334,
+                    "end": 354,
+                    "text": "Brighi et al., 2020;",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 355,
+                    "end": 384,
+                    "text": "Papaspyropoulos et al., 2020;",
+                    "ref_id": null
+                },
+                {
+                    "start": 385,
+                    "end": 406,
+                    "text": "Ribeiro et al., 2020;",
+                    "ref_id": "BIBREF35"
+                },
+                {
+                    "start": 407,
+                    "end": 426,
+                    "text": "Silva et al., 2020)",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 817,
+                    "end": 839,
+                    "text": "(Bhaduri et al., 2020)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 618,
+                    "end": 625,
+                    "text": "Table 2",
+                    "ref_id": "TABREF1"
+                },
+                {
+                    "start": 1155,
+                    "end": 1162,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "The NEUBOrg Whole Brain Organoid Simulations Applied to Alzheimer's Disease"
+        },
+        {
+            "text": "Consistent with previously projects, the statistical analysis of all aiWBO and aiWBO-APOE4 predictions vs. the published and previously unseen wet lab data used the unbiased binomial test. This test provides an exact probability, can compensate for prediction bias, and is ideal for determining the statistical significance of experimental deviations from an actual distribution of observations that fall into two outcome categories (e.g., success or fail or agree or disagree). For all aiWBO simulations, the null hypothesis (H 0 ) states that there is no significant relationship between simulation predictions and published wet lab data. The H 0 is rejected if the p-value is <0.05 and is interpreted to indicate that the observed relationship between aiWBO predictions and actual outcomes is unlikely to have occurred by chance alone. For other between group (e.g., aiWBO vs. aiWBO-APOE4) comparisons, the Mann-Whitney U test of significance was used (Addinsoft, 2019) . This nonparametric test was chosen because some of the data was not normally distributed.",
+            "cite_spans": [
+                {
+                    "start": 955,
+                    "end": 972,
+                    "text": "(Addinsoft, 2019)",
+                    "ref_id": "BIBREF0"
+                }
+            ],
+            "ref_spans": [],
+            "section": "DeepNEU Platform Statistical Analysis"
+        },
+        {
+            "text": "The current DeepNEU database (v6.1) contains 4,516 gene/protein or phenotypic concepts and 41,493 non-zero relationships resulting in a large amount of information flowing into and out of each node in the fully connected recurrent network. On average, each node in the network initially has >9 inputs and >9 outputs. An updated analysis of all positive and negative network connections revealed a bias toward positive outputs. The pretest probability of a positive outcome prediction is 0.656 and the pretest probability of a negative prediction is therefore 0.344. This system bias was used when applying the binomial test to all simulation outcomes.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The DeepNEU Platform Specification"
+        },
+        {
+            "text": "The unsupervised whole brain organoid (aiWBO) simulations converged quickly (45 iterations) to a new system wide steady state without evidence of overtraining after 1,000 iterations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The aiWBO Wild Type Simulations"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all nine neural cell types commonly found in human brain organoids. The probability that all (N = 9) cell type outcomes were predicted by chance alone using the binomial test is 0.023. These results are summarized in Figure 1A .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 265,
+                    "end": 274,
+                    "text": "Figure 1A",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Neural Cell Types"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all three regions commonly found in human brain organoids. These regions are Forebrain, Midbrain and Hindbrain. The spinal cord was not simulated in the current version. The probability that the expression of all (N = 3) regions were predicted by chance alone using the binomial test is 0.282. These results are summarized in Figure 1B .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 374,
+                    "end": 383,
+                    "text": "Figure 1B",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Rostral-Caudal Brain Regions"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all seven ventral (anterior)-dorsal (posterior) regions commonly found in human brain organoids. The probability that the expression of all (N = 7) regions were predicted by chance alone using the binomial test is 0.052. These results are summarized in Figure 1C .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 301,
+                    "end": 310,
+                    "text": "Figure 1C",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Ventral-Dorsal Brain Regions"
+        },
+        {
+            "text": "The aiWBO predicted the expression of all seven concepts representative of a mixed (compensated) metabolic-alkalosis and respiratory acidosis in human brain organoids. The probability that the expression of all (N = 7) concepts associated with the Frontiers in Aging Neuroscience | www.frontiersin.org expression of a compensated metabolic-alkalosis and respiratory acidosis were predicted by chance alone using the binomial test is 0.052. These results are summarized in Figure 1D .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 472,
+                    "end": 481,
+                    "text": "Figure 1D",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "Acid-Base Status of the Organoid"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all six cerebral cortical layers commonly found in human brain organoids. The probability that the expression of all (N = 6) cerebral cortical layers were predicted by chance alone using the binomial test is 0.08. These results are summarized in Figure 2A .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 294,
+                    "end": 303,
+                    "text": "Figure 2A",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Cerebral Cortical Layers"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all six cerebellar layers cortical commonly found in human brain organoids. The probability that the expression of all (N = 4) cerebral cortical layers were predicted by chance alone using the binomial test is 0.185. These results are summarized in Figure 2B .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 297,
+                    "end": 306,
+                    "text": "Figure 2B",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Cerebellar Cortical Layers"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all seven concepts representative of a microcirculation in human brain organoids. The probability that the expression of all (N = 7) concepts associated with the expression of a microcirculation were predicted by chance alone using the binomial test is 0.052. These results are summarized in Figure 2C .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 340,
+                    "end": 349,
+                    "text": "Figure 2C",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Microcirculation"
+        },
+        {
+            "text": "The aiWBO correctly predicted the expression of all six concepts representative of a BBB in human brain organoids. The probability that the expression of all (N = 6) concepts associated with the expression of a BBB were predicted by chance alone using the binomial test is 0.185. These results are summarized in Figure 2D .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 312,
+                    "end": 321,
+                    "text": "Figure 2D",
+                    "ref_id": "FIGREF2"
+                }
+            ],
+            "section": "Blood Brain Barrier (BBB)"
+        },
+        {
+            "text": "The aiWBO simulations predicted the expression of six markers of cell stresses and neuron cell death commonly found in in vitro human brain organoids consistent with published data (Bhaduri et al., 2020) . These results are summarized in Figure 5A .",
+            "cite_spans": [
+                {
+                    "start": 181,
+                    "end": 203,
+                    "text": "(Bhaduri et al., 2020)",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [
+                {
+                    "start": 238,
+                    "end": 247,
+                    "text": "Figure 5A",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Cellular Stress and Neuron Cell Death"
+        },
+        {
+            "text": "Taken together the aiWBO correctly predicted the expression of 48 elements consistent with a pattern seen in a whole brain organoid and seven elements consistent with the presence of a compensated metabolic-alkalosis and respiratory acidosis. The probability that the expression of all (N = 55) concepts were predicted by chance alone using the binomial test is <0.00000001.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary Results for aiWBO Simulations"
+        },
+        {
+            "text": "The unsupervised whole brain organoid (aiWBO-APOE4) AD simulations converged quickly (42 iterations) to a new system wide steady state without evidence of overtraining after 1,000 iterations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The aiWBO-APOE4 Alzheimer's Disease (AD) Simulations"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations correctly predicted the expression of all nine neural cell types commonly found in human brain organoids. The probability that all (N = 9) cell type outcomes were predicted by chance alone using the binomial test is 0.023. A statistical analysis using the Mann-Whitney U test indicated that there were significant decreases in the expression of astrocytes, pericytes, OPCs, and oligodendrocytes with the AD simulations (p < 0.01). We also observed a marginal increase in RG/NSC (P < 0.05). All other cell types including neurons were not significantly different between aiWBO and AD simulations. These results are summarized in Figure 3A .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 661,
+                    "end": 670,
+                    "text": "Figure 3A",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Neural Cell Types"
+        },
+        {
+            "text": "While the major cell target of advanced AD is neurons, deleterious effects on synapses are among the earliest pathologic changes. When we examined the impact of increased APOE4 on the AD simulations using a 7-element, literature validated profile, the effects were largely consistent with significant decline in synaptogenesis and synaptic function. These results are summarized in Supplementary Table S6 .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 382,
+                    "end": 404,
+                    "text": "Supplementary Table S6",
+                    "ref_id": null
+                }
+            ],
+            "section": "Neural Cell Types"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations correctly predicted the expression of all three regions commonly found in human brain organoids. These regions are Forebrain, Midbrain and Hindbrain. The spinal cord was not simulated in the current version. The probability that the expression of all (N = 3) regions were predicted by chance alone using the binomial test is 0.282.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Rostral-Caudal Brain Regions"
+        },
+        {
+            "text": "A statistical analysis using the Mann-Whitney U test indicated that there was a small but significant (p < 0.05) decrease in the expression of the Forebrain and small but significant increase in the Midbrain while the Hindbrain was unchanged in the AD simulations. These results are summarized in Figure 3B .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 297,
+                    "end": 306,
+                    "text": "Figure 3B",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Rostral-Caudal Brain Regions"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations correctly predicted the expression of all seven ventral (anterior)-dorsal (posterior) representative regions commonly found in human brain organoids. The probability that the expression of all (N = 7) regions were predicted by chance alone using the binomial test is 0.052. A statistical analysis using the Mann-Whitney U test indicated that there were no significant differences (p > 0.05) in the expression of all Ventral-Dorsal brain regions in the aiWBO and AD simulations. These results are summarized in Figure 3C .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 543,
+                    "end": 552,
+                    "text": "Figure 3C",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Ventral-Dorsal Brain Regions"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations correctly predicted the expression of all six cerebral cortical layers commonly found in human brain organoids. The probability that the expression of all (N = 6) cerebral cortical layers were predicted by chance alone using the binomial test is 0.08. A statistical analysis using the Mann-Whitney U test indicated that there was a significant decrease (p < 0.01) in the expression of the Layers 2-5 with a very small but still significant decrease (p < 0.05) Layer 6. Layer 1 was unchanged in the AD simulations. Overall, there was also a significant decrease in cerebral cortical mass in AD simulations. These results are summarized in Figure 3D .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 671,
+                    "end": 680,
+                    "text": "Figure 3D",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Cerebral Cortical Layers"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations correctly predicted the expression of all four cerebellar cortical layers commonly found in human brain organoids. The probability that the expression of all (N = 4) cerebral cortical layers were predicted by chance alone using the binomial test is 0.185. A statistical analysis using the Mann-Whitney U test indicated that there were no significant differences (p > 0.05) between expression of all cerebellar cortical layers in the aiWBO and AD simulations. These results are summarized in Figure 3E .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 524,
+                    "end": 533,
+                    "text": "Figure 3E",
+                    "ref_id": "FIGREF3"
+                }
+            ],
+            "section": "Cerebellar Cortical Layers"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations correctly predicted the expression of all seven concepts representative of a microcirculation in human brain organoids. The probability that the expression of all (N = 7) concepts associated with the expression of a microcirculation were predicted by chance alone using the binomial test is 0.052. A statistical analysis using the Mann-Whitney U test indicated that there were significant decreases (p < 0.05) in the endothelial-arterial, venous and lymphatic components of the Microcirculation in the AD simulations. In addition, the intracellular O 2 concentration is significantly decreased (p < 0.05) in the AD simulations consistent with a degree of microcirculation impairment. These results are summarized in Figure4A.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Microcirculation"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) correctly predicted the expression of all six concepts representative of a BBB in human brain organoids. The probability that the expression of all (N = 6) concepts associated with the expression of a BBB were predicted by chance alone using the binomial test is 0.185. A statistical analysis using the Mann-Whitney U test indicated that there were significant decreases in the astrocyte (p < 0.05) and pericyte (p < 0.01) components of the BBB. In addition, the function of the BBB was significantly decreased (p < 0.01) in the AD simulations while the expression of the BBB itself was not different. These results are summarized in Figure 4B .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 655,
+                    "end": 664,
+                    "text": "Figure 4B",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Blood Brain Barrier (BBB)"
+        },
+        {
+            "text": "The aiWBO-APOE4 (AD) simulations predicted the expression of all seven concepts representative of a mixed (compensated) metabolic-alkalosis and respiratory acidosis in human brain organoids. The probability that the expression of all (N = 7) concepts associated with the expression of a compensated metabolic-alkalosis and respiratory acidosis were predicted by chance alone using the binomial test is 0.052. A statistical analysis using the Mann-Whitney U test indicated that there were significant changes (p < 0.05) in all components of the AD simulations compared with aiWBO. Most notable there is a significant increase in intracellular H + concentration. Taken together these data suggest a somewhat less well-compensated mixed metabolic alkalosis-respiratory acidosis in the AD simulations. The persistent high CO 2 concentration is also consistent with the increased CO 2 concentration (5%) that is part of the cocktail used in generating aiWBO and AD simulations. These results are summarized in Figure 4C .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1005,
+                    "end": 1014,
+                    "text": "Figure 4C",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Acid-Base Status of the Organoid"
+        },
+        {
+            "text": "The aiWBO-APOE4 simulations predicted the expression of all 10 concepts, representative of the Alzheimer's Disease (AD) disease profile, in a simulated human brain organoid. The probability that the expression of all (N = 10) AD concepts were predicted by chance alone using the binomial test is 0.015. A statistical analysis using the Mann-Whitney U test indicated that there were significant changes (p < 0.001) in all components of the simulated AD disease profile, except for the expression of amyloid precursor protein (APP) when compared with aiWBO. These results are summarized in Figure 4D .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 588,
+                    "end": 597,
+                    "text": "Figure 4D",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "The aiWBO-APOE4 Alzheimer's Disease (AD) Simulations"
+        },
+        {
+            "text": "The aiWBO-APOE4 predicted the expression of six markers of cell stresses and neuronal cell death commonly found in in vitro human brain organoids. A statistical analysis using the Mann-Whitney U test indicated that there were statistically significant increases (p < 0.01) in all components of the cell stress profile in the AD disease simulations compared with aiWBO-WT simulations including neuronal cell death. The largest observed difference was an increase in glycolysis. The comparative results are summarized in Figure 5B .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 519,
+                    "end": 528,
+                    "text": "Figure 5B",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Cellular Stress and Neuron Cell Death"
+        },
+        {
+            "text": "While the AD simulations produced some significant variability when compared with the aiWBO simulation outputs, the AD simulations also correctly predicted the expression of 48 elements consistent with a pattern seen in a whole brain organoid and seven elements suggesting the expression of a compensated metabolic alkalosis and respiratory acidosis. The probability that the expression of all (N = 55) concepts were predicted by chance alone using the binomial test is <0.00000001. In addition, there was evidence of increased cellular stress and neuron cell death in the AD simulations relative to aiWBO-WT simulations.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Summary of AD Simulations"
+        },
+        {
+            "text": "The main purpose of this project was to extend our previous research (Danter, 2019; Danter, 2019, 2020) by first developing and then validating a whole brain organoid simulation (aiWBO) using the latest version of the DeepNEU (v6.1) machine learning platform. Our unguided approach toward brain organoid development relied on the natural tendency of iPSC to differentiate toward complex neural outcomes given enough time and optimal physical and environmental conditions. When we evaluated the aiWBO simulations by applying the wet lab, published genotypic and phenotypic features of a whole brain organoid, the results confirm that the simulations performed well in that they reliably reproduced the wet lab profile. The probability that the expression of all (N = 46) features were predicted by chance alone using the binomial test is <0.00000001. The important anatomical and regional aspects of the neonatal brain were all predicted accurately. In addition, the simulations appear to have evolved rudimentary elements of a functioning microcirculation and blood brain barrier. Both elements are limited by the absence of a functioning systemic and cerebral circulation. Importantly, the current level of sophistication of these aiWBO simulations has been achieved without expensive or demanding and timeconsuming protocols or the need to grow and then combine individual organoids like cerebral, cerebellar and blood brain barrier into more complex whole brain like structures.",
+            "cite_spans": [
+                {
+                    "start": 69,
+                    "end": 83,
+                    "text": "(Danter, 2019;",
+                    "ref_id": "BIBREF9"
+                },
+                {
+                    "start": 84,
+                    "end": 103,
+                    "text": "Danter, 2019, 2020)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Fortunately, the concepts necessary to evaluate acid base status have always been a core capability of the DeepNEU platform. This allowed us to evaluate the status of these artificial whole brain organoid simulations. Overall, the pattern observed at stabilization was that of a compensated or combined metabolic alkalosis and respiratory acidosis. Importantly, the intracellular H+ ion concentration [iH+] deviation from the arbitrary base line is minimal. The high bicarbonate and CO 2 levels round out the mixed profile. Finally, the organoid appears to be adequately oxygenated. At least part of this complex picture is the result of the normal ambient Oxygen level (21%) and increased CO 2 (5%) level used in the bioreactor protocol.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Once the aiWBO simulations were validated against the current literature, the DeepNEU platform was be used to generate aiWBO simulations of Alzheimer's disease (AD), an important and increasingly common chronic degenerative neurologic disease. As outlined above in Table 3 , a literature derived 10 feature genotypic and phenotypic AD profile was used to evaluate simulation predictions. When we compared the aiWBO simulation outputs with the AD simulations and allowing for disease related effects, both simulations accurately reproduced the feature profile consistent with the pattern seen in a whole brain organoid. To our knowledge this is the first time that a whole brain organoid simulation of Alzheimer's Disease (AD) has been attempted.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 265,
+                    "end": 272,
+                    "text": "Table 3",
+                    "ref_id": null
+                }
+            ],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Alzheimer's Disease (AD) is known to impact many neural cell types including neurons, oligodendrocytes, astrocytes and microglia (Ref) . While more advanced disease largely results in neuronal loss, the current results would suggest that the AD simulations represent an early/milder form of the disease. This conclusion is supported by several other factors. Firstly, Age was arbitrarily set at 65 years for the simulations. Based on the available data this age is widely suggested as a reasonable lower limit for late onset AD (LOAD) and above the upper limit for early onset AD (EOAD). In addition, we wanted to explore the impact of an isolated increase in APOE4, so other factors which are known to exacerbate the disease including diabetes, tobacco abuse, obesity, hypertension, dyslipidemia, and advanced age were all turned off during simulation generation. Finally, this conclusion is supported by the prediction of a significant decline in new synapses formation and loss of synaptic function in AD simulations. Taken together these results are all consistent with an early or milder form of the disease.",
+            "cite_spans": [
+                {
+                    "start": 129,
+                    "end": 134,
+                    "text": "(Ref)",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "In order to create more anatomically correct (3D) whole brain simulations, we evaluated a limited number of (1) Rostral-Caudal features, (2) Ventral-Dorsal features, (3) Cerebral Cortical layers, and (4) Cerebellar Cortical layers. In contrast to wet lab whole brain organoids which are variably disorganized, the aiWBO and aiWBO-APOE3 simulations accurately reproduced the basic anatomical organization of human brain regions and cortical layers. We believe that while encouraging, these anatomic results are rudimentary since validated markers for many brain regions are inadequate or unavailable in the current peer reviewed literature. It is certain this will change as new information is published. Importantly, new information can easily be added to the DeepNEU database in real time as it becomes available.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Regarding Alzheimer's disease, the current data indicate that the relatively mild disease has small but significant effects on Rostral-Caudal elements but no significant changes in Ventral-Dorsal features. Similarly, there were no significant changes in cerebellar cortical layers. In contrast, there were significant changes in cerebral cortical layers 2-5 and less so in Layer 6. No significant changes were detected in Layer 1. The aiWBO-APOE4 (AD) simulation results are generally like published wet lab results and consistent with early but progressive disease. Pathology has previously indicated that Layers 2-4 tend to be affected early while layers 5-6 are affected later and Layer 1 is unaffected.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Most previous attempts to create whole brain organoids have met with limited success with regards to producing a rudimentary microcirculation. Although the organoids are not connected to a functioning cardiovascular system, the presence of a cerebral microcirculation has important implications as a critical element of a functioning blood brain barrier. As summarized in Figure 4 , several important elements of a rudimentary microcirculation were present in the wild type aiWBO simulations. Furthermore, it appears that the simulated microcirculation may be impaired in the AD simulations consistent with known effects patients with AD.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 372,
+                    "end": 380,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Importantly, elements of a rudimentary and functioning blood brain barrier (BBB) were also expressed in the wild type aiWBO simulations. In the AD simulations there were significant decreases in the astrocyte and pericyte components of the BBB. In addition, the function of the BBB was also significantly decreased in the AD simulations. The function of the BBB which was not explored in detail in these initial experiments, has important nutritional, metabolic and pharmacological implications which will be evaluated in futures experiments with a focus on drug development. The NEUBOrg platform aiWBO simulations should permit the early identification of drugs and other potential therapeutics which either enter or do not enter the central nervous system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DISCUSSION"
+        },
+        {
+            "text": "Our data suggested a significant up regulation of cellular stress as well as neuron cell death markers as shown in Figure 5A . These data suggest that our aiWBO-APOE4 (AD) simulations accurately reflected phenotypic features associated with AD in human brain.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 115,
+                    "end": 124,
+                    "text": "Figure 5A",
+                    "ref_id": "FIGREF5"
+                }
+            ],
+            "section": "Cellular Stresses and Neuron Cell Death"
+        },
+        {
+            "text": "Validated computer simulations would have several important advantages. These simulations can be customized and developed and deployed rapidly in a cost-effective manner when compared with wet lab organoid development. We are currently focused on addressing the increased cellular stresses and neural cell death that are seen in in vitro and now in simulated brain organoids. It is likely that these significant issues are the result of the lack of cardiovascular, pulmonary and renal systems. It should be faster and easier to optimize organoid cellular stress and neuronal death by modifying the simulated environment as required. We believe that the data presented here show the promising potential of aiWBO simulations to overcome the current limitation of developing wet lab brain organoid.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Cellular Stresses and Neuron Cell Death"
+        },
+        {
+            "text": "As we continue to develop NEUBOrg simulation, a key limitation of this technology is the degree to which the NEUBOrg platform can accurately represent currently available whole brain organoids. These initial data confirm that the platform can accurately recreate a diverse range of previously unseen features and profiles attributed to human brain organoids in the published literature. Currently, any simulation of a biological system like the human brain will be less complex than the organ itself. To complicate this further, our understanding of the human brain is itself incomplete. Going forward, the key to evaluating the utility of the NEUBOrg platform will be obtaining new data for learning and from ongoing validation.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Limitations and Promises of the Current aiWBO Simulations"
+        },
+        {
+            "text": "The central issue of incomplete learning data continues to improve on an almost daily basis. Version 5.0 contained 4,206 gene/proteins or phenotypic concepts and 37,223 nonzero relationships while the current version (6.1) contains 4,516 gene/proteins or phenotypic concepts and 41,493 nonzero relationships. Overall, the data in v6.1 represents more than 20% of the human genome compared with \u223c18% in version 5.0. Included in this number is 4,270 new relationships specifically relevant to whole brain organoid creation. In addition, each gene/protein and phenotypic concept in DeepNEU v6.1 now has on average >9 gene/protein or phenotypic inputs and outputs. Second, advanced computer modeling systems still require wet lab confirmation, and this continues to be important for DeepNEU v6.1 as well. A major goal of this project was to make these findings regarding the potential research and therapeutic benefits of a validated whole lung simulation of Alzheimer's Disease available to the global research community for wet lab disease modeling, drug discovery and repurposing at the very earliest opportunity. We also plan to continue to develop and validate these important simulations, while focusing on improving the microcirculation and BBB elements of aiWBOs. We are currently seeking development partners with the goal of empowering Alzheimer's Disease research to better understand disease pathology, enable drug discovery and repurposing. We commit to making any additional information available at the earliest opportunity. Third, we have successfully migrated the upgraded DeepNEU platform to the IBM cloud. This emerging technology will permit more rapid organoid simulation development, disease modeling, therapeutic target identification, and drug repurposing for Alzheimer's and other diseases. Finally, our technology continues to evolve from a hybrid deep learning approach toward the Wise Learning (WL) approach described by Groumpos (2016) .",
+            "cite_spans": [
+                {
+                    "start": 1945,
+                    "end": 1960,
+                    "text": "Groumpos (2016)",
+                    "ref_id": "BIBREF16"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Limitations and Promises of the Current aiWBO Simulations"
+        },
+        {
+            "text": "With the current advances in brain organoid and iPSC-derived brain cells research, the functions of AD risk genes and AD causing mutations in iPSC-derived brain cell types remains largely unexplored. It is important to further our understanding of how such mutations, either alone or in in combination, affect the interactions between the different cell types of the brain is contributing to AD pathogenesis. We conclude that based on data presented here and the continued development of the NEUBOrg platform, our aiWBO simulations will not only contribute to enhancing our knowledge of AD pathogenesis, but also can be expanded to study different neurodegenerative diseases. NEUBOrg holds considerable promise for allowing us to answer previously unanswered questions, and ultimately to identify and implement effective treatments for AD and other diseases that primarily affect the central nervous system.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "CONCLUSION/FUTURE DIRECTIONS"
+        },
+        {
+            "text": "All datasets generated for this study are included in the article/Supplementary Material, further inquiries can be directed to the corresponding author/s.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "DATA AVAILABILITY STATEMENT"
+        },
+        {
+            "text": "SE: conceptualization, experimental work analysis, manuscript writing, and figures preparation. WRD: conceptualization, experimental work analysis, manuscript writing, figures preparation, performing all computational simulations, and AD disease modeling. Both authors contributed to the article and approved the submitted version.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "AUTHOR CONTRIBUTIONS"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "XLSTAT Statistical and Data Analysis Solution",
+            "authors": [
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Addinsoft",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "Comprehensive transcriptome analysis of differentiation of embryonic stem cells into midbrain and hindbrain neurons",
+            "authors": [
+                {
+                    "first": "J.-I",
+                    "middle": [],
+                    "last": "Ahn",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Shin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Shim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chang",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2004,
+            "venue": "Dev. Biol",
+            "volume": "265",
+            "issn": "",
+            "pages": "491--501",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ydbio.2003.09.041"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Alzheimer's disease facts and figures",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "15",
+            "issn": "",
+            "pages": "321--387",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Alzheimer's disease facts and figures",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "16",
+            "issn": "",
+            "pages": "391--460",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Targeting amyloid precursor protein shuttling and processinglong before amyloid beta formation",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Arbor",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Neural Regen. Res",
+            "volume": "12",
+            "issn": "",
+            "pages": "207--209",
+            "other_ids": {
+                "DOI": [
+                    "10.4103/1673-5374.200800"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Cell stress in cortical organoids impairs molecular subtype specification",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bhaduri",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Andrews",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Mancia Leon",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Shin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nature",
+            "volume": "578",
+            "issn": "",
+            "pages": "142--148",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-020-1962-0"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "Retinal and brain organoids: bridging the gap between in vivo physiology and in vitro micro-physiology for the study of Alzheimer's diseases",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Brighi",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Cordella",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Chiriatti",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Soloperto",
+                    "suffix": ""
+                },
+                {
+                    "first": "Di",
+                    "middle": [],
+                    "last": "Angelantonio",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Front. Neurosci",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Application of fused organoid models to study human brain development and neural disorders",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Fang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Bian",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Front. Cell. Neurosci",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Applications of human brain organoids to clinical problems",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Dev. Dyn",
+            "volume": "248",
+            "issn": "",
+            "pages": "53--64",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/dvdy.24662"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "DeepNEU: cellular reprogramming comes of age-a machine learning platform with application to rare diseases research",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Danter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Orphanet J. Rare Dis",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "The cellular phase of Alzheimer's disease",
+            "authors": [
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "De Strooper",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Karran",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Cell",
+            "volume": "164",
+            "issn": "",
+            "pages": "603--615",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Neural lineage differentiation from pluripotent stem cells to mimic human brain tissues",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Do",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Hong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Front. Bioeng. Biotechnol",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "DeepNEU: artificially induced stem cell (aiPSC) and differentiated skeletal muscle cell (aiSkMC) simulations of infantile onset POMPE disease (IOPD) for potential biomarker identification and drug discovery",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Esmail",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Danter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Front. Cell Dev. Biol",
+            "volume": "7",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Viral pandemic preparedness: a pluripotent stem cell-based machine-learning platform for simulating SARS-CoV-2 infection to enable drug discovery and repurposing",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Esmail",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Danter",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Stem Cells Transl. Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/sctm.20-0181"
+                ]
+            }
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Human pluripotent stem-cell-derived cortical neurons integrate functionally into the lesioned adult murine visual cortex in an area-specific way",
+            "authors": [
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Espuny-Camacho",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Michelsen",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Linaro",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Bilheu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Acosta-Verdugo",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Herpoel",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Cell Rep",
+            "volume": "23",
+            "issn": "",
+            "pages": "2732--2743",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.celrep.2018.04.094"
+                ]
+            }
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Brain organoids: a next step for humanized Alzheimer's disease models?",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gerakis",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Hetz",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Mol. Psychiatry",
+            "volume": "24",
+            "issn": "",
+            "pages": "474--478",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41380-018-0343-7"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Deep learning vs. wise learning: a critical and challenging overview",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Groumpos",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "IFAC-PapersOnLine",
+            "volume": "49",
+            "issn": "",
+            "pages": "180--189",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ifacol.2016.11.099"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Cerebral organoids model human brain development and microcephaly",
+            "authors": [
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Hattori",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Mov. Disord",
+            "volume": "2",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mds.25740"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Pluripotent stem cell-derived cerebral organoids reveal human oligodendrogenesis with dorsal and ventral origins",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Padmashri",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Dunaevsky",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Dreyfus",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Stem Cell Rep",
+            "volume": "12",
+            "issn": "",
+            "pages": "890--905",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.stemcr.2019.04.011"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Human organoids: model systems for human biology and medicine",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "B.-K",
+                    "middle": [],
+                    "last": "Koo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Knoblich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Rev. Mol. Cell Biol",
+            "volume": "21",
+            "issn": "",
+            "pages": "571--584",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41580-020-0259-3"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Localizing genes to cerebellar layers by classifying ISH images",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Kirsch",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Liscovitch",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Chechik",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "PLoS Comput. Biol",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pcbi.1002790"
+                ]
+            }
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Generation of standardized and reproducible forebrain-type cerebral organoids from human induced pluripotent stem cells",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Krefft",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Jabali",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Iefremova",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Koch",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Ladewig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "J. Vis. Exp",
+            "volume": "131",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Disease modelling in human organoids",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lancaster",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Huch",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Dis. Models Mech",
+            "volume": "12",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1242/dmm.039347"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Generation of cerebral organoids from human pluripotent stem cells",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Lancaster",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Knoblich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Nat. Protoc",
+            "volume": "9",
+            "issn": "",
+            "pages": "2329--2340",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Deterministic HOX patterning in human pluripotent stem cell-derived neuroectoderm",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Lippmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Williams",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Ruhl",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Estevez-Silva",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Chapman",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Coon",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Stem Cell Rep",
+            "volume": "4",
+            "issn": "",
+            "pages": "632--644",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.stemcr.2015.02.018"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Studying human neurological disorders using induced pluripotent stem cells: from 2D monolayer to 3D organoid and blood brain barrier models",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Logan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Arzua",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Canfield",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Seminary",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Sison",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Ebert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Compr. Physiol",
+            "volume": "9",
+            "issn": "",
+            "pages": "565--611",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/cphy.c180025"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Dynamic characterization of structural, molecular, and electrophysiological phenotypes of human-induced pluripotent stem cell-derived cerebral organoids, and comparison with fetal and adult gene profiles",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Logan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Arzua",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L.-K",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Cells",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3390/cells9051301"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Potential microRNA-related targets in clearance pathways of amyloid-\u03b2: novel therapeutic approach for the treatment of Alzheimer's disease",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Madadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Schwarzenbach",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Saidijam",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Mahjub",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Soleimani",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Cell Biosci",
+            "volume": "9",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Reality check for organoids in neuroscience",
+            "authors": [
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Marx",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Nat. Methods",
+            "volume": "17",
+            "issn": "",
+            "pages": "961--964",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41592-020-0964-z"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Brain cell type specific gene expression and co-expression network architectures",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Mckenzie",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Hauberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Fullard",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Kozlenkov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Keenan",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Sci. Rep",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Modeling and targeting Alzheimer's disease with organoids",
+            "authors": [],
+            "year": null,
+            "venue": "Front. Pharmacol",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Generation of human brain region-specific organoids using a miniaturized spinning bioreactor",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Qian",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Jacob",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Nguyen",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Nat. Protoc",
+            "volume": "13",
+            "issn": "",
+            "pages": "565--580",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/nprot.2017.152"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Brain organoids: advances, applications and challenges",
+            "authors": [
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Qian",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Song",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ming",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                },
+                {
+                    "first": "G.-L",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Development",
+            "volume": "146",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1242/dev.166074"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Self-organizing 3D human neural tissue derived from induced pluripotent stem cells recapitulate Alzheimer's disease phenotypes",
+            "authors": [
+                {
+                    "first": "W",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Raja",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "E"
+                    ],
+                    "last": "Mungenast",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Lin",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ko",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Abdurrob",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Seo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "PLoS One",
+            "volume": "11",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1371/journal.pone.0161969"
+                ]
+            }
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "TransSynW: a single-cell RNAsequencing based web application to guide cell conversion experiments",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Ribeiro",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Okawa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Del",
+                    "middle": [],
+                    "last": "Sol",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Stem Cells Trans. Med",
+            "volume": "10",
+            "issn": "",
+            "pages": "230--238",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/sctm.20-0227"
+                ]
+            }
+        },
+        "BIBREF36": {
+            "ref_id": "b36",
+            "title": "Effects of Alzheimer's disease on different cortical layers: the role of intrinsic differences in A\u03b2 susceptibility",
+            "authors": [
+                {
+                    "first": "R",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Romito-Digiacomo",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Menegay",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Cicero",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Herrup",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "J. Neurosci",
+            "volume": "27",
+            "issn": "",
+            "pages": "8496--8504",
+            "other_ids": {
+                "DOI": [
+                    "10.1523/jneurosci.1008-07.2007"
+                ]
+            }
+        },
+        "BIBREF37": {
+            "ref_id": "b37",
+            "title": "Key enzymes and proteins in amyloid-\u03b2 production and clearance",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Santos",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Cardoso",
+                    "suffix": ""
+                },
+                {
+                    "first": "I",
+                    "middle": [],
+                    "last": "Gon\u00e7alves",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Alzheimer's Disease Pathogenesis-Core Concepts, Shifting Paradigms and Therapeutic Targets",
+            "volume": "",
+            "issn": "",
+            "pages": "53--86",
+            "other_ids": {}
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Maturation of human pluripotent stem cell-derived cerebellar neurons in the absence of co-culture",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Silva",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Bekman",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Fernandes",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Vaz",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A V"
+                    ],
+                    "last": "Rodrigues",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Diogo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Front. Bioeng. Biotechnol",
+            "volume": "8",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Induction of pluripotent stem cells from adult human fibroblasts by defined factors",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Takahashi",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tanabe",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ohnuki",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Narita",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Ichisaka",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Tomoda",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Cell",
+            "volume": "131",
+            "issn": "",
+            "pages": "861--872",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cell.2007.11.019"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Distinctive features of the human marginal zone and cajal-retzius cells: comparison of morphological and immunocytochemical features at midgestation",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Tkachenko",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Zykin",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Nasyrov",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Krasnoshchekova",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Front. Neuroanat",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF41": {
+            "ref_id": "b41",
+            "title": "Individual brain organoids reproducibly form cell diversity of the human cerebral cortex",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Velasco",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Kedaigle",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Simmons",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Nash",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rocha",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Quadrato",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Nature",
+            "volume": "570",
+            "issn": "",
+            "pages": "523--527",
+            "other_ids": {
+                "DOI": [
+                    "10.1038/s41586-019-1289-x"
+                ]
+            }
+        },
+        "BIBREF42": {
+            "ref_id": "b42",
+            "title": "Modeling neurological diseases with human brain organoids",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Front. Synaptic Neurosci",
+            "volume": "10",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF43": {
+            "ref_id": "b43",
+            "title": "Recent advances in human iPSCderived models of the blood-brain barrier",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Workman",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Svendsen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Fluids Barriers CNS",
+            "volume": "17",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF44": {
+            "ref_id": "b44",
+            "title": "Loss of Ezh2 promotes a midbrain-to-forebrain identity switch by direct gene derepression and Wnt-dependent regulation",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Zemke",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Draganova",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Klug",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Sch\u00f6ler",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Zurkirchen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Gay",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "BMC Biol",
+            "volume": "13",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF45": {
+            "ref_id": "b45",
+            "title": "Establishment and dysfunction of the blood-brain barrier",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Nelson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Betsholtz",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Zlokovic",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Cell",
+            "volume": "163",
+            "issn": "",
+            "pages": "1064--1078",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.cell.2015.10.067"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "= 6, 0 negatives + 6 positives ER_Stress N = 84, 29 negatives + 55 positives ARCN1 N = 1, 0 negatives + 1 positive GORASP2 N = 1, 0 negatives + 1 positive Neuron cell death N = 43, 10 negatives + 33 positives",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "DeepNEU simulation of differentiated WT aiWBO cell types, regions, elements, and acid base status. (A) Expression of basic aiWBO cell types based on genotypic markers. (B) Presence of the three aiWBO brain regions based on genotypic markers. (C) Presence of the ventral and dorsal aiWBO brain elements based on genotypic markers. (D) The acid base status of the aiWBO based on phenotypic factors. The vertical y-axes represents the semiquantitative levels of concepts that are estimated by DeepNEU regarding an arbitrary base line where 0 = base line, 1 = maximum expression or presence, and \u22121 = minimum expression level or presence. The horizontal x-axes represent the individual aiWBO concepts being simulated. Data represent mean of three experiments \u00b195% confidence interval.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "DeepNEU simulation of cerebral cortical layers, cerebellar cortical layers, microcirculation and BBB of WT aiWBO. (A) Presence of the six aiWBO cerebral cortical layers based on genotypic markers. An estimate of cortical mass is derived by combining the six cortical layers. (B) Presence of the four cerebellar layers based on genotypic markers. (C) Presence of aiWBO microcirculation elements based on phenotypic markers. (D) The presence of aiWBO BBB elements and function based on phenotypic factors. The vertical y-axes represent the semiquantitative levels of concepts that are estimated by DeepNEU regarding an arbitrary base line where 0 = base line, 1 = maximum expression or presence, and \u22121 = minimal expression level or presence. The horizontal x-axes represent the individual aiWBO concepts being simulated. Data represent mean of three experiments \u00b195% confidence interval.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Comparison of aiWBO-WT vs. aiWBO-AD simulation results. (A) Comparison of aiWBO simulations of WT vs. AD cell types. (B) Comparison of brain region concepts in WT vs. AD simulations. (C) Comparison of ventral-dorsal concepts in WT vs. AD simulations. (D) Comparison of cerebral cortical layers in WT vs. AD simulations. (E) Comparison of cerebellar cortical layers in WT and AD simulations. The vertical y-axes represent the semiquantitative levels of concepts that are estimated by DeepNEU regarding an arbitrary base line where 0 = base line, 1 = maximum expression or presence, and \u22121 = minimal expression level or presence.The horizontal x-axes represent the individual aiWBO concepts being simulated. Data represent mean of three experiments \u00b1 95% confidence interval. All p-values from Mann-Whitney U test.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Comparison of aiWBO-WT vs. aiWBO-AD simulation results for microcirculation, BBB, Acid-Base status, and Alzheimer's Disease (AD) features. (A) Comparison of microcirculation elements in WT vs. AD simulations. (B) Comparison of BBB concepts in WT vs. AD simulations. (C) Comparison of acid base concepts in WT vs. AD simulations. (D) Comparison of Alzheimer 's Disease features in WT vs. AD simulations. The vertical y-axes represent the semiquantitative levels of concepts that are estimated by DeepNEU regarding an arbitrary base line where 0 = base line, 1 = maximum expression or presence, and \u22121 = minimal expression level or presence. The horizontal x-axes represent the individual aiWBO concepts being simulated. Data represent mean of three experiments \u00b1 95% confidence interval. All p-values from Mann-Whitney U test. *p < 0.05.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Comparison of aiWBO-WT vs. aiWBO-AD simulation prediction of cellular stress and neuronal cell death. (A) Simulation prediction of cellular stress and neuronal cell death in aiWBO-WT. (B) Comparative simulation predictions of cellular stress and neuronal cell death in aiWBO-WT vs. aiWBO-AD. The vertical y-axes represent the semiquantitative levels of concepts that are estimated by DeepNEU regarding an arbitrary base line where 0 = base line, 1 = maximum expression or presence, and \u22121 = minimal expression level or presence. The horizontal x-axes represent the individual aiWBO concepts being simulated. Data represent mean of three experiments \u00b1 95% confidence interval. All p-values from Mann-Whitney U test.",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Unguided aiPSC to aiWBO simulation cocktail.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "Alzheimer's Disease feature profile.",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "The Supplementary Material for this article can be found online at: https://www.frontiersin.org/articles/10.3389/fnagi. 2021.643889/full#supplementary-material",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "SUPPLEMENTARY MATERIAL"
+        }
+    ]
+}

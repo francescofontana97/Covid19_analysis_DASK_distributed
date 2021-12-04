@@ -1,0 +1,1385 @@
+{
+    "paper_id": "03db5786c72390d070beab1a32d39a78073294a6",
+    "metadata": {
+        "title": "Predicting Emerging Themes in Rapidly Expanding COVID-19 Literature with Dynamic Word Embedding Networks and Machine Learning",
+        "authors": [
+            {
+                "first": "Ridam",
+                "middle": [],
+                "last": "Pal",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Harshita",
+                "middle": [],
+                "last": "Chopra",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "GGSIPU",
+                    "location": {
+                        "settlement": "New Delhi",
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Raghav",
+                "middle": [],
+                "last": "Awasthi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Harsh",
+                "middle": [],
+                "last": "Bandhey",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Aditya",
+                "middle": [],
+                "last": "Nagori",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Amogh",
+                "middle": [],
+                "last": "Gulati",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Ponnurangam",
+                "middle": [],
+                "last": "Kumaraguru",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Tavpritesh",
+                "middle": [],
+                "last": "Sethi",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Indraprastha Institute of Information Technology Delhi",
+                    "location": {
+                        "country": "India"
+                    }
+                },
+                "email": "*tavpriteshsethi@iiitd.ac.in"
+            }
+        ]
+    },
+    "abstract": [
+        {
+            "text": "Background. COVID-19 knowledge has been changing rapidly with the fast pace of information that accompanied the pandemic. Since peer-reviewed research is a trusted source of evidence, capturing and predicting the emerging themes in COVID-19 literature are crucial for guiding research and policy. Machine learning, natural language processing and dynamical networks have the potential to enable rapid distillation and prediction of actionable insights for ending the pandemic. Objective. We hypothesized that emerging COVID-19 research trends can be captured and predicted from networks constructed upon language features. Further, we aimed to detect communities in these networks and used centrality measures to track and predict emerging network modules as dominant themes in a given time period. The goal of our study was to make our findings publicly available as an explainable AI dashboard for researchers and policymakers. Methods. Abstracts from more than 95,000 peer-reviewed articles from the WHO curated COVID-19 database were used to construct word embedding models. Named entity recognition was used to refine the terms. Cosine similarity between the terms was then used to construct dynamical networks in order to understand the temporal trend of emerging associations over months and visualized as alluvial diagrams. Finally, temporal link prediction between diseases for the subsequent month based on their trends of occurrence in the previous six months was carried out to predict the emergence and disappearance of associations in the rapidly changing pandemic scenario. Results. Community detection upon dynamical networks clearly demonstrated the emergence of thromboembolic complications as a cluster and dominant theme between March and August, 2020. Forecasting of top-K influential entities further allowed prediction of future trends, such as the emergence of psychiatry theme as a central node by February 2021. XGBoost modeling in our proposed temporal link prediction framework achieved an AUC-ROC score of 0.855 for predicting new dis(associations) one month in advance. Visualization of the underlying word-embedding models allowed interactive querying to choose novel keywords and extractive models summarized the research relevant to the keyword, allowing faster knowledge distillation. Conclusion: We provide an explainable AI approach for querying, tracking and predicting novel insights in COVID-19 peer reviewed literature. The EvidenceFlow web-application is publicly available and emerging trends are updated on a monthly basis. Such approaches will",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Abstract"
+        }
+    ],
+    "body_text": [
+        {
+            "text": "COVID-19 pandemic continues to be an enigma with its diverse clinical presentation, controversial evidence for treatment, fast-tracked vaccine development and unclear systemic implications. More than 200 countries have been affected by the pandemic with around 75 million confirmed cases and more than 1.6 million deaths recorded till 22nd December 2020 [1] . The literature around COVID-19 is growing at a similar pace with more than 95,000 research articles peer-reviewed articles made publicly available by the WHO [2]. Knowledge synthesis from peer-reviewed literature will become increasingly difficult for researchers, clinicians, and policymakers alike. Hence understanding COVID-19 in the context of evolving themes is important. Ebadi et al [3] carried out topic modeling and sentiment analysis comparing pre-print with peer reviewed literature over a short time span from January to May 2020. However, we are reporting for the first time, the use of unsupervised word embeddings, networks analysis, link prediction and machine learning to predict emerging themes in COVID-19 literature and making these publicly available as a web-application. The current model is trained upon the 95,000 peer-reviewed articles obtained from the WHO Database and will be updated with new publications and pre-prints as these become available on a monthly basis.",
+            "cite_spans": [
+                {
+                    "start": 354,
+                    "end": 357,
+                    "text": "[1]",
+                    "ref_id": "BIBREF0"
+                },
+                {
+                    "start": 750,
+                    "end": 753,
+                    "text": "[3]",
+                    "ref_id": "BIBREF2"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The abstract of articles holds a substantial amount of information about the literature. Named entities play a crucial role in deducing valuable information from large amounts of text and influencing the trends of literature. Models pre-trained on biomedical, scientific and clinical benchmark datasets, can be used for extraction of a variety of clinical entities such as diseases, chemicals, adverse drug reactions from continuous text. By creating dynamic networks of the extracted entities and weighing the links by cosine similarity, we study the shift in flow of importance of each node. W e implement a framework for predicting the top-K influential nodes which tend to represent the theme of a given month's literature based on forecasted centrality measures by an autoregression model.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In addition to predicting broader themes, a study of resurfacing and diminishing links at individual entity level can also reveal the evolution of research. Link Prediction has been defined as the task of predicting the existence of links between two nodes in a complex network based on a set of topological features. The problem of link prediction in real-world temporal networks has been explored a lot in recent years, primarily in online social media networks where nodes are represented by users and edges by the relationship between them. Bu et al [5] proposed a novel semi-supervised learning framework, which integrates survival analysis and game theory for predicting future links. Peddada et al [6] explored the problem of link prediction using supervised learning methods based on proximity scores to capture the temporal shift. In this paper, we propose a framework to predict reconnected and missing links between clinical entities such as diseases extracted from textual data over T time intervals, using a set of proximity scores derived from associated dynamic networks and word embedding similarity. The co-occurrence of words in a span of text plays a vital role in capturing a high-level semantic relationship. Hence, we label the links based on co-occurrence analysis between entity pairs. Given the vast research found on online social networks, our framework differs from the standard link prediction models as it studies the concept by is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [
+                {
+                    "start": 554,
+                    "end": 557,
+                    "text": "[5]",
+                    "ref_id": "BIBREF4"
+                },
+                {
+                    "start": 705,
+                    "end": 708,
+                    "text": "[6]",
+                    "ref_id": "BIBREF5"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ; applying named entity recognition in the scientific literature. The prediction of links between diseases mentioned in abstracts reflects on accurate and validated insights, hence demonstrating the effectiveness of our proposed approach.",
+            "cite_spans": [
+                {
+                    "start": 58,
+                    "end": 69,
+                    "text": "15, 2021. ;",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "Data-sets. The dataset was created using more than 95,000 peer-reviewed research articles related to coronavirus present in the WHO Database [2] from February 2020 to September 2020 [supp. figure 1(a) ].",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 189,
+                    "end": 200,
+                    "text": "figure 1(a)",
+                    "ref_id": null
+                }
+            ],
+            "section": "Methods"
+        },
+        {
+            "text": "Text Pre-processing and Exploratory Data Analysis. Formatting of text and removal of white-spaces, punctuation, digits and stop words was carried out on lowercase converted text using NLTK package [18] . Word frequency distributions were visualized as chatter plots using ggplot2 package [ 7 ] . Named Entity Recognition. Named Entity Recognition was used to extract two types of entities: diseases and chemicals, from the original abstracts of vetted research articles using a pre-trained model ( en_ner_bc5cdr_md ) from SciSpacy, an open-source project developed for Biomedical Natural Language Processing [13] . Entities were further used for creating networks to study the trends through alluvial diagrams and for predicting temporal links between diseases across past and upcoming months.",
+            "cite_spans": [
+                {
+                    "start": 197,
+                    "end": 201,
+                    "text": "[18]",
+                    "ref_id": "BIBREF17"
+                },
+                {
+                    "start": 288,
+                    "end": 293,
+                    "text": "[ 7 ]",
+                    "ref_id": "BIBREF6"
+                },
+                {
+                    "start": 608,
+                    "end": 612,
+                    "text": "[13]",
+                    "ref_id": "BIBREF12"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Unsupervised Word Embeddings . A low-dimensional representation for the disease and chemical entities was learned using the word2vec model with skip-gram algorithm, one-hot encoding and fixed window size of five, implemented in Gensim [11, 12, 19] . Each word vector obtained from its embedding represents an entity and the distance between word vectors was used to calculate dis(similarity) between entities. Visualization of the word vectors was carried out using Tensorflow Embedding Projector [20] to allow interactive exploration of relationships between disease and chemical entities. Separate word2vec models were trained for each month from February to September, 2020 in order to allow capturing of dynamic changes in word similarities in COVID-19 literature.",
+            "cite_spans": [
+                {
+                    "start": 235,
+                    "end": 239,
+                    "text": "[11,",
+                    "ref_id": "BIBREF10"
+                },
+                {
+                    "start": 240,
+                    "end": 243,
+                    "text": "12,",
+                    "ref_id": "BIBREF11"
+                },
+                {
+                    "start": 244,
+                    "end": 247,
+                    "text": "19]",
+                    "ref_id": "BIBREF18"
+                },
+                {
+                    "start": 497,
+                    "end": 501,
+                    "text": "[20]",
+                    "ref_id": "BIBREF19"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Methods"
+        },
+        {
+            "text": "Weighted networks were constructed using similarity scores between word vectors as edge weights. A union of all nodes with top ten percentile similarity scores across February to September, 2020 were preserved as nodes in the networks. Community detection was done over the monthly networks using the Infomap algorithm [17] . Dynamic change in the communities as emerging themes over months was tracked using an alluvial visualization [14] . Detailed steps with parameters are available in the supplementary material.",
+            "cite_spans": [
+                {
+                    "start": 319,
+                    "end": 323,
+                    "text": "[17]",
+                    "ref_id": "BIBREF16"
+                },
+                {
+                    "start": 435,
+                    "end": 439,
+                    "text": "[14]",
+                    "ref_id": "BIBREF13"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Longitudinal Word Vector Networks and Communities."
+        },
+        {
+            "text": "In order to predict the top-K influential nodes in temporal networks of subsequent months, we evaluated three centrality measures PageRank, Eigenvector Centrality and Degree Centrality of the nodes in the past networks [22] . is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [
+                {
+                    "start": 219,
+                    "end": 223,
+                    "text": "[22]",
+                    "ref_id": "BIBREF21"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Time Series Forecasting of Top-K Influential Entities."
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Time Series Forecasting of Top-K Influential Entities."
+        },
+        {
+            "text": "These centrality values were used to forecast future centralities using the Vector Autoregression (VAR) model [21] . Briefly, the VAR model was fit on a time series of each node's centralities calculated from the networks of February to September, 2020 and predicted the node's centralities for October, 2020. The top-K influential nodes were obtained by sorting the sum of the three forecasted centrality measures in descending order. The performance of forecasts is assessed in comparison with the sum of true centralities in retrospective test data using the ranking metric precision@k.",
+            "cite_spans": [
+                {
+                    "start": 110,
+                    "end": 114,
+                    "text": "[21]",
+                    "ref_id": "BIBREF20"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Time Series Forecasting of Top-K Influential Entities."
+        },
+        {
+            "text": "We predicted the existence of a link between entities at timestamp +1 based on computed feature vectors obtained from previous timestamps in the time interval . Briefly, 6-month partitions of data starting from February 2020 were used for training models with testing over the subsequent month. Ground truth for presence and weight of link was defined from co-occurrence and cosine similarity respectively. Nine proximity scores based upon network topology were computed using the NetworkX package [15] and a first order difference of these series were taken in order to capture temporal trends. These were further normalized and used as features for predicting the existence of a link at +1 using Random Forests [23] , SVM [24] , AdaBoost [25] , XGBoost [26] , and LGBM [27] models and the best model for link prediction based on AUC ROC scores was used to predict the subsequent links. The full detail of the algorithm and features are available in the supplementary material. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [
+                {
+                    "start": 498,
+                    "end": 502,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                },
+                {
+                    "start": 713,
+                    "end": 717,
+                    "text": "[23]",
+                    "ref_id": "BIBREF22"
+                },
+                {
+                    "start": 724,
+                    "end": 728,
+                    "text": "[24]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 740,
+                    "end": 744,
+                    "text": "[25]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 755,
+                    "end": 759,
+                    "text": "[26]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 771,
+                    "end": 775,
+                    "text": "[27]",
+                    "ref_id": "BIBREF26"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Temporal Link Prediction between Entities."
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ; Figure 1 : Graphical representation of proposed framework explaining the complete workflow. The pipeline takes abstracts as input from which entities are extracted using NER. Embeddings are generated which are used as features for longitudinal networks. These networks are used for visualizing the trends using alluvial diagrams, temporal link prediction and predicting top-k influential nodes for theme prediction. Implementation and Availability . EvidenceFlow , our web-application with results of online tracking and prediction of emerging themes is available publicly at https://evidenceflow.tavlab.iiitd.edu.in/ .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 70,
+                    "end": 78,
+                    "text": "Figure 1",
+                    "ref_id": null
+                }
+            ],
+            "section": "Temporal Link Prediction between Entities."
+        },
+        {
+            "text": "A total of 21,715 distinct diseases and 19,226 distinct chemicals were identified. Figure 2 shows the top frequent disease and chemical entities identified in the corpus. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 83,
+                    "end": 91,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF4"
+                }
+            ],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ; is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ; https://doi.org/10.1101/2021.01.14.21249855 doi: medRxiv preprint is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ; https://doi.org/10.1101/2021.01.14.21249855 doi: medRxiv preprint The association among the most prevalent diseases is represented graphically using an alluvial diagram. A detailed inference of the alluvial diagram across the month of March and August depicted the emergence of thromboembolic complications as the most important module. In March, the dominant modules were lymphocytopenia, chest pain and acute kidney injury, depicting lesser traces of thromboembolic complications in initial months. The network of August evidently captures the rising influence of nodes linked to thromboembolism, gastrointestinal symptoms, respiratory and cardiovascular diseases. Our study depicts how word embeddings generated from Word2Vec model trained on each month's literature can support the creation of entity networks. The importance of a node is influenced by its topological position and centrality measures along with Pagerank. Our time series analysis presents how the dynamic networks of entities can further be leveraged to efficiently forecast the most influential nodes which can represent a broad theme of a given month's research. is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ; is the author/funder, who has granted medRxiv a license to display the preprint in (which was not certified by peer review) preprint",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "The copyright holder for this this version posted January 15, 2021. ;",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Results"
+        },
+        {
+            "text": "An open-source dashboard called EvidenceFlow , has been built, which can act as a template for collection research articles for a specific disease or in adverse scenarios, to propagate proper information related to research at faster access. The dashboard also allows the user to unravel the literature with a dynamic map of embeddings based on the visualization provided by Tensorboard. The dashboard aims to track literature trends using alluvial diagrams, projecting influential entities, and network analysis across different months.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The potential of the word embeddings as well as NER was leveraged to extract insights regarding the topmost similar diseases or chemicals with selected keywords. Vaccine, which has been a rising topic lately, had the highest cosine similarity with Ad26.COV2.S (also known as Ad26) and mRNA-1273, which are few of the most discussed candidate vaccines for COVID19 in the literature. 'Comorbidity' is found to have a high similarity with hyperlipidemia, diabetes mellitus, heart as well as kidney diseases. A number of long-term effects have been reported post recovery due to a weakened immune system. Exploring 'adverse effects' as a keyword depicted correlations with cardiac adverse events, maladaptive anxiety and humoral immunodeficiency. People with dementia-related neuropsychiatric symptoms have been affected adversely as well. 'Social' factors were found to have the highest similarity with connectedness and an increase in family violence and psychological damage. It also highlights the existing gap between rural and urban communities. The economic recession caused by the pandemic has also led to loneliness and social anxiety which was captured by the language models as well. 'Psychological' health has been negatively impacted due to worry and stress over the coronavirus, which is characterized by aggravation of conditions such as PTSD and an intuitively high cosine similarity with 'eating disorder'. Hence, Natural Language Processing techniques were effectively used to capture latent associations among general keywords and named entities. Detailed descriptions of the analysis can be found in the supplementary Exploring the evolution of literature based on themes helps reveal insightful trends using Natural Language Processing. In recent years, many methods have been put forward to predict centrality in dynamic networks on the basis of past values [4] . Forecasting top-K influential entities based on centrality measures can also assist in steering research while understanding the temporal dynamics of themes represented by them. The method presented in this paper has provided a novel approach for identifying critical nodes in entity networks weighted by cosine similarity, and can be extended to various other dynamical analyses such as the impact of entities on expanding dynamic knowledge graphs.",
+            "cite_spans": [
+                {
+                    "start": 1876,
+                    "end": 1879,
+                    "text": "[4]",
+                    "ref_id": "BIBREF3"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The study conducted on the resurfacing links for October 2020 depicts the efficacy of the model by accurately predicting more intense possibilities of coronavirus being linked with critical infection in the body which alludes to acute kidney injury (AKI). Links have also been predicted between chronic obstructive pulmonary disease and pneumonia. The diminishing links for the month of October [supp. . Links between anxiety and depression, and many other links with words 'anxiety' and 'trauma' are predicted to diminish. This helps us to infer that in the month of November, mental health has not been discussed often. Awareness regarding mental health has been raised in multiple ways including research work and the topic seems to dilute with the normalizing situation worldwide, as the topic of vaccination has been rising. The temporal shift of links captured by computing the difference between the normalized proximity scores of node pairs in each monthly interval lets the model track links by taking into account language features as well as topological attributes of the networks.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "However, one limitation of the current tool is that the networks have been analysed with limited frequency of entities, primarily diseases. The future work in this direction can expand to include other medical entities such as genes, drugs or adverse drug effects. Advancement in the architecture of temporal link prediction can include larger data and complex models like RNN and LSTM to predict the links. We do not train deep learning models as the training data points are limited and these models would tend to overfit. However, the dashboard has surfaced as a great tool for a high-level study of the COVID-19 literature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "The COVID-19 literature has been expanding at an exponential pace since the beginning of 2020. We examined an approach to take advantage of dynamic and homogeneous networks of medical entities and their associated cosine similarities to explore the trends in literature using alluvial diagrams. Our proposed time series analysis of top-K most influential entities correctly forecasts 8 out of top-10 influential nodes in the month of October [supp. table 3] . We used the model based on past centrality measures to further predict the importance of entities in January and February [supp. table 4] . The inference suggests that entities linked to 'psychiatric' themes shall emerge along with major influence of respiratory conditions, thromboembolism and malignancy in the literature for these months.",
+            "cite_spans": [
+                {
+                    "start": 449,
+                    "end": 457,
+                    "text": "table 3]",
+                    "ref_id": null
+                },
+                {
+                    "start": 589,
+                    "end": 597,
+                    "text": "table 4]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Conclusion"
+        },
+        {
+            "text": "We further advance the analysis of trends to predicting links between entity pairs for the upcoming months. Our proposed framework for Temporal Link Prediction effectively captures reconnecting and diminishing links between diseases present in the scientific literature for the successive month on the basis of dynamic networks belonging to the previous six months. Our results show that t he XGBoost model is able to classify links with an AUC-ROC score of 0.855 in the test set [supp. We validated our results by mentioning the papers that contain the excerpts pertaining to the co-occurrence of disease-pairs whose links were correctly predicted for the month of October. The proposed frameworks make use of NLP based networks and surface as an efficient tool for querying, tracking and predicting insights from COVID-19 peer reviewed literature.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusion"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Coronavirus Disease (COVID-19) Situation Reports",
+            "authors": [],
+            "year": 2020,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "WHO Global research Database on coronavirus disease(COVID-19)",
+            "authors": [],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Understanding the temporal evolution of COVID-19 research through machine learning and natural language processing",
+            "authors": [
+                {
+                    "first": "Ashkan",
+                    "middle": [],
+                    "last": "Ebadi",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pengcheng",
+                    "middle": [],
+                    "last": "Xi",
+                    "suffix": ""
+                },
+                {
+                    "first": "St\u00e9phane",
+                    "middle": [],
+                    "last": "Tremblay",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bruce",
+                    "middle": [],
+                    "last": "Spencer",
+                    "suffix": ""
+                },
+                {
+                    "first": "Raman",
+                    "middle": [],
+                    "last": "Pall",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alexander",
+                    "middle": [],
+                    "last": "Wong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Scientometrics",
+            "volume": "",
+            "issn": "",
+            "pages": "1--15",
+            "other_ids": {}
+        },
+        "BIBREF3": {
+            "ref_id": "b3",
+            "title": "Centrality prediction in dynamic human contact networks",
+            "authors": [
+                {
+                    "first": "Hyoungshick",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Tang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ross",
+                    "middle": [],
+                    "last": "Anderson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Cecilia",
+                    "middle": [],
+                    "last": "Mascolo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2012,
+            "venue": "Computer Networks",
+            "volume": "56",
+            "issn": "3",
+            "pages": "983--996",
+            "other_ids": {}
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Link prediction in temporal networks: Integrating survival analysis and game theory",
+            "authors": [
+                {
+                    "first": "Zhan",
+                    "middle": [],
+                    "last": "Bu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yuyao",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Hui-Jia",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jiuchuan",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Zhiang",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jie",
+                    "middle": [],
+                    "last": "Cao",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Information Sciences",
+            "volume": "498",
+            "issn": "",
+            "pages": "41--61",
+            "other_ids": {}
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Users and Pins and Boards, Oh My! Temporal Link Prediction over the Pinterest Network",
+            "authors": [
+                {
+                    "first": "Amani",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Peddada",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lindsey",
+                    "middle": [],
+                    "last": "Kostas",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "ggplot2: An implementation of the Grammar of Graphics",
+            "authors": [
+                {
+                    "first": "Hadley",
+                    "middle": [],
+                    "last": "Wickham",
+                    "suffix": ""
+                },
+                {
+                    "first": "Winston",
+                    "middle": [],
+                    "last": "Chang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "Comparison of tag cloud layouts: Task-related performance and visual exploration",
+            "authors": [
+                {
+                    "first": "Steffen",
+                    "middle": [],
+                    "last": "Lohmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "J\u00fcrgen",
+                    "middle": [],
+                    "last": "Ziegler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Lena",
+                    "middle": [],
+                    "last": "Tetzlaff",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "IFIP Conference on Human-Computer Interaction",
+            "volume": "",
+            "issn": "",
+            "pages": "392--404",
+            "other_ids": {}
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Latent semantic analysis for text-based research",
+            "authors": [
+                {
+                    "first": "Peter",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Foltz",
+                    "suffix": ""
+                }
+            ],
+            "year": 1996,
+            "venue": "Behavior Research Methods, Instruments, & Computers",
+            "volume": "28",
+            "issn": "2",
+            "pages": "197--202",
+            "other_ids": {}
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Latent Semantic Analysis: An Approach to Understand Semantic of Text",
+            "authors": [
+                {
+                    "first": "Pooja",
+                    "middle": [],
+                    "last": "Kherwa",
+                    "suffix": ""
+                },
+                {
+                    "first": "Poonam",
+                    "middle": [],
+                    "last": "Bansal",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "2017 International Conference on Current Trends in Computer, Electrical, Electronics and Communication (CTCEEC)",
+            "volume": "",
+            "issn": "",
+            "pages": "870--874",
+            "other_ids": {}
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Using Word2Vec to process big text data",
+            "authors": [
+                {
+                    "first": "Long",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Yanqing",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "2015 IEEE International Conference on Big Data (Big Data)",
+            "volume": "",
+            "issn": "",
+            "pages": "2895--2897",
+            "other_ids": {}
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "Efficient estimation of word representations in vector space",
+            "authors": [
+                {
+                    "first": "Tomas",
+                    "middle": [],
+                    "last": "Mikolov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Kai",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Greg",
+                    "middle": [],
+                    "last": "Corrado",
+                    "suffix": ""
+                },
+                {
+                    "first": "Jeffrey",
+                    "middle": [],
+                    "last": "Dean",
+                    "suffix": ""
+                }
+            ],
+            "year": 2013,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1301.3781"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "Scispacy: Fast and robust models for biomedical natural language processing",
+            "authors": [
+                {
+                    "first": "Mark",
+                    "middle": [],
+                    "last": "Neumann",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1902.07669"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Mapping Change in Large Networks",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Rosvall",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Bergstrom",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "PLoS ONE",
+            "volume": "5",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Exploring network structure, dynamics, and function using NetworkX",
+            "authors": [
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Aric",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hagberg",
+                    "suffix": ""
+                },
+                {
+                    "first": "Pieter",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Schult",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Swart",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Proceedings of the 7th Python in Science Conference",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "Youden Index and optimal cut-point estimated from observations affected by a lower limit of detection",
+            "authors": [
+                {
+                    "first": "Marcus",
+                    "middle": [
+                        "D"
+                    ],
+                    "last": "Ruopp",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Neil",
+                    "suffix": ""
+                },
+                {
+                    "first": "Brian",
+                    "middle": [
+                        "W"
+                    ],
+                    "last": "Perkins",
+                    "suffix": ""
+                },
+                {
+                    "first": "Enrique",
+                    "middle": [
+                        "F"
+                    ],
+                    "last": "Whitcomb",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Schisterman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Biometrical Journal: Journal of Mathematical Methods in Biosciences",
+            "volume": "50",
+            "issn": "3",
+            "pages": "419--430",
+            "other_ids": {}
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Community detection and visualization of networks with the map equation framework",
+            "authors": [
+                {
+                    "first": "Ludvig",
+                    "middle": [],
+                    "last": "Bohlin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Edler",
+                    "suffix": ""
+                },
+                {
+                    "first": "Andrea",
+                    "middle": [],
+                    "last": "Lancichinetti",
+                    "suffix": ""
+                },
+                {
+                    "first": "Martin",
+                    "middle": [],
+                    "last": "Rosvall",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Measuring scholarly impact",
+            "volume": "",
+            "issn": "",
+            "pages": "3--34",
+            "other_ids": {}
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "NLTK: the natural language toolkit",
+            "authors": [
+                {
+                    "first": "Edward",
+                    "middle": [],
+                    "last": "Loper",
+                    "suffix": ""
+                },
+                {
+                    "first": "Steven",
+                    "middle": [],
+                    "last": "Bird",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Gensim-python framework for vector space modelling",
+            "authors": [
+                {
+                    "first": "Radim",
+                    "middle": [],
+                    "last": "Rehurek",
+                    "suffix": ""
+                },
+                {
+                    "first": "Petr",
+                    "middle": [],
+                    "last": "Sojka",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "NLP Centre, Faculty of Informatics",
+            "volume": "3",
+            "issn": "2",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Embedding projector: Interactive visualization and interpretation of embeddings",
+            "authors": [
+                {
+                    "first": "Daniel",
+                    "middle": [],
+                    "last": "Smilkov",
+                    "suffix": ""
+                },
+                {
+                    "first": "Nikhil",
+                    "middle": [],
+                    "last": "Thorat",
+                    "suffix": ""
+                },
+                {
+                    "first": "Charles",
+                    "middle": [],
+                    "last": "Nicholson",
+                    "suffix": ""
+                },
+                {
+                    "first": "Emily",
+                    "middle": [],
+                    "last": "Reif",
+                    "suffix": ""
+                },
+                {
+                    "first": "Fernanda",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Vi\u00e9gas",
+                    "suffix": ""
+                },
+                {
+                    "first": "Martin",
+                    "middle": [],
+                    "last": "Wattenberg",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1611.05469"
+                ]
+            }
+        },
+        "BIBREF20": {
+            "ref_id": "b20",
+            "title": "Modelling of cointegration in the vector autoregressive model",
+            "authors": [
+                {
+                    "first": "S\u00f8ren",
+                    "middle": [],
+                    "last": "Johansen",
+                    "suffix": ""
+                }
+            ],
+            "year": 2000,
+            "venue": "Economic modelling",
+            "volume": "17",
+            "issn": "3",
+            "pages": "359--373",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Consistency and differences between centrality measures across distinct classes of networks",
+            "authors": [
+                {
+                    "first": "Stuart",
+                    "middle": [],
+                    "last": "Oldham",
+                    "suffix": ""
+                },
+                {
+                    "first": "Ben",
+                    "middle": [],
+                    "last": "Fulcher",
+                    "suffix": ""
+                },
+                {
+                    "first": "Linden",
+                    "middle": [],
+                    "last": "Parkes",
+                    "suffix": ""
+                },
+                {
+                    "first": "Aurina",
+                    "middle": [],
+                    "last": "Arnatkevic\u0306i\u016bt\u0117",
+                    "suffix": ""
+                },
+                {
+                    "first": "Chao",
+                    "middle": [],
+                    "last": "Suo",
+                    "suffix": ""
+                },
+                {
+                    "first": "Alex",
+                    "middle": [],
+                    "last": "Fornito",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "PloS one",
+            "volume": "14",
+            "issn": "7",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Random forests",
+            "authors": [
+                {
+                    "first": "Leo",
+                    "middle": [],
+                    "last": "Breiman",
+                    "suffix": ""
+                }
+            ],
+            "year": 2001,
+            "venue": "Machine learning",
+            "volume": "45",
+            "issn": "1",
+            "pages": "5--32",
+            "other_ids": {}
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Support vector machines",
+            "authors": [
+                {
+                    "first": "Marti",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Hearst",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Susan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Edgar",
+                    "middle": [],
+                    "last": "Dumais",
+                    "suffix": ""
+                },
+                {
+                    "first": "John",
+                    "middle": [],
+                    "last": "Osuna",
+                    "suffix": ""
+                },
+                {
+                    "first": "Bernhard",
+                    "middle": [],
+                    "last": "Platt",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Scholkopf",
+                    "suffix": ""
+                }
+            ],
+            "year": 1998,
+            "venue": "IEEE",
+            "volume": "13",
+            "issn": "4",
+            "pages": "18--28",
+            "other_ids": {}
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "A short introduction to boosting",
+            "authors": [
+                {
+                    "first": "Yoav",
+                    "middle": [],
+                    "last": "Freund",
+                    "suffix": ""
+                },
+                {
+                    "first": "Robert",
+                    "middle": [],
+                    "last": "Schapire",
+                    "suffix": ""
+                },
+                {
+                    "first": "Naoki",
+                    "middle": [],
+                    "last": "Abe",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Journal-Japanese Society For Artificial Intelligence",
+            "volume": "14",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Xgboost: A scalable tree boosting system",
+            "authors": [
+                {
+                    "first": "Tianqi",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Carlos",
+                    "middle": [],
+                    "last": "Guestrin",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining",
+            "volume": "",
+            "issn": "",
+            "pages": "785--794",
+            "other_ids": {}
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Lightgbm: A highly efficient gradient boosting decision tree",
+            "authors": [
+                {
+                    "first": "Guolin",
+                    "middle": [],
+                    "last": "Ke",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qi",
+                    "middle": [],
+                    "last": "Meng",
+                    "suffix": ""
+                },
+                {
+                    "first": "Thomas",
+                    "middle": [],
+                    "last": "Finley",
+                    "suffix": ""
+                },
+                {
+                    "first": "Taifeng",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Wei",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "Weidong",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "Qiwei",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "Tie-Yan",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Advances in neural information processing systems",
+            "volume": "",
+            "issn": "",
+            "pages": "3146--3154",
+            "other_ids": {}
+        }
+    },
+    "ref_entries": {
+        "FIGREF4": {
+            "text": "(a) Bar plot (left) showing frequency of top diseases in the corpus of abstracts extracted using Named Entity Recognition. (b) Bar plot (right) showing frequency of top chemicals in the corpus of abstracts extracted using Named Entity Recognition. c) Latent space of word embeddings visualized around the keyword 'COVID-19 disease', displaying 100 isolated points nearest to it. d) Entities nearest to 'COVID-19 disease' in terms of cosine distance in the original space.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "a) Longitudinal source network from March 2020 to August 2020. b) Longitudinal Community network from March 2020 to August 2020. Emergence of Thromboembolic complications as a major theme by August, 2020 have been illustrated by source and community network.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF8": {
+            "text": "Alluvial diagram for tracking the trends from March 2020 to August 2020. The alluvial diagram eases tracing the trends of temporal dynamics of literature across different months. The diagram clearly illustrates the emergence of thromboembolic complications as a major theme by August. The Vector Autoregression model trained upon the network centralities predicted that the \"psychiatric\" streamline, seen here as a relatively unimportant module in August, would assume a higher centrality in February, 2021.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF9": {
+            "text": "1. COVID-19 and the kidney 2. Targeting acute kidney injury in COVID-19 3. Acute Kidney Injury in COVID-19 Patients: An Inner City Hospital Experience and Policy Implications",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "This table depicts the new links between entity pairs (Node1 and Node2) which were not present in the previous three months, as predicted by the XGBoost model for the month of October using the testing set of the previous six months (March to September). This is a subset of the correctly predicted links, that were found to be not present for the previous two months. 'AKI' has shown emerging links with 'SARS' and 'COVID'. 'Chronic obstructive pulmonary disease' has been predicted to show links with 'pneumonia' and 'death'. The links represent the frequent co-occurrence of entities at the given timestamp based on networks of previous months. The Papers mentioned are from October and they represent the validation of our model's temporal link prediction as their abstracts talk about the given two entities, hence verifying the concept of co-occurrence. Case of Guillain-Barr\u00e9 Syndrome Associated With COVID-19.",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF1": {
+            "text": "table [supp. table 2].",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF2": {
+            "text": "table 6] also reveals various inferences about latent space of literature. Inference of the model was done for the month of November [supp. table 7]",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "This work was partially supported by the Wellcome Trust/DBT India Alliance Fellowship IA/CPHE/14/1/501504 awarded to Tavpritesh Sethi. We also acknowledge support from the Center of Excellence in Healthcare and the Center of Excellence in Artificial Intelligence at IIIT-Delhi",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Acknowledgement"
+        },
+        {
+            "text": "None",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflict of Interest"
+        }
+    ]
+}

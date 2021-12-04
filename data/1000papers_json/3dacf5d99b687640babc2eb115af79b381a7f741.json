@@ -1,0 +1,2381 @@
+{
+    "paper_id": "3dacf5d99b687640babc2eb115af79b381a7f741",
+    "metadata": {
+        "title": "PIC-GAN: A Parallel Imaging Coupled Generative Adversarial Network for Accelerated Multi-Channel MRI Reconstruction",
+        "authors": [
+            {
+                "first": "Jun",
+                "middle": [],
+                "last": "Lv",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Yantai University",
+                    "location": {
+                        "postCode": "264005",
+                        "settlement": "Yantai",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Chengyan",
+                "middle": [],
+                "last": "Wang",
+                "suffix": "",
+                "affiliation": {
+                    "laboratory": "",
+                    "institution": "Fudan University",
+                    "location": {
+                        "postCode": "201203",
+                        "settlement": "Shanghai",
+                        "country": "China"
+                    }
+                },
+                "email": ""
+            },
+            {
+                "first": "Guang",
+                "middle": [],
+                "last": "Yang",
+                "suffix": "",
+                "affiliation": {},
+                "email": ""
+            }
+        ]
+    },
+    "abstract": [],
+    "body_text": [
+        {
+            "text": "Magnetic resonance imaging (MRI) is an important non-invasive imaging modality for in vivo clinical studies that offers preeminent soft tissue contrast without ionizing radiation. However, MRI suffers from long scanning time, especially for high-resolution 3D/4D imaging sequences, which can cause patient discomfort and consequent patient fatigue can yield motion artifacts and thereby degrades the quality of the reconstructed images. Accelerated acquisition and reconstruction are crucial to improve the performance of the current MR imaging techniques. The k-space undersampling is a widely used approach to reduce scan time, but it will produce aliasing artifacts in the image domain if reconstructed in a normal way. Hence, various approaches have been explored to obtain accurate reconstructions without introducing aliasing artifacts, including parallel imaging (PI) and compressed sensing (CS).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "To the best of our knowledge, most previous approaches have used single-channel data for training. In fact, multi-channel technology provides many complementary information. Several endeavors have been made to extend the previous single-channel CNN-based MRI reconstruction methods to the multi-channel reconstructions. Hammernik et al. [27] presented a variational network (VN) for multi-channel MRI reconstruction. Subsequently, Zhou et al. [28] developed a PI-CNN reconstruction framework, which utilized a cascaded structure that intercalated the CNN and PI-DC layers. This method allows the network to make better use of information from multi-coils. Nevertheless, the multi-channel loss function was not integrated into the architecture of the network. Wang et al. [29] trained a deep complex CNN that yielded the direct mapping between aliased multi-channel images and fully-sampled multi-channel images. Unlike other networks for PI, no prior information (such as sparse transform or coil sensitivity) was required, and therefore could provide an end-to-end network in this deep complex CNN based framework. It is of note that all these studies have focused on a single-domain (in either the image domain or the k-space domain).",
+            "cite_spans": [
+                {
+                    "start": 337,
+                    "end": 341,
+                    "text": "[27]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 443,
+                    "end": 447,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 771,
+                    "end": 775,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "In this study, we aim to introduce a novel reconstruction framework named 'Parallel Imaging Coupled Generative Adversarial Network (PIC-GAN)', which is developed to learn a unified model for improving multi-channel MRI reconstruction. We performed experiments on two MRI datasets (abdominal and knee MRI datasets) to validate the efficacy and generalization capacity of the proposed method with different acceleration factors and different sampling trajectories. Besides, we compared our model with the conventional sparsity-based parallel imaging method (L1-ESPIRiT), the VN model and the GAN approach with single-channel images as input (ZF-GAN).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Introduction"
+        },
+        {
+            "text": "The idea of PI is to apply coil sensitivity encoding into the reconstruction of multichannel undersampled k-space data. The PI reconstruction can be formulated as an inverse problem, which can be described in a matrix-vector form:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "where y represents the k-space measurements, x represents the image to be reconstructed, n represents the noise, E represents the forward encoding operator including the sampling trajectory R, the Fourier transform , and the coil sensitivity S. The presence of the operator E and n causes the solution of Equation (1) to be illposed [30] . Thus, Equation (1) is usually solved in an iterative manner with the inclusion of certain regularization terms:",
+            "cite_spans": [
+                {
+                    "start": 333,
+                    "end": 337,
+                    "text": "[30]",
+                    "ref_id": "BIBREF30"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "where \u00b7 2 2 denotes the l 2 norm, R i represents the i-th regularization term and \u03bb i represents the corresponding weighting parameter. The regularization term R i is typically selected as a l 1 -norm in CS reconstruction [31] [32] [33] . ADMM [15] algorithm is usually employed to solve this optimization problem.",
+            "cite_spans": [
+                {
+                    "start": 222,
+                    "end": 226,
+                    "text": "[31]",
+                    "ref_id": "BIBREF31"
+                },
+                {
+                    "start": 227,
+                    "end": 231,
+                    "text": "[32]",
+                    "ref_id": "BIBREF32"
+                },
+                {
+                    "start": 232,
+                    "end": 236,
+                    "text": "[33]",
+                    "ref_id": "BIBREF33"
+                },
+                {
+                    "start": 244,
+                    "end": 248,
+                    "text": "[15]",
+                    "ref_id": "BIBREF14"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "Recently, with the introduction of deep learning, R i can be formulated as a CNN based regularization term, where the model parameters can be trained from existing dataset.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "Here, x u represents an undersampled image to be reconstructed, F CNN (x u ; \u03b8) is an image generated by the CNN network and \u03b8 represents the optimal parameters of the trained CNN.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "Our objective is to train a generator G that can generate a fully-reconstructed MR imagex u = G \u03b8 G (x u ) from a zero-filled reconstruction image x u under the constraint that G \u03b8 G (x u ) is indistinguishable from the image reconstructed from the fully-sampled k-space data (x).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "The objective function of D is to maximize the log-likelihood for estimating the conditional probability, where D(G(x u )) = 0 and D(x) = 1. Hence, this can be addressed by defining an adversarial loss L adv , which can be rewritten as a minimax problem between the generator G \u03b8 G (x) and D \u03b8 D (x). The training process of GAN can be parameterized by \u03b8 G and \u03b8 D as following min",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "Here, x u is sampled from a fixed latent distribution P G (x u ) and real samplesx come from a real data distribution P train (x). Once the training converges, G \u03b8 G can generate the image G \u03b8 G (x u ) which is similar tox, and D \u03b8 D is unable to differentiate between them.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Problem Formulation"
+        },
+        {
+            "text": "The schema of the proposed PIC-GAN for multi-channel image reconstruction is illustrated in Figure 1 . The detailed architecture of G and D components are described as following. The input to the generator is a single, sensitivity-weighted recombined image x u . Besides, the input is made up of two channels, the real and the imaginary parts. A deep residual U-Net is adopted for the generator to improve learning robustness and accuracy. As shown in Figure 2 , the model of Generator G consists of a network of a convolutional encoder and a network of convolutional decoder, and there are multiple shortcut connections between them. The encoder blocks (colored in yellow) are capable to compress the input images and explore the image features with strong robustness and spatial invariance. The decoder blocks (colored in blue) is utilized to restore image features and increase image resolution. Multiple shortcut connections (red lines) are introduced to connect the feature maps from the encoder to the decoder, thus feeding different levels of features to the decoder to get better image reconstruction details. The final result is calculated by adding the zero-filled image x u to the output of generator G(x u ). More specifically, each encoder block (colored in green) or decoder block (colored in lavender) consists of four convolutional layers with a kernel size of 3 \u00d7 3 and different numbers (illustrated under the blocks) of feature maps. It is then followed by a convolutional layer without any activation to get two output channels for the real and imaginary parts, respectively. A discriminator is connected to the generator output. The discriminator D network is composed of similar encoding part of the generator G, which consists of 6 convolutional layers. In all the convolutional layers except the last one, each convolutional layer is followed by batch normalization (BN) and ReLU layers. We use 64, 128, 256, 512 feature maps for the first 4 layers. Meanwhile, a convolution with a stride of 2 is used to reduce the image resolution. The first four layers use kernel size of 3 \u00d7 3, while the last layer uses kernel size of 1 \u00d7 1. The final layer simply averages out features of the seventh layer to obtain decision variables for binary classification without soft-max operation. The output of the last residual block is used to calculate the mentioned adversarial loss L adv .",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 92,
+                    "end": 100,
+                    "text": "Figure 1",
+                    "ref_id": "FIGREF0"
+                },
+                {
+                    "start": 452,
+                    "end": 460,
+                    "text": "Figure 2",
+                    "ref_id": "FIGREF1"
+                }
+            ],
+            "section": "The Proposed PIC-GAN Reconstruction Framework"
+        },
+        {
+            "text": "In this study, we incorporate parallel imaging into the GAN paradigm to fully utilize all the information acquired from the multi-channel coils. Meanwhile, the data consistency loss is designed for training the generator G in both frequency and image domains to help the optimization and to exploit the complementary properties of the two domains. This loss consists of three parts (Figure 1 ), one is a pixel-wise image domain mean absolute error (MAE) L iMAE (\u03b8 G ), the other two are frequency domain MAE losses L iMAE,R (\u03b8 G ) and L f MAE,1\u2212R (\u03b8 G ). The three loss functions can be written as",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 382,
+                    "end": 391,
+                    "text": "(Figure 1",
+                    "ref_id": "FIGREF0"
+                }
+            ],
+            "section": "The Proposed PIC-GAN Reconstruction Framework"
+        },
+        {
+            "text": "Here, q denotes the coil element, the L iMAE (\u03b8 G ) term removes aliasing artifacts between the reconstructed image and its corresponding ground truth image. Specifically, the L f MAE,R (\u03b8 G ) term guarantees that the reconstructed image produces corresponding undersampled image matching the undersampled k-space measurements (y R ). The L f MAE,1\u2212R (\u03b8 G ) term ensures that the difference between the unacquired k-space data (y 1\u2212R ) and interpolated data based on reconstruction to be minimal. Together with L adv , the complete loss function can be written as:",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "The Proposed PIC-GAN Reconstruction Framework"
+        },
+        {
+            "text": "Here, \u03b1, \u03b2 and \u03b3 are the hyper-parameters that control the trade-off between each function. The adversarial loss term L adv enforces the reconstructed images to keep the high perceptual quality and to maintain image details and textural information of the images. It is well known that the GAN model is hard to be trained [23] due to the need for alternate training process on the adversarial components. Inspired by the study of DAGAN [22] , we incorporated the refinement learning to stabilize the training of our model. In fact, we utilizex u = G \u03b8 G (x u ) + x u . Thus, the generator only generates information that is not sampled, which can greatly reduce the complexity of the model.",
+            "cite_spans": [
+                {
+                    "start": 322,
+                    "end": 326,
+                    "text": "[23]",
+                    "ref_id": "BIBREF23"
+                },
+                {
+                    "start": 436,
+                    "end": 440,
+                    "text": "[22]",
+                    "ref_id": "BIBREF22"
+                }
+            ],
+            "ref_spans": [],
+            "section": "The Proposed PIC-GAN Reconstruction Framework"
+        },
+        {
+            "text": "To validate the efficacy and generalization capacity of our proposed method, publicly available abdominal [34] and knee [35] MRI datasets are used retrospectively. Both datasets were acquired from a GE 3.0 T whole-body scanner (GE Healthcare, Milwaukee, WI, USA). Using the same PIC-GAN architecture, we trained our model on each dataset and test independently on their corresponding testing dataset.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "The abdominal MRI dataset contains images acquired from 28 subjects. The signal was acquired by a 32-channel pediatric coil. The data was undersampled by a 3D spoiledgradient-echo with Poisson-disc random undersampling of the phase encodes. The imaging parameters were TE/TR = 1.128 ms/4.832 ms, field-of-view (FOV) = 38 \u00d7 38 cm 2 , slice thickness = 2 mm, flip angle = 15 \u2022 , bandwidth = \u00b164 kHz, matrix size = 308 \u00d7 230 \u00d7 156, and auto-calibration signal (ACS) lines = 24 \u00d7 20.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "The knee dataset consists of images acquired from 20 subjects. The MRI data were acquired with an 8-channel knee coil. The images were fully sampled using a 3D FSE CUBE sequence with proton density weighting. The imaging parameters were TE/TR = 0.944 ms/3.832 ms, FOV = 35 \u00d7 35 cm 2 , slice thickness = 2 mm, flip angle = 15 \u2022 , bandwidth = \u00b164 kHz, and matrix size = 192 \u00d7 224 \u00d7 184.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "In this study, the real and imaginary components of the complex MR image x u were considered as two individual image channels. Among all the 28 abdominal, 26 subjects were randomly selected for training, and the remaining 2 subjects were used for test. For each subject, 50 central slices were selected. Thus, the training set contained 1300 slices and the test set had 100 slices. Similarly, 18 out of 20 knee data were randomly selected for training, while the remaining subjects were used for test. A total of 100 central slices were selected for each subject. Therefore, the knee training and test sets contained 1800 and 200 images, respectively.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Datasets"
+        },
+        {
+            "text": "The proposed PIC-GAN was tested on data with both regular and random Cartesian undersampling under 2\u00d7, 4\u00d7 and 6\u00d7 acceleration factors. Next, we evaluated the performance of the PIC-GAN against previously proposed reconstruction methods, including L1-ESPIRiT, VN and ZF-GAN. The L1-ESPIRiT reconstruction was performed using the Berkeley Advanced Reconstruction Toolbox (BART) [36] , where the parameters were optimized for the best SNR performance. The coil sensitivity maps were estimated by ESPIRiT [37] with 24 and 40 calibration lines for abdominal and knee dataset, respectively.",
+            "cite_spans": [
+                {
+                    "start": 376,
+                    "end": 380,
+                    "text": "[36]",
+                    "ref_id": "BIBREF34"
+                },
+                {
+                    "start": 501,
+                    "end": 505,
+                    "text": "[37]",
+                    "ref_id": "BIBREF35"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Comparison Studies, Experimental Settings and Evaluation"
+        },
+        {
+            "text": "We trained the networks with the following hyperparameters: \u03b1 = 1 and \u03b2 = \u03b3 = 10 for PIC-GAN reconstruction. For the ZF-GAN method, reconstruction was performed without using sensitivity maps. The Adam optimizer [7] is used for the training. The model used a batch size of 32 and the initial learning rate of 10 \u22124 for training, which decreased monotonically over 2000 epochs. The model with the highest validation Peak Signal to Noise Ratio (PSNR) was selected for testing.",
+            "cite_spans": [
+                {
+                    "start": 212,
+                    "end": 215,
+                    "text": "[7]",
+                    "ref_id": "BIBREF6"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Comparison Studies, Experimental Settings and Evaluation"
+        },
+        {
+            "text": "Experiments were carried out on a system equipped with GPUs of NVIDIA Tesla V100 (4 cores, each with 16 GB memory) and a 32-core Intel-Xeon Gold-6130-CPU at 2.10 GHz. Our PIC-GAN was developed using Tensorpack [38] with the Tensorflow [39] library.",
+            "cite_spans": [
+                {
+                    "start": 210,
+                    "end": 214,
+                    "text": "[38]",
+                    "ref_id": null
+                },
+                {
+                    "start": 235,
+                    "end": 239,
+                    "text": "[39]",
+                    "ref_id": null
+                }
+            ],
+            "ref_spans": [],
+            "section": "Comparison Studies, Experimental Settings and Evaluation"
+        },
+        {
+            "text": "We evaluated the reconstruction results quantitatively in terms of Peak Signal to Noise Ratio (PSNR), Normalized Mean Square Error (NMSE), and Structural Similarity Index (SSIM). A paired Wilcoxon signed-rank test was conducted to compare the NMSE, PSNR and SSIM measurements between different approaches. p < 0.05 was treated as statistically significant. As illustrated in the 1st and 3rd rows, the liver and kidney regions are marked with red boxes. The ZF reconstruction was remarkably blurred. Zoomed in error maps showed that liver vessels almost disappeared in L1-ESPIRiT. Moreover, the VN reconstructed images contained substantial residual artifacts, which can be seen in the error maps. The ZF-GAN results produced unnatural blocky patterns for vessels and appeared blurrier at image edges. Compared to the other methods, PIC-GAN results had the least error and were capable of removing the aliasing artifacts. Correspondingly, the proposed PIC-GAN method also performed the best in terms of PSNR and SSIM metrics. These observations have a good correlation with the numerical analysis shown in Table 1 . ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 1105,
+                    "end": 1112,
+                    "text": "Table 1",
+                    "ref_id": "TABREF0"
+                }
+            ],
+            "section": "Comparison Studies, Experimental Settings and Evaluation"
+        },
+        {
+            "text": "To better understand the refining procedure of our PIC-GAN, the intermediate results during the iterations of the reconstruction are shown in Figure 4 . We can observe a gradual improvement in the quality of the reconstruction from epochs 0 to 2000, which is consistent with the quantitative results (PSNR and SSIM) showing in the sub-figures in Figure 4 . Figure 5 shows representative images reconstructed from ZF, L1-ESPIRiT, VN, ZF-GAN and the proposed PIC-GAN compared to the GT. All four methods (L1-ESPIRiT, VN, ZF-GAN and the proposed PIC-GAN) achieved acceptable image quality when AF was selected as 2. When 4-fold undersampling was applied, the residual artifacts can be clearly observed in images reconstructed using VN. Besides, the images reconstructed by ZF-GAN appeared less noisy than L1-ESPIRiT and VN. However, the ZF-GAN reconstructed images were over-smoothed with blocky artifacts (yellow arrows) and obvious residual artifacts (green arrows) as shown in Figure 5 . The proposed PIC-GAN, on the other hand, could better maintain fine details and thus show more accurate textures. The proposed PIC-GAN method achieved the highest PSNR with acceleration of factor up to 6. The other two methods missed some high-frequency texture details (green and yellow arrows). Compared to other reconstruction approaches, PIC-GAN yielded the lowest NMSE and the highest PSNR with regular under-sampling. Figure 6 demonstrates the advantage of the proposed PIC-GAN method using different sampling patterns. The ZF reconstructed images presented with a significant amount of aliasing artifacts. Similarly, there were significant residual artifacts and amplified noise that existed in the results obtained by L1-ESPIRiT. For the reconstruction produced by VN, fine texture details were missing, which might limit the clinical usage. The ZF-GAN images enhanced the spatial homogeneity and the sharpness of the images reconstructed by VN. However, ZF-GAN images contained blurred vessels (green arrows) and blocky patterns (yellow arrows). The PIC-GAN not only suppressed aliasing artifacts but also provided sharper edges and more realistic texture details. These observations are consistent with the quantitative analyzed results shown in Table 2 . Tables 1 and 2 show the quantitative metrics, including PSNR, SSIM, NMSE, and the reconstruction time, for all compared methods. The numbers in Tables 1 and 2 As shown in Figure 7 , the proposed PIC-GAN method significantly outperformed the L1-ESPIRiT, VN and ZF-GAN reconstruction with acceleration factors of 2, 4 and 6 with respect to all metrics (p < 0.01) for the abdominal data with regular Cartesian undersampling.",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 142,
+                    "end": 150,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 346,
+                    "end": 354,
+                    "text": "Figure 4",
+                    "ref_id": "FIGREF4"
+                },
+                {
+                    "start": 357,
+                    "end": 365,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 977,
+                    "end": 985,
+                    "text": "Figure 5",
+                    "ref_id": null
+                },
+                {
+                    "start": 1412,
+                    "end": 1420,
+                    "text": "Figure 6",
+                    "ref_id": null
+                },
+                {
+                    "start": 2244,
+                    "end": 2251,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                },
+                {
+                    "start": 2254,
+                    "end": 2268,
+                    "text": "Tables 1 and 2",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 2398,
+                    "end": 2412,
+                    "text": "Tables 1 and 2",
+                    "ref_id": "TABREF0"
+                },
+                {
+                    "start": 2425,
+                    "end": 2433,
+                    "text": "Figure 7",
+                    "ref_id": "FIGREF7"
+                }
+            ],
+            "section": "Reconstruction Results: Knee MRI Data"
+        },
+        {
+            "text": "The reconstruction time of L1-ESPIRiT was calculated with 30 iterations of conjugate gradient descent using the BART toolbox. For the abdominal data, it took about 66 seconds, which was 165 times longer than the PIC-GAN based approaches. In contrast, ZF-GAN and PIC-GAN methods took about 0.4 to 0.7 seconds for the reconstruction of a single slice, which was much more time-efficient. Similarly, as shown in Table 2 , the reconstruction time using PIC-GAN is much shorter than L1-ESPIRiT for the knee data, and comparable to other methods. ",
+            "cite_spans": [],
+            "ref_spans": [
+                {
+                    "start": 409,
+                    "end": 416,
+                    "text": "Table 2",
+                    "ref_id": "TABREF3"
+                }
+            ],
+            "section": "Quantitative Evaluations"
+        },
+        {
+            "text": "In this study, we have developed a PIC-GAN model incoperating PI and GAN to improve the multi-channel MRI reconstruction. Experimental results show that our PIC-GAN outperformed conventional L1-ESPIRiT and the state-of-the-art VN and ZF-GAN methods in terms of all quantitative metrics. In addition, the speed of PIC-GAN reconstruction is faster than conventional L1-ESPIRiT, indicating its feasibility for real-time imaging.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Currently, several novel GAN-based approaches have been proposed for MRI reconstruction. For example, the DA-FWGAN [24] architecture used a fine-tuning method for training the neural network and the Wasserstein distance as the discrepancy measure between the reference and reconstructed images. SARA-GAN [26] integrated the self-attention mechanism with relative average discriminator to reconstruct images with more realistic details and better integrity. Meanwhile, in contrast to most supervised deep learning reconstruction method, an unsupervised GAN based approach [25] was proposed for accelerated imaging where fully-sampled datasets are difficult to be obtained. However, these approaches are limited to single-channel reconstruction, which is not suitable for modern MRI scanners. Besides, some artifacts removal techniques, e.g., motion correction [40] , are also based on multi-channel acquisitions. Thus, single-channel reconstructions are less realistic for clinical routines since modern MRI scanners are equipped with multi-coils. Thus, several methods have been explored to address this problem. The variational network [27] approach was proposed to learn an end-to-end reconstruction procedure for complex-valued multi-channel imaging. Moreover, a similar result using a PI-CNN network was reported in [28] to integrate multi-channel k-space data and to exploit them through PI. However, the PI algorithm was not incorporated into the optimization equation of the network but only treated as a regularization term. In addition, Deepcomplex-CNN [29] was presented to directly map aliased multi-channel images to the reference images without the requirement of any prior information. Obviously, the data fidelity term of these approaches was only defined in a single-domain (either the image or frequency domain). In our proposed PIC-GAN, we used a progressive refinement method in both frequency and image domains, which can not only help to stabilize the optimization of the network, but also make full use of the complementary information of the two domains. More specifically, the loss function in the image domain ensures reducing aliasing artifacts between the reconstructed images and their corresponding ground truth (i.e., fully-sampled reconstructions). In addition, we want to emphasize that we separated the loss function of the k-space into two parts: one is used to guarantee that the reconstructed image generates its the corresponding undersampled image with matching undersampled k-space data, the other to minimize the discrepancies between the missing data and the data interpolated by PIC-GAN in the k-space. This ensures high-fidelity reconstructions with high acceleration factors.",
+            "cite_spans": [
+                {
+                    "start": 115,
+                    "end": 119,
+                    "text": "[24]",
+                    "ref_id": "BIBREF24"
+                },
+                {
+                    "start": 304,
+                    "end": 308,
+                    "text": "[26]",
+                    "ref_id": "BIBREF26"
+                },
+                {
+                    "start": 571,
+                    "end": 575,
+                    "text": "[25]",
+                    "ref_id": "BIBREF25"
+                },
+                {
+                    "start": 859,
+                    "end": 863,
+                    "text": "[40]",
+                    "ref_id": "BIBREF38"
+                },
+                {
+                    "start": 1137,
+                    "end": 1141,
+                    "text": "[27]",
+                    "ref_id": "BIBREF27"
+                },
+                {
+                    "start": 1320,
+                    "end": 1324,
+                    "text": "[28]",
+                    "ref_id": "BIBREF28"
+                },
+                {
+                    "start": 1562,
+                    "end": 1566,
+                    "text": "[29]",
+                    "ref_id": "BIBREF29"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "It is crucial to mention that both ZF-GAN and PIC-GAN have outperformed the L1-ESPIRiT in terms of reconstruction robustness, speed and image quality. This is because the CS method is sensitive to the regularization term while deep learning-based approaches do not need to impose the sparsity assumption. The networks automatically learn the underlying features and aliasing artifacts of the reconstructed image. Thus, their performance is more robust compared to the conventional non-deep learning CS techniques. Furthermore, the CS method treats each reconstruction as an individual nonlinear optimization problem. In contrast, deep learning based methods pre-calculate the network parameters offline. Therefore, once the parameters of the PIC-GAN are determined, the reconstruction is super-fast to unseen data with the same undersampling factor since no iterative calculations are required. Besides, experimental results show the feasibility of our PIC-GAN to learn the mapping from undersampled artifact-corrupted images to the GT images, using different sampling patterns with fixed undersampling factor. This indicates that a fixed undersampling pattern is not a prerequisite to train the network.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "Multi-channel imaging is widely used in current clinical practice. It is obvious that the multi-channel network achieves better performance than the combined single-channel reconstruction, demonstrating the multi-channel network has the advantage over singlechannel reconstruction by incorporating the sensitivity maps within the network. The results suggest that the operation of introducing a sensitivity map during training is similar to applying a low-pass filter that not only discards high-frequency noise but also enables a fairly clear image to be reconstructed. However, as the acceleration factor increases, the input k-space starts to contain very few ACS lines, which results in a relatively poor quality of the generated sensitivity maps for training. Thus, possible extensions of PIC-GAN may be either to improve the accuracy of the sensitivity maps estimation or to incorporate a calibrationless [41, 42] algorithm into the model. This study has several limitations. First, system imperfections exist during data acquisition that were not considered in the current study. Further studies should be taken to include those physical imperfections, e.g., gradient delays, B0 inhomogeneity, multiple projections with opposing orientations, etc. Second, the sample size was relatively small and only included healthy subjects. Future investigations should enlarge the sample size and validate the model on patients to see its generalization performance. Third, a future study is warranted to evaluate the performance of the proposed PIC-GAN for higher acceleration rates. It is of note that although we have reported the average reconstruction time for our comparison study, the reconstruction efficiency also depends on the system configuration, e.g., actual GPU allocated etc.",
+            "cite_spans": [
+                {
+                    "start": 911,
+                    "end": 915,
+                    "text": "[41,",
+                    "ref_id": "BIBREF39"
+                },
+                {
+                    "start": 916,
+                    "end": 919,
+                    "text": "42]",
+                    "ref_id": "BIBREF40"
+                }
+            ],
+            "ref_spans": [],
+            "section": "Discussion"
+        },
+        {
+            "text": "In conclusion, by coupling multi-channel information and GAN, our PIC-GAN model has been successfully evaluated using two MRI datasets. The proposed PIC-GAN method not only demonstrated superior reconstruction efficacy and generalization capacity, but also outperformed conventional L1-ESPIRiT and other deep learning based algorithms with different acceleration factors. In terms of the reconstruction efficiency, our PIC-GAN can remarkably reduce the reconstruction time (from seconds to milliseconds per slice) for multi-channel data compared to iterative L1-ESPIRiT, which is promising for real-time imaging in a lot of clinical applications.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conclusions"
+        }
+    ],
+    "bib_entries": {
+        "BIBREF0": {
+            "ref_id": "b0",
+            "title": "Simultaneous acquisition of spatial harmonics (SMASH): fast imaging with radiofrequency coil arrays",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sodickson",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                }
+            ],
+            "year": 1997,
+            "venue": "Magn. Reson. Med",
+            "volume": "38",
+            "issn": "",
+            "pages": "591--603",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.1910380414"
+                ]
+            }
+        },
+        "BIBREF1": {
+            "ref_id": "b1",
+            "title": "SENSE: Sensitivity encoding for fast MRI",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Pruessmann",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Weiger",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Scheidegger",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Boesiger",
+                    "suffix": ""
+                }
+            ],
+            "year": 1999,
+            "venue": "Magn. Reson. Med. Off. J. Int. Soc. Magn. Reson. Med",
+            "volume": "42",
+            "issn": "",
+            "pages": "952--962",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/(SICI)1522-2594(199911)42:5<952::AID-MRM16>3.0.CO;2-S"
+                ]
+            }
+        },
+        "BIBREF2": {
+            "ref_id": "b2",
+            "title": "Generalized autocalibrating partially parallel acquisitions (GRAPPA)",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Griswold",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Jakob",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Heidemann",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Nittka",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Jellus",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Kiefer",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [],
+                    "last": "Haase",
+                    "suffix": ""
+                }
+            ],
+            "year": 2002,
+            "venue": "Magn. Reson. Med. Off. J. Int. Soc. Magn. Reson. Med",
+            "volume": "47",
+            "issn": "",
+            "pages": "1202--1210",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.10171"
+                ]
+            }
+        },
+        "BIBREF4": {
+            "ref_id": "b4",
+            "title": "Comprehensive quantification of signal-to-noise ratio and g-factor for image-based and k-space-based parallel imaging reconstructions",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Robson",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Grant",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Madhuranthakam",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Lattanzi",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sodickson",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Mckenzie",
+                    "suffix": ""
+                }
+            ],
+            "year": 2008,
+            "venue": "Magn. Reson. Med. Off. J. Int. Soc. Magn. Reson. Med",
+            "volume": "60",
+            "issn": "",
+            "pages": "895--907",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.21728"
+                ]
+            }
+        },
+        "BIBREF5": {
+            "ref_id": "b5",
+            "title": "Recent advances in parallel imaging for MRI",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Hamilton",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Franson",
+                    "suffix": ""
+                },
+                {
+                    "first": "N",
+                    "middle": [],
+                    "last": "Seiberlich",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "Prog. Nucl. Magn. Reson. Spectrosc",
+            "volume": "101",
+            "issn": "",
+            "pages": "71--95",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.pnmrs.2017.04.002"
+                ]
+            }
+        },
+        "BIBREF6": {
+            "ref_id": "b6",
+            "title": "SPIRiT: Iterative self-consistent parallel imaging reconstruction from arbitrary k-space",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lustig",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pauly",
+                    "suffix": ""
+                }
+            ],
+            "year": 2010,
+            "venue": "Magn. Reson. Med",
+            "volume": "64",
+            "issn": "",
+            "pages": "457--471",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.22428"
+                ]
+            }
+        },
+        "BIBREF7": {
+            "ref_id": "b7",
+            "title": "k-t FOCUSS: A general compressed sensing framework for high resolution dynamic MRI",
+            "authors": [
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Jung",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Sung",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Nayak",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ye",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "Magn. Reson. Med. Off. J. Int. Soc. Magn. Reson. Med",
+            "volume": "61",
+            "issn": "",
+            "pages": "103--116",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.21757"
+                ]
+            }
+        },
+        "BIBREF8": {
+            "ref_id": "b8",
+            "title": "Sparse MRI: The application of compressed sensing for rapid MR imaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lustig",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Donoho",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pauly",
+                    "suffix": ""
+                }
+            ],
+            "year": 2007,
+            "venue": "Magn. Reson. Med",
+            "volume": "58",
+            "issn": "",
+            "pages": "1182--1195",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.21391"
+                ]
+            }
+        },
+        "BIBREF9": {
+            "ref_id": "b9",
+            "title": "Low-rank modeling of local k-space neighborhoods with parallel imaging data",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Haldar",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhuo",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "P-Loraks",
+                    "suffix": ""
+                }
+            ],
+            "year": 2015,
+            "venue": "Magn. Reson. Med",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.25717"
+                ]
+            }
+        },
+        "BIBREF10": {
+            "ref_id": "b10",
+            "title": "Accelerated Dynamic MRI Exploiting Sparsity and Low-Rank Structure: k-t SLR",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [
+                        "G"
+                    ],
+                    "last": "Lingala",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Dibella",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jacob",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "30",
+            "issn": "",
+            "pages": "1042--1054",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TMI.2010.2100850"
+                ]
+            }
+        },
+        "BIBREF11": {
+            "ref_id": "b11",
+            "title": "A Practical Acceleration Algorithm for Real-Time Imaging",
+            "authors": [
+                {
+                    "first": "U",
+                    "middle": [],
+                    "last": "Sumbul",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Santos",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pauly",
+                    "suffix": ""
+                }
+            ],
+            "year": 2009,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "28",
+            "issn": "",
+            "pages": "2042--2051",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TMI.2009.2030474"
+                ]
+            }
+        },
+        "BIBREF12": {
+            "ref_id": "b12",
+            "title": "MR Image Reconstruction From Highly Undersampled k-Space Data by Dictionary Learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Ravishankar",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Bresler",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "30",
+            "issn": "",
+            "pages": "1028--1041",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TMI.2010.2090538"
+                ]
+            }
+        },
+        "BIBREF13": {
+            "ref_id": "b13",
+            "title": "Accelerating magnetic resonance imaging via deep learning",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Su",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Peng",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhu",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Proceedings of the 2016 IEEE 13th International Symposium on Biomedical Imaging (ISBI)",
+            "volume": "",
+            "issn": "",
+            "pages": "514--517",
+            "other_ids": {}
+        },
+        "BIBREF14": {
+            "ref_id": "b14",
+            "title": "Deep ADMM-Net for compressive sensing MRI",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Sun",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "Adv. Neural Inf. Process. Syst",
+            "volume": "29",
+            "issn": "",
+            "pages": "10--18",
+            "other_ids": {}
+        },
+        "BIBREF15": {
+            "ref_id": "b15",
+            "title": "A deep cascade of convolutional neural networks for dynamic MR image reconstruction",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schlemper",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Caballero",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Hajnal",
+                    "suffix": ""
+                },
+                {
+                    "first": "A",
+                    "middle": [
+                        "N"
+                    ],
+                    "last": "Price",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Rueckert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "37",
+            "issn": "",
+            "pages": "491--503",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TMI.2017.2760978"
+                ]
+            }
+        },
+        "BIBREF16": {
+            "ref_id": "b16",
+            "title": "Deep artifact learning for compressed sensing and parallel MRI",
+            "authors": [
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Lee",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Yoo",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "C"
+                    ],
+                    "last": "Ye",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1703.01120"
+                ]
+            }
+        },
+        "BIBREF17": {
+            "ref_id": "b17",
+            "title": "Reconstruction of undersampled radial free-breathing 3D abdominal MRI using stacked convolutional auto-encoders",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Lv",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Chen",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Med. Phys",
+            "volume": "45",
+            "issn": "",
+            "pages": "2023--2032",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mp.12870"
+                ]
+            }
+        },
+        "BIBREF18": {
+            "ref_id": "b18",
+            "title": "Self-attention convolutional neural network for improved MR image reconstruction",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wu",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Ma",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Du",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Xing",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Inf. Sci",
+            "volume": "490",
+            "issn": "",
+            "pages": "317--328",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.ins.2019.03.080"
+                ]
+            }
+        },
+        "BIBREF19": {
+            "ref_id": "b19",
+            "title": "Deep Attentive Wasserstein Generative Adversarial Networks for MRI Reconstruction with Recurrent Context-Awareness",
+            "authors": [
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "International Conference on Medical Image Computing and Computer-Assisted Intervention",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF21": {
+            "ref_id": "b21",
+            "title": "Accelerated magnetic resonance imaging by adversarial neural network. In Deep Learning in Medical Image Analysis and Multimodal Learning for Clinical Decision Support",
+            "authors": [
+                {
+                    "first": "O",
+                    "middle": [],
+                    "last": "Shitrit",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "R"
+                    ],
+                    "last": "Raviv",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "30--38",
+            "other_ids": {}
+        },
+        "BIBREF22": {
+            "ref_id": "b22",
+            "title": "Deep de-aliasing generative adversarial networks for fast compressed sensing MRI reconstruction",
+            "authors": [
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Yu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Dong",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Slabaugh",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "L"
+                    ],
+                    "last": "Dragotti",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Ye",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Arridge",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Keegan",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Guo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2017,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "37",
+            "issn": "",
+            "pages": "1310--1321",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TMI.2017.2785879"
+                ]
+            }
+        },
+        "BIBREF23": {
+            "ref_id": "b23",
+            "title": "Compressed sensing MRI reconstruction using a generative adversarial network with a cyclic loss",
+            "authors": [
+                {
+                    "first": "T",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Quan",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Nguyen-Duc",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Jeong",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "IEEE Trans. Med. Imaging",
+            "volume": "37",
+            "issn": "",
+            "pages": "1488--1497",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/TMI.2018.2820120"
+                ]
+            }
+        },
+        "BIBREF24": {
+            "ref_id": "b24",
+            "title": "Accelerating CS-MRI reconstruction with fine-tuning Wasserstein generative adversarial network",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Zhang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gong",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Xia",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "IEEE Access",
+            "volume": "7",
+            "issn": "",
+            "pages": "152347--152357",
+            "other_ids": {
+                "DOI": [
+                    "10.1109/ACCESS.2019.2948220"
+                ]
+            }
+        },
+        "BIBREF25": {
+            "ref_id": "b25",
+            "title": "Unsupervised MRI Reconstruction with Generative Adversarial Networks. arXiv 2020",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Cole",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pauly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Vasanawala",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ong",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:2008.13065"
+                ]
+            }
+        },
+        "BIBREF26": {
+            "ref_id": "b26",
+            "title": "Self-Attention and Relative Average Discriminator Based Generative Adversarial Networks for Fast Compressed Sensing MRI Reconstruction",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Yuan",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Jiang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Wei",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Li",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Menpes-Smith",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Niu",
+                    "suffix": ""
+                },
+                {
+                    "first": "G",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Sara-Gan",
+                    "suffix": ""
+                }
+            ],
+            "year": null,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "DOI": [
+                    "10.3389/fninf.2020.611666"
+                ]
+            }
+        },
+        "BIBREF27": {
+            "ref_id": "b27",
+            "title": "Learning a variational network for reconstruction of accelerated MRI data",
+            "authors": [
+                {
+                    "first": "K",
+                    "middle": [],
+                    "last": "Hammernik",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Klatzer",
+                    "suffix": ""
+                },
+                {
+                    "first": "E",
+                    "middle": [],
+                    "last": "Kobler",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Recht",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sodickson",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Pock",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Knoll",
+                    "suffix": ""
+                }
+            ],
+            "year": 2018,
+            "venue": "Magn. Reson. Med",
+            "volume": "79",
+            "issn": "",
+            "pages": "3055--3071",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.26977"
+                ]
+            }
+        },
+        "BIBREF28": {
+            "ref_id": "b28",
+            "title": "Parallel imaging and convolutional neural network combined fast MR image reconstruction: Applications in low-latency accelerated real-time imaging",
+            "authors": [
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Zhou",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Han",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Ghodrati",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Gao",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [],
+                    "last": "Yin",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Yang",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Hu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "Med. Phys",
+            "volume": "46",
+            "issn": "",
+            "pages": "3399--3413",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mp.13628"
+                ]
+            }
+        },
+        "BIBREF29": {
+            "ref_id": "b29",
+            "title": "Exploiting deep residual network for fast parallel MR imaging with complex convolution",
+            "authors": [
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Ying",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [],
+                    "last": "Xiao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Z",
+                    "middle": [],
+                    "last": "Ke",
+                    "suffix": ""
+                },
+                {
+                    "first": "X",
+                    "middle": [],
+                    "last": "Liu",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Zheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "",
+                    "middle": [],
+                    "last": "Deepcomplexmri",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Magn. Reson. Imaging",
+            "volume": "68",
+            "issn": "",
+            "pages": "136--147",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.mri.2020.02.002"
+                ]
+            }
+        },
+        "BIBREF30": {
+            "ref_id": "b30",
+            "title": "Decoupled algorithm for MRI reconstruction using nonlocal block matching model: BM3D-MRI",
+            "authors": [
+                {
+                    "first": "E",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Eksioglu",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "J. Math. Imaging Vis",
+            "volume": "56",
+            "issn": "",
+            "pages": "430--440",
+            "other_ids": {
+                "DOI": [
+                    "10.1007/s10851-016-0647-7"
+                ]
+            }
+        },
+        "BIBREF31": {
+            "ref_id": "b31",
+            "title": "Accelerated isotropic sub-millimeter whole-heart coronary MRI: compressed sensing versus parallel imaging",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ak\u00e7akaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Basha",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [
+                        "H"
+                    ],
+                    "last": "Chan",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nezafat",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Magn. Reson. Med",
+            "volume": "71",
+            "issn": "",
+            "pages": "815--822",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.24683"
+                ]
+            }
+        },
+        "BIBREF32": {
+            "ref_id": "b32",
+            "title": "Low-dimensionalstructure self-learning and thresholding: regularization beyond compressed sensing for MRI reconstruction",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Ak\u00e7akaya",
+                    "suffix": ""
+                },
+                {
+                    "first": "T",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Basha",
+                    "suffix": ""
+                },
+                {
+                    "first": "B",
+                    "middle": [],
+                    "last": "Goddu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Goepfert",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Kissinger",
+                    "suffix": ""
+                },
+                {
+                    "first": "V",
+                    "middle": [],
+                    "last": "Tarokh",
+                    "suffix": ""
+                },
+                {
+                    "first": "W",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Manning",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Nezafat",
+                    "suffix": ""
+                }
+            ],
+            "year": 2011,
+            "venue": "Magn. Reson. Med",
+            "volume": "66",
+            "issn": "",
+            "pages": "756--767",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.22841"
+                ]
+            }
+        },
+        "BIBREF33": {
+            "ref_id": "b33",
+            "title": "Golden-angle radial sparse parallel MRI: combination of compressed sensing, parallel imaging, and golden-angle radial sampling for fast and flexible dynamic volumetric MRI",
+            "authors": [
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Feng",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Grimm",
+                    "suffix": ""
+                },
+                {
+                    "first": "K",
+                    "middle": [
+                        "T"
+                    ],
+                    "last": "Block",
+                    "suffix": ""
+                },
+                {
+                    "first": "H",
+                    "middle": [],
+                    "last": "Chandarana",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Kim",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Xu",
+                    "suffix": ""
+                },
+                {
+                    "first": "L",
+                    "middle": [],
+                    "last": "Axel",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "K"
+                    ],
+                    "last": "Sodickson",
+                    "suffix": ""
+                },
+                {
+                    "first": "R",
+                    "middle": [],
+                    "last": "Otazo",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Magn. Reson. Med",
+            "volume": "72",
+            "issn": "",
+            "pages": "707--717",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.24980"
+                ]
+            }
+        },
+        "BIBREF34": {
+            "ref_id": "b34",
+            "title": "Generalized Magnetic Resonance Image Reconstruction Using the Berkeley Advanced Reconstruction Toolbox",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [
+                        "I"
+                    ],
+                    "last": "Tamir",
+                    "suffix": ""
+                },
+                {
+                    "first": "F",
+                    "middle": [],
+                    "last": "Ong",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "Y"
+                    ],
+                    "last": "Cheng",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Uecker",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lustig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2016,
+            "venue": "ISMRM Workshop on Data Sampling & Image Reconstruction",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {}
+        },
+        "BIBREF35": {
+            "ref_id": "b35",
+            "title": "ESPIRiT-An eigenvalue approach to autocalibrating parallel MRI: where SENSE meets GRAPPA",
+            "authors": [
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Uecker",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Lai",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Murphy",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [],
+                    "last": "Virtue",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Elad",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pauly",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [
+                        "S"
+                    ],
+                    "last": "Vasanawala",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lustig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Magn. Reson. Med",
+            "volume": "71",
+            "issn": "",
+            "pages": "990--1001",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.24751"
+                ]
+            }
+        },
+        "BIBREF38": {
+            "ref_id": "b38",
+            "title": "Correction of out-of-FOV motion artifacts using convolutional neural network",
+            "authors": [
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Wang",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [],
+                    "last": "Liang",
+                    "suffix": ""
+                },
+                {
+                    "first": "S",
+                    "middle": [],
+                    "last": "Zhao",
+                    "suffix": ""
+                },
+                {
+                    "first": "Y",
+                    "middle": [
+                        "P"
+                    ],
+                    "last": "Du",
+                    "suffix": ""
+                }
+            ],
+            "year": 2020,
+            "venue": "Magn. Reson. Imaging",
+            "volume": "71",
+            "issn": "",
+            "pages": "93--102",
+            "other_ids": {
+                "DOI": [
+                    "10.1016/j.mri.2020.05.004"
+                ]
+            }
+        },
+        "BIBREF39": {
+            "ref_id": "b39",
+            "title": "Calibrationless parallel imaging reconstruction based on structured low-rank matrix completion",
+            "authors": [
+                {
+                    "first": "P",
+                    "middle": [
+                        "J"
+                    ],
+                    "last": "Shin",
+                    "suffix": ""
+                },
+                {
+                    "first": "P",
+                    "middle": [
+                        "E Z"
+                    ],
+                    "last": "Larson",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [
+                        "A"
+                    ],
+                    "last": "Ohliger",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Elad",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "M"
+                    ],
+                    "last": "Pauly",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [
+                        "B"
+                    ],
+                    "last": "Vigneron",
+                    "suffix": ""
+                },
+                {
+                    "first": "M",
+                    "middle": [],
+                    "last": "Lustig",
+                    "suffix": ""
+                }
+            ],
+            "year": 2014,
+            "venue": "Magn. Reson. Med",
+            "volume": "72",
+            "issn": "",
+            "pages": "959--970",
+            "other_ids": {
+                "DOI": [
+                    "10.1002/mrm.24997"
+                ]
+            }
+        },
+        "BIBREF40": {
+            "ref_id": "b40",
+            "title": "Data consistency networks for (calibration-less) accelerated parallel MR image reconstruction",
+            "authors": [
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Schlemper",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Duan",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Ouyang",
+                    "suffix": ""
+                },
+                {
+                    "first": "C",
+                    "middle": [],
+                    "last": "Qin",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [],
+                    "last": "Caballero",
+                    "suffix": ""
+                },
+                {
+                    "first": "J",
+                    "middle": [
+                        "V"
+                    ],
+                    "last": "Hajnal",
+                    "suffix": ""
+                },
+                {
+                    "first": "D",
+                    "middle": [],
+                    "last": "Rueckert",
+                    "suffix": ""
+                }
+            ],
+            "year": 2019,
+            "venue": "",
+            "volume": "",
+            "issn": "",
+            "pages": "",
+            "other_ids": {
+                "arXiv": [
+                    "arXiv:1909.11795"
+                ]
+            }
+        }
+    },
+    "ref_entries": {
+        "FIGREF0": {
+            "text": "Schema of the proposed parallel imaging and generative adversarial network (PIC-GAN) reconstruction network.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF1": {
+            "text": "The generator G consists of four encoder blocks followed by corresponding 4 decoder blocks. In addition, shortcut connections are applied to connect mirrored layers between the encoder and decoder paths.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF2": {
+            "text": "shows representative images reconstructed from ZF, L1-ESPIRiT, VN, ZF-GAN, and PIC-GAN with sixfold undersampling compared to the ground truth (GT).",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF3": {
+            "text": "Representative abdominal images reconstructed with acceleration AF = 6. The first and second rows depict reconstruction results for regular Cartesian sampling, the third and fourth row depict the same for variable density random sampling. The PIC-GAN reconstruction shows reduced artifacts compared to other methods. (GT: Ground truth. ZF: Zero-filled. L1-ESPIRiT: Sparsity-based parallel imaging. VN: Variational network. ZF-GAN: Conventional GAN with single-channel images as input PIC-GAN: Our proposed method. Red box: Zoomed-in area.)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF4": {
+            "text": "Visualization of the intermediate results of our PIC-GAN reconstruction. (a) Undersampled image with an acceleration factor of 6\u00d7 with the regular (1st row) and the random (3rd row) Cartesian sampling (b-d) Results from intermediate steps 500 to 2000 in the reconstruction process. (e) Ground truth.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF5": {
+            "text": "Comparison of different reconstruction methods with different acceleration factors for the knee dataset. From left to right, each column represents selected knee image reconstructed using ZF, L1-ESPIRiT, VN, ZF-GA and PIC-GAN, respectively, compared to the GT. (GT: Ground truth. ZF: Zero-filled. L1-ESPIRiT: Sparsity-based parallel imaging. VN: Variational network. ZF-GAN: Conventional GAN with single-channel images as input PIC-GAN: Our proposed method. The ZF-GAN reconstructed images were over-smoothed with blocky artifacts (yellow arrows) and obvious residual artifacts (green arrows).) Representative knee images reconstructed with an acceleration factor of 6. The first and second rows show reconstruction results using regular Cartesian sampling, the third and fourth rows show reconstruction results using variable density random sampling. Zoomed in views (as red boxes) show that the proposed method has resulted in both sharper and cleaner reconstruction compared to the results obtained by L1-ESPIRiT, VN and ZF-GAN. Both ZF-GAN and PIC-GAN reconstruction can significantly suppress the artifacts compared to ZF and L1-ESPIRiT. (GT: Ground truth. ZF: Zero-filled. L1-ESPIRiT: Sparsity-based parallel imaging. VN: Variational network. ZF-GAN: Conventional GAN with single-channel images as input PIC-GAN: Our proposed method. ZF-GAN images contained blurred vessels (green arrows) and blocky patterns (yellow arrows).)",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF6": {
+            "text": "represent the mean values and standard deviation of corresponding metrics (bold numbers indicate the best performance). Compared to the L1-ESPIRiT method, the CNN based VN model and single-channel based deep learning method (ZF-GAN), the proposed PIC-GAN framework outperformed them remarkably at different acceleration factors showing the effectiveness of our method.",
+            "latex": null,
+            "type": "figure"
+        },
+        "FIGREF7": {
+            "text": "Performance comparisons (PSNR, SSIM and NMSE \u00d7 10 \u22125 ) on abdominal MRI data with different acceleration factors. (GT: Ground truth. ZF: Zero-filled. L1-ESPIRiT: Sparsity-based parallel imaging. VN: Variational network. ZF-GAN: Conventional GAN with single-channel images as input PIC-GAN: Our proposed method.)",
+            "latex": null,
+            "type": "figure"
+        },
+        "TABREF0": {
+            "text": "Performance comparisons (Normalized Mean Square Error (NMSE) \u00d7 10 \u22125 , Structural Similarity Index (SSIM), Peak Signal to Noise Ratio (PSNR) and Average Reconstruction Time(s)) on abdominal magnetic resonance imaging (MRI) data with different acceleration factors. The bold numbers highlight the best results. The PIC-GAN outperformed the competing algorithms with significantly higher PSNR, SSIM and lower NMSE values (p < 0.05). GAN 31.45 \u00b1 4.00 0.85 \u00b1 0.06 1.93 \u00b1 1.41 30.91 \u00b1 2.72 0.85 \u00b1 0.02 1.42 \u00b1 1.01 0.40 \u00b1 0.00 PIC-GAN 34.43 \u00b1 1.92 0.87 \u00b1 0.05 0.58 \u00b1 0.37 31.76 \u00b1 3.04 0.86 \u00b1 0.02 1.22 \u00b1 0.97 0.68 \u00b1 0.01",
+            "latex": null,
+            "type": "table"
+        },
+        "TABREF3": {
+            "text": "Performance comparisons (NMSE \u00d7 10 \u22125 , SSIM, PSNR and Average Reconstruction Time(s)) on knee MRI data with different acceleration factors. The bold numbers highlight the best results. The PIC-GAN outperformed the competing algorithms with significantly higher PSNR, SSIM and lower NMSE values (p < 0.05). GAN 34.10 \u00b1 1.09 0.86 \u00b1 0.01 0.80 \u00b1 0.26 33.85 \u00b1 1.11 0.85 \u00b1 0.00 0.81 \u00b1 0.10 0.45 \u00b1 0.01",
+            "latex": null,
+            "type": "table"
+        }
+    },
+    "back_matter": [
+        {
+            "text": "Acknowledgments: We appreciate the research groups of Michael Lustig at UC Berkeley and Shreyas Vasanawala at Stanford's Lucille Packard Children's Hospital for providing the data.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "PSNR: 23.37"
+        },
+        {
+            "text": "The authors declare no conflict of interest.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Conflicts of Interest:"
+        },
+        {
+            "text": "The studies involving human participants were reviewed and approved by Ethics Committee of the data providers of the public datasets.Informed Consent Statement: Written informed consent for participation was not required for this study in accordance with the national legislation and the institutional requirements.",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Institutional Review Board Statement:"
+        },
+        {
+            "text": "Publicly available datasets were analyzed in this study. This data can be found here: http://old.mridata.org/undersampled/abdomens and http://mridata.org/ fullysampled/knees (accessed on 18 October 2020).",
+            "cite_spans": [],
+            "ref_spans": [],
+            "section": "Data Availability Statement:"
+        }
+    ]
+}
